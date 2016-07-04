@@ -1,0 +1,29 @@
+.sjgl1>.sjgl1-left{
+    border-right: solid 1px #eee;
+}
+.sjgl1>.sjgl1-left .col-md-7 p:first-child{
+    color: #fb991a;
+    font-size: 34px;
+}
+.sjgl1>.sjgl1-left .col-md-5 p:first-child{
+    color: #fe4d16;
+    font-size: 34px;
+}
+.sjgl1>.sjgl1-left .col-md-7 p:last-child,.sjgl1>.sjgl1-left .col-md-5 p:last-child{padding-left: 35px;}
+.hysj-ttl{margin:40px 0 40px 0px;padding-left: 0px;}
+/*会员升级*/
+.hysj-list{width: 100%;margin: 0 auto;box-shadow: 0 3px 12px rgba(0,0,0,0.3)}
+.hysj-list>.list-top{background-color: #68b8d7;}
+.hysj-list>.list-top>p,.hysj-list>.list-top>p>font{color:#fff}
+.hysj-list>.list-top>p:first-child{padding: 10px;padding-bottom: 0}
+.hysj-list>.list-top>p:last-child{padding-bottom: 10px}
+.hysj-list>.list-bottom{border:solid 1px #d3d3d3;border-top: none;margin-top: -20px;}
+.hysj-list>.list-bottom>button{margin: 0 0 35px 38px;width: 120px}
+.hysj-list>.list-bottom p{padding: 5px 0;color: #646464}
+.hysj-list>.list-bottom p:first-child{padding-top: 40px}
+.hysj-list>.list-bottom p:nth-of-type(2){padding-bottom: 50px;}
+.hysj-list>.list-bottom p font{color: #FB991A}
+/*数据概览*/
+.sjgl .progress-bar{width: 50%;background-color: #FB991A}
+.sjgl .btn-upGrade{background-color: #FB991A}
+.sjgl .sjgl1-left{padding: 40px 0 30px}

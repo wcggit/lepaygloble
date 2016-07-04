@@ -1,0 +1,79 @@
+<div class="container-fluid content" >
+    <p class="ttl">账户设置</p>
+    <div class="panel panel-default">
+        <div class="panel-heading">基本信息</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-2">商户名称</div>
+                <div class="col-md-2" ng-bind="merchant.name"></div>
+                <div class="col-md-2 col-md-offset-2">绑定手机</div>
+                <div class="col-md-2" ng-bind="merchant.merchantPhone"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">用户名</div>
+                <div class="col-md-2" ng-bind="account.login"></div>
+                <div class="col-md-2 col-md-offset-2">密码</div>
+                <div class="col-md-2" >*****</div>
+                <div class="col-md-2"><a class="changePassword" data-target="#changePassword" ng-click="changePassword()">修改</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">结算信息</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-2">收款人</div>
+                <div class="col-md-2" ng-bind="merchant.payee"></div>
+                <div class="col-md-2 col-md-offset-2">银行卡号</div>
+                <div class="col-md-4" ng-bind="merchant.merchantBank.bankNumber"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">开户行</div>
+                <div class="col-md-2" ng-bind="merchant.merchantBank.bankName"></div>
+                <div class="col-md-2 col-md-offset-2">结算周期</div>
+                <div class="col-md-4" ng-show="merchant.cycle==1">T+1(提现申请后一个工作日内到账)</div>
+                <div class="col-md-4" ng-show="merchant.cycle==2">T+2(提现申请后两个工作日内到账)</div>
+            </div>
+        </div>
+    </div>
+    <p class="text-right">如需修改信息，请联系客服：<span>400-0412-800</span></p>
+</div>
+<!--修改密码提示框-->
+<div class="modal" id="changePassword">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="inputPassword1" class="col-sm-3 col-sm-offset-1 control-label">当前密码</label>
+                        <div class="col-sm-7">
+                            <input type="password" class="form-control" id="inputPassword1" placeholder="请输入当前密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword2" class="col-sm-3 col-sm-offset-1 control-label">新密码</label>
+                        <div class="col-sm-7">
+                            <input type="password" class="form-control" id="inputPassword2" placeholder="请输入新密码">
+                            <p class="text-muted small">密码由数字和字母组合，不少于6位，不能包含特殊符号</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-3 col-sm-offset-1 control-label">确认新密码</label>
+                        <div class="col-sm-7">
+                            <input type="password" class="form-control" id="inputPassword3" placeholder="请再次输入新密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-8" style="margin-left: 28%">
+                            <button type="submit" class="btn btn-warning">确认修改</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

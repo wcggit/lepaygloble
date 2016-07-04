@@ -1,0 +1,21 @@
+{
+  "name": "json-export-excel",
+  "version": "1.0.0",
+  "main": "src/json-export-excel.js",
+  "dependencies": {
+    "angular": ">=1.0.4",
+    "file-saver": "*"
+  },
+  "devDependencies": {},
+  "homepage": "https://github.com/dtagdev1/json-export-excel",
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.0",
+    "commit": "36eee6ce592277f32f1852648600e03e33ea85c0"
+  },
+  "_source": "https://github.com/dtagdev1/json-export-excel.git",
+  "_target": "^1.0.0",
+  "_originalSource": "ng-json-export-excel",
+  "_direct": true
+}

@@ -1,0 +1,92 @@
+/*收入概览*/
+.srgl-div{
+    width: 268px;
+    height: 100px;
+}
+.srgl-div:after{
+    display: block;
+    clear: both;
+    height: 0;
+    content: '';
+}
+.srgl-div-left{
+    float: left;
+    width: 80px;
+    height: 100px;
+    position: relative;
+}
+.srgl-div-right{
+    float: right;
+    border: solid 1px #dcdcdc;
+    border-left: none;
+    width: 188px;
+    height: 100px;
+    padding-left: 20px;
+}
+.srgl-div-right h2{
+    margin: 15px 0 2px 0;
+    /*margin-bottom: 2px;*/
+}
+.srgl-div-right .tx{
+    margin: 0 10px 0 0;
+    cursor: pointer;
+}
+.srgl-div-right h5{
+    color: #646464;
+}
+.srgl-div-right h2{
+    color: #505050;
+}
+.srgl-div-left .srgl-icon{
+    position: absolute;
+    left:0;
+    right: 0;
+    top:0;
+    bottom: 0;
+    margin: auto;
+    overflow: hidden;
+}
+.srgl-div-left1{
+    background-color: #83c0ed;
+}
+.srgl-div-left .srgl-icon1{
+    width: 50px;
+    height: 50px;
+    background: url("../images/wdlf/1.png") no-repeat;
+}
+.srgl-div-left2{
+    background-color: #64dfcd;
+}
+.srgl-div-left .srgl-icon2{
+    width: 40px;
+    height: 55px;
+    background: url("../images/wdlf/2.png") no-repeat;
+}
+.srgl-div-left3{
+    background-color: #cb93de;
+}
+.srgl-div-left .srgl-icon3{
+    width: 43px;
+    height: 52px;
+    background: url("../images/wdlf/3.png") no-repeat;
+}
+.srgl-div-left4{
+    background-color: #fb991a;
+}
+.srgl-div-left .srgl-icon4{
+    width: 52px;
+    height: 54px;
+    background: url("../images/wdlf/4.png") no-repeat;
+}
+/*账单明细*/
+.tab-content .col-md-3 p:first-child{
+    color: #fb991a;
+    font-size: 28px;
+    text-align: center;
+}
+.tab-content .col-md-3 p:last-child{
+    color: #333333;
+    font-size: 16px;
+    text-align: center;
+}
+/*日交易收入趋势*/

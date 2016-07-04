@@ -1,0 +1,124 @@
+.main{
+    position: relative;
+    height: 100%;
+}
+/*左边按钮*/
+.left-main{width: 200px;height: 100vh;position: absolute;}
+.left-menu{
+    width: 200px;
+    height: 100vh;
+    list-style: none;
+    background-color: #f0f0f0;
+    position: absolute;
+}
+.left-menu li:not(:first-child):hover{
+    cursor: pointer;
+}
+.left-menu .active{
+    background-color: #fb991a;
+}
+.left-menu .active span {
+    color: #fff;
+}
+.left-menu li{
+    height: 50px;
+    line-height: 50px;
+    border-bottom: solid 1px #d9d9d9;
+    position: relative;
+    outline: none;
+}
+.left-menu li.active:before{
+    position: absolute;
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-right: solid 10px #fff;
+    border-top: solid 10px transparent;
+    border-left: solid 10px transparent;
+    border-bottom: solid 10px transparent;
+    right: 0;
+    top: 15px;
+}
+.left-menu li:after{
+    content: '';
+    display: block;
+    height: 0;
+    clear: both;
+}
+.left-menu li:first-child{
+    height: 30px;
+}
+.left-menu li span{
+    float: left;
+}
+.left-menu li span:last-child{
+    line-height: 50px;
+    display: inline-block;
+}
+.left-menu-icon{
+    display: inline-block;
+    padding: 0 30px;
+    color: #222;
+}
+/*右边主要内容*/
+.right-main{
+    margin-left: 200px;
+    height: 100%;
+}
+
+/*交易记录*/
+.ttl-add font{color: #fb991a}
+.pagination>li>a, .pagination>li>span{color: #fb991a;}
+th,td{padding-left: 20px}
+.date-click{width: 305px;}
+.table-download{cursor: pointer}
+.bank{width: 24%;}
+label{font-weight: normal;color: #222;}
+
+/*我的乐付码*/
+.wdlfmMain{
+    width: 345px;
+    height: 480px;
+    background: url("../images/jygl/lefuma.png") no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+    left:0;
+    right: 0;
+    top: 6vw;
+    margin: auto;
+    outline: solid 1px #cccccc;
+}
+.wdlfmMain .rvCode{
+    width: 230px;
+    height: 230px;
+    position: absolute;
+    top: 120px;
+    left: 0;
+    right: 0;
+    margin:auto;
+}
+.wdlfmMain .shopName{
+    text-align: center;
+    font-size: 24px;
+    color: #fff;
+    position: absolute;
+    top: 365px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    font-family: Arial;
+}
+.lfm-btn{
+    margin: auto;
+    width: 100px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    border-radius: 4px;
+    position: relative;
+    left: 0;
+    right:0;
+    margin: auto;
+    top:12vw;
+}

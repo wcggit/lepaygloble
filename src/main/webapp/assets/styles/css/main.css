@@ -1,0 +1,8 @@
+*{color: #222;margin: 0;padding: 0;}
+:focus {
+    outline:none;
+}
+html,body{height:100%;position: relative}
+.bodyBgColor{background: #f3f3f3;}
+.container{padding: 0}
+.main-content{background-color: #fff;position: absolute;top:52px;left:0;right:0;margin: auto}

@@ -1,0 +1,112 @@
+<div class="container-fluid content">
+    <p class="ttl">收入概览</p>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="srgl-div">
+                <div class="srgl-div-left srgl-div-left1">
+                    <div class="srgl-icon srgl-icon1"></div>
+                </div>
+                <div class="srgl-div-right">
+                    <h5>转账中金额</h5>
+                    <h2 ng-bind="'¥'+srgl.firNum"></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="srgl-div">
+                <div class="srgl-div-left srgl-div-left2">
+                    <div class="srgl-icon srgl-icon2"></div>
+                </div>
+                <div class="srgl-div-right">
+                    <h5>累计到账</h5>
+                    <h2 ng-bind="'¥'+srgl.secNum"></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="srgl-div">
+                <div class="srgl-div-left srgl-div-left3">
+                    <div class="srgl-icon srgl-icon3"></div>
+                </div>
+                <div class="srgl-div-right">
+                    <h5>可用佣金</h5>
+                    <h2 ng-bind="'¥'+srgl.thirNum"></h2>
+                    <p class="clearfix"><a class="pull-right tx">提现</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="srgl-div">
+                <div class="srgl-div-left srgl-div-left4">
+                    <div class="srgl-icon srgl-icon4"></div>
+                </div>
+                <div class="srgl-div-right">
+                    <h5>累计佣金</h5>
+                    <h2 ng-bind="'¥'+srgl.forNum"></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="ttl">账单明细</p>
+    <ul class="nav nav-tabs">
+        <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab()"><a>今日账单</a></li>
+        <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab()"><a>本月账单</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane" ng-class="{active:currentTab0}">
+            <div class="row">
+                <div class="col-md-3">
+                    <p>{{day.count}}</p>
+                    <p>交易笔数</p>
+                </div>
+                <div class="col-md-3">
+                    <p>¥{{day.sales}}</p>
+                    <p>销售金额</p>
+                </div>
+                <div class="col-md-3">
+                    <p>¥{{day.commission}}</p>
+                    <p>手续费</p>
+                </div>
+                <div class="col-md-3">
+                    <p>¥{{day.trueSales}}</p>
+                    <p>实际收入</p>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" ng-class="{active:currentTab1}">
+            <div class="row">
+                <div class="col-md-3">
+                    <p>{{month.count}}</p>
+                    <p>交易笔数</p>
+                </div>
+                <div class="col-md-3">
+                    <p>¥{{month.sales}}</p>
+                    <p>销售金额</p>
+                </div>
+                <div class="col-md-3">
+                    <p>¥{{month.commission}}</p>
+                    <p>手续费</p>
+                </div>
+                <div class="col-md-3">
+                    <p>¥{{month.trueSales}}</p>
+                    <p>实际收入</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="ttl">日交易收入趋势</p>
+    <div class="panel panel-default" style="padding-bottom: 50px">
+        <div class="panel-heading clearfix">
+            <div class='input-group date date-click pull-right'>
+                <input class="form-control date0" type="daterange" format="YYYY/MM/DD" ng-model="dates1" ng-click="show()" ng-controller="SampleCtrl1" ranges="ranges"/>
+            </div>
+        </div>
+        <div class="panel-body rjysr-panel-body">
+            <div ng-controller="lineCtrl">
+                <line id="main" legend="legend" item="item" data="data"></line>
+            </div>
+        </div>
+    </div>
+</div>

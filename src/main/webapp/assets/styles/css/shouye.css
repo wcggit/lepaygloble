@@ -1,0 +1,10 @@
+.sy-banner{min-width: 1280px;max-width: 1920px;}
+.banner1{background: url(/assets/styles/images/shouye/2.jpg) no-repeat center center;height: 600px;position: relative}
+.banner1 button{position: absolute;top:320px;left:60%;}
+.banner2{background: url(/assets/styles/images/shouye/3.jpg) no-repeat center center;height: 551px;}
+.banner3{background: url(/assets/styles/images/shouye/4.jpg) no-repeat center center;height: 533px;}
+.banner4{background: url(/assets/styles/images/shouye/5.jpg) no-repeat center center;height: 559px;}
+.banner5{background: url(/assets/styles/images/shouye/6.jpg) no-repeat center center;height: 520px;}
+.banner6{background: url(/assets/styles/images/shouye/7.jpg) no-repeat center center;height: 1070px;}
+.banner7{background: url(/assets/styles/images/shouye/8.jpg) no-repeat center center;height: 868px;}
+.shouye-container{padding: 0;}

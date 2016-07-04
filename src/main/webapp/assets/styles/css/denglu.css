@@ -1,0 +1,10 @@
+.dl-banner{min-width: 1263px;max-width: 1920px;background: url(../images/denglu/banner.jpg) no-repeat center center;height: 500px;position: relative}
+.denglu form{width: 320px;position: absolute;top: 160px;left:62.5%;background-color: rgba(0,0,0,0.5);padding: 10px 30px 30px}
+.denglu h3{color: #fff}
+.denglu input{padding-left: 60px}
+.denglu button{background-color: #fb991a;color: #fff;margin-bottom: 10px}
+.denglu p span{color: #fff}
+.denglu p a{color: #fb991a}
+.denglu .logo{display: inline-block;width: 36px;height: 20px;position: absolute;left:40px;}
+.denglu .logo-zhanghu{top:73px;background: url("../images/denglu/zhanghu.png") no-repeat;}
+.denglu .logo-mima{top:123px;background: url("../images/denglu/mima.png") no-repeat;}

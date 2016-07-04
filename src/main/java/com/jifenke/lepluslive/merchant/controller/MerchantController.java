@@ -1,0 +1,131 @@
+package com.jifenke.lepluslive.merchant.controller;
+
+import com.jifenke.lepluslive.global.util.ImageLoad;
+import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.merchant.controller.dto.MerchantDto;
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
+import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.order.service.FinanicalStatisticService;
+import com.jifenke.lepluslive.security.SecurityUtils;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.imageio.ImageIO;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Created by wcg on 16/6/29.
+ */
+@RestController
+@RequestMapping("/api")
+public class MerchantController {
+
+    private String backgroundPicture = "http://lepluslive-image.oss-cn-beijing.aliyuncs.com/20160701164034O6wvP4QZ5X.png";
+
+    @Inject
+    private MerchantService merchantService;
+
+    @Inject
+    private FinanicalStatisticService finanicalStatisticService;
+
+
+    @RequestMapping(value = "/merchant/getCommission", method = RequestMethod.GET)
+    public LejiaResult getAvaliableCommission() {
+        Merchant
+            merchant =
+            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+                .getMerchant();
+        MerchantWallet
+            merchantWallet =
+            merchantService.findMerchantWalletByMerchant(merchant);
+        Long transfering = finanicalStatisticService.countTransfering(merchant);
+
+        return LejiaResult.ok(new MerchantDto(transfering, merchantWallet.getTotalTransferMoney(),
+                                              merchantWallet.getAvailableBalance(),
+                                              merchantWallet.getTotalMoney()));
+    }
+
+    @RequestMapping(value = "/merchant", method = RequestMethod.GET)
+    public LejiaResult getQrCode() {
+        Merchant
+            merchant =
+            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+                .getMerchant();
+
+        return LejiaResult.ok(merchant);
+    }
+
+
+    @RequestMapping(value = "/merchant/downLoadQrCode", method = RequestMethod.GET)
+    public void downLoadQrCode(HttpServletResponse response) {
+        Merchant
+            merchant =
+            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+                .getMerchant();
+
+        response.setContentType("application/x-msdownload;");
+        response.setHeader("Content-disposition", "attachment; filename=image.png");
+        response.setCharacterEncoding("UTF-8");
+        OutputStream outputSream = null;
+        // byte[] image =ImageLoad.saveToFile(url) ;
+        try {
+            outputSream = response.getOutputStream();
+            InputStream qrCode = ImageLoad.returnStream(merchant.getQrCodePicture());
+            InputStream back = ImageLoad.returnStream(backgroundPicture);
+            BufferedImage image = ImageIO.read(back);
+            Graphics2D g = image.createGraphics();
+
+            BufferedImage logo = ImageIO.read(qrCode);
+
+            int widthLogo = logo.getWidth(), heightLogo = logo.getHeight();
+
+            // 计算图片放置位置
+            int x = (image.getWidth() - widthLogo) / 2;
+            int y = (image.getHeight() - logo.getHeight()) / 2;
+            //开始绘制图片
+            g.drawImage(logo, x, y, widthLogo, heightLogo, null);
+            g.drawRoundRect(x, y, widthLogo, heightLogo, 20, 20);
+            g.setStroke(new BasicStroke(1.0f));
+            g.setColor(Color.white);
+            g.drawRect(x, y, widthLogo,heightLogo);
+                //写文子
+            g.setColor(Color.WHITE);
+            g.setBackground(Color.red);
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setFont(new Font(null, 12, 88)); //字体、字型、字号
+            g.drawString(merchant.getName(), (image.getWidth() - g.getFontMetrics().stringWidth(merchant.getName())) / 2,1700); //画文字
+
+            g.dispose();
+
+            int len = 0;
+            InputStream is = null;
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            ImageIO.write(image, "png",ImageIO.createImageOutputStream(bs));
+            is= new ByteArrayInputStream(bs.toByteArray());
+            while ((len =is.read(buf, 0, 1024)) != -1) {
+                outputSream.write(buf, 0, len);
+            }
+            outputSream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
+}

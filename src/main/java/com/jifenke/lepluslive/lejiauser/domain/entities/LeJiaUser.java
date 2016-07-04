@@ -1,0 +1,144 @@
+package com.jifenke.lepluslive.lejiauser.domain.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jifenke.lepluslive.global.util.MvUtil;
+import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import java.util.Date;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+/**
+ * Created by wcg on 16/3/22.
+ */
+@Entity
+@Table(name = "LE_JIA_USER")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public class LeJiaUser {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    private String oneBarCodeUrl;
+
+    private String userSid = MvUtil.getBarCodeStr();
+
+    private Date createDate = new Date();
+
+    private Date phoneBindDate;
+
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JsonIgnore
+    private WeiXinUser weiXinUser;
+
+    private String phoneNumber;
+
+    private String token;
+
+    private String pwd;    //加密后
+
+    private String headImageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private RegisterOrigin registerOrigin;
+
+    public RegisterOrigin getRegisterOrigin() {
+        return registerOrigin;
+    }
+
+    public void setRegisterOrigin(RegisterOrigin registerOrigin) {
+        this.registerOrigin = registerOrigin;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    public String getHeadImageUrl() {
+        return headImageUrl;
+    }
+
+    public void setHeadImageUrl(String headImageUrl) {
+        this.headImageUrl = headImageUrl;
+    }
+
+    public Date getPhoneBindDate() {
+        return phoneBindDate;
+    }
+
+    public void setPhoneBindDate(Date phoneBindDate) {
+        this.phoneBindDate = phoneBindDate;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public WeiXinUser getWeiXinUser() {
+        return weiXinUser;
+    }
+
+    public void setWeiXinUser(WeiXinUser weiXinUser) {
+        this.weiXinUser = weiXinUser;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getOneBarCodeUrl() {
+        return oneBarCodeUrl;
+    }
+
+    public void setOneBarCodeUrl(String oneBarCodeUrl) {
+        this.oneBarCodeUrl = oneBarCodeUrl;
+    }
+
+    public String getUserSid() {
+        return userSid;
+    }
+
+    public void setUserSid(String userSid) {
+        this.userSid = userSid;
+    }
+}

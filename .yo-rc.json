@@ -1,0 +1,24 @@
+{
+  "generator-jhipster": {
+    "baseName": "lepaygloble",
+    "packageName": "com.jifenke.lepluslive",
+    "packageFolder": "com/jifenke/lepluslive",
+    "authenticationType": "session",
+    "hibernateCache": "ehcache",
+    "clusteredHttpSession": "no",
+    "websocket": "spring-websocket",
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": "no",
+    "useSass": false,
+    "buildTool": "maven",
+    "frontendBuilder": "grunt",
+    "enableTranslation": false,
+    "enableSocialSignIn": false,
+    "rememberMeKey": "8ae148220f5fa275395252823160f1f7875a02d3",
+    "testFrameworks": [
+      "gatling"
+    ]
+  }
+}
