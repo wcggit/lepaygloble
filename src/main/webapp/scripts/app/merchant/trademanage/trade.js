@@ -28,6 +28,9 @@ angular.module('lepayglobleApp')
                                         resolve: {}
                                     }).state('orderList', {
                                                  parent: 'trade',
+                                                 params: {
+                                                     date: null
+                                                 },
                                                  url: '/orderList',
                                                  data: {
                                                      authorities: []

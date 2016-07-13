@@ -2,6 +2,8 @@ package com.jifenke.lepluslive.lejiauser.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jifenke.lepluslive.global.util.MvUtil;
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
 
 import org.hibernate.annotations.Cache;
@@ -24,7 +26,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "LE_JIA_USER")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class LeJiaUser {
 
     @Id
@@ -39,10 +40,6 @@ public class LeJiaUser {
 
     private Date phoneBindDate;
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JsonIgnore
-    private WeiXinUser weiXinUser;
-
     private String phoneNumber;
 
     private String token;
@@ -51,8 +48,65 @@ public class LeJiaUser {
 
     private String headImageUrl;
 
+    private String userName;  //用户名
+
     @ManyToOne(fetch = FetchType.LAZY)
     private RegisterOrigin registerOrigin;
+
+    @ManyToOne
+    private Merchant bindMerchant;
+
+    @ManyToOne
+    private Partner bindPartner;
+
+    private Date bindMerchantDate;
+
+    private Date bindPartnerDate;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private WeiXinUser weiXinUser;
+
+
+    public WeiXinUser getWeiXinUser() {
+        return weiXinUser;
+    }
+
+    public void setWeiXinUser(WeiXinUser weiXinUser) {
+        this.weiXinUser = weiXinUser;
+    }
+
+    public Date getBindMerchantDate() {
+        return bindMerchantDate;
+    }
+
+    public void setBindMerchantDate(Date bindMerchantDate) {
+        this.bindMerchantDate = bindMerchantDate;
+    }
+
+    public Date getBindPartnerDate() {
+        return bindPartnerDate;
+    }
+
+    public void setBindPartnerDate(Date bindPartnerDate) {
+        this.bindPartnerDate = bindPartnerDate;
+    }
+
+
+    public Partner getBindPartner() {
+        return bindPartner;
+    }
+
+    public void setBindPartner(Partner bindPartner) {
+        this.bindPartner = bindPartner;
+    }
+
+    public Merchant getBindMerchant() {
+        return bindMerchant;
+    }
+
+    public void setBindMerchant(Merchant bindMerchant) {
+        this.bindMerchant = bindMerchant;
+    }
 
     public RegisterOrigin getRegisterOrigin() {
         return registerOrigin;
@@ -110,14 +164,6 @@ public class LeJiaUser {
         this.phoneNumber = phoneNumber;
     }
 
-    public WeiXinUser getWeiXinUser() {
-        return weiXinUser;
-    }
-
-    public void setWeiXinUser(WeiXinUser weiXinUser) {
-        this.weiXinUser = weiXinUser;
-    }
-
     public Long getId() {
         return id;
     }
@@ -140,5 +186,13 @@ public class LeJiaUser {
 
     public void setUserSid(String userSid) {
         this.userSid = userSid;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

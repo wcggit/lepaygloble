@@ -1,6 +1,7 @@
 .sy-banner{min-width: 1280px;max-width: 1920px;}
 .banner1{background: url(/assets/styles/images/shouye/2.jpg) no-repeat center center;height: 600px;position: relative}
-.banner1 button{position: absolute;top:320px;left:60%;}
+.banner1 .banner1-inner{position:relative;max-width: 1182px;height: 600px;background: url("../images/shouye/1.png") no-repeat center center;margin: 0 auto}
+.banner1 button{position: absolute;top:320px;left:695px;}
 .banner2{background: url(/assets/styles/images/shouye/3.jpg) no-repeat center center;height: 551px;}
 .banner3{background: url(/assets/styles/images/shouye/4.jpg) no-repeat center center;height: 533px;}
 .banner4{background: url(/assets/styles/images/shouye/5.jpg) no-repeat center center;height: 559px;}

@@ -66,7 +66,7 @@ public class FinancialController {
     }
 
     @RequestMapping(value = "/financial/export", method = RequestMethod.GET)
-    public ModelAndView exporeExcel(@RequestParam String startDate, @RequestParam String endDate) {
+    public ModelAndView exporeExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) {
         FinancialCriteria financialCriteria = new FinancialCriteria();
         financialCriteria.setStartDate(startDate);
         financialCriteria.setEndDate(endDate);
@@ -87,8 +87,8 @@ public class FinancialController {
     @RequestMapping(value = "/financial/dayTrade", method = RequestMethod.GET)
     public LejiaResult dayTrade(@RequestParam(required = false) String startDate,
                                 @RequestParam(required = false) String endDate) {
-        Date start;
-        Date end;
+            Date start;
+            Date end;
         if (startDate==null||"".equals(startDate)) {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_MONTH, -1);
@@ -96,7 +96,7 @@ public class FinancialController {
             calendar.set(Calendar.MINUTE, 59);
             calendar.set(Calendar.SECOND, 59);
             end = calendar.getTime();
-            calendar.add(Calendar.DAY_OF_MONTH, -5);
+            calendar.add(Calendar.DAY_OF_MONTH, -3);
             calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
@@ -105,12 +105,12 @@ public class FinancialController {
             Date date = new Date(startDate);
             Calendar calendar = new GregorianCalendar();
             calendar.setTime(date);
-            calendar.set(Calendar.HOUR_OF_DAY, 23);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
             start = calendar.getTime();
-            Date date2 = new Date(startDate);
-            calendar.setTime(date);
+            Date date2 = new Date(endDate);
+            calendar.setTime(date2);
             calendar.set(Calendar.HOUR_OF_DAY, 23);
             calendar.set(Calendar.MINUTE, 59);
             calendar.set(Calendar.SECOND, 59);

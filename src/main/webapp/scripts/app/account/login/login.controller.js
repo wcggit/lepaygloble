@@ -13,8 +13,8 @@ angular.module('lepayglobleApp')
                     $scope.login = function (event) {
                         event.preventDefault();
                         Auth.login({
-                                       username: $scope.username,
-                                       password: $scope.password,
+                                       username: $scope.username.trim(),
+                                       password: $scope.password.trim(),
                                        rememberMe: $scope.rememberMe
                                    }).then(function () {
                             $scope.authenticationError = false;

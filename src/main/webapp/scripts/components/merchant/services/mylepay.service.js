@@ -48,7 +48,7 @@ angular.module('lepayglobleApp')
                      },
                      getDayTrade: function (data) {
                          var deferred = $q.defer();
-                         $http.get('/api/financial/dayTrade',data, {
+                         $http.get('/api/financial/dayTrade?'+data, {
                              headers: {
                                  'Content-Type': 'application/json'
                              }

@@ -2,15 +2,24 @@ package com.jifenke.lepluslive.merchant.controller;
 
 import com.jifenke.lepluslive.global.util.ImageLoad;
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.global.util.MD5Util;
+import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
+import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.controller.dto.MerchantDto;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.order.domain.entities.FinancialStatistic;
+import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.service.FinanicalStatisticService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -20,9 +29,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.*;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -32,13 +43,18 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/api")
 public class MerchantController {
 
-    private String backgroundPicture = "http://lepluslive-image.oss-cn-beijing.aliyuncs.com/20160701164034O6wvP4QZ5X.png";
+    private String
+        backgroundPicture =
+        "http://lepluslive-image.oss-cn-beijing.aliyuncs.com/20160701164034O6wvP4QZ5X.png";
 
     @Inject
     private MerchantService merchantService;
 
     @Inject
     private FinanicalStatisticService finanicalStatisticService;
+
+    @Inject
+    private LeJiaUserService leJiaUserService;
 
 
     @RequestMapping(value = "/merchant/getCommission", method = RequestMethod.GET)
@@ -58,13 +74,23 @@ public class MerchantController {
     }
 
     @RequestMapping(value = "/merchant", method = RequestMethod.GET)
-    public LejiaResult getQrCode() {
+    public LejiaResult getMerchant() {
         Merchant
             merchant =
             merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
 
         return LejiaResult.ok(merchant);
+    }
+
+    @RequestMapping(value = "/merchant/wallet", method = RequestMethod.GET)
+    public LejiaResult getMerchantWallet() {
+        Merchant
+            merchant =
+            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+                .getMerchant();
+
+        return LejiaResult.ok(merchantService.findMerchantWalletByMerchant(merchant));
     }
 
 
@@ -99,13 +125,15 @@ public class MerchantController {
             g.drawRoundRect(x, y, widthLogo, heightLogo, 20, 20);
             g.setStroke(new BasicStroke(1.0f));
             g.setColor(Color.white);
-            g.drawRect(x, y, widthLogo,heightLogo);
-                //写文子
+            g.drawRect(x, y, widthLogo, heightLogo);
+            //写文子
             g.setColor(Color.WHITE);
             g.setBackground(Color.red);
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setFont(new Font(null, 12, 88)); //字体、字型、字号
-            g.drawString(merchant.getName(), (image.getWidth() - g.getFontMetrics().stringWidth(merchant.getName())) / 2,1700); //画文字
+            g.setFont(new Font("微软雅黑", Font.PLAIN, 88)); //字体、字型、字号
+            g.drawString(merchant.getName(),
+                         (image.getWidth() - g.getFontMetrics().stringWidth(merchant.getName()))
+                         / 2, 1700); //画文字
 
             g.dispose();
 
@@ -113,9 +141,9 @@ public class MerchantController {
             InputStream is = null;
             ByteArrayOutputStream bs = new ByteArrayOutputStream();
             byte[] buf = new byte[1024];
-            ImageIO.write(image, "png",ImageIO.createImageOutputStream(bs));
-            is= new ByteArrayInputStream(bs.toByteArray());
-            while ((len =is.read(buf, 0, 1024)) != -1) {
+            ImageIO.write(image, "png", ImageIO.createImageOutputStream(bs));
+            is = new ByteArrayInputStream(bs.toByteArray());
+            while ((len = is.read(buf, 0, 1024)) != -1) {
                 outputSream.write(buf, 0, len);
             }
             outputSream.close();
@@ -125,7 +153,65 @@ public class MerchantController {
 
     }
 
+    @RequestMapping(value = "/merchant/bindUsers", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    LejiaResult getMerchantBindUserList(@RequestBody LeJiaUserCriteria leJiaUserCriteria) {
+        if (leJiaUserCriteria.getOffset() == null) {
+            leJiaUserCriteria.setOffset(1);
+        }
+        MerchantUser
+            merchantUserByName =
+            merchantService
+                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        leJiaUserCriteria.setMerchant(merchantUserByName.getMerchant());
+        return LejiaResult.ok(leJiaUserService.getMerchantBindUserList(leJiaUserCriteria));
+    }
 
+    @RequestMapping(value = "/merchant/totalPages", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    LejiaResult getMerchantBindUserTotalPage(@RequestBody LeJiaUserCriteria leJiaUserCriteria) {
+        if (leJiaUserCriteria.getOffset() == null) {
+            leJiaUserCriteria.setOffset(1);
+        }
+        MerchantUser
+            merchantUserByName =
+            merchantService
+                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        leJiaUserCriteria.setMerchant(merchantUserByName.getMerchant());
+        return LejiaResult.ok(leJiaUserService.getTotalPages(leJiaUserCriteria));
+    }
+
+
+    @RequestMapping(value = "/merchant/open", method = RequestMethod.GET)
+    public void openRequest() {
+        Merchant
+            merchant =
+            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+                .getMerchant();
+        merchantService.createOpenRequest(merchant);
+
+
+    }
+
+    @RequestMapping(value = "/merchant/resetPassword", method = RequestMethod.POST)
+    public LejiaResult resetPassword(HttpServletRequest request) {
+        String reset = request.getParameter("reset");
+        String password = request.getParameter("password");
+
+        MerchantUser
+            merchantUser =
+            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+
+        try{
+            merchantService.resetPasswword(merchantUser,reset,password);
+            return LejiaResult.ok();
+        }catch (Exception e){
+            return LejiaResult.build(400,"密码不正确");
+
+        }
+    }
 
 
 }

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .factory('Principal', function Principal($q, Account, Tracker) {
+    .factory('Principal', function Principal($q, Account) {
         var _identity,
             _authenticated = false;
 
@@ -61,7 +61,7 @@ angular.module('lepayglobleApp')
                         _identity = account.data;
                         _authenticated = true;
                         deferred.resolve(_identity);
-                        Tracker.connect();
+                        //Tracker.connect();
                     })
                     .catch(function() {
                         _identity = null;

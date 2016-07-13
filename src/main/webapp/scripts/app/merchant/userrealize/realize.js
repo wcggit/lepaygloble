@@ -20,51 +20,38 @@ angular.module('lepayglobleApp')
                                    }
                                },
                                resolve: {}
-                           }).state('OverView', {
-                                                        parent: 'realize',
-                                                        data: {
-                                                            authorities: ['merchant']
-                                                        },
-                                                        resolve: {}
-                                                    })
-                                    //}).state('orderList', {
-                                    //             parent: 'trade',
-                                    //             url: '/orderList',
-                                    //             data: {
-                                    //                 authorities: []
-                                    //             },
-                                    //             views: {
-                                    //                 'tradeContent@trade': {
-                                    //                     templateUrl: 'scripts/app/merchant/trademanage/orderList.html',
-                                    //                     controller: 'OrderListController'
-                                    //                 }
-                                    //             },
-                                    //             resolve: {}
-                                    //         }).state('withdrawList', {
-                                    //                      parent: 'trade',
-                                    //                      url: '/withdrawList',
-                                    //                      data: {
-                                    //                          authorities: []
-                                    //                      },
-                                    //                      views: {
-                                    //                          'tradeContent@trade': {
-                                    //                              templateUrl: 'scripts/app/merchant/trademanage/withdraw.html',
-                                    //                              controller: 'TradeController'
-                                    //                          }
-                                    //                      },
-                                    //                      resolve: {}
-                                    //                  }).state('qrCode', {
-                                    //                               parent: 'trade',
-                                    //                               url: '/qrCode',
-                                    //                               data: {
-                                    //                                   authorities: []
-                                    //                               },
-                                    //                               views: {
-                                    //                                   'tradeContent@trade': {
-                                    //                                       templateUrl: 'scripts/app/merchant/trademanage/qrCode.html',
-                                    //                                       controller: 'QrCodeController'
-                                    //                                   }
-                                    //                               },
-                                    //                               resolve: {}
-                                    //                           })
-            });
+                           }).state('overView', {
+                                        parent: 'realize',
+                                        data: {
+                                            authorities: ['merchant']
+                                        },
+                                        resolve: {}
+                                    }).state('fees', {
+                                                 parent: 'realize',
+                                                 url: '/fees',
+                                                 data: {
+                                                     authorities: ['merchant']
+                                                 },
+                                                 views: {
+                                                     'realizeContent@realize': {
+                                                         templateUrl: 'scripts/app/merchant/userrealize/fees.html',
+                                                         controller: 'FeesController'
+                                                     }
+                                                 },
+                                                 resolve: {}
+                                             }).state('myMember', {
+                                                                          parent: 'realize',
+                                                                          url: '/member',
+                                                                          data: {
+                                                                              authorities: ['merchant']
+                                                                          },
+                                                                          views: {
+                                                                              'realizeContent@realize': {
+                                                                                  templateUrl: 'scripts/app/merchant/userrealize/member.html',
+                                                                                  controller: 'MemberController'
+                                                                              }
+                                                                          },
+                                                                          resolve: {}
+                                                                      })
+            })
+;

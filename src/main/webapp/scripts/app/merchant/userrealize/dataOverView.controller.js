@@ -1,26 +1,41 @@
 angular.module('lepayglobleApp')
-    .controller('OverViewController', function ($scope, $state, $location, $q, Trade) {
+    .controller('OverViewController', function ($scope, $state, Commission, $http) {
 
-  $(".sjgl .progress-bar").css({width:"30%"}).html("30%")
+                    Commission.getMerchantCommissionDetail().then(function (response) {
+                        var data = response.data;
+                        $scope.available = data.available;
+                        $scope.totalCommission = data.totalCommission;
+                        $scope.userLimit = data.userLimit;
+                        $scope.currentBind = data.currentBind;
+                        if (data.currentBind == 0 && data.totalCommission == 0) {
+                            $scope.per = 0;
+                        } else {
+
+                            $scope.per = data.totalCommission / data.currentBind;
+                        }
+                        var percent = data.currentBind / data.userLimit * 100;
+                        $(".sjgl .progress-bar").css({width: "" + percent + "%"})
+                    });
+
+                    Commission.getDayCommissionDetail().then(function (response) {
+                        var data = response.data;
+                        $scope.dayCommission = data.dayCommission / 100;
+                        $scope.count = data.count;
+                        $scope.shareCount = data.shareCount;
+                    });
+
+                    $http.get('api/merchant').success(function (response) {
+                        $scope.payee = response.data.payee;
+                        var bankNumber = response.data.merchantBank.bankNumber;
+                        $scope.bank =
+                        bankNumber.substring(bankNumber.length - 4, bankNumber.length);
+                    });
+
+                    $scope.tx = function () {
+                        $("#tx").modal("toggle");
+                    }
 
                 });
-
-function post(URL, PARAMS) {
-    var temp = document.createElement("form");
-    temp.action = URL;
-    temp.method = "post";
-    temp.style.display = "none";
-    for (var x in PARAMS) {
-        var opt = document.createElement("textarea");
-        opt.name = x;
-        opt.value = PARAMS[x];
-        // alert(opt.name)
-        temp.appendChild(opt);
-    }
-    document.body.appendChild(temp);
-    temp.submit();
-    return temp;
-}
 
 
 

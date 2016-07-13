@@ -1,11 +1,46 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('OrderListController', function ($scope, $state, $location, Trade) {
+    .controller('OrderListController',
+                function ($scope, $state, $location, Trade, $rootScope, $stateParams) {
+                    $('#timePicker1').daterangepicker({
+                                                          "autoApply": true,
+                                                          "showDropdowns": true,
+                                                          "showWeekNumbers": true,
+                                                          "showISOWeekNumbers": true,
+                                                          "timePicker": true,
+                                                          "timePicker24Hour": true,
+                                                          "timePickerSeconds": true,
+                                                          "ranges": $rootScope.timePickerObj.ranges,
+                                                          "locale": $rootScope.timePickerObj.locale,
+                                                          "alwaysShowCalendars": true,
+                                                          "startDate": moment().subtract(1,
+                                                                                         'day').format("YYYY/MM/DD 00:00:00"),
+                                                          "endDate": moment().subtract(1,
+                                                                                       'day').format("YYYY/MM/DD 23:59:59"),
+                                                          "opens": "right"
+                                                      }, function (start, end, label) {
+                    });
+                    $("#timePicker1").val("");
                     var currentPage = 1;
                     var olOrderCriteria = {};
                     olOrderCriteria.offset = 1;
-                    loadContent();
+                    if ($stateParams.date != null && $stateParams.date != "") {
+                        var end = new Date($stateParams.date);
+
+                        var start = new Date($stateParams.date);
+                        start.setMinutes(0, 0, 0);
+                        start.setHours(0);
+                        $("#timePicker1").val(start.format("yyyy/MM/dd HH:mm:ss") + " - "
+                                              + end.format("yyyy/MM/dd HH:mm:ss"));
+                        olOrderCriteria.startDate = start.format("yyyy/MM/dd HH:mm:ss");
+                        olOrderCriteria.endDate = end.format("yyyy/MM/dd HH:mm:ss");
+                        loadContent();
+                    } else {
+
+                        loadContent();
+                    }
+                    loadStatistic();
 
                     function loadContent() {
                         Trade.getOrderList(olOrderCriteria).then(function (results) {
@@ -13,7 +48,19 @@ angular.module('lepayglobleApp')
 
                             $scope.pulls = page.content;
                             $scope.page = currentPage;
+                            $scope.totalElements = page.totalElements;
                             $scope.totalPages = page.totalPages;
+                        });
+                    }
+
+                    function loadStatistic() {
+                        Trade.getOrderStatistic(olOrderCriteria).then(function (results) {
+                            var data = results.data;
+                            $scope.statistic = {
+                                sales:      data.sales / 100.0,
+                                commission: data.commission / 100.0,
+                                trueSales:  data.trueSales / 100.0
+                            };
                         });
                     }
 
@@ -35,4 +82,72 @@ angular.module('lepayglobleApp')
                         loadContent();
                     };
 
+                    $scope.searchByCriteria = function () {
+                        var dateStr = $("#timePicker1").val();
+                        if (dateStr == "" || dateStr == null) {
+                            alert("请输入时间");
+                            return;
+                        }
+                        var startDate = dateStr.split("-")[0].trim();
+                        var endDate = dateStr.split("-")[1].trim();
+                        olOrderCriteria.startDate = startDate;
+                        olOrderCriteria.endDate = endDate;
+                        olOrderCriteria.offset = 1;
+                        olOrderCriteria.orderSid = $("#order-num").val();
+                        currentPage = 1;
+                        loadContent();
+                        loadStatistic();
+                    }
+
+                    $scope.exportExcel = function () {
+                        var data = "?";
+                        if (olOrderCriteria.startDate != null) {
+                            data+="startDate="+olOrderCriteria.startDate+"&";
+                            data+="endDate="+olOrderCriteria.endDate;
+                        }
+                        if (olOrderCriteria.orderSid != null) {
+                            data+="&orderSid="+olOrderCriteria.orderSid;
+                        }
+                        location.href = "/api/offLineOrder/export"+data;
+                    }
+
                 });
+
+Date.prototype.format = function (fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时
+        "H+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    var week = {
+        "0": "\u65e5",
+        "1": "\u4e00",
+        "2": "\u4e8c",
+        "3": "\u4e09",
+        "4": "\u56db",
+        "5": "\u4e94",
+        "6": "\u516d"
+    };
+    if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    if (/(E+)/.test(fmt)) {
+        fmt =
+        fmt.replace(RegExp.$1,
+                    ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "\u661f\u671f" : "\u5468")
+                        : "") + week[this.getDay() + ""]);
+    }
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(fmt)) {
+            fmt =
+            fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr((""
+                                                                                             + o[k]).length)));
+        }
+    }
+    return fmt;
+}

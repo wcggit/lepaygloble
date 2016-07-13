@@ -4,7 +4,7 @@ angular.module('lepayglobleApp')
     .controller('TradeController', function ($scope, $state, $location) {
                     $scope.lefts = [
                         {
-                            pic: 'left-menu-icon iconfont icon-fcstubiao06',
+                            pic: 'left-menu-icon iconfont icon-2wodezhangdan18x20',
                             name: "每日账单",
                             state: "tradeList"
                         },
@@ -14,12 +14,12 @@ angular.module('lepayglobleApp')
                             state: "orderList"
                         },
                         {
-                            pic: "left-menu-icon iconfont icon-tixianjilu",
+                            pic: "left-menu-icon iconfont icon-tixianjilu small-font",
                             name: "提现记录",
                             state: "withdrawList"
                         },
                         {
-                            pic: "left-menu-icon iconfont icon-erweima",
+                            pic: "left-menu-icon iconfont icon-erweima01",
                             name: "我的乐付码",
                             state: "qrCode"
                         }

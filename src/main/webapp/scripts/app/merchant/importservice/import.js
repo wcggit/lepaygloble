@@ -5,14 +5,14 @@ angular.module('lepayglobleApp')
                 $stateProvider
                     .state('import', {
                                parent: 'merchant',
-                               url: '/merchant/import',
+                               url: '/import',
                                data: {
                                    authorities: ["merchant"]
                                },
                                views: {
                                    'content@': {
                                        templateUrl: 'scripts/app/merchant/importservice/import.html',
-                                       controller: 'MyLePayController'
+                                       controller: 'ImportController'
                                    }
                                },
                                resolve: {

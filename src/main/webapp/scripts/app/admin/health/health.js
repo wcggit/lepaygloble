@@ -7,7 +7,7 @@ angular.module('lepayglobleApp')
                 parent: 'admin',
                 url: '/health',
                 data: {
-                    authorities: ['ROLE_ADMIN'],
+                    //authorities: ['ROLE_ADMIN'],
                     pageTitle: 'Health checks'
                 },
                 views: {
@@ -17,7 +17,7 @@ angular.module('lepayglobleApp')
                     }
                 },
                 resolve: {
-                    
+
                 }
             });
     });

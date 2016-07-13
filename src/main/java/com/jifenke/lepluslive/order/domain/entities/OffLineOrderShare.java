@@ -1,11 +1,16 @@
 package com.jifenke.lepluslive.order.domain.entities;
 
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.partner.domain.entities.Partner;
+
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -15,95 +20,135 @@ import javax.persistence.Table;
 @Table(name = "OFF_LINE_ORDER_SHARE")
 public class OffLineOrderShare {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  private String orderSid;
+    @OneToOne
+    private OffLineOrder offLineOrder;
 
-  private Long toTradePartner = 0L;
+    private Long toTradePartner = 0L;
 
-  private Long toTradePartnerManager = 0L;
+    private Long toTradePartnerManager = 0L;
 
-  private Long toLockMerchant = 0L;
+    private Long toLockMerchant = 0L;
 
-  private Long toLockPartner = 0L;
+    private Long toLockPartner = 0L;
 
-  private Long toLockPartnerManager = 0L;
+    private Long toLockPartnerManager = 0L;
 
-  private Long toLePlusLife = 0L;
+    private Long toLePlusLife = 0L;
 
-  private Date createDate = new Date();
+    private Date createDate = new Date();
 
-  public Date getCreateDate() {
-    return createDate;
-  }
+    @ManyToOne
+    private Partner tradePartner;
 
-  public void setCreateDate(Date createDate) {
-    this.createDate = createDate;
-  }
 
-  public Long getToLePlusLife() {
-    return toLePlusLife;
-  }
+    @ManyToOne
+    private Merchant lockMerchant;
 
-  public void setToLePlusLife(Long toLePlusLife) {
-    this.toLePlusLife = toLePlusLife;
-  }
+    @ManyToOne
+    private Partner lockPartner;
 
-  public Long getId() {
-    return id;
-  }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
 
-  public String getOrderSid() {
-    return orderSid;
-  }
+    public OffLineOrder getOffLineOrder() {
+        return offLineOrder;
+    }
 
-  public void setOrderSid(String orderSid) {
-    this.orderSid = orderSid;
-  }
+    public void setOffLineOrder(OffLineOrder offLineOrder) {
+        this.offLineOrder = offLineOrder;
+    }
 
-  public Long getToTradePartner() {
-    return toTradePartner;
-  }
+    public Partner getTradePartner() {
+        return tradePartner;
+    }
 
-  public void setToTradePartner(Long toTradePartner) {
-    this.toTradePartner = toTradePartner;
-  }
+    public void setTradePartner(Partner tradePartner) {
+        this.tradePartner = tradePartner;
+    }
 
-  public Long getToTradePartnerManager() {
-    return toTradePartnerManager;
-  }
 
-  public void setToTradePartnerManager(Long toTradePartnerManager) {
-    this.toTradePartnerManager = toTradePartnerManager;
-  }
+    public Merchant getLockMerchant() {
+        return lockMerchant;
+    }
 
-  public Long getToLockMerchant() {
-    return toLockMerchant;
-  }
+    public void setLockMerchant(Merchant lockMerchant) {
+        this.lockMerchant = lockMerchant;
+    }
 
-  public void setToLockMerchant(Long toLockMerchant) {
-    this.toLockMerchant = toLockMerchant;
-  }
+    public Partner getLockPartner() {
+        return lockPartner;
+    }
 
-  public Long getToLockPartner() {
-    return toLockPartner;
-  }
+    public void setLockPartner(Partner lockPartner) {
+        this.lockPartner = lockPartner;
+    }
 
-  public void setToLockPartner(Long toLockPartner) {
-    this.toLockPartner = toLockPartner;
-  }
 
-  public Long getToLockPartnerManager() {
-    return toLockPartnerManager;
-  }
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-  public void setToLockPartnerManager(Long toLockPartnerManager) {
-    this.toLockPartnerManager = toLockPartnerManager;
-  }
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Long getToLePlusLife() {
+        return toLePlusLife;
+    }
+
+    public void setToLePlusLife(Long toLePlusLife) {
+        this.toLePlusLife = toLePlusLife;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+    public Long getToTradePartner() {
+        return toTradePartner;
+    }
+
+    public void setToTradePartner(Long toTradePartner) {
+        this.toTradePartner = toTradePartner;
+    }
+
+    public Long getToTradePartnerManager() {
+        return toTradePartnerManager;
+    }
+
+    public void setToTradePartnerManager(Long toTradePartnerManager) {
+        this.toTradePartnerManager = toTradePartnerManager;
+    }
+
+    public Long getToLockMerchant() {
+        return toLockMerchant;
+    }
+
+    public void setToLockMerchant(Long toLockMerchant) {
+        this.toLockMerchant = toLockMerchant;
+    }
+
+    public Long getToLockPartner() {
+        return toLockPartner;
+    }
+
+    public void setToLockPartner(Long toLockPartner) {
+        this.toLockPartner = toLockPartner;
+    }
+
+    public Long getToLockPartnerManager() {
+        return toLockPartnerManager;
+    }
+
+    public void setToLockPartnerManager(Long toLockPartnerManager) {
+        this.toLockPartnerManager = toLockPartnerManager;
+    }
 }

@@ -90,3 +90,40 @@
     text-align: center;
 }
 /*日交易收入趋势*/
+#tx .modal-footer > div {
+    width: 150px;
+    margin: 0 auto;
+}
+#tx .modal-header > h4 > span {
+    font-size: 14px;
+    color:#666;
+    margin-left: 20px;
+}
+#tx .modal-header > h4 > span >font{
+    color: #f75555;
+}
+#tx .modal-body .ts{color: #fb991a;display: inline-block;line-height: 30px;margin-left: -10px}
+.btn-sx{margin-left: 20px}
+.myPay-picker{padding-right: 0px;width: 224px}
+.fenge{
+    width: 100%;
+    height: 10px;
+    position: absolute;
+    left:0;
+    background-color: rgb(243, 243, 243);
+}
+.fenge1{
+    top:228px;
+}
+.fenge2{
+    top:500px;
+}
+.wdlf .row{
+    padding-bottom: 50px;
+}
+.wdlf .tab-content{
+    padding-bottom: 0px;
+}
+.wdlf #inputPassword1{
+    border: solid 1px #dadada;
+}

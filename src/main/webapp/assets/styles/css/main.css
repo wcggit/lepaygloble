@@ -1,8 +1,56 @@
-*{color: #222;margin: 0;padding: 0;}
+*{color: #222;margin: 0;padding: 0;font-family: "microsoft yahei"}
 :focus {
     outline:none;
 }
 html,body{height:100%;position: relative}
 .bodyBgColor{background: #f3f3f3;}
-.container{padding: 0}
-.main-content{background-color: #fff;position: absolute;top:52px;left:0;right:0;margin: auto}
+.container{padding: 0;background-color: #fff}
+.main-content{background-color: #fff;position: absolute;top:68px;left:0;right:0;margin: auto}
+.timePicker i{
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    top: auto;
+    cursor: pointer;
+    z-index: 10;
+}
+label{
+    width: 90px;
+    text-align: right;
+    margin-right: 10px;
+}
+input[type='button'],.btn-warning{
+    background-color: #FB991A;
+}
+input[type='text']{
+    border-color: #dadada;
+}
+.navbar-nav a{
+    font-size: 18px;
+}
+.h2, h2 {
+    font-size: 28px;
+}
+.bg-warning{
+    background-color: #fff;
+}
+.glyphicon-calendar:before {
+    color: #a2a2a2;
+    font-size: 18px;
+}
+tr{border-bottom: solid 1px #e2e2e2}
+thead tr{border-bottom: solid 1px #d6d7dc;font-size: 16px}
+thead{background-color: #f4f5f9}
+table{border-color: #d6d7dc}
+.close span:first-child{font-size: 32px}
+.ol-tab >tbody tr td > p{margin: 0;line-height:18px !important;}
+.ol-tab >thead tr td > p{line-height:10px !important;}
+td > p:last-child{color: #666}
+.ol-tab tbody tr td{line-height: 40px !important;}
+a>span.icon-xiazai{color: #449dea}
+a:hover,a:hover span.icon-xiazai{text-decoration: none;color: #4069B2}
+.modal-dialog {
+    margin: 150px auto;
+}
+tbody td a{cursor: pointer}
+.pagination{cursor: pointer}

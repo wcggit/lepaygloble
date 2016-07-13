@@ -7,7 +7,7 @@ angular.module('lepayglobleApp')
                 parent: 'admin',
                 url: '/metrics',
                 data: {
-                    authorities: ['ROLE_ADMIN'],
+                    //authorities: ['ROLE_ADMIN'],
                     pageTitle: 'Application Metrics'
                 },
                 views: {
@@ -17,7 +17,7 @@ angular.module('lepayglobleApp')
                     }
                 },
                 resolve: {
-                    
+
                 }
             });
     });

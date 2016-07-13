@@ -46,34 +46,25 @@ public class FinancialViewExcel extends AbstractExcelView {
 
   public void setExcelHeader(HSSFSheet excelSheet) {
     HSSFRow excelHeader = excelSheet.createRow(0);
-    excelHeader.createCell(0).setCellValue("结算单号");
-    excelHeader.createCell(1).setCellValue("结算日期");
-    excelHeader.createCell(2).setCellValue("转账日期");
-    excelHeader.createCell(3).setCellValue("商户信息");
-    excelHeader.createCell(4).setCellValue("绑定银行卡");
-    excelHeader.createCell(5).setCellValue("开户行");
-    excelHeader.createCell(6).setCellValue("收款人");
-    excelHeader.createCell(7).setCellValue("待转账金额");
+    excelHeader.createCell(0).setCellValue("结算日期");
+    excelHeader.createCell(1).setCellValue("状态");
+    excelHeader.createCell(2).setCellValue("到账金额");
+    excelHeader.createCell(3).setCellValue("结算方式");
+    excelHeader.createCell(4).setCellValue("银行卡（支付宝号)");
   }
 
   public void setExcelRows(HSSFSheet excelSheet, List<FinancialStatistic> financialList) {
     int record = 1;
     for (FinancialStatistic financialStatistic : financialList) {
       HSSFRow excelRow = excelSheet.createRow(record++);
-      excelRow.createCell(0).setCellValue(financialStatistic.getStatisticId());
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-      excelRow.createCell(1).setCellValue(sdf.format(financialStatistic.getBalanceDate()));
-      excelRow.createCell(2).setCellValue(financialStatistic.getTransferDate()==null?"结算未完成":sdf.format(financialStatistic.getTransferDate()));
-      excelRow.createCell(3).setCellValue(
-          financialStatistic.getMerchant().getName() + "(" + financialStatistic.getMerchant()
-              .getMerchantSid() + ")");
-      excelRow.createCell(4).setCellValue(
-          financialStatistic.getMerchant().getMerchantBank().getBankNumber());
-      excelRow.createCell(5)
+      excelRow.createCell(0).setCellValue(sdf.format(financialStatistic.getBalanceDate()));
+      excelRow.createCell(1).setCellValue(financialStatistic.getState()==0?"转账中":"已到帐");
+        excelRow.createCell(2).setCellValue(financialStatistic.getTransferPrice() / 100.0);
+        excelRow.createCell(3)
           .setCellValue(financialStatistic.getMerchant().getMerchantBank().getBankName());
-      excelRow.createCell(6).setCellValue(financialStatistic.getMerchant().getPayee());
-      excelRow.createCell(7).setCellValue(financialStatistic.getTransferPrice() / 100.0);
-
+        excelRow.createCell(4).setCellValue(
+            financialStatistic.getMerchant().getMerchantBank().getBankNumber());
     }
   }
 }

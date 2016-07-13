@@ -53,6 +53,8 @@ public class DatabaseConfiguration {
                 "Database connection pool is not configured correctly");
         }
         HikariConfig config = new HikariConfig();
+        config.setMaximumPoolSize(10);
+//        config.setLeakDetectionThreshold(90000);
         config.setDataSourceClassName(dataSourceProperties.getDriverClassName());
         config.addDataSourceProperty("url", dataSourceProperties.getUrl());
         if (dataSourceProperties.getUsername() != null) {

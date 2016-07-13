@@ -68,6 +68,17 @@ angular.module('lepayglobleApp')
                          });
                          return deferred.promise;
                      },
+                     getOrderStatistic: function (orderCriteria) {
+                         var deferred = $q.defer();
+                         $http.post('/api/offLineOrder/statistic', orderCriteria, {
+                             headers: {
+                                 'Content-Type': 'application/json'
+                             }
+                         }).success(function (response) {
+                             deferred.resolve(response);
+                         });
+                         return deferred.promise;
+                     },
                      hasValidToken: function () {
                          var token = this.getToken();
                          return !!token;

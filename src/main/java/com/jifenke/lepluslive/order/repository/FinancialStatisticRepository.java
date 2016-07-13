@@ -21,7 +21,7 @@ public interface FinancialStatisticRepository extends JpaRepository<FinancialSta
 
     Page findAll(Specification<FinancialStatistic> financialClause, Pageable pageRequest);
 
-    @Query(value = "select sum(transfer_price) from financial_statistic where merchant_id = ?1",nativeQuery = true)
+    @Query(value = "select sum(transfer_price) from financial_statistic where merchant_id = ?1 and state = 0",nativeQuery = true)
     Long countTransfering(Long id);
 
     List<FinancialStatistic> findAllByMerchantAndBalanceDateBetweenOrderByBalanceDate(

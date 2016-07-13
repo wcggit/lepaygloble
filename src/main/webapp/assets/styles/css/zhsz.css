@@ -1,6 +1,11 @@
 .content{height: 100vh}
-.content .ttl{margin:40px 0 40px 10px;padding-left: 10px;border-left: solid 3px #fb991a;}
-.content .row{margin: 40px 0}
+.content .ttl{margin:30px 0 30px 10px;padding-left: 10px;border-left: solid 3px #fb991a;font-size: 16px}
+.content .row{margin: 30px 0}
 .changePassword{cursor: pointer;}
-#changePassword label{position: relative;text-align: left;width: 20%;}
+#changePassword label{position: relative;text-align: left;width: 17%;}
 #changePassword label:before{content: "*";color: red;position: absolute;left: 0px;top: 10px;}
+#changePassword .label-last:before{content: '\20' !important;}
+.zhsz .panel-body{padding: 0 15px}
+.zhsz .changePassword{margin-left: 34px}
+.tishi{color: #909090;margin-top: 10px}
+.zhsz{}

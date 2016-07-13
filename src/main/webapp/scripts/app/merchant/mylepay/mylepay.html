@@ -1,112 +1,213 @@
-<div class="container-fluid content">
-    <p class="ttl">收入概览</p>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="srgl-div">
-                <div class="srgl-div-left srgl-div-left1">
-                    <div class="srgl-icon srgl-icon1"></div>
+<div class="container main-content wdlf">
+
+    <div class="container-fluid content" style="height: 100%">
+        <p class="ttl">收入概览</p>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="srgl-div">
+                    <div class="srgl-div-left srgl-div-left1">
+                        <div class="srgl-icon srgl-icon1"></div>
+                    </div>
+                    <div class="srgl-div-right">
+                        <h5>转账中金额</h5>
+                        <h2 ng-bind="'¥'+srgl.firNum"></h2>
+                    </div>
                 </div>
-                <div class="srgl-div-right">
-                    <h5>转账中金额</h5>
-                    <h2 ng-bind="'¥'+srgl.firNum"></h2>
+            </div>
+            <div class="col-md-3">
+                <div class="srgl-div">
+                    <div class="srgl-div-left srgl-div-left2">
+                        <div class="srgl-icon srgl-icon2"></div>
+                    </div>
+                    <div class="srgl-div-right">
+                        <h5>累计到账</h5>
+                        <h2 ng-bind="'¥'+srgl.secNum"></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="srgl-div">
+                    <div class="srgl-div-left srgl-div-left3">
+                        <div class="srgl-icon srgl-icon3"></div>
+                    </div>
+                    <div class="srgl-div-right">
+                        <h5>可用佣金</h5>
+                        <h2 ng-bind="'¥'+srgl.thirNum"></h2>
+                        <p class="clearfix"><a class="pull-right tx" ng-click="tx()">提现</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="srgl-div">
+                    <div class="srgl-div-left srgl-div-left4">
+                        <div class="srgl-icon srgl-icon4"></div>
+                    </div>
+                    <div class="srgl-div-right">
+                        <h5>累计佣金</h5>
+                        <h2 ng-bind="'¥'+srgl.forNum"></h2>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="srgl-div">
-                <div class="srgl-div-left srgl-div-left2">
-                    <div class="srgl-icon srgl-icon2"></div>
+        <div class="fenge fenge1"></div>
+        <p class="ttl">账单明细</p>
+        <ul class="nav nav-tabs">
+            <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab()"><a>今日账单</a></li>
+            <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab()"><a>本月账单</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane" ng-class="{active:currentTab0}">
+                <div class="row">
+                    <div class="col-md-3">
+                        <p>{{day.count}}</p>
+                        <p>交易笔数</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p>¥{{day.sales}}</p>
+                        <p>销售金额</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p>¥{{day.commission}}</p>
+                        <p>手续费</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p>¥{{day.trueSales}}</p>
+                        <p>实际收入</p>
+                    </div>
                 </div>
-                <div class="srgl-div-right">
-                    <h5>累计到账</h5>
-                    <h2 ng-bind="'¥'+srgl.secNum"></h2>
+            </div>
+            <div class="tab-pane" ng-class="{active:currentTab1}">
+                <div class="row">
+                    <div class="col-md-3">
+                        <p>{{month.count}}</p>
+                        <p>交易笔数</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p>¥{{month.sales}}</p>
+                        <p>销售金额</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p>¥{{month.commission}}</p>
+                        <p>手续费</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p>¥{{month.trueSales}}</p>
+                        <p>实际收入</p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="srgl-div">
-                <div class="srgl-div-left srgl-div-left3">
-                    <div class="srgl-icon srgl-icon3"></div>
-                </div>
-                <div class="srgl-div-right">
-                    <h5>可用佣金</h5>
-                    <h2 ng-bind="'¥'+srgl.thirNum"></h2>
-                    <p class="clearfix"><a class="pull-right tx">提现</a></p>
+        <div class="fenge fenge2"></div>
+        <p class="ttl">日交易收入趋势</p>
+        <div class="panel panel-default" style="padding-bottom: 50px">
+            <div class="panel-heading clearfix">
+                <div class="col-md-3 timePicker myPay-picker pull-right">
+                    <input type="text" id="timePicker0" class="form-control">
+                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="srgl-div">
-                <div class="srgl-div-left srgl-div-left4">
-                    <div class="srgl-icon srgl-icon4"></div>
-                </div>
-                <div class="srgl-div-right">
-                    <h5>累计佣金</h5>
-                    <h2 ng-bind="'¥'+srgl.forNum"></h2>
+            <div class="panel-body rjysr-panel-body">
+                <div>
+                    <div e-chart ui-options='{
+                    tooltip: {show: true},
+                    legend: {
+                        data: ["日交易收入"]
+                    },
+                    xAxis: [{
+                        nameTextStyle:{
+                            color:"#FB991A"
+                        },
+                        name: "时间",
+                        type: "category",
+                        splitLine:{
+                            show:false
+                        },
+                        splitArea:{
+                            show:false
+                        },
+                        axisLine:{
+                            lineStyle:{
+                                color:["#6b6b6b"],
+                                width:"1"
+                            }
+                        },
+                        data: {{item}}
+                    }],
+                    yAxis: [{
+                        nameTextStyle:{
+                            color:"#FB991A"
+                        },
+                        type: "value",
+                        name: "金额",
+                        splitLine:{
+                            show:false
+                        },
+                        splitArea:{
+                            show:false
+                        },
+                        axisLine:{
+                            lineStyle:{
+                                color:["#6b6b6b"],
+                                width:"1"
+                            }
+                        }
+                    }],
+                    series: [{
+                        name: "日交易收入",
+                        type: "line",
+                        itemStyle:{
+                            normal:{
+                                color:"#FB991A",
+                                lineStyle:{
+                                    color:"#FB991A",
+                                    borderColor:"#FB991A"
+                                }
+                            }
+                        },
+                        data: {{data}}
+                    }]
+                }' style="height: 400px;width: 100%;"></div>
                 </div>
             </div>
         </div>
     </div>
+    <!--提现提示框-->
+    <div class="modal fade" id="tx">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">提现余额 <span>佣金余额：<font color="#fb991a">{{srgl.thirNum}}</font>元</span></h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="inputPassword1" class="col-sm-3 col-sm-offset-1 control-label">提现金额</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputPassword1" placeholder="请输入金额">
 
-    <p class="ttl">账单明细</p>
-    <ul class="nav nav-tabs">
-        <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab()"><a>今日账单</a></li>
-        <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab()"><a>本月账单</a></li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane" ng-class="{active:currentTab0}">
-            <div class="row">
-                <div class="col-md-3">
-                    <p>{{day.count}}</p>
-                    <p>交易笔数</p>
-                </div>
-                <div class="col-md-3">
-                    <p>¥{{day.sales}}</p>
-                    <p>销售金额</p>
-                </div>
-                <div class="col-md-3">
-                    <p>¥{{day.commission}}</p>
-                    <p>手续费</p>
-                </div>
-                <div class="col-md-3">
-                    <p>¥{{day.trueSales}}</p>
-                    <p>实际收入</p>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane" ng-class="{active:currentTab1}">
-            <div class="row">
-                <div class="col-md-3">
-                    <p>{{month.count}}</p>
-                    <p>交易笔数</p>
-                </div>
-                <div class="col-md-3">
-                    <p>¥{{month.sales}}</p>
-                    <p>销售金额</p>
-                </div>
-                <div class="col-md-3">
-                    <p>¥{{month.commission}}</p>
-                    <p>手续费</p>
-                </div>
-                <div class="col-md-3">
-                    <p>¥{{month.trueSales}}</p>
-                    <p>实际收入</p>
-                </div>
-            </div>
-        </div>
-    </div>
+                            </div>
+                            <div class="col-sm-3"><span class="ts">至少提现200元</span></div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
+                            <div class="col-sm-7">
+                                <p class="text-muted" class="form-control">xxxxxxxxxxxxxxxxxxx{{bank}}</p>
+                                <p class="text-muted" class="form-control">{{payee}}</p>
+                            </div>
 
-    <p class="ttl">日交易收入趋势</p>
-    <div class="panel panel-default" style="padding-bottom: 50px">
-        <div class="panel-heading clearfix">
-            <div class='input-group date date-click pull-right'>
-                <input class="form-control date0" type="daterange" format="YYYY/MM/DD" ng-model="dates1" ng-click="show()" ng-controller="SampleCtrl1" ranges="ranges"/>
-            </div>
-        </div>
-        <div class="panel-body rjysr-panel-body">
-            <div ng-controller="lineCtrl">
-                <line id="main" legend="legend" item="item" data="data"></line>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="clearfix">
+                        <button type="button" class="btn btn-warning pull-left" ng-class="{disabled: srgl.thirNum<=200}">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<script src="assets/styles/js/echarts-all.js"></script>
+

@@ -1,5 +1,6 @@
 <!--<div ng-cloak>-->
-        <div class="container-fluid">
+
+        <div class="container-fluid shouye">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">
                     <img alt="Brand" src="/assets/styles/images/shouye/logo.png">
@@ -8,8 +9,8 @@
             <div class="collapse navbar-collapse pull-right" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <button class="btn btn-warning" style="margin-top: 8px" ng-click="login()" ng-if="!isAuthenticated">商户登陆</button>
-                        <button class="btn btn-warning" style="margin-top: 8px" ng-click="stateChange()" ng-if="isAuthenticated">商户入口</button>
+                        <button class="btn btn-warning shouye-button" ng-click="login()" ng-if="!isAuthenticated">商户登陆</button>
+                        <button class="btn btn-warning" style="margin-top: 8px;" ng-click="stateChange()" ng-if="isAuthenticated">商户入口</button>
                     </li>
                 </ul>
                 <div class="pull-right">
@@ -23,7 +24,9 @@
         </div>
     <div class="container-fluid shouye-container">
         <div class="container-fluid sy-banner banner1">
-            <button class="btn btn-warning" onclick="window.open('http://form.mikecrm.com/F4s2fS')">快速接入</button>
+            <div class="banner1-inner">
+                <button class="btn btn-warning" onclick="window.open('http://form.mikecrm.com/F4s2fS')">快速接入</button>
+            </div>
         </div>
         <div class="container-fluid sy-banner banner2"></div>
         <div class="container-fluid sy-banner banner3"></div>

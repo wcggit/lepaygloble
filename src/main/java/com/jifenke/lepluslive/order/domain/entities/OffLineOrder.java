@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -20,188 +21,190 @@ import javax.persistence.Table;
 @Table(name = "OFF_LINE_ORDER")
 public class OffLineOrder {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  private String orderSid = MvUtil.getOrderNumber();
+    private String orderSid = MvUtil.getOrderNumber();
 
-  private Date createdDate;
+    private Date createdDate;
 
-  private Date completeDate;
+    private Date completeDate;
 
-  @ManyToOne
-  private LeJiaUser leJiaUser;
 
-  @ManyToOne
-  private Merchant merchant;
+    @ManyToOne
+    private LeJiaUser leJiaUser;
 
-  @ManyToOne
-  private PayWay payWay;
+    @ManyToOne
+    private Merchant merchant;
 
-  private Long totalPrice = 0L;
+    @ManyToOne
+    private PayWay payWay;
 
-  private Long truePay = 0L;
+    private Long totalPrice = 0L;
 
-  private Long ljCommission = 0L; //乐加佣金
+    private Long truePay = 0L;
 
-  private Long trueScore = 0L;
+    private Long ljCommission = 0L; //乐加佣金
 
-  private Long wxCommission = 0L; //微信手续费
+    private Long trueScore = 0L;
 
-  private Long rebate = 0L; //返利红包
+    private Long wxCommission = 0L; //微信手续费
 
-  private Long scoreB = 0L; //发放积分
+    private Long rebate = 0L; //返利红包
 
-  private Integer state = 0;
+    private Long scoreB = 0L; //发放积分
 
-  private Long transferMoney; //每笔应该转给商户的金额
+    private Integer state = 0;
 
-  private Integer rebateWay; //返利方式,如果为0 代表非会员订单或者会员在非签约商家消费 则只返b积分 如果为1 代表会员订单
+    private Long transferMoney; //每笔应该转给商户的金额
 
-  private String lepayCode = MvUtil.getLePayCode();
+    private Integer rebateWay; //返利方式,如果为0 代表非会员订单或者会员在非签约商家消费 则只返b积分 如果为1 代表会员订单
 
-  public String getLepayCode() {
-    return lepayCode;
-  }
+    private String lepayCode = MvUtil.getLePayCode();
 
-  public void setLepayCode(String lepayCode) {
-    this.lepayCode = lepayCode;
-  }
 
-  public Integer getRebateWay() {
-    return rebateWay;
-  }
+    public String getLepayCode() {
+        return lepayCode;
+    }
 
-  public void setRebateWay(Integer rebateWay) {
-    this.rebateWay = rebateWay;
-  }
+    public void setLepayCode(String lepayCode) {
+        this.lepayCode = lepayCode;
+    }
 
-  public Long getTransferMoney() {
-    return transferMoney;
-  }
+    public Integer getRebateWay() {
+        return rebateWay;
+    }
 
-  public void setTransferMoney(Long transferMoney) {
-    this.transferMoney = transferMoney;
-  }
+    public void setRebateWay(Integer rebateWay) {
+        this.rebateWay = rebateWay;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Long getTransferMoney() {
+        return transferMoney;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setTransferMoney(Long transferMoney) {
+        this.transferMoney = transferMoney;
+    }
 
-  public String getOrderSid() {
-    return orderSid;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setOrderSid(String orderSid) {
-    this.orderSid = orderSid;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public Date getCreatedDate() {
-    return createdDate;
-  }
+    public String getOrderSid() {
+        return orderSid;
+    }
 
-  public void setCreatedDate(Date createdDate) {
-    this.createdDate = createdDate;
-  }
+    public void setOrderSid(String orderSid) {
+        this.orderSid = orderSid;
+    }
 
-  public Date getCompleteDate() {
-    return completeDate;
-  }
+    public Date getCreatedDate() {
+        return createdDate;
+    }
 
-  public void setCompleteDate(Date completeDate) {
-    this.completeDate = completeDate;
-  }
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 
-  public LeJiaUser getLeJiaUser() {
-    return leJiaUser;
-  }
+    public Date getCompleteDate() {
+        return completeDate;
+    }
 
-  public void setLeJiaUser(LeJiaUser leJiaUser) {
-    this.leJiaUser = leJiaUser;
-  }
+    public void setCompleteDate(Date completeDate) {
+        this.completeDate = completeDate;
+    }
 
-  public Merchant getMerchant() {
-    return merchant;
-  }
+    public LeJiaUser getLeJiaUser() {
+        return leJiaUser;
+    }
 
-  public void setMerchant(Merchant merchant) {
-    this.merchant = merchant;
-  }
+    public void setLeJiaUser(LeJiaUser leJiaUser) {
+        this.leJiaUser = leJiaUser;
+    }
 
-  public PayWay getPayWay() {
-    return payWay;
-  }
+    public Merchant getMerchant() {
+        return merchant;
+    }
 
-  public void setPayWay(PayWay payWay) {
-    this.payWay = payWay;
-  }
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
 
-  public Long getTotalPrice() {
-    return totalPrice;
-  }
+    public PayWay getPayWay() {
+        return payWay;
+    }
 
-  public void setTotalPrice(Long totalPrice) {
-    this.totalPrice = totalPrice;
-  }
+    public void setPayWay(PayWay payWay) {
+        this.payWay = payWay;
+    }
 
-  public Long getTruePay() {
-    return truePay;
-  }
+    public Long getTotalPrice() {
+        return totalPrice;
+    }
 
-  public void setTruePay(Long truePay) {
-    this.truePay = truePay;
-  }
+    public void setTotalPrice(Long totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
-  public Long getLjCommission() {
-    return ljCommission;
-  }
+    public Long getTruePay() {
+        return truePay;
+    }
 
-  public void setLjCommission(Long ljCommission) {
-    this.ljCommission = ljCommission;
-  }
+    public void setTruePay(Long truePay) {
+        this.truePay = truePay;
+    }
 
-  public Long getTrueScore() {
-    return trueScore;
-  }
+    public Long getLjCommission() {
+        return ljCommission;
+    }
 
-  public void setTrueScore(Long trueScore) {
-    this.trueScore = trueScore;
-  }
+    public void setLjCommission(Long ljCommission) {
+        this.ljCommission = ljCommission;
+    }
 
-  public Long getWxCommission() {
-    return wxCommission;
-  }
+    public Long getTrueScore() {
+        return trueScore;
+    }
 
-  public void setWxCommission(Long wxCommission) {
-    this.wxCommission = wxCommission;
-  }
+    public void setTrueScore(Long trueScore) {
+        this.trueScore = trueScore;
+    }
 
-  public Long getRebate() {
-    return rebate;
-  }
+    public Long getWxCommission() {
+        return wxCommission;
+    }
 
-  public void setRebate(Long rebate) {
-    this.rebate = rebate;
-  }
+    public void setWxCommission(Long wxCommission) {
+        this.wxCommission = wxCommission;
+    }
 
-  public Long getScoreB() {
-    return scoreB;
-  }
+    public Long getRebate() {
+        return rebate;
+    }
 
-  public void setScoreB(Long scoreB) {
-    this.scoreB = scoreB;
-  }
+    public void setRebate(Long rebate) {
+        this.rebate = rebate;
+    }
 
-  public Integer getState() {
-    return state;
-  }
+    public Long getScoreB() {
+        return scoreB;
+    }
 
-  public void setState(Integer state) {
-    this.state = state;
-  }
+    public void setScoreB(Long scoreB) {
+        this.scoreB = scoreB;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 }

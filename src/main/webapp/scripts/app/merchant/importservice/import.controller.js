@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('MerchantConfigController', function ($scope, $http, $rootScope, $location,Principal,Auth) {
+    .controller('ImportController', function ($scope, $http, $rootScope, $location,Principal,Auth) {
                     Principal.identity().then(function (account) {
                         $scope.account = account;
                     });
@@ -23,6 +23,12 @@ angular.module('lepayglobleApp')
                     $scope.changePassword=function () {
                         $("#changePassword").modal("toggle");
                     }
+
+                    $scope.ljkt=function () {
+                        $("#ljkt").modal("toggle");
+                        $http.get('/api/merchant/open');
+                    }
+
 
                 });
 

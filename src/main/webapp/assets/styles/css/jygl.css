@@ -3,10 +3,10 @@
     height: 100%;
 }
 /*左边按钮*/
-.left-main{width: 200px;height: 100vh;position: absolute;}
+.left-main{width: 200px;height: 100%;position: absolute;}
 .left-menu{
     width: 200px;
-    height: 100vh;
+    height: 100%;
     list-style: none;
     background-color: #f0f0f0;
     position: absolute;
@@ -55,11 +55,24 @@
 .left-menu li span:last-child{
     line-height: 50px;
     display: inline-block;
+    font-size: 16px;
 }
 .left-menu-icon{
     display: inline-block;
-    padding: 0 30px;
+    padding: 0 20px 0 30px;
     color: #222;
+    font-size: 26px;
+}
+.left-menu-icon1{
+    font-size: 20px;
+}
+.left-menu-icon2{
+    font-size: 24px;
+    padding: 0 20px 0 28px ;
+}
+.left-menu-icon3{
+    font-size: 27px;
+    padding: 3px 21px 0 25px;
 }
 /*右边主要内容*/
 .right-main{
@@ -83,10 +96,7 @@ label{font-weight: normal;color: #222;}
     background: url("../images/jygl/lefuma.png") no-repeat;
     background-size: 100% 100%;
     position: relative;
-    left:0;
-    right: 0;
-    top: 6vw;
-    margin: auto;
+    margin:40px auto 0;
     outline: solid 1px #cccccc;
 }
 .wdlfmMain .rvCode{
@@ -103,7 +113,7 @@ label{font-weight: normal;color: #222;}
     font-size: 24px;
     color: #fff;
     position: absolute;
-    top: 365px;
+    top: 370px;
     left: 0;
     right: 0;
     margin: auto;
@@ -116,9 +126,19 @@ label{font-weight: normal;color: #222;}
     line-height: 35px;
     text-align: center;
     border-radius: 4px;
-    position: relative;
-    left: 0;
-    right:0;
-    margin: auto;
-    top:12vw;
+    /*position: relative;*/
+    /*left: 0;*/
+    /*right:0;*/
+    margin: 20px auto;
+    /*top:10vw;*/
+}
+.btn-check{
+    width: 90px;
+    margin-left: -100px;
+}
+.btn-check2{
+    width: 90px;
+}
+.tab-name{
+    font-size: 16px !important;
 }

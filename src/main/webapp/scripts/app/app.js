@@ -1,15 +1,96 @@
 'use strict';
 
 angular.module('lepayglobleApp', ['LocalStorageModule',
-                                  'ngResource', 'ngCookies', 'ngAria', 'ngCacheBuster',
-                                  'ngFileUpload',
+                                  'ngResource',
+                                  //'ngCookies',
+                                  //'ngAria',
+                                  'ngCacheBuster',
+                                  //'ngFileUpload',
     // jhipster-needle-angularjs-add-module JHipster will add new module here
-                                  'ui.bootstrap', 'ui.router', 'infinite-scroll',
-                                  'angular-loading-bar', 'ngBootstrap', 'ngJsonExportExcel'])//
+                                  'ui.bootstrap', 'ui.router',
+                                  //'infinite-scroll',
+                                  'angular-loading-bar', 'ngBootstrap'])//
 
     .run(function ($rootScope, $location,$window, $http, $state, Auth, Principal, ENV, VERSION) {
              $rootScope.disappear = function () {
                  $rootScope.personal = false;
+             }
+
+             $rootScope.timePickerObj={
+                 "ranges": {
+                     "今天": [moment().format("YYYY/MM/DD 00:00:00"), moment().format("YYYY/MM/DD 23:59:59")],
+                     "昨天": [moment().subtract('days', 1).format("YYYY/MM/DD 00:00:00"), moment().subtract('days', 1).format("YYYY/MM/DD 23:59:59")],
+                     "最近七天": [moment().subtract('days', 6).format("YYYY/MM/DD 00:00:00"), moment().format("YYYY/MM/DD 23:59:59")],
+                     "最近30天": [moment().subtract('days', 29).format("YYYY/MM/DD 00:00:00"), moment().format("YYYY/MM/DD 23:59:59")]
+                 },
+                 "locale": {
+                     "direction": "ltr",
+                     "format": "YYYY/MM/DD HH:mm:ss",
+                     "separator": " - ",
+                     "applyLabel": "确认",
+                     "cancelLabel": "取消",
+                     "fromLabel": "从",
+                     "toLabel": "至",
+                     "customRangeLabel": "自定义",
+                     "daysOfWeek": [
+                         "日",
+                         "一",
+                         "二",
+                         "三",
+                         "四",
+                         "五",
+                         "六"
+                     ],
+                     "monthNames": [
+                         "一月",
+                         "二月",
+                         "三月",
+                         "四月",
+                         "五月",
+                         "六月",
+                         "七月",
+                         "八月",
+                         "九月",
+                         "十月",
+                         "十一月",
+                         "十二月"
+                     ],
+                     "firstDay": 1
+                 },
+                 "locale1": {
+                     "direction": "ltr",
+                     "format": "YYYY/MM/DD",
+                     "separator": " - ",
+                     "applyLabel": "确认",
+                     "cancelLabel": "取消",
+                     "fromLabel": "从",
+                     "toLabel": "至",
+                     "customRangeLabel": "自定义",
+                     "daysOfWeek": [
+                         "日",
+                         "一",
+                         "二",
+                         "三",
+                         "四",
+                         "五",
+                         "六"
+                     ],
+                     "monthNames": [
+                         "一月",
+                         "二月",
+                         "三月",
+                         "四月",
+                         "五月",
+                         "六月",
+                         "七月",
+                         "八月",
+                         "九月",
+                         "十月",
+                         "十一月",
+                         "十二月"
+                     ],
+                     "firstDay": 1
+                 }
              }
 
              $rootScope.ENV = ENV;
@@ -26,7 +107,7 @@ angular.module('lepayglobleApp', ['LocalStorageModule',
 
              $rootScope.$on('$stateChangeSuccess',
                             function (event, toState, toParams, fromState, fromParams) {
-                                var titleKey = 'lepaygloble';
+                                var titleKey = '乐加支付';
 
                                 // Remember previous state unless we've been redirected to login or
                                 // we've just reset the state memory after logout. If we're

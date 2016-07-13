@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.weixin.domain.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 
 import java.util.Date;
@@ -45,6 +46,7 @@ public class WeiXinUser {
   private Integer hongBaoState = 0; //红包状态 0 未开红包, 1 已开红包;
 
   @OneToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
   private LeJiaUser leJiaUser; //真实的乐加会员
 
 

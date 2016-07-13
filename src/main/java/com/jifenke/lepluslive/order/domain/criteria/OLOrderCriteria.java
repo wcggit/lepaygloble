@@ -15,9 +15,19 @@ public class OLOrderCriteria {
 
     private Merchant merchant;
 
+    private String orderSid;
+
   private Integer offset;
 
-  public Integer getOffset() {
+    public String getOrderSid() {
+        return orderSid;
+    }
+
+    public void setOrderSid(String orderSid) {
+        this.orderSid = orderSid;
+    }
+
+    public Integer getOffset() {
     return offset;
   }
 

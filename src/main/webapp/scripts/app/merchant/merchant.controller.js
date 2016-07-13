@@ -46,9 +46,7 @@ angular.module('lepayglobleApp')
                     $scope.onClickTab = function (tab) {
                         $scope.currentTab = tab.state;
                         $state.go(tab.state);
-                        if ($scope.currentTab == "wdlf") {
-                            $('body').css({background: '#f3f3f3'});
-                            $('.main-content').css({height: 'auto'})
+                        if ($scope.currentTab == "mylepay") {
                         } else {
                             $('body').css({background: '#fff'});
                             $('.main-content').css({height: '100vh'})
@@ -56,8 +54,7 @@ angular.module('lepayglobleApp')
                     };
                     $scope.szClick = function () {
                         $scope.currentTab = "";
-                        $('body').css({background: '#f3f3f3'});
-                        $('.main-content').css({height: '100vh'})
+
                         $state.go('merchant-config')
                     }
                     $scope.logout = function () {
@@ -70,21 +67,3 @@ angular.module('lepayglobleApp')
                     $('.dropdown').dropdown('toggle')
                 });
 
-angular.module('lepayglobleApp')
-    .controller('SampleCtrl1', function($scope, $filter) {
-                    $scope.dates1 = {
-                        startDate: moment().subtract(1, 'day'),
-                        endDate: moment().subtract(1, 'day'),
-                        timePicker:true
-                    };
-                    $scope.ranges = {
-                        '今天': [moment(), moment()],
-                        '昨天': [moment().subtract('days', 1), moment().subtract('days', 1)],
-                        '最近7天': [moment().subtract('days', 7), moment()],
-                        '最近30天': [moment().subtract('days', 30), moment()],
-                        '这个月': [moment().startOf('month'), moment().endOf('month')]
-                    };
-                    $scope.show=function () {
-                        alert.$scope.dates0;
-                    }
-                });

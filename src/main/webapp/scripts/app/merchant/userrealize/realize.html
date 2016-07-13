@@ -1,8 +1,11 @@
-<ul class="left-menu">
-    <li></li>
-    <li ng-class="{active:isActiveTab(tab.state)}" ng-repeat="tab in lefts" ng-click="onClickTab(tab)">
-        <span ng-class="tab.pic"></span>
-        <span ng-bind="tab.name"></span>
-    </li>
-</ul>
-<div class="right-main" ui-view="realizeContent"></div>
+<div class="container main-content">
+
+    <ul class="left-menu">
+        <li></li>
+        <li ng-class="{active:isActiveTab(tab.state)}" ng-repeat="tab in lefts" ng-click="onClickTab(tab)">
+            <span ng-class="tab.pic"></span>
+            <span ng-bind="tab.name"></span>
+        </li>
+    </ul>
+    <div class="right-main" ui-view="realizeContent"></div>
+</div>

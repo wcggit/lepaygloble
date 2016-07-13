@@ -1,5 +1,22 @@
 angular.module('lepayglobleApp')
-    .controller('TradeListController', function ($scope, $state, $location, $q, Trade) {
+    .controller('TradeListController', function ($scope, $state, $location, $q, Trade, $rootScope) {
+                    $('#timePicker1').daterangepicker({
+                                                          "autoApply": true,
+                                                          "showDropdowns": true,
+                                                          //"showWeekNumbers": true,
+                                                          //"showISOWeekNumbers": true,
+                                                          //"timePicker": true,
+                                                          "timePicker24Hour": true,
+                                                          "timePickerSeconds": true,
+                                                          "ranges": $rootScope.timePickerObj.ranges,
+                                                          "locale": $rootScope.timePickerObj.locale1,
+                                                          "alwaysShowCalendars": true,
+                                                          "startDate": moment().subtract(1, 'day'),
+                                                          "endDate": moment().subtract(1, 'day'),
+                                                          "opens": "right"
+                                                      }, function (start, end, label) {
+                    });
+                    $("#timePicker1").val("");
 
                     var currentPage = null;
                     var financialCriteria = {};
@@ -16,6 +33,7 @@ angular.module('lepayglobleApp')
                             $scope.totalPages = page.totalPages;
                         });
                     }
+
                     $scope.loadPage = function (page) {
                         if (page == 0) {
                             return;
@@ -23,10 +41,10 @@ angular.module('lepayglobleApp')
                         if (page > $scope.totalPages) {
                             return;
                         }
-                        if (currentPage == $scope.totalPages&&page==$scope.totalPages) {
+                        if (currentPage == $scope.totalPages && page == $scope.totalPages) {
                             return;
                         }
-                        if (currentPage == 1&&page==1) {
+                        if (currentPage == 1 && page == 1) {
                             return;
                         }
                         currentPage = page;
@@ -34,28 +52,34 @@ angular.module('lepayglobleApp')
                         loadContent();
                     };
 
-                    $scope.searchByDate = function(){
-                        var dateStr = $(".date0").val();
-                        alert(dateStr);
-                        var startDate =dateStr[0].replace(/-/g, "/");
-                        var endDate = dateStr[1].replace(/-/g, "/");
+                    $scope.searchByDate = function () {
+
+                        var dateStr = $("#timePicker1").val();
+                        if (dateStr == "" || dateStr == null) {
+                            alert("请输入时间");
+                            return;
+                        }
+                        var startDate = dateStr.split("-")[0];
+                        var endDate = dateStr.split("-")[1].trim();
+                        financialCriteria.startDate = startDate;
+                        financialCriteria.endDate = endDate;
+                        financialCriteria.offset = 1;
+                        currentPage = 1;
+                        loadContent();
                     }
 
-                    $scope.exportExcel = function(){
-                        if (financialCriteria.startDate == null) {
-                            financialCriteria.startDate = null;
+                    $scope.exportExcel = function () {
+                        var data = "?";
+                        if (financialCriteria.startDate != null) {
+                            data+="startDate="+financialCriteria.startDate+"&";
+                            data+="endDate="+financialCriteria.endDate;
                         }
-                        if (financialCriteria.endDate == null) {
-                            financialCriteria.endDate = null;
-                        }
-                        if (financialCriteria.state == null) {
-                            financialCriteria.state = null;
-                        }
+                        location.href = "/api/financial/export"+data;
+                    }
 
-                        if (financialCriteria.merchant == null) {
-                            financialCriteria.merchant = null;
-                        }
-                        location.href = "/api/financial/export";
+                    $scope.showDetail = function (date) {
+                        $scope.$parent.currentTab = "orderList";
+                        $state.go("orderList", {date: date});
                     }
 
                 });
