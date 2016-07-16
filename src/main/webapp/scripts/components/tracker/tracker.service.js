@@ -27,6 +27,11 @@ angular.module('lepayglobleApp')
                 stompClient.connect(headers, function(frame) {
                     connected.resolve("success");
                     sendActivity();
+                    connected.promise.then(function() {
+                        subscriber = stompClient.subscribe("/user/wcg/reply", function(data) {
+                            alert(1);
+                        });
+                    }, null, null);
                     if (!alreadyConnectedOnce) {
                         $rootScope.$on('$stateChangeStart', function (event) {
                             sendActivity();
@@ -42,6 +47,9 @@ angular.module('lepayglobleApp')
                     });
                 }, null, null);
             },
+            //subscribeOffLineOrder: function() {
+            //
+            //},
             unsubscribe: function() {
                 if (subscriber != null) {
                     subscriber.unsubscribe();

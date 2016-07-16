@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.order.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.global.websocket.dto.ActivityDTO;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
@@ -13,6 +14,8 @@ import com.jifenke.lepluslive.order.service.OffLineOrderService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
 import org.springframework.data.domain.Page;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,6 +50,9 @@ public class OrderController {
 
     @Inject
     private OrderViewExcel orderViewExcel;
+
+    @Inject
+    SimpMessageSendingOperations messagingTemplate;
 
 
     @RequestMapping(value = "/order/todayOrderDetail", method = RequestMethod.GET)
@@ -161,7 +167,7 @@ public class OrderController {
 
         Long shareCount = offLineOrderService.countShareByMerchant(merchant);
 
-        map.put("shareCount",shareCount);
+        map.put("shareCount", shareCount);
 
         return LejiaResult.ok(map);
     }
@@ -180,20 +186,17 @@ public class OrderController {
             merchantWallet =
             merchantService.findMerchantWalletByMerchant(merchant);
 
-
-
-        Long currentBind =  leJiaUserService.countBindMerchant(merchant);
+        Long currentBind = leJiaUserService.countBindMerchant(merchant);
 
         Map map = new HashMap<>();
 
-        map.put("available",merchantWallet.getAvailableBalance());
-        map.put("totalCommission",merchantWallet.getTotalMoney());
-        map.put("userLimit",merchant.getUserLimit());
-        map.put("currentBind",currentBind);
+        map.put("available", merchantWallet.getAvailableBalance());
+        map.put("totalCommission", merchantWallet.getTotalMoney());
+        map.put("userLimit", merchant.getUserLimit());
+        map.put("currentBind", currentBind);
 
         return LejiaResult.ok(map);
     }
-
 
 
     @RequestMapping(value = "/offLineOrder/share", method = RequestMethod.POST)
@@ -225,9 +228,9 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/offLineOrder/export", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    ModelAndView exportExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,@RequestParam(required = false) String orderSid) {
+    public ModelAndView exportExcel(@RequestParam(required = false) String startDate,
+                                    @RequestParam(required = false) String endDate,
+                                    @RequestParam(required = false) String orderSid) {
         OLOrderCriteria olOrderCriteria = new OLOrderCriteria();
         olOrderCriteria.setStartDate(startDate);
         olOrderCriteria.setEndDate(endDate);
@@ -241,10 +244,17 @@ public class OrderController {
             merchantService
                 .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
         olOrderCriteria.setMerchant(merchantUserByName.getMerchant());
-        Page page = offLineOrderService.findOrderByPage(olOrderCriteria,10000);
+        Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 10000);
         Map map = new HashMap();
         map.put("orderList", page.getContent());
         return new ModelAndView(orderViewExcel, map);
+    }
+
+    @RequestMapping(value = "/offLineOrder/message/{id}", method = RequestMethod.GET)
+    public void sendOffLineOrderToMerchant(@PathVariable String id) {
+        ActivityDTO activityDTO = new ActivityDTO();
+        activityDTO.setPage("logout");
+        messagingTemplate.convertAndSendToUser("wcg", "/reply", activityDTO);
     }
 
 }

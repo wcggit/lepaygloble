@@ -15,13 +15,13 @@ angular.module('lepayglobleApp')
                     }
                 },
                 resolve: {
-                    
+
                 },
                 onEnter: function(Tracker) {
                     Tracker.subscribe();
                 },
                 onExit: function(Tracker) {
                     Tracker.unsubscribe();
-                },
+                }
             });
     });

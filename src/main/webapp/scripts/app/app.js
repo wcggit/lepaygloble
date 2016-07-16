@@ -2,7 +2,7 @@
 
 angular.module('lepayglobleApp', ['LocalStorageModule',
                                   'ngResource',
-                                  //'ngCookies',
+                                  'ngCookies',
                                   //'ngAria',
                                   'ngCacheBuster',
                                   //'ngFileUpload',

@@ -209,9 +209,11 @@ public class MerchantController {
             return LejiaResult.ok();
         }catch (Exception e){
             return LejiaResult.build(400,"密码不正确");
-
         }
     }
+
+
+
 
 
 }

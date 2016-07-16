@@ -2,7 +2,7 @@
 
 angular.module('lepayglobleApp')
     .factory('AuthServerProvider',
-             function loginService($http, localStorageService, $window) {
+             function loginService($http, localStorageService, $window,Tracker) {
                  return {
                      login: function (credentials) {
                          var data = 'userRole=' + encodeURIComponent("merchant")
@@ -18,7 +18,7 @@ angular.module('lepayglobleApp')
                          });
                      },
                      logout: function () {
-                         //Tracker.disconnect();
+                         Tracker.disconnect();
                          // logout from the server
                          $http.post('api/logout').success(function (response) {
                              localStorageService.clearAll();
