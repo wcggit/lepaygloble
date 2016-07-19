@@ -3,38 +3,12 @@ angular.module("lepayglobleApp").controller("MyLePayController",
     function ($q, $scope, MyLePay, $rootScope, $http) {
         $('body').css({background: '#f3f3f3'});
         $('.main-content').css({height: 'auto'});
-        // $('#timePicker0').daterangepicker({
-        //     "autoApply": true,
-        //     "showDropdowns": true,
-        //     "showWeekNumbers": true,
-        //     "showISOWeekNumbers": true,
-        //     //"timePicker":
-        //     // true,
-        //     // "timePicker24Hour":
-        //     // true,
-        //     // "timePickerSeconds":
-        //     // true,
-        //     "ranges": $rootScope.timePickerObj.ranges,
-        //     "locale": $rootScope.timePickerObj.locale1,
-        //     "alwaysShowCalendars": true,
-        //     "startDate": moment().subtract(4, 'day'),
-        //     "endDate": moment(),
-        //     "opens": "left"
-        // },
-        // function (start, end,label) {
-        //
-        // });
         $('#timePicker0')
             .val(moment().subtract('day', 4).format('YYYY/MM/DD') + ' - ' + moment().format('YYYY/MM/DD'))
             .daterangepicker({
-                // timePicker: true, //是否显示小时和分钟
-                // timePickerIncrement: 1, //时间的增量，单位为分钟
                 opens : 'left', //日期选择框的弹出位置
                 format : 'YYYY/MM/DD', //控件中from和to 显示的日期格式
                 ranges : {
-                    '最近1小时': [moment().subtract('hours',1), moment()],
-                    '今日': [moment().startOf('day'), moment()],
-                    '昨日': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],
                     '最近7日': [moment().subtract('days', 6), moment()],
                     '最近30日': [moment().subtract('days', 29), moment()]
                 },

@@ -262,7 +262,7 @@
 }
 
 .daterangepicker_end_input {
-  float: left; 
+  float: left;
   padding-left: 11px
 }
 
@@ -276,8 +276,12 @@
     margin-left: 20px;
 }
 .cancelBtn{
-    margin-left: 44px;
+    margin-left: 40px;
 }
 .timePicker i{
     color: #999;
+}
+.daterangepicker.dropdown-menu {
+    height: auto;
+    min-width: auto;
 }
