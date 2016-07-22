@@ -44,7 +44,8 @@
 .collapse .pull-right{
     cursor: pointer;
 }
-.dropdown h6{line-height: 47px}
+.dropdown h6{line-height: 47px;color: #666}
+.dropdown h6 span:first-child{color: #666}
 .dropdown-menu{
     top: 48px;
     padding: 0;

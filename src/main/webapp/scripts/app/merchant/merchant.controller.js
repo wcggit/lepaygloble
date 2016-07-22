@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('MerchantController', function ($scope, $state, $rootScope, $location,Principal,Auth) {
+    .controller('MerchantController', function ($scope, $state, $rootScope, $location,Principal,Auth,$http) {
                     Principal.identity().then(function (account) {
                         $scope.account = account;
                         $scope.isAuthenticated = Principal.isAuthenticated;
@@ -10,7 +10,10 @@ angular.module('lepayglobleApp')
                     $scope.personalClick=function () {
                         $rootScope.personal =!$rootScope.personal;
                         $rootScope.personal=$rootScope.personal;
-                    }
+                    };
+                    $http.get('api/merchant').success(function (response) {
+                        $scope.shopName = response.data.name;
+                    });
                     $scope.headers = [
                         {
                             ttl: "我的乐付",
