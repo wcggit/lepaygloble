@@ -5,10 +5,14 @@ angular.module('lepayglobleApp')
              function loginService($http, localStorageService, $window,Tracker) {
                  return {
                      login: function (credentials) {
-                         var data = 'userRole=' + encodeURIComponent("merchant")
-                                    + '&j_username=' + encodeURIComponent(credentials.username) +
+                         var data = '&j_username=' + encodeURIComponent(credentials.username) +
                                     '&j_password=' + encodeURIComponent(credentials.password) +
                                     '&remember-me=' + credentials.rememberMe + '&submit=Login';
+                         if(credentials.isPartner){
+                             data+='&userRole=' + encodeURIComponent("partner");
+                         }else{
+                             data+='&userRole=' + encodeURIComponent("merchant");
+                         }
                          return $http.post('api/authentication', data, {
                              headers: {
                                  'Content-Type': 'application/x-www-form-urlencoded'

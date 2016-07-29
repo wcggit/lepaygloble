@@ -1,9 +1,12 @@
 package com.jifenke.lepluslive.security;
 
+import com.jifenke.lepluslive.global.config.LoginUser;
 import com.jifenke.lepluslive.jhipster.domain.entities.User;
 import com.jifenke.lepluslive.jhipster.repository.UserRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
+import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.repository.PartnerRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,9 @@ public class LeJiaUserDetailsServiceImpl implements LeJiaUserDetailsService {
     @Inject
     private MerchantUserRepository userRepository;
 
+    @Inject
+    private PartnerRepository partnerRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username)
         throws UsernameNotFoundException {
@@ -43,15 +49,27 @@ public class LeJiaUserDetailsServiceImpl implements LeJiaUserDetailsService {
     public UserDetails loadUserByUsername(String userRole, final String login) {
         log.debug("Authenticating {}", login);
         String lowercaseLogin = login.toLowerCase();
-        Optional<MerchantUser> userFromDatabase = userRepository.findByName(lowercaseLogin);
-        return userFromDatabase.map(user -> {
-            List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-            grantedAuthorities.add(new SimpleGrantedAuthority(userRole));
-            return new org.springframework.security.core.userdetails.User(lowercaseLogin,
-                                                                          user.getPassword(),
-                                                                          grantedAuthorities);
-        }).orElseThrow(() -> new UsernameNotFoundException(
-            "User " + lowercaseLogin + " was not found in the " +
-            "database"));
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+        grantedAuthorities.add(new SimpleGrantedAuthority(userRole));
+        if ("merchant".equals(userRole)) {
+            Optional<MerchantUser> userFromDatabase = userRepository.findByName(lowercaseLogin);
+            return userFromDatabase.map(user -> {
+                return new org.springframework.security.core.userdetails.User(lowercaseLogin,
+                                                                              user.getPassword(),
+                                                                              grantedAuthorities);
+            }).orElseThrow(() -> new UsernameNotFoundException(
+                "User " + lowercaseLogin + " was not found in the " +
+                "database"));
+        } else {
+            Optional<Partner> userFromDatabase = partnerRepository.findByName(lowercaseLogin);
+            return userFromDatabase.map(user -> {
+                return new org.springframework.security.core.userdetails.User(lowercaseLogin,
+                                                                              user.getPassword(),
+                                                                              grantedAuthorities);
+            }).orElseThrow(() -> new UsernameNotFoundException(
+                "User " + lowercaseLogin + " was not found in the " +
+                "database"));
+        }
+
     }
 }

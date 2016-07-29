@@ -38,14 +38,14 @@ angular.module('lepayglobleApp')
                         var isAuthenticated = Principal.isAuthenticated();
 
                         // an authenticated user can't access to login and register pages
-                        if (isAuthenticated && $rootScope.toState.parent === 'account' && ($rootScope.toState.name === 'login' || $rootScope.toState.name === 'register')) {
+                        if (isAuthenticated && $rootScope.toState.parent === 'account' && ($rootScope.toState.name === 'login' || $rootScope.toState.name === 'loginPartner')) {
                             $state.go('home');
                         }
 
                         if ($rootScope.toState.data.authorities && $rootScope.toState.data.authorities.length > 0 && !Principal.hasAnyAuthority($rootScope.toState.data.authorities)) {
                             if (isAuthenticated) {
                                 // user is signed in but not authorized for desired state
-                                $state.go('accessdenied');
+                                $state.go('home');
                             }
                             else {
                                 // user is not authenticated. stow the state they wanted before you

@@ -17,7 +17,11 @@ angular.module('lepayglobleApp')
                     }
                 },
                 resolve: {
-
+                    authorize: ['Auth',
+                                function (Auth) {
+                                    return Auth.authorize();
+                                }
+                    ]
                 }
             });
     });

@@ -1,5 +1,9 @@
 package com.jifenke.lepluslive.merchant.domain.entities;
 
+import com.jifenke.lepluslive.global.config.LoginUser;
+
+import org.apache.catalina.User;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,7 +16,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "MERCHANT_USER")
-public class MerchantUser {
+public class MerchantUser implements LoginUser {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -57,4 +61,9 @@ public class MerchantUser {
   public void setMerchant(Merchant merchant) {
     this.merchant = merchant;
   }
+
+    @Override
+    public String getPwd() {
+        return password;
+    }
 }
