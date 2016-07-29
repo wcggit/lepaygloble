@@ -9,9 +9,11 @@ angular.module('lepayglobleApp')
             isIdentityResolved: function () {
                 return angular.isDefined(_identity);
             },
+            //判断商户是否已登录
             isAuthenticated: function () {
                 return _authenticated;
             },
+            //判断是否认证
             hasAuthority: function (authority) {
                 if (!_authenticated) {
                     return $q.when(false);
@@ -40,6 +42,7 @@ angular.module('lepayglobleApp')
                 _identity = identity;
                 _authenticated = identity !== null;
             },
+            //身份确认
             identity: function (force) {
                 var deferred = $q.defer();
 

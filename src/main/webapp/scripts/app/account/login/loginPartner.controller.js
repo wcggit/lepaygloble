@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('LoginController',
+    .controller('LoginPartnerController',
         function ($rootScope, $scope, $state, $timeout, Auth, Principal) {
             $scope.user = {};
             $scope.errors = {};
