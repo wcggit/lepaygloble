@@ -3,7 +3,7 @@ angular.module('lepayglobleApp')
 
                     Commission.getMerchantCommissionDetail().then(function (response) {
                         var data = response.data;
-                        $scope.available = data.available;
+                        $scope.available = toDecimal(data.available*0.01);
                         $scope.totalCommission = data.totalCommission;
                         $scope.userLimit = data.userLimit;
                         $scope.currentBind = data.currentBind;
@@ -15,6 +15,24 @@ angular.module('lepayglobleApp')
                         }
                         var percent = data.currentBind / data.userLimit * 100;
                         $(".sjgl .progress-bar").css({width: "" + percent + "%"})
+                        //强制保留两位小数
+                        function toDecimal(x) {
+                            var f = parseFloat(x);
+                            if (isNaN(f)) {
+                                return false;
+                            }
+                            var f = Math.round(x*100)/100;
+                            var s = f.toString();
+                            var rs = s.indexOf('.');
+                            if (rs < 0) {
+                                rs = s.length;
+                                s += '.';
+                            }
+                            while (s.length <= rs + 2) {
+                                s += '0';
+                            }
+                            return s;
+                        }
                     });
 
                     Commission.getDayCommissionDetail().then(function (response) {
