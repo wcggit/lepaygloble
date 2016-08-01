@@ -1,0 +1,33 @@
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <img alt="Brand" src="/assets/images/head/logo.png">
+            </a>
+            <a class="navbar-brand" href="#">
+                <span>|</span><span>合伙人平台</span>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse pull-right" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li ng-class="{active:isActiveTab(tab.state)}" ng-click="onClickTab(tab)" ng-repeat="tab in headers">
+                    <a ng-bind="tab.ttl"></a>
+                </li>
+            </ul>
+            <div class="pull-right">
+                <div class="dropdown personalInfo">
+                    <h6 class=" dropdown-toggle" type="button" ng-click="personalClick()">
+                        {{shopName+'&nbsp;(&nbsp;'+account.login+'&nbsp;)&nbsp;'}}
+                        <span class="caret"></span>
+                    </h6>
+                    <ul class="dropdown-menu head-dropdown" ng-class="{show:personal}">
+                        <span class="jiao"></span>
+                        <li ng-click="personalClick()"><span class="iconfont icon-shezhi icon-personal icon-personal1" ng-click="szClick()"></span><a  ng-click="szClick()">账户设置</a></li>
+                        <li><span class="iconfont icon-tuichu icon-personal icon-personal2" ng-click="logout()"></span><a ng-click="logout()">退出登录</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+

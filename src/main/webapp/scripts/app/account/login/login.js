@@ -5,6 +5,7 @@ angular.module('lepayglobleApp')
         $stateProvider
             .state('login', {
                 parent: 'account',
+                params:{data:"show"},
                 url: '/login',
                 data: {
                     authorities: [],
