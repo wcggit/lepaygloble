@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('ImportController', function ($scope, $http, $rootScope, $location,Principal,Auth) {
+    .controller('UserManagerController', function ($scope, $http, $rootScope, $location,Principal,Auth) {
         $('#timePicker1')
         // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' + moment().format('YYYY/MM/DD HH:mm:59'))
             .daterangepicker({
