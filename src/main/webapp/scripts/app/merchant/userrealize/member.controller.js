@@ -15,15 +15,15 @@ angular.module('lepayglobleApp')
                                 '昨日': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],
                                 '最近7日': [moment().subtract('days', 6), moment()],
                                 '最近30日': [moment().subtract('days', 29), moment()]
-                            },
+                            }
                         },function(start, end, label) {});
 
                     var currentPage = 1;
-                    var olOrderCriteria = {};
-                    olOrderCriteria.offset = 1;
+                    var criteria = {};
+                    criteria.offset = 1;
                     getTotalPage();
                     function loadContent(){
-                        Commission.getMerchantBindUserList(olOrderCriteria).then(function (response) {
+                        Commission.getMerchantBindUserList(criteria).then(function (response) {
                             var data = response.data;
                             $scope.page = currentPage;
                             $scope.pulls =data;
@@ -44,13 +44,13 @@ angular.module('lepayglobleApp')
                             return;
                         }
                         currentPage = page;
-                        olOrderCriteria.offset = page;
+                        criteria.offset = page;
                         loadContent();
                     };
 
 
                    function  getTotalPage(){
-                       Commission.getMerchantBindUserTotalPages(olOrderCriteria).then(function (response) {
+                       Commission.getMerchantBindUserTotalPages(criteria).then(function (response) {
                            $scope.totalPages = response.data;
                            loadContent();
                        });
@@ -64,9 +64,9 @@ angular.module('lepayglobleApp')
                         }
                         var startDate = dateStr.split("-")[0].trim();
                         var endDate = dateStr.split("-")[1].trim();
-                        olOrderCriteria.startDate = startDate;
-                        olOrderCriteria.endDate = endDate;
-                        olOrderCriteria.offset = 1;
+                        criteria.startDate = startDate;
+                        criteria.endDate = endDate;
+                        criteria.offset = 1;
                         currentPage = 1;
                         getTotalPage()
                     }

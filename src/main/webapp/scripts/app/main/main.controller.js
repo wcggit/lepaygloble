@@ -24,8 +24,11 @@ angular.module('lepayglobleApp')
             $state.go('loginPartner');
         };
         $scope.stateChange=function(){
-            if(Principal.hasAuthority('merchant')){
+            if(Principal.hasAnyAuthority(['merchant'])){
                 $state.go('merchant');
+            }
+            if(Principal.hasAnyAuthority(['partner'])){
+                $state.go('partner');
             }
         };
     });

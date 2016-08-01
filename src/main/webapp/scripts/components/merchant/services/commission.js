@@ -88,6 +88,28 @@ angular.module('lepayglobleApp')
                          });
                          return deferred.promise;
                      },
+                     getUsersByBindPartner: function (data) {
+                         var deferred = $q.defer();
+                         $http.post('/api/partner/bindUsers', data, {
+                             headers: {
+                                 'Content-Type': 'application/json'
+                             }
+                         }).success(function (response) {
+                             deferred.resolve(response);
+                         });
+                         return deferred.promise;
+                     },
+                     getTotalPagesByBindPartner: function (data) {
+                         var deferred = $q.defer();
+                         $http.post('/api/partner/userTotalPages', data, {
+                             headers: {
+                                 'Content-Type': 'application/json'
+                             }
+                         }).success(function (response) {
+                             deferred.resolve(response);
+                         });
+                         return deferred.promise;
+                     },
                      hasValidToken: function () {
                          var token = this.getToken();
                          return !!token;
