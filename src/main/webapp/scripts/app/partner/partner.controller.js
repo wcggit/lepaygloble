@@ -2,6 +2,7 @@
 
 angular.module('lepayglobleApp')
     .controller('PartnerController', function ($scope, $state, $rootScope, $location,Principal,Auth,$http) {
+
         Principal.identity().then(function (account) {
             $scope.account = account;
             $scope.isAuthenticated = Principal.isAuthenticated;
