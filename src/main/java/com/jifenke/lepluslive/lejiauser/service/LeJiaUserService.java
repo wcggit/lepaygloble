@@ -66,7 +66,8 @@ public class LeJiaUserService {
             sql.append(leJiaUserCriteria.getEndDate());
             sql.append("'");
         }
-        sql.append(" and le_jia_user.id = wei_xin_user.le_jia_user_id order by bind_merchant_date desc limit ");
+        sql.append(
+            " and le_jia_user.id = wei_xin_user.le_jia_user_id order by bind_merchant_date desc limit ");
         sql.append(start);
         sql.append(",10");
         sql.append(
@@ -75,16 +76,9 @@ public class LeJiaUserService {
         sql.append(
             " group by off_line_order.le_jia_user_id) as counts  on   le_jia_user.id = counts.id ");
 
-        Date end = new Date();
         Query query = em.createNativeQuery(sql.toString());
 
         List<Object[]> details = query.getResultList();
-
-
-
-        Date end1 = new Date();
-
-
 
         return details;
     }
@@ -107,4 +101,89 @@ public class LeJiaUserService {
         List<BigInteger> details = query.getResultList();
         return (long) Math.ceil(details.get(0).doubleValue() / 10.0);
     }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List getUserByBindPartner(LeJiaUserCriteria leJiaUserCriteria) {
+        int start = 10 * (leJiaUserCriteria.getOffset() - 1);
+
+        StringBuffer
+            sql = new StringBuffer();
+        sql.append(
+            "select user.id id,user.name,user.image,user.date,user.merchant_name,user.phone,ifnull(audit.to_merchant,0),ifnull(audit.to_partner,0) from (select le_jia_user.id id,wei_xin_user.nickname name,wei_xin_user.head_image_url image,le_jia_user.bind_partner_date date,merchant.name merchant_name,le_jia_user.bind_partner_id partner_id ,le_jia_user.phone_number phone  from le_jia_user,wei_xin_user,merchant where wei_xin_user.le_jia_user_id= le_jia_user.id and le_jia_user.bind_merchant_id = merchant.id and  le_jia_user.bind_partner_id =");
+        sql.append(leJiaUserCriteria.getPartner().getId());
+        if (leJiaUserCriteria.getPartnerStartDate() != null
+            && leJiaUserCriteria.getPartnerStartDate() != "") {
+            sql.append(" and le_jia_user.bind_partner_date between '");
+            sql.append(leJiaUserCriteria.getPartnerStartDate());
+            sql.append("' and '");
+            sql.append(leJiaUserCriteria.getPartnerEndDate());
+            sql.append("'");
+        }
+        if (leJiaUserCriteria.getMerchantName() != null
+            && leJiaUserCriteria.getMerchantName() != "") {
+            sql.append(" and merchant.name like '%");
+            sql.append(leJiaUserCriteria.getMerchantName());
+            sql.append("%'");
+        }
+        if (leJiaUserCriteria.getPhone() != null && leJiaUserCriteria.getPhone() != "") {
+            sql.append(" and le_jia_user.phone_number like '%");
+            sql.append(leJiaUserCriteria.getPhone());
+            sql.append("%'");
+        }
+        sql.append(" order by le_jia_user.bind_partner_date desc limit  ");
+        sql.append(start);
+        sql.append(",10");
+
+        sql.append(
+            ") user left join (select sum(off_line_order_share.to_lock_merchant) to_merchant,sum(off_line_order_share.to_lock_partner) to_partner,off_line_order.le_jia_user_id id from off_line_order_share,merchant,off_line_order where off_line_order_share.lock_merchant_id = merchant.id  and merchant.partner_id = ");
+        sql.append(leJiaUserCriteria.getPartner().getId());
+        sql.append(
+            " and off_line_order.id = off_line_order_share.off_line_order_id group by off_line_order.le_jia_user_id) audit on user.id = audit.id ");
+
+        Query query = em.createNativeQuery(sql.toString());
+
+        List<Object[]> details = query.getResultList();
+
+        return details;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Long getTotalPagesByBindPartner(LeJiaUserCriteria leJiaUserCriteria) {
+        int start = 10 * (leJiaUserCriteria.getOffset() - 1);
+
+        StringBuffer
+            countPage = new StringBuffer();
+        countPage.append(
+            "select count(*) from le_jia_user,wei_xin_user,merchant where wei_xin_user.le_jia_user_id= le_jia_user.id and le_jia_user.bind_merchant_id = merchant.id and  le_jia_user.bind_partner_id =");
+        countPage.append(leJiaUserCriteria.getPartner().getId());
+        if (leJiaUserCriteria.getPartnerStartDate() != null
+            && leJiaUserCriteria.getPartnerStartDate() != "") {
+            countPage.append(" and le_jia_user.bind_partner_date between '");
+            countPage.append(leJiaUserCriteria.getPartnerStartDate());
+            countPage.append("' and '");
+            countPage.append(leJiaUserCriteria.getPartnerEndDate());
+            countPage.append("'");
+        }
+        if (leJiaUserCriteria.getMerchantName() != null
+            && leJiaUserCriteria.getMerchantName() != "") {
+            countPage.append(" and merchant.name like '%");
+            countPage.append(leJiaUserCriteria.getMerchantName());
+            countPage.append("%'");
+        }
+        if (leJiaUserCriteria.getPhone() != null && leJiaUserCriteria.getPhone() != "") {
+            countPage.append(" and le_jia_user.phone_number like '%");
+            countPage.append(leJiaUserCriteria.getPhone());
+            countPage.append("%'");
+        }
+
+        countPage.append(" order by le_jia_user.bind_partner_date desc limit  ");
+        countPage.append(start);
+        countPage.append(",10");
+
+        List<BigInteger> details = em.createNativeQuery(countPage.toString()).getResultList();
+
+        return (long) Math.ceil(details.get(0).doubleValue() / 10.0);
+
+    }
+
 }
