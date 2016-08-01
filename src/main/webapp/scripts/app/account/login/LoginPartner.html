@@ -11,7 +11,7 @@
 <div class="dl-banner denglu">
     <form class="" role="form" ng-submit="login($event)">
         <h3 class="text-center">登录</h3>
-
+        <p ng-if="authenticationError" class="login-error">账户或密码错误</p>
         <div class="form-group">
             <input type="text" class="form-control" id="username" placeholder="用户名" ng-model="username">
             <span class="logo logo-zhanghu"></span>

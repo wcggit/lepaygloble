@@ -7,9 +7,10 @@ angular.module('lepayglobleApp')
         Principal.identity().then(function(account) {
             //$scope.account = account;
             //商户是否已登录的状态值
-            if(Principal.hasAnyAuthority('merchant')){
+            if(Principal.hasAnyAuthority(['merchant'] )){
                 $scope.merchant = true;
-            }else{
+            }
+            if(Principal.hasAnyAuthority(['partner'])){
                 $scope.partner = true;
             }
             $scope.isAuthenticated = Principal.isAuthenticated();
