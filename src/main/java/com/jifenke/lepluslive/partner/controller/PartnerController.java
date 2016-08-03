@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by wcg on 16/7/21.

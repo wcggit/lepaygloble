@@ -8,13 +8,22 @@ angular.module('lepayglobleApp')
                 // Don't do this check on the account API to avoid infinite loop
                 if (response.status == 401 && response.data.path !== undefined && response.data.path.indexOf("/api/account") == -1){
                     var Auth = $injector.get('Auth');
+                    var Principal = $injector.get('Principal');
+                    var state = null;
+                    if(Principal.hasAnyAuthority(['merchant'])){
+                        state='merchant';
+
+                    }
+                    if(Principal.hasAnyAuthority(['partner'])){
+                        state='partner';
+                    }
                     var $state = $injector.get('$state');
                     var to = $rootScope.toState;
                     var params = $rootScope.toStateParams;
                     Auth.logout();
                     $rootScope.previousStateName = to;
                     $rootScope.previousStateNameParams = params;
-                    $state.go(to.name,{data:"show"});
+                    $state.go(state);
                 } else if (response.status == 403 && response.config.method != 'GET' && getCSRF() == '') {
                     // If the CSRF token expired, then try to get a new CSRF token and retry the old request
                     var $http = $injector.get('$http');
