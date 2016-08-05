@@ -36,7 +36,7 @@ angular.module('lepayglobleApp', ['LocalStorageModule',
                 // redirected to login, our previousState is already set in the
                 // authExpiredInterceptor. If we're going to login directly, we
                 // don't want to be sent to some previous state anyway
-                if (toState.name != 'login') {
+                if (fromState.name != 'login'&&fromState.name!="loginPartner") {
                     $rootScope.previousStateName = fromState.name;
                     $rootScope.previousStateParams = fromParams;
                 }

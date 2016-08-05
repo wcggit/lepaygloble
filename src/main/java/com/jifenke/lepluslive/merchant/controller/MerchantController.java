@@ -118,6 +118,9 @@ public class MerchantController {
             int widthLogo = logo.getWidth(), heightLogo = logo.getHeight();
 
             // 计算图片放置位置
+            int width = image.getWidth();
+            int height = image.getHeight();
+            System.out.println(width+height);
             int x = (image.getWidth() - widthLogo) / 2;
             int y = (image.getHeight() - logo.getHeight()) / 2;
             //开始绘制图片

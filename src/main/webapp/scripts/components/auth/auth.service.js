@@ -52,9 +52,11 @@ angular.module('lepayglobleApp')
                                 // send them to the signin state, so you can return them when you're done
                                 $rootScope.previousStateName = $rootScope.toState;
                                 $rootScope.previousStateNameParams = $rootScope.toStateParams;
-
-                                // now, send them to the signin state so they can log in
-                                $state.go('login');
+                                if($rootScope.toState.data.authorities[0]=='partner'){
+                                    $state.go('loginPartner');
+                                }else{
+                                    $state.go('login');
+                                }
                             }
                         }
                     });
