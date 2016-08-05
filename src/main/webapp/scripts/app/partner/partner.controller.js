@@ -18,10 +18,10 @@ angular.module('lepayglobleApp')
         $scope.headers = [
             {
                 ttl: "首页",
-                state: "home"
+                state: "partnerhome"
             },
             {
-                ttl: "我的商品",
+                ttl: "我的商户",
                 state: "myitems"
             },
             {
@@ -29,9 +29,9 @@ angular.module('lepayglobleApp')
                 state: "usermanager"
             }
         ];
-        if ($location.url() == "/merchant") {
-            $scope.currentTab = "mylepay";
-            $state.go("mylepay");
+        if ($location.url() == "/partner") {
+            $scope.currentTab = "partnerhome";
+            $state.go("partnerhome");
         }
         if ($location.url().indexOf("trade") != -1) {
             $scope.currentTab = "trade";

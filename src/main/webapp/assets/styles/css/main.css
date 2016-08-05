@@ -5,7 +5,7 @@
 html,body{height:100%;position: relative}
 .bodyBgColor{background: #f3f3f3;}
 .container{padding: 0;background-color: #fff}
-.main-content{background-color: #fff;position: absolute;top:68px;left:0;right:0;margin: auto}
+/*.main-content{background-color: #fff;position: absolute;top:68px;left:0;right:0;margin: auto}*/
 .timePicker i{
     position: absolute;
     bottom: 8px;
@@ -19,7 +19,7 @@ label{
     text-align: right;
     margin-right: 10px;
 }
-input[type='button'],.btn-warning{
+.btn-warning{
     background-color: #FB991A;
 }
 input[type='text']{

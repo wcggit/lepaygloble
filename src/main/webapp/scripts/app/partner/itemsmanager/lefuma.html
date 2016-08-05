@@ -1,0 +1,12 @@
+<div class="container-fluid content main-content items-manager">
+    <div class="container">
+        <div class="container-fluid">
+            <p><span ui-sref="myitems" ui-sref-opts="{reload:true}">我的商户 / </span><font>商户二维码</font></p>
+            <div class="wdlfmMain">
+                <img class="rvCode" src="{{qrCode}}" alt=""/>
+                <p class="shopName" ng-bind="shopName"></p>
+            </div>
+            <div class="lfm-btn btn-warning" ng-click="downloadQrCode()">点击下载</div>
+        </div>
+    </div>
+</div>

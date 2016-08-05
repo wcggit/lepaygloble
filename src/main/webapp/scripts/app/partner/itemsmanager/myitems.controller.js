@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('UserManagerController', function ($scope, $http, $rootScope, $location,Principal,Auth) {
+    .controller('myItemsController', function ($scope, $http, $rootScope, $location,Principal,Auth) {
+        $('body').css({background: '#f3f3f3'});
+        $('.main-content').css({height: 'auto'});
         $('#timePicker1')
         // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' + moment().format('YYYY/MM/DD HH:mm:59'))
             .daterangepicker({
@@ -35,17 +37,17 @@ angular.module('lepayglobleApp')
         $scope.ljkt=function () {
             $("#ljkt").modal("toggle");
             $http.get('/api/merchant/open');
-        }
+        };
 
-        $scope.memberInfo=[
+        $scope.itemsInfo=[
             {
-                lockTime:'2016-07-29 18:34:34',
-                wxInfo:{
-                    headImg:'1.jpg',
-                    nickname:'努力的小羔羊',
-                }
-
+                itemsName:'一品江南',
+                contractType:'0',
+                itemsAddress:'北京市朝阳区',
+                memberNumber:'20',
+                shopCommission:'23.33',
+                myCommission:'12.56'
             }
-        ]
+        ];
     });
 
