@@ -1,0 +1,80 @@
+
+<div class="container-fluid content main-content items-manager account-manager">
+    <div class="container">
+        <div class="container-fluid">
+            <p><span ui-sref="itemsaccount" ui-sref-opts="{reload:true}">我的商户 / </span><font>账号管理</font></p>
+            <!--表格-->
+            <div class="text-center clearfix table-ttl">
+                <font>棉花糖KTV</font>账户管理
+                <a class="btn btn-warning pull-right createAccount" data-target="#createAccount" ng-click="createAccount()">新建账号</a>
+            </div>
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr><td>用户名</td><td>密码</td><td>操作</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in accountInfo">
+                        <td ng-bind="x.username"></td>
+                        <td ng-bind="x.password"></td>
+                        <td><a class="deleteAccount" data-target="#deleteAccount" ng-click="deleteAccount()" >删除账户</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--创建账户提示框-->
+    <div class="modal fade" id="createAccount" ng-controller="MerchantConfigController">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">创建账户</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="account" class="col-sm-2 col-sm-offset-1 control-label">账户</label>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" id="account">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword2" class="col-sm-2 col-sm-offset-1 control-label">密码</label>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" id="inputPassword2">
+                                <p class="text-muted small tishi">密码由数字和字母组合，不少于6位，不能包含特殊符号</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-sm-offset-1 control-label label-last"></label>
+                            <div class="col-sm-7">
+                                <button type="button" class="btn btn-warning" ng-click="confirmEdit()">确认修改</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--删除账户提示框-->
+    <div class="modal fade" id="deleteAccount" ng-controller="MerchantConfigController">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">删除账户</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>请问您确认删除吗？</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-warning">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

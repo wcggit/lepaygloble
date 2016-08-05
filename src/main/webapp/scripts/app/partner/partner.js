@@ -13,6 +13,10 @@ angular.module('lepayglobleApp')
                     'navbar@': {
                         templateUrl: 'scripts/app/partner/partner.html',
                         controller: 'PartnerController'
+                    },
+                    'content@': {
+                        templateUrl: 'scripts/app/partner/partnerhome/partnerhome.html',
+                        controller: 'partnerHomeController'
                     }
                 },
                 resolve: {

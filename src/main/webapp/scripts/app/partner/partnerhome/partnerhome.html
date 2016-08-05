@@ -1,0 +1,193 @@
+<div class="container content main-content partner-home">
+    <div class="container-fluid">
+        <p class="ttl">我的商户</p>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1">
+                <div class="face-img">
+                    <img src="../../../../assets/images/hipster.png" alt="">
+                </div>
+                <h5 class="text-center">小喵喵</h5>
+            </div>
+            <div class="col-md-8">
+                <p class="money-ttl">账户佣金余额</p>
+                <p class="money-content clearfix">
+                    <span class="pull-left">￥8000.00</span>
+                    <input type="button" class="btn btn-warning btn-sm pull-left tx" ng-click="tx()" value="提现">
+                    <a class="pull-left" ui-sref="withdrawdetails" ui-sref-opts="{reload:true}">查看提现详情</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container content main-content partner-home">
+    <div class="container-fluid">
+        <p class="ttl">交易明细</p>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="home-div">
+                    <div class="home-div-left home-div-left1">
+                        <div class="home-icon home-icon1"></div>
+                    </div>
+                    <div class="home-div-right">
+                        <h5>今日绑定会员数</h5>
+                        <h2 ng-bind="home.firNum"></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="home-div">
+                    <div class="home-div-left home-div-left2">
+                        <div class="home-icon home-icon2"></div>
+                    </div>
+                    <div class="home-div-right">
+                        <h5>今日佣金输入</h5>
+                        <h2 ng-bind="'¥'+home.secNum"></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="home-div">
+                    <div class="home-div-left home-div-left3">
+                        <div class="home-icon home-icon3"></div>
+                    </div>
+                    <div class="home-div-right">
+                        <h5>累计佣金输入</h5>
+                        <h2 ng-bind="'¥'+home.thirNum"></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="home-div">
+                    <div class="home-div-left home-div-left4">
+                        <div class="home-icon home-icon4"></div>
+                    </div>
+                    <div class="home-div-right">
+                        <h5>人均佣金收入</h5>
+                        <h2 ng-bind="'¥'+home.forNum"></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container content main-content partner-home">
+    <div class="container-fluid">
+        <p class="ttl">锁定明细</p>
+        <div class="row">
+            <div class="col-md-6">
+                <p>锁定商户</p>
+                <p><font size="6" color="#333">5</font>/10</p>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-warning progress-bar1" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <p>锁定会员</p>
+                <p><font size="6" color="#333">500</font>/1000</p>
+                <div class="progress">
+                    <div class="progress-bar progress-bar2" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container content main-content partner-home">
+    <div class="container-fluid">
+        <p class="ttl clearfix">
+            商户<font size="4">TOP5</font>
+            <span class="btn-group pull-right">
+                <button type="button" class="btn btn-warning">佣金</button>
+                <button type="button" class="btn btn-default">锁定会员</button>
+                <button type="button" class="btn btn-default">累计流水</button>
+            </span>
+        </p>
+
+        <!--表格-->
+        <div class="panel panel-default">
+            <table class="table ol-tab">
+                <thead class="active">
+                    <tr>
+                        <td>商户名称</td>
+                        <td>商户佣金输入</td>
+                        <td>我的佣金收入</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="x in homeTab">
+                        <td ng-show="x.rebateWay!=0">
+                            <span class="num" ng-bind="x.num"></span>
+                            <span ng-bind="x.name"></span>
+                        </td>
+                        <td ng-bind="'¥'+x.itemsMon"></td>
+                        <td ng-bind="'¥'+x.myMon"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a aria-label="Previous">
+                        <span aria-hidden="true">‹</span>
+                    </a></li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page + 1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!--提现提示框-->
+    <div class="modal fade" id="tx">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">提现余额 <span>佣金余额：<font color="#fb991a">5</font>元</span></h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="inputPassword1" class="col-sm-3 col-sm-offset-1 control-label">提现金额（元）</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputPassword1" placeholder="请输入金额">
+
+                            </div>
+                            <div class="col-sm-3"><span class="ts">至少提现200元</span></div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
+                            <div class="col-sm-7">
+                                <p class="text-muted" class="form-control">xxxxxxxxxxxxxxxxxxx{{bank}}</p>
+                                <p class="text-muted" class="form-control">小喵喵</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="clearfix">
+                        <button type="button" class="btn btn-warning pull-left" ng-class="{disabled: srgl.thirNum<=200}">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
