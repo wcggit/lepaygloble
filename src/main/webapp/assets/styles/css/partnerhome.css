@@ -98,3 +98,26 @@
     line-height: 23px;
     margin-right: 15px;
 }
+
+/*TOP5*/
+.partner-home:last-child{position: relative}
+.partner-home .nav-pills{
+    position: absolute;
+    top:25px;
+    right: 20px;
+}
+.partner-home .nav>li{
+    cursor: pointer;
+}
+.partner-home .nav>li>a {
+    padding: 9px 0;
+    width: 88px;
+    text-align: center;
+}
+.partner-home .nav>li:not(.active)>a {
+    color: #222;
+}
+.partner-home .nav>li:not(.active){
+    background-color: #eee;
+    border-radius: 4px;
+}

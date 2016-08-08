@@ -97,38 +97,86 @@
 </div>
 
 <div class="container content main-content partner-home">
-    <div class="container-fluid">
-        <p class="ttl clearfix">
-            商户<font size="4">TOP5</font>
-            <span class="btn-group pull-right">
-                <button type="button" class="btn btn-warning">佣金</button>
-                <button type="button" class="btn btn-default">锁定会员</button>
-                <button type="button" class="btn btn-default">累计流水</button>
-            </span>
-        </p>
+    <div class="container-fluid clearfix">
+        <p class="ttl">商户<font size="4">TOP5</font></p>
+        <ul class="nav nav-pills">
+            <li role="presentation" class="active"><a>佣金</a></li>
+            <li role="presentation"><a>锁定会员</a></li>
+            <li role="presentation" ng-class="{active:currentTab2}"><a>累计流水</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" >
+                <div class="panel panel-default">
+                    <table class="table ol-tab">
+                        <thead class="active">
+                        <tr>
+                            <td>商户名称</td>
+                            <td>商户佣金输入</td>
+                            <td>我的佣金收入</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="x in homeTab">
+                            <td ng-show="x.rebateWay!=0">
+                                <span class="num" ng-bind="x.num"></span>
+                                <span ng-bind="x.name"></span>
+                            </td>
+                            <td ng-bind="'¥'+x.itemsMon"></td>
+                            <td ng-bind="'¥'+x.myMon"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        <!--表格-->
-        <div class="panel panel-default">
-            <table class="table ol-tab">
-                <thead class="active">
-                    <tr>
-                        <td>商户名称</td>
-                        <td>商户佣金输入</td>
-                        <td>我的佣金收入</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="x in homeTab">
-                        <td ng-show="x.rebateWay!=0">
-                            <span class="num" ng-bind="x.num"></span>
-                            <span ng-bind="x.name"></span>
-                        </td>
-                        <td ng-bind="'¥'+x.itemsMon"></td>
-                        <td ng-bind="'¥'+x.myMon"></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="tab-pane">
+                <div class="panel panel-default">
+                    <table class="table ol-tab">
+                        <thead class="active">
+                        <tr>
+                            <td>商户名称</td>
+                            <td>商户锁定会员</td>
+                            <td>商户会员上限</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="x in homeTab">
+                            <td ng-show="x.rebateWay!=0">
+                                <span class="num" ng-bind="x.num"></span>
+                                <span ng-bind="x.name"></span>
+                            </td>
+                            <td ng-bind="'¥'+x.itemsMon"></td>
+                            <td ng-bind="'¥'+x.myMon"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane">
+                <div class="panel panel-default">
+                    <table class="table ol-tab">
+                        <thead class="active">
+                        <tr>
+                            <td>商户名称</td>
+                            <td>商户累计流水</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="x in homeTab">
+                            <td ng-show="x.rebateWay!=0">
+                                <span class="num" ng-bind="x.num"></span>
+                                <span ng-bind="x.name"></span>
+                            </td>
+                            <td ng-bind="'¥'+x.itemsMon"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+        <!--表格-->
+
 
         <!--分页-->
         <div class=" clearfix">
