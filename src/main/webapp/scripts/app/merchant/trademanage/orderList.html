@@ -12,12 +12,12 @@
             </div>
         </div>
         <div class="row">
-            <!--<div class="form-group col-md-4">-->
-                <!--<label>订单类型</label>-->
-                <!--<select class="form-control">-->
-                    <!--<option ng-repeat="x in options" ng-bind="x"></option>-->
-                <!--</select>-->
-            <!--</div>-->
+            <div class="form-group col-md-4">
+                <label>订单类型</label>
+                <select class="form-control">
+                    <option ng-repeat="x in options" ng-bind="x"></option>
+                </select>
+            </div>
             <div class="form-group col-md-4">
                 <label for="order-num">订单号</label>
                 <input type="text" class="form-control" id="order-num" placeholder="请输入订单编号">
@@ -38,7 +38,7 @@
         <div class="panel panel-default">
             <table class="table ol-tab">
                 <thead class="active">
-                <tr><td>交易完成时间</td><td>交易单号</td><td>消费者</td><td>金额</td><td>支付方式</td><td>手续费</td><td>到账收入</td></tr>
+                <tr><td>交易完成时间</td><td>交易单号</td><td>订单类型</td><td>金额</td><td>手续费</td><td>到账收入</td></tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="x in pulls">
@@ -47,10 +47,8 @@
                         <p ng-bind="x.completeDate|date:'HH:mm:ss'"></p>
                     </td>
                     <td ng-bind="x.orderSid"></td>
-                    <td ng-show="x.rebateWay==0">非会员</td>
-                    <td ng-show="x.rebateWay!=0">会员</td>
+                    <td>订单类型（待修改）</td>
                     <td ng-bind="'¥'+x.totalPrice/100.0"></td>
-                    <td ng-bind="x.payWay.payWay"></td>
                     <td ng-bind="'¥'+x.ljCommission/100.0"></td>
                     <td ng-bind="'¥'+x.transferMoney/100.0"></td>
                 </tr>
