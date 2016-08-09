@@ -10,6 +10,7 @@ import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
 import com.jifenke.lepluslive.merchant.repository.OpenRequestRepository;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
+import com.jifenke.lepluslive.partner.domain.entities.Partner;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -75,9 +76,14 @@ public class MerchantService {
         if (merchantUser.getPassword().equals(origin)) {
             merchantUser.setPassword(MD5Util.MD5Encode(reset, "utf-8"));
             merchantUserRepository.save(merchantUser);
-        }else {
+        } else {
             throw new RuntimeException();
         }
 
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+      public Long countPartnerBindMerchant(Partner partner) {
+        return merchantRepository.countByPartner(partner);
     }
 }
