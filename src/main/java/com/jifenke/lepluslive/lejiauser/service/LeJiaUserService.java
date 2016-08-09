@@ -5,6 +5,7 @@ import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
 import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.partner.domain.entities.Partner;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -186,4 +188,21 @@ public class LeJiaUserService {
 
     }
 
+    public Long countPartnerBindLeJiaUser(Partner partner) {
+        return leJiaUserRepository.countPartnerBindLeJiaUser(partner.getId());
+    }
+
+    public Long countPartnerBindLeJiaUserByDate(Partner partner) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        Date start =calendar.getTime();
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        calendar.add(Calendar.SECOND, -1);
+        Date end =calendar.getTime();
+        return leJiaUserRepository.countByBindPartnerAndBindPartnerDateBetween(partner,start,end);
+    }
 }

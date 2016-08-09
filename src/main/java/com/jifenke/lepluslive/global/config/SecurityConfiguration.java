@@ -80,31 +80,31 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public LeJiaAuthenticationFilter leJiaAuthenticationFilter()
         throws Exception {
 
-        LeJiaAuthenticationFilter  organizationUserAuthenticationFilter =
-                new LeJiaAuthenticationFilter();
+        LeJiaAuthenticationFilter organizationUserAuthenticationFilter =
+            new LeJiaAuthenticationFilter();
 
-            organizationUserAuthenticationFilter
-                .setAuthenticationManager(authenticationManager());
-            organizationUserAuthenticationFilter
-                .setRequiresAuthenticationRequestMatcher(
-                    new AntPathRequestMatcher("/api/authentication"));
-            organizationUserAuthenticationFilter
-                .setAuthenticationSuccessHandler(ajaxAuthenticationSuccessHandler);
-            organizationUserAuthenticationFilter
-                .setAuthenticationFailureHandler(ajaxAuthenticationFailureHandler);
-            organizationUserAuthenticationFilter
-                .setUserRole("j_userRole");
-            organizationUserAuthenticationFilter.setUsernameParameter("j_username");
-            organizationUserAuthenticationFilter.setPasswordParameter("j_password");
+        organizationUserAuthenticationFilter
+            .setAuthenticationManager(authenticationManager());
+        organizationUserAuthenticationFilter
+            .setRequiresAuthenticationRequestMatcher(
+                new AntPathRequestMatcher("/api/authentication"));
+        organizationUserAuthenticationFilter
+            .setAuthenticationSuccessHandler(ajaxAuthenticationSuccessHandler);
+        organizationUserAuthenticationFilter
+            .setAuthenticationFailureHandler(ajaxAuthenticationFailureHandler);
+        organizationUserAuthenticationFilter
+            .setUserRole("j_userRole");
+        organizationUserAuthenticationFilter.setUsernameParameter("j_username");
+        organizationUserAuthenticationFilter.setPasswordParameter("j_password");
 
         return organizationUserAuthenticationFilter;
     }
 
     @Bean
     public AuthenticationProvider superAdminOnlyAuthenticationProvider() {
-        SystemOnlyAuthenticationProvider   authenticationProvider =
-                new SystemOnlyAuthenticationProvider(userDetailsService,
-                                                     passwordEncoder());
+        SystemOnlyAuthenticationProvider authenticationProvider =
+            new SystemOnlyAuthenticationProvider(userDetailsService,
+                                                 passwordEncoder());
         return authenticationProvider;
     }
 
@@ -146,6 +146,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/account/reset_password/init").permitAll()
             .antMatchers("/api/account/reset_password/finish").permitAll()
             .antMatchers("/api/logs/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/api/merchant/**").hasAuthority(AuthoritiesConstants.MERCHANT)
+            .antMatchers("/api/partner/**").hasAuthority(AuthoritiesConstants.PARTNER)
             .antMatchers("/api/audits/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/api/**").authenticated()
             .antMatchers("/websocket/tracker").hasAuthority(AuthoritiesConstants.ADMIN)
@@ -170,7 +172,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/protected/**").authenticated();
 
     }
-
 
 
     @Bean

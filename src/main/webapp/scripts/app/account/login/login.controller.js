@@ -21,7 +21,7 @@ angular.module('lepayglobleApp')
                     $scope.authenticationError = false;
                     if ($rootScope.previousStateName === 'home'
                         || $rootScope.previousStateName == null
-                        || $rootScope.previousStateName == "") {
+                        || $rootScope.previousStateName == ""||$rootScope.previousStateName == "login") {
                         if (Principal.hasAuthority('merchant')) {
                             $state.go('merchant');
                         }

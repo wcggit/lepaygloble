@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.merchant.repository;
 
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.partner.domain.entities.Partner;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,4 +31,6 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
     @Query(value = "SELECT m.id,m.sid,m.location,m.phone_number,m.`name`,m.picture,m.discount,m.rebate,m.lng,m.lat, ROUND( 6378.138 * 2 * ASIN(SQRT(POW(SIN((?1 * PI() / 180 - m.lat * PI() / 180) / 2),2) + COS(?1 * PI() / 180) * COS(m.lat * PI() / 180) * POW(SIN((?2 * PI() / 180 - m.lng * PI() / 180) / 2),2))) * 1000) AS distance FROM merchant m ORDER BY distance LIMIT ?3,?4", nativeQuery = true)
     List<Object[]> findOrderByDistance(Double latitude, Double longitude, Integer startNum,
                                        Integer pageSize);
+
+    Long countByPartner(Partner partner);
 }
