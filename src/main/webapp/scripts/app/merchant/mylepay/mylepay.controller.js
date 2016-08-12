@@ -14,15 +14,14 @@ angular.module("lepayglobleApp").controller("MyLePayController",
                 },
             },function(start, end, label) {
                 if (start.format('YYYY/MM/DD')
-                    == new Date().format('yyyy/MM/dd')) {
+                    == moment().format('yyyy/MM/dd')) {
                     MyLePay.getTodayOrderDetail().then(function (data) {
                         var datas = data.data;
                         var item = [];
                         var data = [];
                         var day = datas.trueSales;
-                        item.push(new Date().format("MM/dd"));
-                        data.push(day
-                            / 100);
+                        item.push(moment().format("MM/dd"));
+                        data.push(day / 100);
                         $scope.item = [];
                         $scope.data = [];
                         $scope.item = item;
@@ -33,18 +32,16 @@ angular.module("lepayglobleApp").controller("MyLePayController",
                 var data = "startDate="
                     + start.format('YYYY/MM/DD')
                     + "&endDate="
-                    + end.format('YYYY/MM/DD')
+                    + end.format('YYYY/MM/DD');
                 MyLePay.getDayTrade(data).then(function(result){
                     var financials = result.data;
                     var item = [];
                     var data = [];
                     angular.forEach(financials,
-                        function (financial, index,
-                                  array) {
-                            var date = new Date(financial.balanceDate);
-                            item.push(date.format("MM/dd"));
-                            data.push(financial.transferPrice
-                                / 100);
+                        function (financial, index, array) {
+                            var date = moment(financial.balanceDate);
+                            item.push(date.format("MM/DD"));
+                            data.push(financial.transferPrice/100);
                         });
                     if(end.format('YYYY/MM/DD')==new Date().format('yyyy/MM/dd')){
                         item.push(new Date().format("MM/dd"));
@@ -117,14 +114,11 @@ angular.module("lepayglobleApp").controller("MyLePayController",
             var data = [];
             var day = results[1].data.trueSales;
 
-            angular.forEach(financials,
-                            function (financial, index,
-                                      array) {
-                                var date = new Date(financial.balanceDate);
-                                item.push(date.format("MM/dd"));
-                                data.push(financial.transferPrice
-                                          / 100);
-                            });
+            angular.forEach(financials, function (financial, index, array) {
+                var date = new Date(financial.balanceDate);
+                item.push(date.format("MM/dd"));
+                data.push(financial.transferPrice/100);
+            });
             item.push(new Date().format("MM/dd"));
             data.push(day / 100);
             $scope.item = item;
@@ -138,7 +132,7 @@ angular.module("lepayglobleApp").controller("MyLePayController",
             $scope.bank = bankNumber.substring(bankNumber.length - 4, bankNumber.length);
         });
 
-    })
+    });
 angular.module("lepayglobleApp").directive("eChart", function () {
     function link($scope, element, attrs) {
         // 基于准备好的dom，初始化echarts图表
