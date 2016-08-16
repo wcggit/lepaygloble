@@ -64,7 +64,7 @@ angular.module('lepayglobleApp')
                         _identity = account.data;
                         _authenticated = true;
                         deferred.resolve(_identity);
-                        Tracker.connect();
+                        //Tracker.connect();
                     })
                     .catch(function() {
                         _identity = null;

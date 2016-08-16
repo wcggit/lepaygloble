@@ -11,7 +11,7 @@ angular.module("lepayglobleApp").controller("MyLePayController",
                 ranges : {
                     '最近7日': [moment().subtract('days', 6), moment()],
                     '最近30日': [moment().subtract('days', 29), moment()]
-                },
+                }
             },function(start, end, label) {
                 if (start.format('YYYY/MM/DD')
                     == new Date().format('yyyy/MM/dd')) {
@@ -20,7 +20,7 @@ angular.module("lepayglobleApp").controller("MyLePayController",
                         var item = [];
                         var data = [];
                         var day = datas.trueSales;
-                        item.push(new Date().format("MM/dd"));
+                        item.push(moment().format("MM/DD"));
                         data.push(day
                             / 100);
                         $scope.item = [];
@@ -41,13 +41,13 @@ angular.module("lepayglobleApp").controller("MyLePayController",
                     angular.forEach(financials,
                         function (financial, index,
                                   array) {
-                            var date = new Date(financial.balanceDate);
-                            item.push(date.format("MM/dd"));
+                            var date = moment(financial.balanceDate);
+                            item.push(date.format("MM/DD"));
                             data.push(financial.transferPrice
                                 / 100);
                         });
                     if(end.format('YYYY/MM/DD')==new Date().format('yyyy/MM/dd')){
-                        item.push(new Date().format("MM/dd"));
+                        item.push(moment().format("MM/DD"));
                         data.push($scope.day.trueSales);
                     }
                     $scope.item = item;
@@ -120,12 +120,12 @@ angular.module("lepayglobleApp").controller("MyLePayController",
             angular.forEach(financials,
                             function (financial, index,
                                       array) {
-                                var date = new Date(financial.balanceDate);
-                                item.push(date.format("MM/dd"));
+                                var date = moment(financial.balanceDate);
+                                item.push(date.format("MM/DD"));
                                 data.push(financial.transferPrice
                                           / 100);
                             });
-            item.push(new Date().format("MM/dd"));
+            item.push(moment().format("MM/DD"));
             data.push(day / 100);
             $scope.item = item;
             $scope.data = data;

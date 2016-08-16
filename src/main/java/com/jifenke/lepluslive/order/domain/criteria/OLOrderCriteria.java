@@ -7,17 +7,27 @@ import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
  */
 public class OLOrderCriteria {
 
-  private String startDate;
+    private String startDate;
 
-  private String endDate;
+    private String endDate;
 
-  private Integer state;
+    private Integer state;
 
     private Merchant merchant;
 
     private String orderSid;
 
-  private Integer offset;
+    private Integer rebateWay;
+
+    private Integer offset;
+
+    public Integer getRebateWay() {
+        return rebateWay;
+    }
+
+    public void setRebateWay(Integer rebateWay) {
+        this.rebateWay = rebateWay;
+    }
 
     public String getOrderSid() {
         return orderSid;
@@ -28,36 +38,36 @@ public class OLOrderCriteria {
     }
 
     public Integer getOffset() {
-    return offset;
-  }
+        return offset;
+    }
 
-  public void setOffset(Integer offset) {
-    this.offset = offset;
-  }
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
 
-  public String getStartDate() {
-    return startDate;
-  }
+    public String getStartDate() {
+        return startDate;
+    }
 
-  public void setStartDate(String startDate) {
-    this.startDate = startDate;
-  }
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
 
-  public String getEndDate() {
-    return endDate;
-  }
+    public String getEndDate() {
+        return endDate;
+    }
 
-  public void setEndDate(String endDate) {
-    this.endDate = endDate;
-  }
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
 
-  public Integer getState() {
-    return state;
-  }
+    public Integer getState() {
+        return state;
+    }
 
-  public void setState(Integer state) {
-    this.state = state;
-  }
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
     public Merchant getMerchant() {
         return merchant;

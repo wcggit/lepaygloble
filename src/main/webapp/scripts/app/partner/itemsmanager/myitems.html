@@ -1,100 +1,123 @@
 <div class="container content main-content my-items">
     <div class="container-fluid">
-            <p class="ttl">我的商户</p>
-            <!--查询表单-->
-            <form class="form-inline">
-                <div class="row">
-                    <div class="form-group col-md-5">
-                        <label>创建时间</label>
-                        <div class="input-group timePicker col-md-9">
-                            <input type="text" name="reservation" id="timePicker1" class="form-control" />
-                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>会员锁定状态</label>
-                        <select class="form-control">
-                            <option>未锁定</option>
-                            <option>即将锁满</option>
-                            <option>已锁满</option>
-                        </select>
+        <p class="ttl">我的商户</p>
+        <!--查询表单-->
+        <form class="form-inline">
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label>创建时间</label>
+
+                    <div class="input-group timePicker col-md-9">
+                        <input type="text" name="reservation" id="timePicker1"
+                               class="form-control"/>
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-5">
-                        <label for="order-num">商户名称</label>
-                        <input type="text" class="form-control" id="order-num" placeholder="请输入商户名称">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>签约类型</label>
-                        <select class="form-control">
-                            <option>普通协议</option>
-                            <option>联盟协议</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-4 col-md-offset-1">
-                        <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
-                    </div>
-                </div>
-            </form>
-            <div>
-                <!--表格信息总结-->
-                <p class="ttl-add clearfix">
-                    注：有<font>5</font>家商户的锁定名额以满 <a>查看详情</a>
-                    <a class="btn btn-warning pull-right" ui-sref="createitems1" ui-sref-opts="{reload:true}">新建商户</a>
-                </p>
-                <!--表格-->
-                <div class="panel panel-default">
-                    <table class="table ol-tab">
-                        <thead class="active">
-                            <tr><td>商户名称</td><td>签约类型</td><td>商户地址</td><td>会员锁定</td><td>店铺佣金</td><td>我的佣金</td><td>操作</td></tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="x in itemsInfo">
-                            <td ng-bind="x.itemsName">非会员</td>
-                            <td ng-show="x.rebateWay!=0">
-                                <span ng-show="x.contractType==0">普通协议</span>
-                                <span ng-show="x.contractType==1">联盟协议（6%）</span>
-                            </td>
-                            <td ng-bind="x.itemsAddress">非会员</td>
-                            <td ng-bind="x.memberNumber">会员</td>
-                            <td ng-bind="'¥'+x.shopCommission"></td>
-                            <td ng-bind="'¥'+x.myCommission"></td>
-                            <td>
-                                <a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>
-                                <a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>
-                                <a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="form-group col-md-4">
+                    <label>会员锁定状态</label>
+                    <select class="form-control" id="userBindState">
+                        <option value="-1">全部</option>
+                        <option value="0">未锁定</option>
+                        <option value="1">即将锁满</option>
+                        <option value="2">已锁满</option>
+                    </select>
                 </div>
             </div>
-
-            <!--分页-->
-            <div class=" clearfix">
-                <nav class="pull-right">
-                    <ul class="pagination">
-                        <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
-                        <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a aria-label="Previous">
-                            <span aria-hidden="true">‹</span>
-                        </a></li>
-                        <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
-                        <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
-                        <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
-                        <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page + 1}}</a>
-                        </li>
-                        <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
-                            2}}</a>
-                        </li>
-                        <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(page+1)"><a aria-label="Next">
-                            <span aria-hidden="true">›</span>
-                        </a></li>
-                        <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
-                    </ul>
-                </nav>
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label for="merchantName">商户名称</label>
+                    <input type="text" class="form-control" id="merchantName" placeholder="请输入商户名称">
+                </div>
+                <div class="form-group col-md-4">
+                    <label>签约类型</label>
+                    <select class="form-control" id="partnerShip">
+                        <option value="-1">全部</option>
+                        <option value="0">普通协议</option>
+                        <option value="1">联盟协议</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4 col-md-offset-1">
+                    <button type="button" class="btn btn-warning btn-check2"
+                            ng-click="searchByCriteria()">查询
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div>
+            <!--表格信息总结-->
+            <p class="ttl-add clearfix">
+                注：有<font>5</font>家商户的锁定名额以满 <a>查看详情</a>
+                <a class="btn btn-warning pull-right" ui-sref="createitems1"
+                   ui-sref-opts="{reload:true}">新建商户</a>
+            </p>
+            <!--表格-->
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>商户名称</td>
+                        <td>创建时间</td>
+                        <td>签约类型</td>
+                        <td>商户地址</td>
+                        <td>会员锁定</td>
+                        <td>店铺佣金</td>
+                        <td>我的佣金</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in pulls">
+                        <td ng-bind="x[1]"></td>
+                        <td>
+                            <p ng-bind="x[2]|date:'yyyy-MM-dd'"></p>
+                            <p ng-bind="x[2]|date:'HH:mm:ss'"></p>
+                        </td>
+                        <td ng-show="x[3]==0">普通商户</td>
+                        <td ng-show="x[3]==1">联盟商户</td>
+                        <td ng-show="x[4]!=''">{{x[4]}}</td>
+                        <td ng-show="x[4]==''">----</td>
+                        <td >{{x[5]}}/{{x[8]}}</td>
+                        <td ng-bind="x[6]/100"></td>
+                        <td ng-bind="x[7]/100"></td>
+                        <td>
+                            <a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>
+                            <a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>
+                            <a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
+
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a
+                        aria-label="Previous">
+                        <span aria-hidden="true">‹</span>
+                    </a></li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>

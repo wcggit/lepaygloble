@@ -4,6 +4,7 @@ import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.partner.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
 import com.jifenke.lepluslive.partner.service.PartnerService;
@@ -37,6 +38,15 @@ public class PartnerController {
 
     @Inject
     private MerchantService merchantService;
+
+
+    @RequestMapping(value = "/partner", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    LejiaResult getPartner() {
+        return LejiaResult.ok(partnerService
+                                  .findPartnerByName(SecurityUtils.getCurrentUserLogin()));
+    }
 
     @RequestMapping(value = "/partner/bindUsers", method = RequestMethod.POST)
     public
@@ -88,19 +98,38 @@ public class PartnerController {
         result.put("bindMerchant", merchantService.countPartnerBindMerchant(partner));
         result.put("dayBindLeJiaUser", leJiaUserService.countPartnerBindLeJiaUserByDate(partner));
         result.put("perCommission", new BigDecimal(partnerWallet.getTotalMoney() / 100.0)
-            .divide(new BigDecimal(bindLeJiaUser), 2,BigDecimal.ROUND_HALF_UP).doubleValue());
+            .divide(new BigDecimal(bindLeJiaUser), 2, BigDecimal.ROUND_HALF_UP).doubleValue());
         return result;
     }
 
-    @RequestMapping(value = "/partner", method = RequestMethod.GET)
+    @RequestMapping(value = "/partner/merchant_top5", method = RequestMethod.GET)
     public
     @ResponseBody
-    LejiaResult getCurrentPartner() {
+    LejiaResult getMerchantTop5(Integer sortType) {
         Partner
             partner =
             partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
 
-        return LejiaResult.ok(partner);
+        return LejiaResult.ok(partnerService.findMerchantTop5(sortType, partner));
+    }
+
+
+    @RequestMapping(value = "/partner/merchant_list", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    LejiaResult getPartnerBindMerchantList(@RequestBody MerchantCriteria merchantCriteria) {
+        merchantCriteria
+            .setPartner(partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin()));
+        return LejiaResult.ok(partnerService.getMerchantList(merchantCriteria));
+    }
+
+    @RequestMapping(value = "/partner/merchant_list_page", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    LejiaResult getPartnerBindMerchantListPage(@RequestBody MerchantCriteria merchantCriteria) {
+        merchantCriteria
+            .setPartner(partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin()));
+        return LejiaResult.ok(partnerService.getMerchantListPage(merchantCriteria));
     }
 
 

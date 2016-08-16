@@ -21,6 +21,10 @@ angular.module('lepayglobleApp')
                         $scope.dayBindLeJiaUser = result['dayBindLeJiaUser'];
                     });
 
+                    Partner.getMerchantTop5(0).then(function (result) {
+                        $scope.homeTab = result.data;
+                    });
+
                     $scope.home = {
                         firNum: 23,
                         secNum: 32.34,
@@ -44,6 +48,9 @@ angular.module('lepayglobleApp')
                                 navDiv.eq(t).removeClass('active')
                             }
                             var index = $(this).index();
+                            Partner.getMerchantTop5(index).then(function (result) {
+                                $scope.homeTab = result.data;
+                            });
                             navBtn.eq(index).addClass('active');
                             navDiv.eq(index).addClass('active')
                         })

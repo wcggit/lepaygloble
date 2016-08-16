@@ -133,11 +133,11 @@
                         <tbody>
                         <tr ng-repeat="x in homeTab">
                             <td ng-show="x.rebateWay!=0">
-                                <span class="num" ng-bind="x.num"></span>
-                                <span ng-bind="x.name"></span>
+                                <span class="num" ng-bind="$index+1"></span>
+                                <span ng-bind="x[0]"></span>
                             </td>
-                            <td ng-bind="'¥'+x.itemsMon"></td>
-                            <td ng-bind="'¥'+x.myMon"></td>
+                            <td ng-bind="'¥'+x[2]/100"></td>
+                            <td ng-bind="'¥'+x[1]/100"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -157,11 +157,11 @@
                         <tbody>
                         <tr ng-repeat="x in homeTab">
                             <td ng-show="x.rebateWay!=0">
-                                <span class="num" ng-bind="x.num"></span>
-                                <span ng-bind="x.name"></span>
+                                <span class="num" ng-bind="$index+1"></span>
+                                <span ng-bind="x[0]"></span>
                             </td>
-                            <td ng-bind="'¥'+x.itemsMon"></td>
-                            <td ng-bind="'¥'+x.myMon"></td>
+                            <td ng-bind="x[1]"></td>
+                            <td ng-bind="x[2]"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -180,10 +180,10 @@
                         <tbody>
                         <tr ng-repeat="x in homeTab">
                             <td ng-show="x.rebateWay!=0">
-                                <span class="num" ng-bind="x.num"></span>
-                                <span ng-bind="x.name"></span>
+                                <span class="num" ng-bind="$index+1"></span>
+                                <span ng-bind="x[0]"></span>
                             </td>
-                            <td ng-bind="'¥'+x.itemsMon"></td>
+                            <td ng-bind="'¥'+x[1]/100"></td>
                         </tr>
                         </tbody>
                     </table>

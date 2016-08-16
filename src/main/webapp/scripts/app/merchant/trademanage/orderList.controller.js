@@ -5,22 +5,25 @@ angular.module('lepayglobleApp')
                 function ($scope, $state, $location, Trade, $rootScope, $stateParams) {
 
                     $('#timePicker1')
-                        // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' + moment().format('YYYY/MM/DD HH:mm:59'))
+                        // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' +
+                        // moment().format('YYYY/MM/DD HH:mm:59'))
                         .daterangepicker({
-                            timePicker: true, //是否显示小时和分钟
-                            timePickerIncrement: 1, //时间的增量，单位为分钟
-                            opens : 'right', //日期选择框的弹出位置
-                            startDate: moment().format('YYYY/MM/DD HH:mm:00'),
-                            endDate: moment().format('YYYY/MM/DD HH:mm:59'),
-                            format : 'YYYY/MM/DD HH:mm:ss', //控件中from和to 显示的日期格式
-                            ranges : {
-                                '最近1小时': [moment().subtract('hours',1), moment()],
-                                '今日': [moment().startOf('day'), moment()],
-                                '昨日': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],
-                                '最近7日': [moment().subtract('days', 6), moment()],
-                                '最近30日': [moment().subtract('days', 29), moment()]
-                            },
-                        },function(start, end, label) {});
+                                             timePicker: true, //是否显示小时和分钟
+                                             timePickerIncrement: 1, //时间的增量，单位为分钟
+                                             opens: 'right', //日期选择框的弹出位置
+                                             startDate: moment().format('YYYY/MM/DD HH:mm:00'),
+                                             endDate: moment().format('YYYY/MM/DD HH:mm:59'),
+                                             format: 'YYYY/MM/DD HH:mm:ss', //控件中from和to 显示的日期格式
+                                             ranges: {
+                                                 '最近1小时': [moment().subtract('hours', 1), moment()],
+                                                 '今日': [moment().startOf('day'), moment()],
+                                                 '昨日': [moment().subtract('days', 1).startOf('day'),
+                                                        moment().subtract('days', 1).endOf('day')],
+                                                 '最近7日': [moment().subtract('days', 6), moment()],
+                                                 '最近30日': [moment().subtract('days', 29), moment()]
+                                             },
+                                         }, function (start, end, label) {
+                                         });
                     $("#timePicker1").val("");
                     var currentPage = 1;
                     var olOrderCriteria = {};
@@ -84,16 +87,19 @@ angular.module('lepayglobleApp')
 
                     $scope.searchByCriteria = function () {
                         var dateStr = $("#timePicker1").val();
-                        if (dateStr == "" || dateStr == null) {
-                            alert("请输入时间");
-                            return;
+                        if(dateStr != "" && dateStr != null){
+                            var startDate = dateStr.split("-")[0].trim();
+                            var endDate = dateStr.split("-")[1].trim();
+                            olOrderCriteria.startDate = startDate;
+                            olOrderCriteria.endDate = endDate;
                         }
-                        var startDate = dateStr.split("-")[0].trim();
-                        var endDate = dateStr.split("-")[1].trim();
-                        olOrderCriteria.startDate = startDate;
-                        olOrderCriteria.endDate = endDate;
                         olOrderCriteria.offset = 1;
                         olOrderCriteria.orderSid = $("#order-num").val();
+                        if ($("#rebateWay").val() != null && $("#rebateWay").val() != 0) {
+                            olOrderCriteria.rebateWay = $("#rebateWay").val();
+                        }else{
+                            olOrderCriteria.rebateWay =null;
+                        }
                         currentPage = 1;
                         loadContent();
                         loadStatistic();
@@ -102,13 +108,13 @@ angular.module('lepayglobleApp')
                     $scope.exportExcel = function () {
                         var data = "?";
                         if (olOrderCriteria.startDate != null) {
-                            data+="startDate="+olOrderCriteria.startDate+"&";
-                            data+="endDate="+olOrderCriteria.endDate;
+                            data += "startDate=" + olOrderCriteria.startDate + "&";
+                            data += "endDate=" + olOrderCriteria.endDate;
                         }
                         if (olOrderCriteria.orderSid != null) {
-                            data+="&orderSid="+olOrderCriteria.orderSid;
+                            data += "&orderSid=" + olOrderCriteria.orderSid;
                         }
-                        location.href = "/api/offLineOrder/export"+data;
+                        location.href = "/api/offLineOrder/export" + data;
                     }
 
                 });

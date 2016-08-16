@@ -83,6 +83,19 @@ public class OffLineOrderService {
                                    new Date(orderCriteria.getEndDate())));
                 }
 
+                if (orderCriteria.getRebateWay() != null) {
+                    if (orderCriteria.getRebateWay() == 1) {
+                        predicate.getExpressions().add(
+                            cb.equal(r.get("rebateWay"),
+                                     1));
+                    } else {
+                        predicate.getExpressions().add(
+                            cb.notEqual(r.get("rebateWay"),
+                                        1));
+                    }
+
+                }
+
                 if (orderCriteria.getOrderSid() != null && orderCriteria.getOrderSid() != "") {
                     predicate.getExpressions().add(
                         cb.like(r.get("orderSid"), "%" + orderCriteria.getOrderSid() + "%"));
@@ -200,6 +213,13 @@ public class OffLineOrderService {
             sql.append(" and order_sid like '%");
             sql.append(olOrderCriteria.getOrderSid());
             sql.append("%'");
+        }
+        if (olOrderCriteria.getRebateWay() != null) {
+            if (olOrderCriteria.getRebateWay() == 2) {
+                sql.append(" and rebate_way != 1");
+            } else {
+                sql.append(" and rebate_way = 1");
+            }
         }
         sql.append(" and state = 1 group by merchant_id");
 

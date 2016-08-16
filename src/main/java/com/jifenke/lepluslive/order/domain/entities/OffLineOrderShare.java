@@ -44,6 +44,9 @@ public class OffLineOrderShare {
     @ManyToOne
     private Partner tradePartner;
 
+    @ManyToOne
+    private Merchant tradeMerchant;
+
 
     @ManyToOne
     private Merchant lockMerchant;
@@ -52,6 +55,13 @@ public class OffLineOrderShare {
     private Partner lockPartner;
 
 
+    public Merchant getTradeMerchant() {
+        return tradeMerchant;
+    }
+
+    public void setTradeMerchant(Merchant tradeMerchant) {
+        this.tradeMerchant = tradeMerchant;
+    }
 
     public OffLineOrder getOffLineOrder() {
         return offLineOrder;
