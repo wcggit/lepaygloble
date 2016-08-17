@@ -33,4 +33,6 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
                                        Integer pageSize);
 
     Long countByPartner(Partner partner);
+
+    Merchant findByMerchantSid(String sid);
 }

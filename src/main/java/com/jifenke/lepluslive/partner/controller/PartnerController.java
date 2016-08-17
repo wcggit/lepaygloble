@@ -3,6 +3,7 @@ package com.jifenke.lepluslive.partner.controller;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.partner.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
@@ -13,6 +14,7 @@ import com.jifenke.lepluslive.security.SecurityUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -130,6 +132,42 @@ public class PartnerController {
         merchantCriteria
             .setPartner(partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin()));
         return LejiaResult.ok(partnerService.getMerchantListPage(merchantCriteria));
+    }
+
+    @RequestMapping(value = "/partner/count_full_merchant", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    LejiaResult countFullBindMerchant() {
+        return LejiaResult.ok(partnerService.countPartnerBindFullMerchant(
+            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin())));
+    }
+
+    @RequestMapping(value = "/partner/merchant", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    LejiaResult getMerchantBySid(@RequestParam String sid) {
+        Merchant merchant = merchantService.findmerchantBySid(sid);
+        Partner
+            partner =
+            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+        if (merchant.getPartner().getId().toString().equals(partner.getId().toString())) {
+            return LejiaResult.ok(merchant);
+        }
+        return LejiaResult.build(401, "无权限");
+    }
+
+    @RequestMapping(value = "/partner/merchant_user", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    LejiaResult getMerchantUserBySid(@RequestParam String sid) {
+        Merchant merchant = merchantService.findmerchantBySid(sid);
+        Partner
+            partner =
+            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+        if (merchant.getPartner().getId().toString().equals(partner.getId().toString())) {
+            return LejiaResult.ok(merchantService.findMerchantUserByMerchant(merchant));
+        }
+        return LejiaResult.build(401, "无权限");
     }
 
 

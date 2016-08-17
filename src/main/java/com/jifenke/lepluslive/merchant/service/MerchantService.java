@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 /**
@@ -83,7 +85,16 @@ public class MerchantService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-      public Long countPartnerBindMerchant(Partner partner) {
+    public Long countPartnerBindMerchant(Partner partner) {
         return merchantRepository.countByPartner(partner);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Merchant findmerchantBySid(String sid) {
+        return merchantRepository.findByMerchantSid(sid);
+    }
+
+    public List<MerchantUser> findMerchantUserByMerchant(Merchant merchant) {
+        return merchantUserRepository.findAllByMerchant(merchant);
     }
 }

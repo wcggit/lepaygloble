@@ -2,7 +2,7 @@
 
 angular.module('lepayglobleApp')
     .controller('myItemsController',
-                function ($scope, Partner) {
+                function ($scope, Partner, $state) {
                     $('body').css({background: '#f3f3f3'});
                     $('.main-content').css({height: 'auto'});
                     $('#timePicker1')
@@ -29,6 +29,10 @@ angular.module('lepayglobleApp')
                     var currentPage = 1;
                     var criteria = {};
                     criteria.offset = 1;
+                    Partner.countFullMerchant().then(function (response) {
+                        var data = response.data;
+                        $scope.fullMerchant = data;
+                    });
                     getTotalPage();
                     function loadContent() {
                         Partner.getPartnerBindMerchantList(criteria).then(function (response) {
@@ -76,12 +80,12 @@ angular.module('lepayglobleApp')
                         }
                         if (partnerShip != -1) {
                             criteria.partnerShip = partnerShip;
-                        }else{
+                        } else {
                             criteria.partnerShip = null;
                         }
                         if (userBindState != -1) {
                             criteria.userBindState = userBindState;
-                        }else{
+                        } else {
                             criteria.userBindState = null;
                         }
                         criteria.offset = 1;
@@ -90,15 +94,28 @@ angular.module('lepayglobleApp')
                         getTotalPage()
                     }
 
-                    $scope.itemsInfo = [
-                        {
-                            itemsName: '一品江南',
-                            contractType: '0',
-                            itemsAddress: '北京市朝阳区',
-                            memberNumber: '20',
-                            shopCommission: '23.33',
-                            myCommission: '12.56'
-                        }
-                    ];
+                    $scope.showFullMerchant = function (page) {
+                        $("#timePicker1").val("");
+                        $("#merchantName").val("");
+                        $("#userBindState").val("2");
+                        $("#partnerShip").val("-1");
+                        criteria.offset = 1;
+                        criteria.merchantName = null;
+                        criteria.userBindState = 2;
+                        criteria.partnerShip = null;
+                        criteria.startDate = null;
+                        criteria.endDate = null;
+                        getTotalPage()
+                    };
+                    $scope.goLePayCode = function (id) {
+                        $state.go("lefuma", {id: id})
+                    };
+                    $scope.goEdit = function (id) {
+                        $state.go("createitems1", {id: id})
+                    };
+                    $scope.goMerchantUser = function (id) {
+                        $state.go("accountmanager", {id: id})
+                    };
+
                 });
 

@@ -130,7 +130,7 @@ public class PartnerService {
         int start = 10 * (merchantCriteria.getOffset() - 1);
         StringBuffer sql = new StringBuffer();
         sql.append(
-            "select merchant.id,merchant.name,merchant.create_date,merchant.partnership,merchant.location,ifNull(le_jia_user.bind_user,0)bind_user,merchant.total_money,ifNull(trade_merchant.total,0)+ifNull(lock_merchant.total,0)commission,merchant.user_limit from (select merchant.id,merchant.name,merchant.partnership,merchant.location,merchant.create_date,merchant.user_limit,merchant_wallet.total_money from merchant,merchant_wallet where merchant.id=merchant_wallet.merchant_id and merchant.partner_id = ");
+            "select merchant_sid,name,create_date,partnership,location,(select count(*) from le_jia_user where bind_merchant_id = merchant.id)bind_user,(select total_money from merchant_wallet where merchant_id = merchant.id),ifNull((SELECT sum(to_trade_partner) total FROM off_line_order_share WHERE trade_merchant_id = merchant.id),0)+ifNull((SELECT sum(to_lock_partner) total FROM off_line_order_share WHERE  lock_merchant_id = merchant.id),0)commission,user_limit from merchant where partner_id =");
         sql.append(merchantCriteria.getPartner().getId());
         if (merchantCriteria.getStartDate() != null && merchantCriteria.getStartDate() != "") {
             sql.append(" and merchant.create_date  between '");
@@ -149,29 +149,24 @@ public class PartnerService {
             sql.append(" and merchant.partnership =");
             sql.append(merchantCriteria.getPartnerShip());
         }
-        sql.append(" order by merchant.create_date desc limit ");
-        sql.append(start);
-        sql.append(",10");
-        sql.append(
-            ")merchant left join (select count(*) bind_user,le_jia_user.bind_merchant_id from le_jia_user group by bind_merchant_id )le_jia_user on merchant.id = le_jia_user.bind_merchant_id  left join (SELECT sum(to_trade_partner) total,trade_merchant_id FROM off_line_order_share WHERE trade_partner_id = ");
-        sql.append(merchantCriteria.getPartner().getId());
-        sql.append(
-            " GROUP BY trade_merchant_id)trade_merchant on trade_merchant.trade_merchant_id = merchant.id left join (SELECT sum(to_lock_partner) total,lock_merchant_id FROM off_line_order_share WHERE lock_partner_id = ");
-        sql.append(merchantCriteria.getPartner().getId());
-        sql.append(
-            " GROUP BY lock_merchant_id)lock_merchant on merchant.id=lock_merchant.lock_merchant_id");
+
         if (merchantCriteria.getUserBindState() != null) {
             if (merchantCriteria.getUserBindState() == 0) {
-                sql.append(" where (case when (merchant.user_limit=0 ) then 0 else  ifNull(le_jia_user.bind_user,0)/merchant.user_limit end )=0");
+                sql.append(
+                    "  and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )=0");
             }
             if (merchantCriteria.getUserBindState() == 1) {
                 sql.append(
-                    " where (case when (merchant.user_limit=0 ) then 0 else  ifNull(le_jia_user.bind_user,0)/merchant.user_limit end )>=0.85 and (case when (merchant.user_limit=0 ) then 0 else  ifNull(le_jia_user.bind_user,0)/merchant.user_limit end )<1");
+                    " and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )>=0.85 and  (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )<1");
             }
             if (merchantCriteria.getUserBindState() == 2) {
-                sql.append(" where (case when (merchant.user_limit=0 ) then 0 else  ifNull(le_jia_user.bind_user,0)/merchant.user_limit end )=1");
+                sql.append(
+                    "  and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )=1");
             }
         }
+        sql.append(" order by merchant.create_date desc limit ");
+        sql.append(start);
+        sql.append(",10");
         Query nativeQuery = em.createNativeQuery(sql.toString());
 
         return nativeQuery.getResultList();
@@ -179,12 +174,13 @@ public class PartnerService {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Long getMerchantListPage(MerchantCriteria merchantCriteria) {
+        int start = 10 * (merchantCriteria.getOffset() - 1);
         StringBuffer sql = new StringBuffer();
         sql.append(
-            "select count(*) from (select merchant.id,merchant.name,merchant.partnership,merchant.location,merchant.create_date,merchant.user_limit from merchant where merchant.partner_id = ");
+            "select count(*)from merchant where partner_id =");
         sql.append(merchantCriteria.getPartner().getId());
         if (merchantCriteria.getStartDate() != null && merchantCriteria.getStartDate() != "") {
-            sql.append(" and create_date  between '");
+            sql.append(" and merchant.create_date  between '");
             sql.append(merchantCriteria.getStartDate());
             sql.append("' and '");
             sql.append(merchantCriteria.getEndDate());
@@ -200,29 +196,40 @@ public class PartnerService {
             sql.append(" and merchant.partnership =");
             sql.append(merchantCriteria.getPartnerShip());
         }
-        sql.append(
-            ")merchant left join (select count(*) bind_user,le_jia_user.bind_merchant_id from le_jia_user group by bind_merchant_id )le_jia_user on merchant.id = le_jia_user.bind_merchant_id  left join (SELECT sum(to_trade_partner) total,trade_merchant_id FROM off_line_order_share WHERE trade_partner_id = ");
-        sql.append(merchantCriteria.getPartner().getId());
-        sql.append(
-            " GROUP BY trade_merchant_id)trade_merchant on trade_merchant.trade_merchant_id = merchant.id left join (SELECT sum(to_lock_partner) total,lock_merchant_id FROM off_line_order_share WHERE lock_partner_id = ");
-        sql.append(merchantCriteria.getPartner().getId());
-        sql.append(
-            " GROUP BY lock_merchant_id)lock_merchant on merchant.id=lock_merchant.lock_merchant_id");
+
         if (merchantCriteria.getUserBindState() != null) {
             if (merchantCriteria.getUserBindState() == 0) {
-                sql.append(" where (case when (merchant.user_limit=0 ) then 0 else  ifNull(le_jia_user.bind_user,0)/merchant.user_limit end )=0");
+                sql.append(
+                    "  and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )=0");
             }
             if (merchantCriteria.getUserBindState() == 1) {
                 sql.append(
-                    " where (case when (merchant.user_limit=0 ) then 0 else  ifNull(le_jia_user.bind_user,0)/merchant.user_limit end )>=0.85 and (case when (merchant.user_limit=0 ) then 0 else  ifNull(le_jia_user.bind_user,0)/merchant.user_limit end )<1");
+                    " and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )>=0.85 and  (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )<1");
             }
             if (merchantCriteria.getUserBindState() == 2) {
-                sql.append(" where (case when (merchant.user_limit=0 ) then 0 else  ifNull(le_jia_user.bind_user,0)/merchant.user_limit end )=1");
+                sql.append(
+                    "  and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )=1");
             }
         }
+        sql.append(" order by merchant.create_date desc limit ");
+        sql.append(start);
+        sql.append(",10");
         Query nativeQuery = em.createNativeQuery(sql.toString());
         List<BigInteger> details = nativeQuery.getResultList();
         return (long) Math.ceil(details.get(0).doubleValue() / 10.0);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Long countPartnerBindFullMerchant(Partner partner) {
+        StringBuffer sql = new StringBuffer();
+        sql.append(
+            "select count(*) from merchant where partner_id = ");
+        sql.append(partner.getId());
+        sql.append(
+            " and user_limit = (select count(*) from le_jia_user where bind_merchant_id = merchant.id)");
+        Query nativeQuery = em.createNativeQuery(sql.toString());
+        List<BigInteger> details = nativeQuery.getResultList();
+        return details.get(0).longValue();
     }
 
 

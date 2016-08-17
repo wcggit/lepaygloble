@@ -48,7 +48,7 @@
         <div>
             <!--表格信息总结-->
             <p class="ttl-add clearfix">
-                注：有<font>5</font>家商户的锁定名额以满 <a>查看详情</a>
+                注：有<font>{{fullMerchant}}</font>家商户的锁定名额以满 <a ng-click="showFullMerchant()">查看详情</a>
                 <a class="btn btn-warning pull-right" ui-sref="createitems1"
                    ui-sref-opts="{reload:true}">新建商户</a>
             </p>
@@ -82,9 +82,12 @@
                         <td ng-bind="x[6]/100"></td>
                         <td ng-bind="x[7]/100"></td>
                         <td>
-                            <a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>
-                            <a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>
-                            <a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>
+                            <a ng-click="goLePayCode(x[0])">乐付码</a>
+                            <a ng-click="goEdit(x[0])">编辑</a>
+                            <a ng-click="goMerchantUser(x[0])">账户</a>
+                            <!--<a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>-->
+                            <!--<a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>-->
+                            <!--<a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>-->
                         </td>
                     </tr>
                     </tbody>

@@ -1,18 +1,21 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('lefumaController', function ($scope, $state, $location, $http) {
+    .controller('lefumaController', function ($scope, $state, $stateParams, Partner) {
 
-        //$('.left-main').css({'height':'100vw'})
+                    if ($stateParams.id != null && $stateParams.id != "") {
+                        Partner.getMerchantById($stateParams.id).then(function (response) {
+                            if (response.status == 200) {
 
-        $http.get('api/merchant').success(function (response) {
-            $scope.qrCode = response.data.qrCodePicture;
-            $scope.shopName = response.data.name;
-        });
-        $scope.downloadQrCode = function(){
-            location.href = "/api/merchant/downLoadQrCode"
-        }
-    });
-/**
- * Created by recoluan on 2016/8/2 0002.
- */
+                                $scope.merchant = response.data;
+                            } else {
+                                $state.go("myitems");
+                            }
+                        });
+                    } else {
+                        $state.go("myitems");
+                    }
+                    $scope.downloadQrCode = function () {
+                        location.href = "/api/merchant/downLoadQrCode?sid=" + $stateParams.id;
+                    }
+                });

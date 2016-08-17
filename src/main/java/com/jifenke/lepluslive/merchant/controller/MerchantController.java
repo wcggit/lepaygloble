@@ -95,11 +95,16 @@ public class MerchantController {
 
 
     @RequestMapping(value = "/merchant/downLoadQrCode", method = RequestMethod.GET)
-    public void downLoadQrCode(HttpServletResponse response) {
+    public void downLoadQrCode(HttpServletResponse response,
+                               @RequestParam(required = false) String sid) {
         Merchant
-            merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchant = null;
+        if (sid != null && sid != "") {
+            merchant = merchantService.findmerchantBySid(sid);
+        } else {
+            merchant = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
+        }
 
         response.setContentType("application/x-msdownload;");
         response.setHeader("Content-disposition", "attachment; filename=image.png");
@@ -120,7 +125,7 @@ public class MerchantController {
             // 计算图片放置位置
             int width = image.getWidth();
             int height = image.getHeight();
-            System.out.println(width+height);
+            System.out.println(width + height);
             int x = (image.getWidth() - widthLogo) / 2;
             int y = (image.getHeight() - logo.getHeight()) / 2;
             //开始绘制图片
@@ -207,16 +212,13 @@ public class MerchantController {
             merchantUser =
             merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
 
-        try{
-            merchantService.resetPasswword(merchantUser,reset,password);
+        try {
+            merchantService.resetPasswword(merchantUser, reset, password);
             return LejiaResult.ok();
-        }catch (Exception e){
-            return LejiaResult.build(400,"密码不正确");
+        } catch (Exception e) {
+            return LejiaResult.build(400, "密码不正确");
         }
     }
-
-
-
 
 
 }
