@@ -1,6 +1,6 @@
 /*我的商户*/
 .my-items tr td:last-child a{margin-right: 15px}
-
+.my-items tr td:nth-of-type(4){width: 18%}
 /*商户二维码*/
 .items-manager .container-fluid > p{margin-top: 30px;}
 .items-manager .container-fluid > p span{font-size: 14px;color: #939393;cursor: pointer}
@@ -8,7 +8,7 @@
 .items-manager .table-ttl{margin-bottom: 15px;font-size: 16px}
 .account-manager td{text-align: center}
 
-/*新建商户1*/
+/*新建商户*/
 .content .top-div{margin: 30px 9px 30px -15px}
 .top-div{border-left: solid 1px #cecece;}
 .top-div .col-md-4{
@@ -26,7 +26,7 @@
 }
 .top-div .top-focus{background-color: #fb991a;color: #fff;border-top-color:#fb991a;border-right-color:#fb991a;}
 .top-div .top-focus .top-angle{background-color: #fb991a;border-top-color:#fb991a;border-right-color:#fb991a;}
-.create-items .form-group > label:before {content: "*";color: #fb991a;position: absolute;right: 80px;top: 10px;}
+.create-items .form-group > label:before {content: "*";color: #fb991a;position: absolute;margin-left:-14px;top: 10px;}
 .create-items .shopPic{width: 120px;height: 120px;overflow: hidden;position: relative;padding: 0; margin-right: 10px;}
 .create-items .shopPic img{width: 100%;height: 100%;}
 .create-items .shopPic:hover div{display: block;}
@@ -43,19 +43,22 @@
     width: 20px;height: 22px;right: 18%;
     background: url("../../styles/images/shop/delete.png") no-repeat;
 }
-.create-items  #addShopPic{
+.create-items  .addShopPic{
     width: 120px;height: 120px;
     background: url("../../styles/images/shop/addShopPic.png") no-repeat center 35% ;
     background-size: 35% 35%;border: solid 1px #ddd;border-radius: 4px; position: relative;
 }
-.create-items  #addShopPic input{
+.create-items  .addShopPic input{
     width: 120px;height: 120px;opacity: 0;position: absolute;
     top: 0; left: 0; z-index: 10; cursor: pointer;
 }
-.create-items  #addShopPic span{
+.create-items  .addShopPic span{
     display: inline-block;width: 120px;text-align: center;
     line-height: 20px;position: absolute;bottom: 10px;
 }
+.radio-style .radio-inline{padding-left: 0}
+.radio-style .radio-inline label{width: 76px}
+.default-font{display: block;width: 100%;height: 34px;padding: 6px 12px;font-size: 14px;line-height: 1.42857143;}
 
 /*图片放大器*/
 #enlargePic img{width: 100%;}
@@ -88,9 +91,3 @@
 #myPageTop .column2{padding-left: 25px;}
 .flipBtn{margin: 20px 0 50px}
 .map-ttl{height: 34px;padding: 6px 0;font-size: 14px;line-height: 1.42857143;color: #fb991a}
-
-
-/*新建商户2*/
-.radio-style .radio-inline{padding-left: 0}
-.radio-style .radio-inline label{width: 76px}
-.default-font{display: block;width: 100%;height: 34px;padding: 6px 12px;font-size: 14px;line-height: 1.42857143;}

@@ -48,46 +48,18 @@ angular.module('lepayglobleApp')
                                },
                                resolve: {}
                            })
-                    .state('createitems1', {
+                    .state('createitems', {
                                parent: 'myitems',
-                               url: '/createitems1',
+                               url: '/createitems',
                                data: {
                                    authorities: ["partner"]
                                },
                                views: {
                                    'content@': {
-                                       templateUrl: 'scripts/app/partner/itemsmanager/createitems1.html',
-                                       controller: 'createItems1Controller'
+                                       templateUrl: 'scripts/app/partner/itemsmanager/createitems.html',
+                                       controller: 'createItemsController'
                                    }
                                },
                                resolve: {}
                            })
-                    .state('createitems2', {
-                               parent: 'myitems',
-                               url: '/createitems2',
-                               data: {
-                                   authorities: ["partner"]
-                               },
-                               views: {
-                                   'content@': {
-                                       templateUrl: 'scripts/app/partner/itemsmanager/createitems2.html',
-                                       controller: 'createItems2Controller'
-                                   }
-                               },
-                               resolve: {}
-                           })
-                    .state('createitems3', {
-                               parent: 'myitems',
-                               url: '/createitems3',
-                               data: {
-                                   authorities: ["partner"]
-                               },
-                               views: {
-                                   'content@': {
-                                       templateUrl: 'scripts/app/partner/itemsmanager/createitems3.html',
-                                       controller: 'createItems3Controller'
-                                   }
-                               },
-                               resolve: {}
-                           });
             });

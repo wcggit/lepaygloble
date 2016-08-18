@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('createItems1Controller', function ($scope, $state, $location, $http) {
+    .controller('createItemsController', function ($scope, $state, $location, $http) {
         $('body').css({background: '#f3f3f3'});
         $('.main-content').css({height: 'auto'});
         _init_area();
 
-        $scope.imgBtnChange=function(x){
+        $scope.imgBtnChange=function(x,addShopPic){
                var docObj=x;
                if(docObj.files&&docObj.files[0]) {
                    //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
@@ -14,7 +14,7 @@ angular.module('lepayglobleApp')
                    var beforeStr = '<div class="thumbnail shopPic pull-left">' +
                        '<img src="'+window.URL.createObjectURL(docObj.files[0])+'" alt="...">' +
                        '<div><span class="enlarge"></span><span class="delete"data-target="#enlargePic"></span></div></div>';
-                   $('#addShopPic').before(beforeStr);
+                   addShopPic.before(beforeStr);
                    $('.shopPic').each(function (i) {
                        $('.shopPic').eq(i).find('.delete').unbind().bind('click', function () {
                            $(this).parent('div').parent('.shopPic').remove();
@@ -67,6 +67,27 @@ angular.module('lepayglobleApp')
                 map.setCenter(e.poi.location);
             }
         }
+        // 判断是都是联盟商户
+        $scope.itemsState=true;
+        $scope.itemsStateFun=function () {
+            if($('#optionsRadios1').prop('checked')){
+                $scope.itemsState=true;
+            }else{
+                $scope.itemsState=false;
+            }
+        };
+
+        //判断当前是那一页
+        $scope.currentState=1;
+        $scope.currentStateFun1=function () {
+            $scope.currentState=1;
+        };
+        $scope.currentStateFun2=function () {
+            $scope.currentState=2;
+        };
+        $scope.currentStateFun3=function () {
+            $scope.currentState=3;
+        };
     });
 /**
  * Created by recoluan on 2016/8/2 0002.
