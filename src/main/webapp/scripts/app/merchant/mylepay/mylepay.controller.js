@@ -1,165 +1,144 @@
 'use strict';
 angular.module("lepayglobleApp").controller("MyLePayController",
-    function ($q, $scope, MyLePay, $rootScope, $http) {
-        $('body').css({background: '#f3f3f3'});
-        $('.main-content').css({height: 'auto'});
-        $('#timePicker0')
-            .val(moment().subtract('day', 4).format('YYYY/MM/DD') + ' - ' + moment().format('YYYY/MM/DD'))
-            .daterangepicker({
-                opens : 'left', //日期选择框的弹出位置
-                format : 'YYYY/MM/DD', //控件中from和to 显示的日期格式
-                ranges : {
-                    '最近7日': [moment().subtract('days', 6), moment()],
-                    '最近30日': [moment().subtract('days', 29), moment()]
-                }
-            },function(start, end, label) {
-                if (start.format('YYYY/MM/DD')
-                    == moment().format('yyyy/MM/dd')) {
-                    MyLePay.getTodayOrderDetail().then(function (data) {
-                        var datas = data.data;
-                        var item = [];
-                        var data = [];
-                        var day = datas.trueSales;
-<<<<<<< HEAD
-                        item.push(moment().format("MM/DD"));
-                        data.push(day
-                            / 100);
-=======
-                        item.push(moment().format("MM/dd"));
-                        data.push(day / 100);
->>>>>>> origin/master
-                        $scope.item = [];
-                        $scope.data = [];
-                        $scope.item = item;
-                        $scope.data = data;
-                    });
-                    return;
-                }
-                var data = "startDate="
-                    + start.format('YYYY/MM/DD')
-                    + "&endDate="
-                    + end.format('YYYY/MM/DD');
-                MyLePay.getDayTrade(data).then(function(result){
-                    var financials = result.data;
-                    var item = [];
-                    var data = [];
-                    angular.forEach(financials,
-<<<<<<< HEAD
-                        function (financial, index,
-                                  array) {
-                            var date = moment(financial.balanceDate);
-                            item.push(date.format("MM/DD"));
-                            data.push(financial.transferPrice
-                                / 100);
-=======
-                        function (financial, index, array) {
-                            var date = moment(financial.balanceDate);
-                            item.push(date.format("MM/DD"));
-                            data.push(financial.transferPrice/100);
->>>>>>> origin/master
-                        });
-                    if(end.format('YYYY/MM/DD')==new Date().format('yyyy/MM/dd')){
-                        item.push(moment().format("MM/DD"));
-                        data.push($scope.day.trueSales);
-                    }
-                    $scope.item = item;
-                    $scope.data = data;
-                });
-            });
-        $scope.srgl = {
-            firNum: "0",
-            secNum: "0",
-            thirNum: "0",
-            forNum: "0"
-        };
-        $scope.day = {
-            count: "0",
-            sales: "0",
-            commission: "0",
-            trueSales: "0"
-        };
+                                            function ($q, $scope, MyLePay, $rootScope, $http) {
+                                                $('body').css({background: '#f3f3f3'});
+                                                $('.main-content').css({height: 'auto'});
+                                                $('#timePicker0')
+                                                    .val(moment().subtract('day', 4).format('YYYY/MM/DD') + ' - ' + moment().format('YYYY/MM/DD'))
+                                                    .daterangepicker({
+                                                                         opens : 'left', //日期选择框的弹出位置
+                                                                         format : 'YYYY/MM/DD', //控件中from和to 显示的日期格式
+                                                                         ranges : {
+                                                                             '最近7日': [moment().subtract('days', 6), moment()],
+                                                                             '最近30日': [moment().subtract('days', 29), moment()]
+                                                                         }
+                                                                     },function(start, end, label) {
+                                                                         if (start.format('YYYY/MM/DD')
+                                                                             == new Date().format('yyyy/MM/dd')) {
+                                                                             MyLePay.getTodayOrderDetail().then(function (data) {
+                                                                                 var datas = data.data;
+                                                                                 var item = [];
+                                                                                 var data = [];
+                                                                                 var day = datas.trueSales;
+                                                                                 item.push(moment().format("MM/DD"));
+                                                                                 data.push(day
+                                                                                           / 100);
+                                                                                 $scope.item = [];
+                                                                                 $scope.data = [];
+                                                                                 $scope.item = item;
+                                                                                 $scope.data = data;
+                                                                             });
+                                                                             return;
+                                                                         }
+                                                                         var data = "startDate="
+                                                                                    + start.format('YYYY/MM/DD')
+                                                                                    + "&endDate="
+                                                                                    + end.format('YYYY/MM/DD')
+                                                                         MyLePay.getDayTrade(data).then(function(result){
+                                                                             var financials = result.data;
+                                                                             var item = [];
+                                                                             var data = [];
+                                                                             angular.forEach(financials,
+                                                                                             function (financial, index,
+                                                                                                       array) {
+                                                                                                 var date = moment(financial.balanceDate);
+                                                                                                 item.push(date.format("MM/DD"));
+                                                                                                 data.push(financial.transferPrice
+                                                                                                           / 100);
+                                                                                             });
+                                                                             if(end.format('YYYY/MM/DD')==new Date().format('yyyy/MM/dd')){
+                                                                                 item.push(moment().format("MM/DD"));
+                                                                                 data.push($scope.day.trueSales);
+                                                                             }
+                                                                             $scope.item = item;
+                                                                             $scope.data = data;
+                                                                         });
+                                                                     });
+                                                $scope.srgl = {
+                                                    firNum: "0",
+                                                    secNum: "0",
+                                                    thirNum: "0",
+                                                    forNum: "0"
+                                                };
+                                                $scope.day = {
+                                                    count: "0",
+                                                    sales: "0",
+                                                    commission: "0",
+                                                    trueSales: "0"
+                                                };
 
-        $scope.item = ["1"];
-        $scope.data = ["1"];
-        MyLePay.getAvaliableCommission().then(function (data) {
-            var data = data.data;
-            $scope.srgl = {
-                firNum:  data.transferingMoney / 100.0,
-                secNum:  data.totalTransferMoney / 100.0,
-                thirNum: data.availableCommission / 100.0,
-                forNum:  data.totalCommission / 100.0
-            };
-        });
-        MyLePay.getTodayOrderDetail().then(function (data) {
-            var data = data.data;
-            $scope.day = {
-                count: data.count,
-                sales:      data.sales / 100.0,
-                commission: data.commission / 100.0,
-                trueSales:  data.trueSales / 100.0
-            };
-        });
+                                                $scope.item = ["1"];
+                                                $scope.data = ["1"];
+                                                MyLePay.getAvaliableCommission().then(function (data) {
+                                                    var data = data.data;
+                                                    $scope.srgl = {
+                                                        firNum:  data.transferingMoney / 100.0,
+                                                        secNum:  data.totalTransferMoney / 100.0,
+                                                        thirNum: data.availableCommission / 100.0,
+                                                        forNum:  data.totalCommission / 100.0
+                                                    };
+                                                });
+                                                MyLePay.getTodayOrderDetail().then(function (data) {
+                                                    var data = data.data;
+                                                    $scope.day = {
+                                                        count: data.count,
+                                                        sales:      data.sales / 100.0,
+                                                        commission: data.commission / 100.0,
+                                                        trueSales:  data.trueSales / 100.0
+                                                    };
+                                                });
 
-        $scope.tx=function () {
-            $("#tx").modal("toggle");
-        }
+                                                $scope.tx=function () {
+                                                    $("#tx").modal("toggle");
+                                                }
 
-        MyLePay.getMonthOrderDetail().then(function (data) {
-            var data = data.data;
-            $scope.month = {
-                count: data.count,
-                sales:      data.sales / 100.0,
-                commission: data.commission / 100.0,
-                trueSales:  data.trueSales / 100.0
-            };
-        });
+                                                MyLePay.getMonthOrderDetail().then(function (data) {
+                                                    var data = data.data;
+                                                    $scope.month = {
+                                                        count: data.count,
+                                                        sales:      data.sales / 100.0,
+                                                        commission: data.commission / 100.0,
+                                                        trueSales:  data.trueSales / 100.0
+                                                    };
+                                                });
 
-        $scope.currentTab0 = true;
-        $scope.currentTab1 = false;
-        $scope.onClickTab = function () {
-            $scope.currentTab0 = !$scope.currentTab0;
-            $scope.currentTab1 = !$scope.currentTab1;
-        };
+                                                $scope.currentTab0 = true;
+                                                $scope.currentTab1 = false;
+                                                $scope.onClickTab = function () {
+                                                    $scope.currentTab0 = !$scope.currentTab0;
+                                                    $scope.currentTab1 = !$scope.currentTab1;
+                                                };
 
-        //$scope.legend = ['日交易收入'];
-        $q.all([MyLePay.getDayTrade(),
-                MyLePay.getTodayOrderDetail()]).then(function (results) {
-            var financials = results[0].data;
-            var item = [];
-            var data = [];
-            var day = results[1].data.trueSales;
+                                                //$scope.legend = ['日交易收入'];
+                                                $q.all([MyLePay.getDayTrade(),
+                                                        MyLePay.getTodayOrderDetail()]).then(function (results) {
+                                                    var financials = results[0].data;
+                                                    var item = [];
+                                                    var data = [];
+                                                    var day = results[1].data.trueSales;
 
-<<<<<<< HEAD
-            angular.forEach(financials,
-                            function (financial, index,
-                                      array) {
-                                var date = moment(financial.balanceDate);
-                                item.push(date.format("MM/DD"));
-                                data.push(financial.transferPrice
-                                          / 100);
-                            });
-            item.push(moment().format("MM/DD"));
-=======
-            angular.forEach(financials, function (financial, index, array) {
-                var date = new Date(financial.balanceDate);
-                item.push(date.format("MM/dd"));
-                data.push(financial.transferPrice/100);
-            });
-            item.push(new Date().format("MM/dd"));
->>>>>>> origin/master
-            data.push(day / 100);
-            $scope.item = item;
-            $scope.data = data;
+                                                    angular.forEach(financials,
+                                                                    function (financial, index,
+                                                                              array) {
+                                                                        var date = moment(financial.balanceDate);
+                                                                        item.push(date.format("MM/DD"));
+                                                                        data.push(financial.transferPrice
+                                                                                  / 100);
+                                                                    });
+                                                    item.push(moment().format("MM/DD"));
+                                                    data.push(day / 100);
+                                                    $scope.item = item;
+                                                    $scope.data = data;
 
-        });
+                                                });
 
-        $http.get('api/merchant').success(function (response) {
-            $scope.payee = response.data.payee;
-           var bankNumber = response.data.merchantBank.bankNumber;
-            $scope.bank = bankNumber.substring(bankNumber.length - 4, bankNumber.length);
-        });
+                                                $http.get('api/merchant').success(function (response) {
+                                                    $scope.payee = response.data.payee;
+                                                    var bankNumber = response.data.merchantBank.bankNumber;
+                                                    $scope.bank = bankNumber.substring(bankNumber.length - 4, bankNumber.length);
+                                                });
 
-    });
+                                            })
 angular.module("lepayglobleApp").directive("eChart", function () {
     function link($scope, element, attrs) {
         // 基于准备好的dom，初始化echarts图表
