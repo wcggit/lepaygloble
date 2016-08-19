@@ -79,6 +79,28 @@ angular.module('lepayglobleApp')
                              deferred.resolve(response);
                          });
                          return deferred.promise;
+                     },
+                     getAllCities: function () {
+                         var deferred = $q.defer();
+                         $http.get('/api/city/ajax', {
+                             headers: {
+                                 'Content-Type': 'application/json'
+                             }
+                         }).success(function (response) {
+                             deferred.resolve(response);
+                         });
+                         return deferred.promise;
+                     },
+                     getAllMerchantType: function () {
+                         var deferred = $q.defer();
+                         $http.get('/api/merchant/merchantType', {
+                             headers: {
+                                 'Content-Type': 'application/json'
+                             }
+                         }).success(function (response) {
+                             deferred.resolve(response);
+                         });
+                         return deferred.promise;
                      }
                  };
              });

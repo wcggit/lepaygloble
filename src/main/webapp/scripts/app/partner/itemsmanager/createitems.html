@@ -4,15 +4,15 @@
 
         <!--头部-->
         <div class="row top-div">
-            <div class="col-md-4" ng-class = "{'top-focus':currentState==1}">
+            <div class="col-md-4" ng-class="{'top-focus':currentState==1}">
                 基本信息
                 <span class="top-angle"></span>
             </div>
-            <div class="col-md-4" ng-class = "{'top-focus':currentState==2}">
+            <div class="col-md-4" ng-class="{'top-focus':currentState==2}">
                 签约信息
                 <span class="top-angle"></span>
             </div>
-            <div class="col-md-4" ng-class = "{'top-focus':currentState==3}">
+            <div class="col-md-4" ng-class="{'top-focus':currentState==3}">
                 结算信息
                 <span class="top-angle"></span>
             </div>
@@ -25,28 +25,55 @@
                     <label class="col-sm-2 control-label">商户名称</label>
 
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" placeholder="请输入商户名称">
+                        <input type="text" class="form-control" id="merchantName"
+                               placeholder="请输入商户名称">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">商户分类</label>
 
                     <div class="col-sm-4">
-                        <select class="form-control"></select>
+                        <select class="form-control" id="merchantType">
+                            <option value="">请选择分类</option>
+                            <option ng-repeat="merchantType in merchantTypes"
+                                    value="{{merchantType.id}}">
+                                {{merchantType.name}}
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">所属区域</label>
 
                     <div class="info">
+                        <!--<div class="col-sm-2">-->
+                        <!--<select class="form-control" id="s_province" name="s_province"></select>  -->
+                        <!--</div>-->
+
                         <div class="col-sm-2">
-                            <select class="form-control" id="s_province" name="s_province"></select>  
+                            <!--<select class="form-control" id="city" name="s_city"-->
+                            <!--ng-model="currentCity" ng-options="o.id as o.name for o in cities"-->
+                            <!--ng-change="cityChange(currentCity)">-->
+                            <!--<option value="" selected>城市</option>-->
+                            <!--&lt;!&ndash;<option ng-repeat="city in cities" value="{{city.id}}">&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{city.name}}&ndash;&gt;-->
+                            <!--&lt;!&ndash;</option>&ndash;&gt;-->
+                            <!--</select>  -->
+                            <select class="form-control" id="city" name="s_city"
+                                    ng-model="currentCity">
+                                <option value="" selected>城市</option>
+                                <option ng-repeat="city in cities" value="{{city.id}}">
+                                    {{city.name}}
+                                </option>
+                            </select>  
                         </div>
                         <div class="col-sm-2">
-                            <select class="form-control" id="s_city" name="s_city"></select>  
-                        </div>
-                        <div class="col-sm-2">
-                            <select class="form-control" id="s_county" name="s_county"></select>
+                            <select class="form-control" id="area" name="s_county">
+                                <option value="">区域</option>
+                                <option ng-repeat="area in areas" value="{{area.id}}">
+                                    {{area.name}}
+                                </option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -54,7 +81,8 @@
                     <label class="col-sm-2 control-label">详细地址</label>
 
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" placeholder="请输入商户详细地址">
+                        <input type="text" id="location" class="form-control"
+                               placeholder="请输入商户详细地址">
                     </div>
                 </div>
                 <div class="form-group">
@@ -62,7 +90,7 @@
 
                     <div class="col-sm-8 clearfix">
                         <div id="addShopPic1" class="pull-left addShopPic">
-                            <input type="file" class="form-control"
+                            <input type="file" id="picture" class="form-control"
                                    onchange="angular.element(this).scope().imgBtnChange(this,$('#addShopPic1'))">
                             <span class="text-center ">添加照片</span>
                         </div>
@@ -83,7 +111,8 @@
                                     <td class="column2"><label>左击获取经纬度：</label></td>
                                 </tr>
                                 <tr>
-                                    <td><input class="form-control" type="text" placeholder="请输入关键字进行搜索"
+                                    <td><input class="form-control" type="text"
+                                               placeholder="请输入关键字进行搜索"
                                                id="tipinput"></td>
                                     <td class="column2"><input class="form-control" type="text"
                                                                readonly="true" id="lnglat"></td>
@@ -96,57 +125,67 @@
             <div class="floor2" ng-show="currentState==2">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">协议签约人</label>
+
                     <div class="col-sm-4">
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" id="merchantContact">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">绑定手机号</label>
+
                     <div class="col-sm-4">
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" id="merchantPhone">
                     </div>
                 </div>
                 <div class="form-group radio-style">
                     <label for="cooperate-style" class="col-sm-2 control-label">合约类型</label>
+
                     <div class="col-sm-4" id="cooperate-style">
                         <div class="radio-inline">
                             <label>
-                                <input ng-click="itemsStateFun()" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                                <input ng-click="itemsStateFun()"  type="radio" name="optionsRadios"
+                                       id="optionsRadios1" value="option1" checked>
                                 联盟商户
                             </label>
                         </div>
                         <div class="radio-inline">
                             <label>
-                                <input ng-click="itemsStateFun()" type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                <input ng-click="itemsStateFun()" type="radio" name="optionsRadios"
+                                       id="optionsRadios2" value="option2">
                                 普通商户
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">商户分类</label>
+                    <label class="col-sm-2 control-label">普通订单手续费</label>
+
                     <div class="col-sm-4">
-                        <span class="default-font">6%</span>
+                        <span class="default-font">0.6%</span>
                     </div>
                 </div>
                 <div class="form-group" ng-if="itemsState">
                     <label class="col-sm-2 control-label">会员订单手续费</label>
+
                     <div class="col-sm-8 form-inline">
                         <input type="text" class="form-control input-inline"> %
                         <span>注：会员订单的手续费和官方微信手续费的差额，乐加会以红包形式发放给会员</span>
                     </div>
                 </div>
                 <div class="form-group" ng-if="itemsState">
-                    <label class="col-sm-2 control-label">会员订单佣金比</label>
+                    <label class="col-sm-2 control-label">导流订单佣金比</label>
+
                     <div class="col-sm-8 form-inline">
                         <input type="text" class="form-control input-inline"> %
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">签约协议</label>
+
                     <div class="col-sm-8 clearfix">
                         <div id="addShopPic2" class="pull-left addShopPic">
-                            <input type="file" class="form-control" onchange="angular.element(this).scope().imgBtnChange(this,$('#addShopPic2'))">
+                            <input type="file" id="protocols" class="form-control" multiple="true"
+                                   onchange="angular.element(this).scope().imgBtnChange(this,$('#addShopPic2'))">
                             <span class="text-center ">添加照片</span>
                         </div>
                     </div>
@@ -154,25 +193,30 @@
             </div>
             <div class="floor3" ng-show="currentState==3">
                 <div class="form-group">
-                    <label for="bindCard" class="col-sm-2 control-label">银行卡号</label>
+                    <label for="merchantBankCard" class="col-sm-2 control-label">银行卡号</label>
+
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="bindCard" placeholder="请输入银行卡号">
+                        <input type="text" class="form-control" id="merchantBankCard" placeholder="请输入银行卡号">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="bank-branch" class="col-sm-2 control-label">开户行</label>
+                    <label for="merchantBank" class="col-sm-2 control-label">开户行</label>
+
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="bank-branch" placeholder="请输入所在支行地址">
+                        <input type="text" class="form-control" id="merchantBank"
+                               placeholder="请输入所在支行地址">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="payee" class="col-sm-2 control-label">收款人</label>
+
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="payee" placeholder="请输入收款人姓名">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">结算周期</label>
+
                     <div class="col-sm-4">
                         <span class="default-font">T+1</span>
                     </div>
@@ -183,13 +227,18 @@
                 <hr>
                 <div class="col-sm-9 col-sm-offset-2">
                     <p>
-                        <input type="button" class="btn btn-warning" value="下一页" ng-click="currentStateFun2()" ng-show="currentState==1">
+                        <input type="button" class="btn btn-warning" value="下一页"
+                               ng-click="currentStateFun2()" ng-show="currentState==1">
 
-                        <input type="button" class="btn btn-default" value="上一页" ng-click="currentStateFun1()" ng-show="currentState==2">
-                        <input type="button" class="btn btn-warning" value="下一页" ng-click="currentStateFun3()" ng-show="currentState==2">
+                        <input type="button" class="btn btn-default" value="上一页"
+                               ng-click="currentStateFun1()" ng-show="currentState==2">
+                        <input type="button" class="btn btn-warning" value="下一页"
+                               ng-click="currentStateFun3()" ng-show="currentState==2">
 
-                        <input type="button" class="btn btn-default" value="上一页" ng-click="currentStateFun2()" ng-show="currentState==3">
-                        <input type="button" class="btn btn-warning" value="确认"  ng-show="currentState==3">
+                        <input type="button" class="btn btn-default" value="上一页"
+                               ng-click="currentStateFun2()" ng-show="currentState==3">
+                        <input type="button" class="btn btn-warning" value="确认" ng-click="sumMerchant()"
+                               ng-show="currentState==3">
                     </p>
                 </div>
             </div>

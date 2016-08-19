@@ -7,6 +7,7 @@ import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.controller.dto.MerchantDto;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantType;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
@@ -21,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 
 import java.awt.*;
@@ -30,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -200,7 +205,14 @@ public class MerchantController {
                 .getMerchant();
         merchantService.createOpenRequest(merchant);
 
+        merchantService.findAllMerchantTypes();
+    }
 
+    @RequestMapping(value = "/merchant/merchantType", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<MerchantType> findAllMerchantType() {
+        return merchantService.findAllMerchantTypes();
     }
 
     @RequestMapping(value = "/merchant/resetPassword", method = RequestMethod.POST)
@@ -218,6 +230,18 @@ public class MerchantController {
         } catch (Exception e) {
             return LejiaResult.build(400, "密码不正确");
         }
+    }
+
+    @RequestMapping(value = "/merchant/createMerchant", method = RequestMethod.POST)
+    public LejiaResult createMerchant(
+        MultipartHttpServletRequest request) {
+        Iterator<String> iterator = request.getFileNames();
+        MultipartFile multipartFile = null;
+        while (iterator.hasNext()) {
+            multipartFile = request.getFile(iterator.next());
+            //do something with the file.....
+        }
+        return null;
     }
 
 

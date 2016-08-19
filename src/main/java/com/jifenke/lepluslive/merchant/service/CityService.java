@@ -1,8 +1,6 @@
 package com.jifenke.lepluslive.merchant.service;
 
-import com.jifenke.lepluslive.merchant.domain.entities.Area;
 import com.jifenke.lepluslive.merchant.domain.entities.City;
-import com.jifenke.lepluslive.merchant.repository.AreaRepository;
 import com.jifenke.lepluslive.merchant.repository.CityRepository;
 
 import org.springframework.data.domain.Pageable;
@@ -24,9 +22,6 @@ public class CityService {
     @Inject
     private CityRepository cityRepository;
 
-    @Inject
-    private AreaRepository areaRepository;
-
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<City> findCitiesByPage(Pageable pageable) {
         return cityRepository.findAll(pageable).getContent();
@@ -35,7 +30,7 @@ public class CityService {
     public City findCityById(Long id) {
 
         City city = cityRepository.findOne(id);
-        if (city == null) {
+        if(city==null){
             throw new RuntimeException("不存在的城市");
         }
 
@@ -43,15 +38,15 @@ public class CityService {
     }
 
     public void createCity(City city) {
-        if (city.getId() != null) {
+        if(city.getId()!=null){
             throw new RuntimeException("新建城市ID不为null");
         }
         cityRepository.save(city);
     }
 
     public void editCity(City city) {
-        City cityOri = cityRepository.findOne(city.getId());
-        if (cityOri == null) {
+        City cityOri =  cityRepository.findOne(city.getId());
+        if(cityOri==null){
             throw new RuntimeException("不存在的商户");
         }
         cityOri.setName(city.getName());
@@ -60,19 +55,11 @@ public class CityService {
         cityRepository.save(cityOri);
     }
 
-    public void deleteCity(Long id) {
+    public void deleteCity(Long id){
         cityRepository.delete(id);
     }
 
-    /**
-     * 获取某个城市的所有地区列表
-     * @param id 城市id
-     * @return
-     */
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<Area> findAreaListByCity(Long id) {
-        City city = new City();
-        city.setId(id);
-        return areaRepository.findAllByCity(city);
+    public List<City> findAllCity() {
+        return cityRepository.findAll();
     }
 }

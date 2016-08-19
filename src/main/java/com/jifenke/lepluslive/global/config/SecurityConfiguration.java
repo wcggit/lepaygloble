@@ -147,6 +147,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/account/reset_password/finish").permitAll()
             .antMatchers("/api/logs/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/api/merchant/downLoadQrCode").permitAll()
+            .antMatchers("/api/merchant/createMerchant").hasAuthority(AuthoritiesConstants.PARTNER)
+            .antMatchers("/api/merchant/merchantType").permitAll()
             .antMatchers("/api/merchant/**").hasAuthority(AuthoritiesConstants.MERCHANT)
             .antMatchers("/api/partner/**").hasAuthority(AuthoritiesConstants.PARTNER)
             .antMatchers("/api/audits/**").hasAuthority(AuthoritiesConstants.ADMIN)

@@ -2,10 +2,12 @@ package com.jifenke.lepluslive.merchant.service;
 
 import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantType;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
 import com.jifenke.lepluslive.merchant.domain.entities.OpenRequest;
 import com.jifenke.lepluslive.merchant.repository.MerchantRepository;
+import com.jifenke.lepluslive.merchant.repository.MerchantTypeRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
 import com.jifenke.lepluslive.merchant.repository.OpenRequestRepository;
@@ -39,6 +41,9 @@ public class MerchantService {
 
     @Inject
     private OpenRequestRepository openRequestRepository;
+
+    @Inject
+    private MerchantTypeRepository merchantTypeRepository;
 
 
     /**
@@ -96,5 +101,9 @@ public class MerchantService {
 
     public List<MerchantUser> findMerchantUserByMerchant(Merchant merchant) {
         return merchantUserRepository.findAllByMerchant(merchant);
+    }
+
+    public List<MerchantType> findAllMerchantTypes() {
+        return merchantTypeRepository.findAll();
     }
 }

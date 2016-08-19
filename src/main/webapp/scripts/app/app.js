@@ -5,7 +5,7 @@ angular.module('lepayglobleApp', ['LocalStorageModule',
                                   'ngCookies',
                                   //'ngAria',
                                   'ngCacheBuster',
-                                  //'ngFileUpload',
+                                  'ngFileUpload',
     // jhipster-needle-angularjs-add-module JHipster will add new module here
                                   'ui.bootstrap', 'ui.router',
                                   //'infinite-scroll',
@@ -36,7 +36,7 @@ angular.module('lepayglobleApp', ['LocalStorageModule',
                 // redirected to login, our previousState is already set in the
                 // authExpiredInterceptor. If we're going to login directly, we
                 // don't want to be sent to some previous state anyway
-                if (fromState.name != 'login'&&fromState.name!="loginPartner") {
+                if (fromState.name != 'login'&&fromState.name!="loginPartner"&&fromState.name!="home") {
                     $rootScope.previousStateName = fromState.name;
                     $rootScope.previousStateParams = fromParams;
                 }
