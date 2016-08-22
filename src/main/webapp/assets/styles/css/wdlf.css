@@ -90,10 +90,6 @@
     text-align: center;
 }
 /*日交易收入趋势*/
-#tx .modal-footer > div {
-    width: 150px;
-    margin: 0 auto;
-}
 #tx .modal-header > h4 > span {
     font-size: 14px;
     color:#666;

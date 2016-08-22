@@ -1,12 +1,60 @@
 /*我的商户*/
 .my-items tr td:last-child a{margin-right: 15px}
-.my-items tr td:nth-of-type(4){width: 18%}
-/*商户二维码*/
+.my-items tr td.address{width: 20%;position: relative}
+.my-items .tool{
+    display:inline-block;
+    width: 90%;
+    line-height: 20px;
+    padding-left: 16px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    position: absolute;
+    top: 25px;
+    left: 0;
+    background-color: #fff;
+}
+.my-items .tool:hover{
+    white-space: normal;
+    z-index: 10;
+}
+.my-items .select-jiao{
+    display: block;
+    position: absolute;
+    top: 1px;
+    right: 163px;
+    width: 10px;
+    height: 32px;
+    background:url("../images/wdlf/select_jiao.jpg") no-repeat;
+    background-size: 100% 100%;
+    z-index:10;
+}
+.my-items .ttl-add>span{margin-top: 14px}
+.left-icon{
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background: url("../images/wdlf/left-icon.png") no-repeat;
+    background-size: 100% 100%;
+    margin-right: 10px;
+}
+.modal h4{font-size: 16px}
+.modal-header{padding: 7px}
+.modal-title {margin: 4px;}
+.modal-body form{padding-top:14px}
+.modal .modal-footer button{padding: 4px 24px}
+.modal label{margin-right: 0px}
+#tx p{margin-top: 6px}
+.btn-div{width: 200px;margin: 0 auto}
+.btn-div button:first-child{margin-right: 20px}
+    /*商户二维码*/
 .items-manager .container-fluid > p{margin-top: 30px;}
 .items-manager .container-fluid > p span{font-size: 14px;color: #939393;cursor: pointer}
 .items-manager .container-fluid > p font{font-size: 16px;color: #fb991a;}
-.items-manager .table-ttl{margin-bottom: 15px;font-size: 16px}
+.items-manager .table-ttl{margin-bottom: 15px;font-size: 16px;position: relative}
 .account-manager td{text-align: center}
+.account-manager .panel{width: 80%;margin: 0 auto}
+.account-manager .createAccount{position: absolute;top:-5px;right: 114px;padding: 4px 15px }
 
 /*新建商户*/
 .content .top-div{margin: 30px 9px 30px -15px}
