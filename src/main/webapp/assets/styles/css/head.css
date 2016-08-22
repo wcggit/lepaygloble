@@ -8,9 +8,7 @@
 .navbar-brand img{width: 100px}
 .shouye .navbar-brand{padding: 19px 15px}
 .shouye .navbar-brand img,.denglu .navbar-brand img{width: 250px}
-.shouye-button{
-    margin: 17px 30px 0 0;
-}
+.shouye-button{margin: 17px 30px 0 0;}
 .denglu{height: 68px}
 .navbar-brand:first-child{
     padding: 19px 15px;
@@ -24,6 +22,9 @@
 .navbar-default .navbar-nav{
     margin-right: 100px;
     height: 68px;
+}
+.navbar-default .navbar-nav-partner{
+    margin-right: 300px;
 }
 .navbar-default .container,.navbar-default .header,.navbar-collapse,.navbar-nav li,.navbar-nav li a{
     height: 66px;

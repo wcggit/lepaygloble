@@ -3,20 +3,20 @@
         <p class="ttl">基本信息</p>
 
         <div class="row">
-            <div class="col-md-2 col-md-offset-1">
+            <div class="col-md-2">
                 <div class="face-img">
-                    <img src="../../../../assets/images/hipster.png" alt="">
+                    <img src="../../../../assets/styles/images/head/touxiang.png" alt="">
                 </div>
                 <h5 class="text-center">{{account.login}}</h5>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 ttl-top">
                 <p class="money-ttl">账户佣金余额</p>
 
                 <p class="money-content clearfix">
                     <span class="pull-left">￥{{available}}</span>
                     <input type="button" class="btn btn-warning btn-sm pull-left tx" ng-click="tx()"
                            value="提现">
-                    <!--<a class="pull-left" ui-sref="withdrawdetails" ui-sref-opts="{reload:true}">查看提现详情</a>-->
+                    <a class="pull-left" onclick="alert('敬请期待')">查看提现详情</a>
                 </p>
             </div>
         </div>
@@ -228,12 +228,13 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <div class="clearfix">
-                        <button type="button" class="btn btn-warning pull-left"
-                                ng-class="{disabled: srgl.thirNum<=200}">确认
-                        </button>
+                    <div class="btn-div">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消
                         </button>
+                        <button type="button" class="btn btn-warning  "
+                                ng-class="{disabled: srgl.thirNum<=200}">确认
+                        </button>
+
                     </div>
                 </div>
             </div>
