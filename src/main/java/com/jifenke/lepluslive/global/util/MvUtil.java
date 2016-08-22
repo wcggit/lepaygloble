@@ -20,7 +20,7 @@ public class MvUtil {
 
   public static String getExtendedName(String fullName) {
     if (fullName != null) {
-      String[] arr = fullName.split(".");
+      String[] arr = fullName.split("\\.");
       return arr[arr.length - 1];
     }
     return null;
