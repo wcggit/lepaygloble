@@ -1,26 +1,26 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('createItemsController', function ($scope, Partner, $http, Upload) {
+    .controller('createItemsController', function ($scope, Partner, $http) {
                     $('body').css({background: '#f3f3f3'});
                     $('.main-content').css({height: 'auto'});
+
                     // select标签右侧小三角
-                    $.fn.openSelect = function() {
-                        return this.each(function(idx,domEl) {
+                    $.fn.openSelect = function () {
+                        return this.each(function (idx, domEl) {
                             if (document.createEvent) {
                                 var event = document.createEvent("MouseEvents");
-                                event.initMouseEvent("mousedown", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                                event.initMouseEvent("mousedown", true, true, window, 0, 0, 0, 0, 0,
+                                                     false, false, false, false, 0, null);
                                 domEl.dispatchEvent(event);
                             } else if (element.fireEvent) {
                                 domEl.fireEvent("onmousedown");
                             }
                         });
                     };
-                    $('.select-jiao').on('click', function() {
+                    $('.select-jiao').on('click', function () {
                         $(this).siblings('select').openSelect();
                     });
-
-
                     var cities = [];
                     var merchant = {};
                     $scope.merchant = null;
@@ -98,7 +98,7 @@ angular.module('lepayglobleApp')
                             return;
                         }
                         var merchant = {};
-                        merchant.id = $scope.merchant.id;
+                        //merchant.id = $scope.merchant.id;
                         var merchantType = {};
                         merchantType.id = $("#merchantType").val();
                         merchant.merchantType = merchantType;
@@ -108,32 +108,57 @@ angular.module('lepayglobleApp')
                         var area = {};
                         area.id = $("#area").val();
                         merchant.area = area;
-                        merchant.location = $("#location").val()
-                        merchant.name = $("#merchantName").val();
-                        merchant.contact = $("#contact").val();
-                        merchant.merchantPhone = $("#phone").val();
-                        $http({
-                                  method: 'POST',
-                                  url: "/api/merchant/createMerchant",
-                                  data: fd,
-                                  headers: {'Content-Type': undefined},
-                                  transformRequest: angular.identity
-                              })
-                            .success(function (response) {
-                                         //上传成功的操作
-                                         alert("uplaod success");
-                                     });
+                        merchant.location = $("#location").val().trim()
+                        merchant.name = $("#merchantName").val().trim();
+                        merchant.contact = $("#merchantContact").val().trim();
+                        merchant.merchantPhone = $("#merchantPhone").val().trim();
+                        merchant.payee = $("#payee").val().trim();
+                        merchant.picture = $(".merchant-picture")[0].src;
+                        merchant.cycle = 1;
+                        merchant.lat = $("#lnglat").val().split(",")[0]
+                        merchant.lng = $("#lnglat").val().split(",")[1]
+                        if ($('#optionsRadios1').prop('checked')) {
+                            merchant.partnership = 1;
+                            merchant.ljCommission = $("#import-commission").val().trim();
+                            merchant.memberCommission = $("#member-commission").val().trim();
+                            merchant.ljBrokerage = 0.6;
+                            merchant.receiptAuth = 1;
+                            merchant.userLimit = 100;
+                        } else {
+                            merchant.partnership = 0;
+                            merchant.ljCommission = 0.6;
+                            merchant.receiptAuth = 0;
+                            merchant.userLimit = 0;
+                        }
+                        merchant.scoreARebate = 50;
+                        merchant.scoreBRebate = 5;
+                        var merchantProtocols = [];
+                        $(".protocol").each(function () {
+                            var merchantProtocol = {};
+                            merchantProtocol.picture = $(this).attr("src");
+                            merchantProtocols.push(merchantProtocol);
+                        });
+                        merchant.merchantProtocols = merchantProtocols;
+                        var merchantBank = {};
+                        merchantBank.bankName = $("#merchantBank").val().trim();
+                        merchantBank.bankNumber = $("#merchantBankCard").val().trim();
+                        merchant.merchantbank = merchantBank;
+                        $http.post('/api/merchant/createMerchant', merchant, {
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }).success(function (response) {
+                            deferred.resolve(response);
+                        });
 
                     }
 
                     //判断当前是那一页
                     $scope.currentState = 1;
                     $scope.currentStateFun1 = function () {
-                        $('.main-content').css({height: 'auto'});
                         $scope.currentState = 1;
                     };
                     $scope.currentStateFun2 = function () {
-                        $('.main-content').css({height: 'auto'});
                         if ($("#merchantName").val().trim() == "") {
                             alert("请输入商户名");
                             return;
@@ -159,15 +184,14 @@ angular.module('lepayglobleApp')
                             alert("请选择经纬度");
                             return;
                         }
-                        // if ($(".merchant-picture").length == 0) {
-                        //     alert("请选择图片");
-                        //     return;
-                        // }
+                        if ($(".merchant-picture").length == 0) {
+                            alert("请选择图片");
+                            return;
+                        }
 
                         $scope.currentState = 2;
                     };
                     $scope.currentStateFun3 = function () {
-                        $('.main-content').css({height: '100vh'});
                         if ($("#merchantContact").val().trim() == "") {
                             alert("请输入签约人");
                             return;
@@ -219,21 +243,23 @@ angular.module('lepayglobleApp')
                                                  '<img class="images protocol" src="http://lepluslive-image.oss-cn-beijing.aliyuncs.com/'
                                              }
 
-                                             beforeStr += response.data + '" alt="...">' +
+                                             beforeStr += response.data
+                                                          + '" alt="...">' +
                                                           '<div><span class="enlarge"></span><span class="delete"data-target="#enlargePic"></span></div></div>';
                                              addShopPic.before(beforeStr);
                                              $('.shopPic').each(function (i) {
                                                  $('.shopPic').eq(i).find('.delete').unbind().bind('click',
-                                                       function () {
-                                                           $(this).parent('div').parent('.shopPic').remove();
-                                                       });
-                                                 $('.shopPic').eq(i).find('.enlarge').unbind().bind('click', function () {
-                                                    var imgSrc = $(this).parent().siblings('img').attr('src');
-                                                    console.log(imgSrc);
-                                                    $("#enlargePic").find('img').attr('src',
-                                                                                      imgSrc);
-                                                    $("#enlargePic").modal("toggle");
-                                                });
+                                                                                                   function () {
+                                                                                                       $(this).parent('div').parent('.shopPic').remove();
+                                                                                                   });
+                                                 $('.shopPic').eq(i).find('.enlarge').unbind().bind('click',
+                                                                                                    function () {
+                                                                                                        var imgSrc = $(this).parent().siblings('img').attr('src');
+                                                                                                        console.log(imgSrc);
+                                                                                                        $("#enlargePic").find('img').attr('src',
+                                                                                                                                          imgSrc);
+                                                                                                        $("#enlargePic").modal("toggle");
+                                                                                                    });
                                              });
                                          });
 

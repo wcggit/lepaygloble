@@ -14,8 +14,10 @@ import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.order.domain.entities.FinancialStatistic;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.service.FinanicalStatisticService;
+import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -60,6 +62,9 @@ public class MerchantController {
 
     @Inject
     private LeJiaUserService leJiaUserService;
+
+    @Inject
+    private PartnerService partnerService;
 
 
     @RequestMapping(value = "/merchant/getCommission", method = RequestMethod.GET)
@@ -232,16 +237,20 @@ public class MerchantController {
         }
     }
 
-    @RequestMapping(value = "/merchant/createMerchant", method = RequestMethod.POST)
+    @RequestMapping(value = "/merchant/createMerchant", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public LejiaResult createMerchant(
-        MultipartHttpServletRequest request) {
-        Iterator<String> iterator = request.getFileNames();
-        MultipartFile multipartFile = null;
-        while (iterator.hasNext()) {
-            multipartFile = request.getFile(iterator.next());
-            //do something with the file.....
-        }
-        return null;
+        @RequestBody Merchant merchant) {
+        merchant.setPartner(partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin()));
+        merchantService.createMerchant(merchant);
+
+        return LejiaResult.ok("添加商户成功");
+    }
+
+    @RequestMapping(value = "/merchant", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public LejiaResult eidtMerchant(@RequestBody Merchant merchant) {
+        merchantService.editMerchant(merchant);
+
+        return LejiaResult.ok("修改商户成功");
     }
 
 

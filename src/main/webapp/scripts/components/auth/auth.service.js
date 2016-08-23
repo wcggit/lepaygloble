@@ -50,7 +50,7 @@ angular.module('lepayglobleApp')
                             else {
                                 // user is not authenticated. stow the state they wanted before you
                                 // send them to the signin state, so you can return them when you're done
-                                $rootScope.previousStateName = $rootScope.toState;
+                                $rootScope.previousStateName = $rootScope.toState.name;
                                 $rootScope.previousStateNameParams = $rootScope.toStateParams;
                                 if($rootScope.toState.data.authorities[0]=='partner'){
                                     $state.go('loginPartner');

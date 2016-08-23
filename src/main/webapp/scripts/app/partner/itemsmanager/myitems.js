@@ -51,6 +51,9 @@ angular.module('lepayglobleApp')
                     .state('createitems', {
                                parent: 'myitems',
                                url: '/createitems',
+                               params: {
+                                   id: null
+                               },
                                data: {
                                    authorities: ["partner"]
                                },

@@ -16,6 +16,11 @@ public final class Constants {
 
     public static final String SYSTEM_ACCOUNT = "system";
 
+
+    public static final String MERCHANT_URL = "http://www.lepluslife.com/lepay/merchant/";
+
+    public static final String BAR_CODE_EXT = "png";
+
     private Constants() {
     }
 }

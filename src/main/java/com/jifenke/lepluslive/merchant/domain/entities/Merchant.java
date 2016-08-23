@@ -3,6 +3,7 @@ package com.jifenke.lepluslive.merchant.domain.entities;
 import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -25,334 +26,347 @@ import javax.persistence.Table;
 @Table(name = "MERCHANT")
 public class Merchant {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  private Integer sid;
+    private Integer sid;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  private MerchantBank merchantBank;
+    @OneToOne(cascade = CascadeType.ALL)
+    private MerchantBank merchantBank;
 
-  private String merchantSid = MvUtil.getMerchantSid();
+    private String merchantSid = MvUtil.getMerchantSid();
 
-  @ManyToOne
-  private City city;
+    @ManyToOne
+    private City city;
 
-  private String thumb;//缩略图
+    private String thumb;//缩略图
 
-  @ManyToOne
-  private MerchantType merchantType;
+    @ManyToOne
+    private MerchantType merchantType;
 
-  @ManyToOne
-  private Partner partner;
+    @ManyToOne
+    private Partner partner;
 
-  private String location;
+    private String location;
 
-  private String name;
+    private String name;
 
-  private String picture;
+    private String picture;
 
-  private String phoneNumber; //服务电话
+    private String phoneNumber; //服务电话
 
-  private Integer partnership; //合作关系
+    private Integer partnership; //合作关系
 
-  private Double lng=0.0;
+    private Double lng = 0.0;
 
-  private Double lat=0.0;
+    private Double lat = 0.0;
 
-  private String payee; //收款人
+    private String payee; //收款人
 
-  private Integer state = 0;  //状态0 代表未开启乐店 ,
+    private Integer state = 0;  //状态0 代表未开启乐店 ,
 
-  private Integer receiptAuth; //收款权限为1 代表可以使用乐加红包支付,0代表不能使用乐加红包
+    private Integer receiptAuth; //收款权限为1 代表可以使用乐加红包支付,0代表不能使用乐加红包
 
-  private String qrCodePicture; //商户收款码
+    private String qrCodePicture; //商户收款码
 
-  private Long userLimit; //会员绑定上线
+    private String pureQrCode; //纯支付码
 
-  private BigDecimal ljCommission; //乐加佣金 单位百分比
+    private Long userLimit; //会员绑定上线
 
-  private BigDecimal ljBrokerage = new BigDecimal(0); //只有联盟商户才不为空 , 代表非乐加会员消费时,收取的手续费
+    private BigDecimal ljCommission; //乐加佣金 单位百分比
 
-  private BigDecimal scoreARebate; //返a积分比 单位百分比
+    private BigDecimal ljBrokerage = new BigDecimal(0); //只有联盟商户才不为空 , 代表非乐加会员消费时,收取的手续费
 
-  private BigDecimal scoreBRebate;
+    private BigDecimal memberCommission = new BigDecimal(0); //只有联盟商户才不为空 , 代表会员在绑定商户消费时的手续费
 
-  private String contact; //联系人
+    private BigDecimal scoreARebate; //返a积分比 单位百分比
 
-  private Date createDate = new Date();
+    private BigDecimal scoreBRebate;
 
-  public BigDecimal getLjBrokerage() {
-    return ljBrokerage;
-  }
+    private String contact; //联系人
 
-  public void setLjBrokerage(BigDecimal ljBrokerage) {
-    this.ljBrokerage = ljBrokerage;
-  }
+    private Date createDate = new Date();
 
-  @OneToMany(mappedBy = "merchant",fetch = FetchType.LAZY)
-  private List<MerchantProtocol> merchantProtocols;
+    public String getPureQrCode() {
+        return pureQrCode;
+    }
 
-  private Integer cycle;  //结算周期  1 一个工作日 2 2个工作日
+    public void setPureQrCode(String pureQrCode) {
+        this.pureQrCode = pureQrCode;
+    }
 
-  private String merchantPhone; //绑定电话
+    public BigDecimal getMemberCommission() {
+        return memberCommission;
+    }
 
-  private String officeHour; //营业时间
+    public void setMemberCommission(BigDecimal memberCommission) {
+        this.memberCommission = memberCommission;
+    }
 
-  public String getMerchantPhone() {
-    return merchantPhone;
-  }
+    public BigDecimal getLjBrokerage() {
+        return ljBrokerage;
+    }
 
-  public void setMerchantPhone(String merchantPhone) {
-    this.merchantPhone = merchantPhone;
-  }
+    public void setLjBrokerage(BigDecimal ljBrokerage) {
+        this.ljBrokerage = ljBrokerage;
+    }
 
-  public String getOfficeHour() {
-    return officeHour;
-  }
+    @OneToMany(mappedBy = "merchant", fetch = FetchType.LAZY)
+    private List<MerchantProtocol> merchantProtocols;
 
-  public void setOfficeHour(String officeHour) {
-    this.officeHour = officeHour;
-  }
+    private Integer cycle;  //结算周期  1 一个工作日 2 2个工作日
 
-  public Integer getCycle() {
-    return cycle;
-  }
+    private String merchantPhone; //绑定电话
 
-  public void setCycle(Integer cycle) {
-    this.cycle = cycle;
-  }
+    private String officeHour; //营业时间
 
-  public List<MerchantProtocol> getMerchantProtocols() {
-    return merchantProtocols;
-  }
+    public String getMerchantPhone() {
+        return merchantPhone;
+    }
 
-  public void setMerchantProtocols(List<MerchantProtocol> merchantProtocols) {
-    this.merchantProtocols = merchantProtocols;
-  }
+    public void setMerchantPhone(String merchantPhone) {
+        this.merchantPhone = merchantPhone;
+    }
 
-  public String getContact() {
-    return contact;
-  }
+    public String getOfficeHour() {
+        return officeHour;
+    }
 
-  public void setContact(String contact) {
-    this.contact = contact;
-  }
+    public void setOfficeHour(String officeHour) {
+        this.officeHour = officeHour;
+    }
 
-  public BigDecimal getScoreBRebate() {
-    return scoreBRebate;
-  }
+    public Integer getCycle() {
+        return cycle;
+    }
 
-  public void setScoreBRebate(BigDecimal scoreBRebate) {
-    this.scoreBRebate = scoreBRebate;
-  }
+    public void setCycle(Integer cycle) {
+        this.cycle = cycle;
+    }
 
-  public BigDecimal getLjCommission() {
-    return ljCommission;
-  }
+    public List<MerchantProtocol> getMerchantProtocols() {
+        return merchantProtocols;
+    }
 
-  public void setLjCommission(BigDecimal ljCommission) {
-    this.ljCommission = ljCommission;
-  }
+    public void setMerchantProtocols(List<MerchantProtocol> merchantProtocols) {
+        this.merchantProtocols = merchantProtocols;
+    }
 
-  public BigDecimal getScoreARebate() {
-    return scoreARebate;
-  }
+    public String getContact() {
+        return contact;
+    }
 
-  public void setScoreARebate(BigDecimal scoreARebate) {
-    this.scoreARebate = scoreARebate;
-  }
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
 
-  public Date getCreateDate() {
-    return createDate;
-  }
+    public BigDecimal getScoreBRebate() {
+        return scoreBRebate;
+    }
 
-  public void setCreateDate(Date createDate) {
-    this.createDate = createDate;
-  }
+    public void setScoreBRebate(BigDecimal scoreBRebate) {
+        this.scoreBRebate = scoreBRebate;
+    }
 
-  public Long getUserLimit() {
-    return userLimit;
-  }
+    public BigDecimal getLjCommission() {
+        return ljCommission;
+    }
 
-  public void setUserLimit(Long userLimit) {
-    this.userLimit = userLimit;
-  }
+    public void setLjCommission(BigDecimal ljCommission) {
+        this.ljCommission = ljCommission;
+    }
 
-  public Partner getPartner() {
-    return partner;
-  }
+    public BigDecimal getScoreARebate() {
+        return scoreARebate;
+    }
 
-  public void setPartner(Partner partner) {
-    this.partner = partner;
-  }
+    public void setScoreARebate(BigDecimal scoreARebate) {
+        this.scoreARebate = scoreARebate;
+    }
 
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-  public Long getLimit() {
-    return userLimit;
-  }
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-  public void setLimit(Long userLimit) {
-    this.userLimit = userLimit;
-  }
+    public Long getUserLimit() {
+        return userLimit;
+    }
 
-  @ManyToOne
-  private Area area;
+    public void setUserLimit(Long userLimit) {
+        this.userLimit = userLimit;
+    }
 
-  public Integer getReceiptAuth() {
-    return receiptAuth;
-  }
+    public Partner getPartner() {
+        return partner;
+    }
 
-  public void setReceiptAuth(Integer receiptAuth) {
-    this.receiptAuth = receiptAuth;
-  }
+    public void setPartner(Partner partner) {
+        this.partner = partner;
+    }
 
 
-  public String getQrCodePicture() {
-    return qrCodePicture;
-  }
+    @ManyToOne
+    private Area area;
 
-  public void setQrCodePicture(String qrCodePicture) {
-    this.qrCodePicture = qrCodePicture;
-  }
+    public Integer getReceiptAuth() {
+        return receiptAuth;
+    }
 
-  public Integer getState() {
-    return state;
-  }
+    public void setReceiptAuth(Integer receiptAuth) {
+        this.receiptAuth = receiptAuth;
+    }
 
-  public void setState(Integer state) {
-    this.state = state;
-  }
 
+    public String getQrCodePicture() {
+        return qrCodePicture;
+    }
 
-  public Integer getPartnership() {
-    return partnership;
-  }
+    public void setQrCodePicture(String qrCodePicture) {
+        this.qrCodePicture = qrCodePicture;
+    }
 
-  public void setPartnership(Integer partnership) {
-    this.partnership = partnership;
-  }
+    public Integer getState() {
+        return state;
+    }
 
-  public String getPayee() {
-    return payee;
-  }
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
-  public void setPayee(String payee) {
-    this.payee = payee;
-  }
 
-  public MerchantBank getMerchantBank() {
-    return merchantBank;
-  }
+    public Integer getPartnership() {
+        return partnership;
+    }
 
-  public void setMerchantBank(MerchantBank merchantBank) {
-    this.merchantBank = merchantBank;
-  }
+    public void setPartnership(Integer partnership) {
+        this.partnership = partnership;
+    }
 
-  public String getMerchantSid() {
-    return merchantSid;
-  }
+    public String getPayee() {
+        return payee;
+    }
 
-  public void setMerchantSid(String merchantSid) {
-    this.merchantSid = merchantSid;
-  }
+    public void setPayee(String payee) {
+        this.payee = payee;
+    }
 
-  public String getThumb() {
-    return thumb;
-  }
+    public MerchantBank getMerchantBank() {
+        return merchantBank;
+    }
 
-  public void setThumb(String thumb) {
-    this.thumb = thumb;
-  }
+    public void setMerchantBank(MerchantBank merchantBank) {
+        this.merchantBank = merchantBank;
+    }
 
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
+    public String getMerchantSid() {
+        return merchantSid;
+    }
 
-  public void setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
-  }
+    public void setMerchantSid(String merchantSid) {
+        this.merchantSid = merchantSid;
+    }
 
+    public String getThumb() {
+        return thumb;
+    }
 
-  public MerchantType getMerchantType() {
-    return merchantType;
-  }
+    public void setThumb(String thumb) {
+        this.thumb = thumb;
+    }
 
-  public void setMerchantType(MerchantType merchantType) {
-    this.merchantType = merchantType;
-  }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-  public Area getArea() {
-    return area;
-  }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-  public void setArea(Area area) {
-    this.area = area;
-  }
 
-  public Double getLng() {
-    return lng;
-  }
+    public MerchantType getMerchantType() {
+        return merchantType;
+    }
 
-  public void setLng(Double lng) {
-    this.lng = lng;
-  }
+    public void setMerchantType(MerchantType merchantType) {
+        this.merchantType = merchantType;
+    }
 
-  public Double getLat() {
-    return lat;
-  }
+    public Area getArea() {
+        return area;
+    }
 
-  public void setLat(Double lat) {
-    this.lat = lat;
-  }
+    public void setArea(Area area) {
+        this.area = area;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Double getLng() {
+        return lng;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
 
-  public Integer getSid() {
-    return sid;
-  }
+    public Double getLat() {
+        return lat;
+    }
 
-  public void setSid(Integer sid) {
-    this.sid = sid;
-  }
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
 
-  public City getCity() {
-    return city;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setCity(City city) {
-    this.city = city;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public String getLocation() {
-    return location;
-  }
+    public Integer getSid() {
+        return sid;
+    }
 
-  public void setLocation(String location) {
-    this.location = location;
-  }
+    public void setSid(Integer sid) {
+        this.sid = sid;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public City getCity() {
+        return city;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setCity(City city) {
+        this.city = city;
+    }
 
-  public String getPicture() {
-    return picture;
-  }
+    public String getLocation() {
+        return location;
+    }
 
-  public void setPicture(String picture) {
-    this.picture = picture;
-  }
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
 
 }
