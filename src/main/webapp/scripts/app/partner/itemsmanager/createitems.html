@@ -1,6 +1,6 @@
 <div class="container content main-content items-manager create-items">
     <div class="container-fluid">
-        <p><span ui-sref="myitems" ui-sref-opts="{reload:true}">我的商户 / </span><font>新建商户</font></p>
+        <p class="clearfix"><span class="left-icon pull-left"></span><span ui-sref="myitems" ui-sref-opts="{reload:true}">我的商户 / </span><font>新建商户</font></p>
 
         <!--头部-->
         <div class="row top-div">
@@ -23,7 +23,6 @@
             <div class="floor1" ng-show="currentState==1">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">商户名称</label>
-
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="merchantName"
                                placeholder="请输入商户名称">
@@ -31,7 +30,6 @@
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">商户分类</label>
-
                     <div class="col-sm-4">
                         <select class="form-control" id="merchantType">
                             <option value="">请选择分类</option>
@@ -40,6 +38,7 @@
                                 {{merchantType.name}}
                             </option>
                         </select>
+                        <span class="select-jiao"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -66,6 +65,7 @@
                                     {{city.name}}
                                 </option>
                             </select>  
+                            <span class="select-jiao"></span>
                         </div>
                         <div class="col-sm-2">
                             <select class="form-control" id="area" name="s_county">
@@ -74,6 +74,7 @@
                                     {{area.name}}
                                 </option>
                             </select>
+                            <span class="select-jiao"></span>
                         </div>
                     </div>
                 </div>
@@ -125,7 +126,6 @@
             <div class="floor2" ng-show="currentState==2">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">协议签约人</label>
-
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="merchantContact">
                     </div>
@@ -169,7 +169,7 @@
 
                     <div class="col-sm-8 form-inline">
                         <input type="text" id="member-commission" class="form-control input-inline"> %
-                        <span>注：会员订单的手续费和官方微信手续费的差额，乐加会以红包形式发放给会员</span>
+                        <span class="tip">注：会员订单的手续费和官方微信手续费的差额，乐加会以红包形式发放给会员</span>
                     </div>
                 </div>
                 <div class="form-group" ng-if="itemsState">
