@@ -4,6 +4,23 @@ angular.module('lepayglobleApp')
     .controller('createItemsController', function ($scope, Partner, $http, Upload) {
                     $('body').css({background: '#f3f3f3'});
                     $('.main-content').css({height: 'auto'});
+                    // select标签右侧小三角
+                    $.fn.openSelect = function() {
+                        return this.each(function(idx,domEl) {
+                            if (document.createEvent) {
+                                var event = document.createEvent("MouseEvents");
+                                event.initMouseEvent("mousedown", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                                domEl.dispatchEvent(event);
+                            } else if (element.fireEvent) {
+                                domEl.fireEvent("onmousedown");
+                            }
+                        });
+                    };
+                    $('.select-jiao').on('click', function() {
+                        $(this).siblings('select').openSelect();
+                    });
+
+
                     var cities = [];
                     var merchant = {};
                     $scope.merchant = null;
@@ -112,9 +129,11 @@ angular.module('lepayglobleApp')
                     //判断当前是那一页
                     $scope.currentState = 1;
                     $scope.currentStateFun1 = function () {
+                        $('.main-content').css({height: 'auto'});
                         $scope.currentState = 1;
                     };
                     $scope.currentStateFun2 = function () {
+                        $('.main-content').css({height: 'auto'});
                         if ($("#merchantName").val().trim() == "") {
                             alert("请输入商户名");
                             return;
@@ -140,14 +159,15 @@ angular.module('lepayglobleApp')
                             alert("请选择经纬度");
                             return;
                         }
-                        if ($(".merchant-picture").length == 0) {
-                            alert("请选择图片");
-                            return;
-                        }
+                        // if ($(".merchant-picture").length == 0) {
+                        //     alert("请选择图片");
+                        //     return;
+                        // }
 
                         $scope.currentState = 2;
                     };
                     $scope.currentStateFun3 = function () {
+                        $('.main-content').css({height: '100vh'});
                         if ($("#merchantContact").val().trim() == "") {
                             alert("请输入签约人");
                             return;
@@ -199,23 +219,21 @@ angular.module('lepayglobleApp')
                                                  '<img class="images protocol" src="http://lepluslive-image.oss-cn-beijing.aliyuncs.com/'
                                              }
 
-                                             beforeStr += response.data
-                                                          + '" alt="...">' +
+                                             beforeStr += response.data + '" alt="...">' +
                                                           '<div><span class="enlarge"></span><span class="delete"data-target="#enlargePic"></span></div></div>';
                                              addShopPic.before(beforeStr);
                                              $('.shopPic').each(function (i) {
                                                  $('.shopPic').eq(i).find('.delete').unbind().bind('click',
-                                                                                                   function () {
-                                                                                                       $(this).parent('div').parent('.shopPic').remove();
-                                                                                                   });
-                                                 $('.shopPic').eq(i).find('.enlarge').unbind().bind('click',
-                                                                                                    function () {
-                                                                                                        var imgSrc = $(this).parent().siblings('img').attr('src');
-                                                                                                        console.log(imgSrc);
-                                                                                                        $("#enlargePic").find('img').attr('src',
-                                                                                                                                          imgSrc);
-                                                                                                        $("#enlargePic").modal("toggle");
-                                                                                                    });
+                                                       function () {
+                                                           $(this).parent('div').parent('.shopPic').remove();
+                                                       });
+                                                 $('.shopPic').eq(i).find('.enlarge').unbind().bind('click', function () {
+                                                    var imgSrc = $(this).parent().siblings('img').attr('src');
+                                                    console.log(imgSrc);
+                                                    $("#enlargePic").find('img').attr('src',
+                                                                                      imgSrc);
+                                                    $("#enlargePic").modal("toggle");
+                                                });
                                              });
                                          });
 
