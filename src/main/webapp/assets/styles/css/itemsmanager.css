@@ -41,7 +41,9 @@
 .my-items .ttl-add > span {
     margin-top: 14px
 }
-
+.my-items .ttl-add > span a{
+    cursor: pointer;
+}
 .left-icon {
     width: 24px;
     height: 24px;
