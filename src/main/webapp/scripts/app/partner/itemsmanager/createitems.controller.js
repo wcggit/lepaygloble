@@ -72,7 +72,6 @@ angular.module('lepayglobleApp')
 
                     $scope.$watch('merchant.city.id', function (after, before) {
                         var id = after;
-                        //$("#city").val("-1");
                         if (id != "" && id != null) {
                             angular.forEach(cities, function (data, index, array) {
                                 if (data.id == id) {
@@ -90,8 +89,8 @@ angular.module('lepayglobleApp')
                     });
                     //为地图注册click事件获取鼠标点击出的经纬度坐标
                     var clickEventListener = map.on('click', function (e) {
-                        document.getElementById("lnglat").value =
-                        e.lnglat.getLng() + ',' + e.lnglat.getLat()
+                        document.getElementById("lnglat").value = e.lnglat.getLng() + ',' + e.lnglat.getLat();
+                        $scope.lnglatState = false;
                     });
                     var auto = new AMap.Autocomplete({
                                                          input: "tipinput"
@@ -244,7 +243,7 @@ angular.module('lepayglobleApp')
                             $scope.locationState = false;
                         }
 
-                        if ($("#lnglat").val() == "") {
+                        if ($("#lnglat").val() == ",") {
                             $scope.lnglatState = true;
                         } else {
                             $scope.lnglatState = false;
@@ -257,8 +256,7 @@ angular.module('lepayglobleApp')
                         }
 
                         if ($scope.merchantNameState || $scope.merchantTypeState || $scope.cityState
-                            ||
-                            $scope.areaState || $scope.locationState || $scope.lnglatState) {
+                            || $scope.areaState || $scope.locationState || $scope.lnglatState) {
                             $scope.currentState = 1;
                         } else {
                             $scope.currentState = 2;
@@ -272,9 +270,9 @@ angular.module('lepayglobleApp')
                         } else {
                             $scope.merchantCtctState = false;
                         }
-                        if ($("#merchantPhone").val().trim() == "") {
+                        if (($("#merchantPhone").val().trim() == "")) {
                             $scope.merchantTelState = true;
-                        } else {
+                        }else {
                             $scope.merchantTelState = false;
                         }
                         if ($('#optionsRadios1').prop('checked')) {
@@ -297,23 +295,49 @@ angular.module('lepayglobleApp')
                             $scope.currentState = 3;
                         }
                     };
-                    $scope.tipState = function (x, stateName) {
-                        if (x.value !== '') {
-                            $scope[stateName] = false;
+                    $scope.inputState = function (x, stateName,idName) {
+                        if(idName==''||idName==null){
+                            if (x.value !== '') {
+                                $scope[stateName] = false;
+                            }else {
+                                $scope[stateName] = true;
+                            }
+                        }else {
+                            if(idName==='merchantPhone'){
+                                var isTel=!/^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\d{8}$/i.test($("#merchantPhone").val());
+                                if (($("#merchantPhone").val().trim() == "")||isTel) {
+                                    $scope[stateName] = true;
+                                }else {
+                                    $scope[stateName] = false;
+                                }
+                            }else if(idName==='merchantBankCard'){
+                                var isBankCard=!/^(\d{16}|\d{19})$/.test($("#merchantBankCard").val());
+                                if (($("#merchantBankCard").val().trim() == "")||isBankCard) {
+                                    $scope[stateName] = true;
+                                }else {
+                                    $scope[stateName] = false;
+                                }
+                            }
                         }
+
+
                     };
-                    // $('input[type="text"]').each(function (i) {
-                    //     $('input[type="text"]').eq(i).on('input propertychange',function () {
-                    //         if($(this).val()!==''){
-                    //             $(this).removeClass('red-border');
-                    //         }
-                    //     })
-                    // });
+
+                    // tel正则
+                    // $scope.isTel=function () {
+                    //     if(!/^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\d{8}$/i.test($("#merchantPhone").val())){
+                    //         $scope.merchantCtctState = true;
+                    //     }
+                    // };
+                    // $scope.picState = function (stateName) {
+                    //     if ($(".merchant-picture").length > 0) {
+                    //         $scope[stateName] = false;
+                    //     }
+                    // };
 
                     var arr = [];
-                    $scope.imgBtnChange = function (x, addShopPic) {
-                        if (addShopPic.attr('id') == "addShopPic1" && $(".merchant-picture").length
-                                                                      == 1) {
+                    $scope.imgBtnChange = function (x, addShopPic,stateName) {
+                        if (addShopPic.attr('id') == "addShopPic1" && $(".merchant-picture").length == 1) {
                             return;
                         }
                         addShopPic.attr('id');
@@ -336,9 +360,15 @@ angular.module('lepayglobleApp')
                                              if (addShopPic.attr('id') == "addShopPic1") {
                                                  beforeStr +=
                                                  '<img class="images merchant-picture" src="http://lepluslive-image.oss-cn-beijing.aliyuncs.com/'
+                                                 if ($(".merchant-picture").length > 0) {
+                                                     $scope[stateName] = false;
+                                                 }else {
+                                                     $scope[stateName] = true;
+                                                 }
                                              } else {
                                                  beforeStr +=
                                                  '<img class="images protocol" src="http://lepluslive-image.oss-cn-beijing.aliyuncs.com/'
+
                                              }
 
                                              beforeStr += response.data + '" alt="...">' +
