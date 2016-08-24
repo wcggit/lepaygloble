@@ -226,11 +226,23 @@ public class PartnerService {
             "select count(*) from merchant where partner_id = ");
         sql.append(partner.getId());
         sql.append(
-            " and user_limit = (select count(*) from le_jia_user where bind_merchant_id = merchant.id)");
+            " and user_limit = (select count(*) from le_jia_user where bind_merchant_id = merchant.id) and user_limit != 0");
         Query nativeQuery = em.createNativeQuery(sql.toString());
         List<BigInteger> details = nativeQuery.getResultList();
         return details.get(0).longValue();
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void resetPassword(Partner partner, String reset, String password) {
 
+        String origin = MD5Util.MD5Encode(password, "utf-8");
+
+        if (partner.getPassword().equals(origin)) {
+            partner.setPassword(MD5Util.MD5Encode(reset, "utf-8"));
+            partnerRepository.save(partner);
+        } else {
+            throw new RuntimeException();
+        }
+
+    }
 }

@@ -6,6 +6,12 @@ angular.module('lepayglobleApp')
                     $('body').css({background: '#f3f3f3'});
                     $('.main-content').css({height: 'auto'});
 
+                    $http.get('api/partner').success(function (response) {
+                        $scope.payee = response.data.payee;
+                        var bankNumber = response.data.bankNumber;
+                        $scope.bank = bankNumber.substring(bankNumber.length - 4, bankNumber.length);
+                    });
+
                     Principal.identity().then(function (account) {
                         $scope.account = account;
                     });

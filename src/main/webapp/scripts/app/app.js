@@ -3,15 +3,15 @@
 angular.module('lepayglobleApp', ['LocalStorageModule',
                                   'ngResource',
                                   'ngCookies',
-                                  //'ngAria',
+    //'ngAria',
                                   'ngCacheBuster',
                                   'ngFileUpload',
     // jhipster-needle-angularjs-add-module JHipster will add new module here
                                   'ui.bootstrap', 'ui.router',
-                                  //'infinite-scroll',
+    //'infinite-scroll',
                                   'angular-loading-bar', 'ngBootstrap'])//
 
-    .run(function ($rootScope, $location,$window, $http, $state, Auth, Principal, ENV, VERSION) {
+    .run(function ($rootScope, $location, $window, $http, $state, Auth, Principal, ENV, VERSION) {
              $rootScope.disappear = function () {
                  $rootScope.personal = false;
              };
@@ -28,26 +28,27 @@ angular.module('lepayglobleApp', ['LocalStorageModule',
              });
 
              $rootScope.$on('$stateChangeSuccess',
-            function (event, toState, toParams, fromState, fromParams) {
-                var titleKey = '乐加支付';
+                            function (event, toState, toParams, fromState, fromParams) {
+                                var titleKey = '乐加支付';
 
-                // Remember previous state unless we've been redirected to login or
-                // we've just reset the state memory after logout. If we're
-                // redirected to login, our previousState is already set in the
-                // authExpiredInterceptor. If we're going to login directly, we
-                // don't want to be sent to some previous state anyway
-                if (fromState.name != 'login'&&fromState.name!="loginPartner"&&fromState.name!="home") {
-                    $rootScope.previousStateName = fromState.name;
-                    $rootScope.previousStateParams = fromParams;
-                }
+                                // Remember previous state unless we've been redirected to login or
+                                // we've just reset the state memory after logout. If we're
+                                // redirected to login, our previousState is already set in the
+                                // authExpiredInterceptor. If we're going to login directly, we
+                                // don't want to be sent to some previous state anyway
+                                if (fromState.name != 'login' && fromState.name != "loginPartner"
+                                    && fromState.name != "home" && fromState.name != "") {
+                                    $rootScope.previousStateName = fromState.name;
+                                    $rootScope.previousStateParams = fromParams;
+                                }
 
-                // Set the page title key to the one configured in state or use
-                // default one
-                if (toState.data.pageTitle) {
-                    titleKey = toState.data.pageTitle;
-                }
-                $window.document.title = titleKey;
-            });
+                                // Set the page title key to the one configured in state or use
+                                // default one
+                                if (toState.data.pageTitle) {
+                                    titleKey = toState.data.pageTitle;
+                                }
+                                $window.document.title = titleKey;
+                            });
 
              $rootScope.back = function () {
                  // If previous state is 'activate' or do not exist go to 'home'

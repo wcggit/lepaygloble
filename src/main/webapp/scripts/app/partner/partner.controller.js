@@ -30,19 +30,16 @@ angular.module('lepayglobleApp')
                             state: "usermanager"
                         }
                     ];
-                    if ($location.url() == "/partner") {
+                    if ($location.url().indexOf( "/partnerhome")!=-1) {
                         $scope.currentTab = "partnerhome";
                         $state.go("partnerhome");
                     }
-                    if ($location.url().indexOf("trade") != -1) {
-                        $scope.currentTab = "trade";
+                    if ($location.url().indexOf("myitems") != -1) {
+                        $scope.currentTab = "myitems";
                     }
-                    if ($location.url().indexOf("/import") != -1) {
-                        $scope.currentTab = "import";
+                    if ($location.url().indexOf("/usermanager") != -1) {
+                        $scope.currentTab = "usermanager";
                         $('body').css({background: '#f3f3f3'});
-                    }
-                    if ($location.url().indexOf("/realize") != -1) {
-                        $scope.currentTab = "realize";
                     }
                     $scope.onClickTab = function (tab) {
                         $scope.currentTab = tab.state;
@@ -50,7 +47,7 @@ angular.module('lepayglobleApp')
                     };
                     $scope.szClick = function () {
                         $scope.currentTab = "";
-                        $state.go('merchant-config')
+                        $state.go('partner-config')
                     }
                     $scope.logout = function () {
                         Auth.logout();

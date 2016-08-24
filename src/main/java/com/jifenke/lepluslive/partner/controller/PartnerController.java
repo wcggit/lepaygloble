@@ -170,5 +170,20 @@ public class PartnerController {
         return LejiaResult.build(401, "无权限");
     }
 
+    @RequestMapping(value = "/partner/resetPassword", method = RequestMethod.POST)
+    public LejiaResult resetPassword(HttpServletRequest request) {
+        String reset = request.getParameter("reset");
+        String password = request.getParameter("password");
+        Partner
+            partner =
+            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+        try {
+            partnerService.resetPassword(partner, reset, password);
+            return LejiaResult.ok();
+        } catch (Exception e) {
+            return LejiaResult.build(400, "密码不正确");
+        }
+    }
+
 
 }

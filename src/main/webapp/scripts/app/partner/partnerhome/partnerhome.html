@@ -199,7 +199,7 @@
                 <div class="modal-header bg-warning">
                     <button type="button" class="close" data-dismiss="modal"><span
                         aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">提现余额 <span>佣金余额：<font color="#fb991a">5</font>元</span>
+                    <h4 class="modal-title">提现余额 <span>佣金余额：<font color="#fb991a">{{available}}</font>元</span>
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -222,7 +222,7 @@
                                 <p class="text-muted" class="form-control">
                                     xxxxxxxxxxxxxxxxxxx{{bank}}</p>
 
-                                <p class="text-muted" class="form-control">小喵喵</p>
+                                <p class="text-muted" class="form-control">{{payee}}</p>
                             </div>
                         </div>
                     </form>
@@ -232,7 +232,7 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消
                         </button>
                         <button type="button" class="btn btn-warning  "
-                                ng-class="{disabled: srgl.thirNum<=200}">确认
+                                ng-class="{disabled: available<=200}">确认
                         </button>
 
                     </div>

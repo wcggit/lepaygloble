@@ -12,18 +12,18 @@ angular.module('lepayglobleApp')
                              var Principal = $injector.get('Principal');
                              var state = null;
                              if (Principal.hasAnyAuthority(['merchant'])) {
-                                 state = 'login';
+                                 state = 'merchant';
 
                              }
                              if (Principal.hasAnyAuthority(['partner'])) {
-                                 state = 'loginPartner';
+                                 state = 'partner';
                              }
                              var $state = $injector.get('$state');
-                             //var to = $rootScope.toState;
-                             //var params = $rootScope.toStateParams;
+                             var to = $rootScope.toState;
+                             var params = $rootScope.toStateParams;
                              Auth.logout();
-                             //$rootScope.previousStateName = to;
-                             //$rootScope.previousStateNameParams = params;
+                             $rootScope.previousStateName = to.name;
+                             $rootScope.previousStateNameParams = params;
                              $state.go(state);
                          } else if (response.status == 403 && response.config.method != 'GET'
                                     && getCSRF() == '') {
