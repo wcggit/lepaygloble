@@ -64,8 +64,8 @@ angular.module('lepayglobleApp')
                         e.lnglat.getLng() + ',' + e.lnglat.getLat()
                     });
                     var auto = new AMap.Autocomplete({
-                                                         input: "tipinput"
-                                                     });
+                         input: "tipinput"
+                     });
                     AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
                     function select(e) {
                         if (e.poi && e.poi.location) {
@@ -86,17 +86,14 @@ angular.module('lepayglobleApp')
 
                     $scope.sumMerchant = function () {
                         if ($("#merchantBankCard").val().trim() == "") {
-                            alert("请输入银行卡号");
-                            return;
-                        }
+                            $scope.merchantBankCdState=true;
+                        }else {$scope.merchantBankCdState=false;}
                         if ($("#merchantBank").val().trim() == "") {
-                            alert("请输入支行地址");
-                            return;
-                        }
+                            $scope.merchantBankState=true;
+                        }else {$scope.merchantBankState=false;}
                         if ($("#payee").val().trim() == "") {
-                            alert("请输入收款人");
-                            return;
-                        }
+                            $scope.payeeState=true;
+                        }else {$scope.payeeState=false;}
                         var merchant = {};
                         merchant.id = $scope.merchant.id;
                         var merchantType = {};
@@ -113,19 +110,17 @@ angular.module('lepayglobleApp')
                         merchant.contact = $("#contact").val();
                         merchant.merchantPhone = $("#phone").val();
                         $http({
-                                  method: 'POST',
-                                  url: "/api/merchant/createMerchant",
-                                  data: fd,
-                                  headers: {'Content-Type': undefined},
-                                  transformRequest: angular.identity
-                              })
-                            .success(function (response) {
-                                         //上传成功的操作
-                                         alert("uplaod success");
-                                     });
-
-                    }
-
+                              method: 'POST',
+                              url: "/api/merchant/createMerchant",
+                              data: fd,
+                              headers: {'Content-Type': undefined},
+                              transformRequest: angular.identity
+                          })
+                        .success(function (response) {
+                             //上传成功的操作
+                             alert("uplaod success");
+                         });
+                    };
                     //判断当前是那一页
                     $scope.currentState = 1;
                     $scope.currentStateFun1 = function () {
@@ -135,66 +130,77 @@ angular.module('lepayglobleApp')
                     $scope.currentStateFun2 = function () {
                         $('.main-content').css({height: 'auto'});
                         if ($("#merchantName").val().trim() == "") {
-                            alert("请输入商户名");
-                            return;
-                        }
+                            $scope.merchantNameState=true;
+                        }else {$scope.merchantNameState=false;}
                         if ($("#merchantType").val() == "") {
-                            alert("请选择商户分类");
-                            return;
-                        }
+                            $scope.merchantTypeState=true;
+                        }else {$scope.merchantTypeState=false;}
 
                         if ($("#city").val() == "") {
-                            alert("请选择商户所在城市");
-                            return;
-                        }
+                            $scope.cityState=true;
+                        }else {$scope.cityState=false;}
                         if ($("#area").val() == "") {
-                            alert("请选择商户所在地区");
-                            return;
-                        }
-                        if ($("#location").val().trim() == "") {
-                            alert("请输入商户详细地址");
-                            return;
-                        }
-                        if ($("#lnglat").val() == "") {
-                            alert("请选择经纬度");
-                            return;
-                        }
-                        // if ($(".merchant-picture").length == 0) {
-                        //     alert("请选择图片");
-                        //     return;
-                        // }
+                            $scope.areaState=true;
+                        }else {$scope.areaState=false;}
 
-                        $scope.currentState = 2;
+                        if ($("#location").val().trim() == "") {
+                            $scope.locationState=true;
+                        }else {$scope.locationState=false;}
+
+                        if ($("#lnglat").val() == "") {
+                            $scope.lnglatState=true;
+                        }else {$scope.lnglatState=false;}
+
+                        if ($(".merchant-picture").length == 0) {
+                            $scope.merchantPicState=true;
+                        }else {$scope.merchantPicState=false;}
+
+                        if($scope.merchantNameState||$scope.merchantTypeState||$scope.cityState||
+                            $scope.areaState||$scope.locationState||$scope.lnglatState){
+                            $scope.currentState = 1;
+                        }else {$scope.currentState = 2;}
+
                     };
                     $scope.currentStateFun3 = function () {
                         $('.main-content').css({height: '100vh'});
                         if ($("#merchantContact").val().trim() == "") {
-                            alert("请输入签约人");
-                            return;
-                        }
+                            $scope.merchantCtctState=true;
+                        }else {$scope.merchantCtctState=false;}
                         if ($("#merchantPhone").val().trim() == "") {
-                            alert("请输入绑定手机号");
-                            return;
-                        }
+                            $scope.merchantTelState=true;
+                        }else {$scope.merchantTelState=false;}
                         if ($('#optionsRadios1').prop('checked')) {
                             if ($("#member-commission").val().trim() == "") {
-                                alert("请输入会员订单手续费");
-                                return;
-                            }
+                                $scope.memberCmsnState=true;
+                            }else {$scope.memberCmsnState=false;}
                             if ($("#import-commission").val().trim() == "") {
-                                alert("请输入导流订单手续费");
-                                return;
-                            }
+                                $scope.importCmsnState=true;
+                            }else {$scope.importCmsnState=false;}
                         }
-                        $scope.currentState = 3;
+
+                        if($scope.merchantCtctState||$scope.merchantTelState||$scope.memberCmsnState||$scope.importCmsnState){
+                            $scope.currentState = 2;
+                        }else {$scope.currentState = 3;}
                     };
+                    $scope.tipState=function (x,stateName) {
+                        if(x.value!==''){
+                            $scope[stateName]=false;
+                        }
+                    };
+                    // $('input[type="text"]').each(function (i) {
+                    //     $('input[type="text"]').eq(i).on('input propertychange',function () {
+                    //         if($(this).val()!==''){
+                    //             $(this).removeClass('red-border');
+                    //         }
+                    //     })
+                    // });
+
                     var arr = [];
                     $scope.imgBtnChange = function (x, addShopPic) {
-                        if (addShopPic.attr('id') == "addShopPic1" && $(".merchant-picture").length
-                                                                      == 1) {
+                        if (addShopPic.attr('id') == "addShopPic1" && $(".merchant-picture").length == 1) {
                             return;
                         }
-                        addShopPic.attr('id')
+                        addShopPic.attr('id');
                         var docObj = x;
                         if (docObj.files && docObj.files[0]) {
                             //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
@@ -203,39 +209,38 @@ angular.module('lepayglobleApp')
                             var fd = new FormData();
                             fd.append('file', docObj.files[0]);
                             $http({
-                                      method: 'POST',
-                                      url: "/api/file/saveImage",
-                                      data: fd,
-                                      headers: {'Content-Type': undefined},
-                                      transformRequest: angular.identity
-                                  })
-                                .success(function (response) {
-                                             var beforeStr = '<div class="thumbnail shopPic pull-left">'
-                                             if (addShopPic.attr('id') == "addShopPic1") {
-                                                 beforeStr +=
-                                                 '<img class="images merchant-picture" src="http://lepluslive-image.oss-cn-beijing.aliyuncs.com/'
-                                             } else {
-                                                 beforeStr +=
-                                                 '<img class="images protocol" src="http://lepluslive-image.oss-cn-beijing.aliyuncs.com/'
-                                             }
+                                method: 'POST',
+                                url: "/api/file/saveImage",
+                                data: fd,
+                                headers: {'Content-Type': undefined},
+                                transformRequest: angular.identity
+                            })
+                            .success(function (response) {
+                                 var beforeStr = '<div class="thumbnail shopPic pull-left">';
+                                 if (addShopPic.attr('id') == "addShopPic1") {
+                                     beforeStr +=
+                                     '<img class="images merchant-picture" src="http://lepluslive-image.oss-cn-beijing.aliyuncs.com/'
+                                 } else {
+                                     beforeStr +=
+                                     '<img class="images protocol" src="http://lepluslive-image.oss-cn-beijing.aliyuncs.com/'
+                                 }
 
-                                             beforeStr += response.data + '" alt="...">' +
-                                                          '<div><span class="enlarge"></span><span class="delete"data-target="#enlargePic"></span></div></div>';
-                                             addShopPic.before(beforeStr);
-                                             $('.shopPic').each(function (i) {
-                                                 $('.shopPic').eq(i).find('.delete').unbind().bind('click',
-                                                       function () {
-                                                           $(this).parent('div').parent('.shopPic').remove();
-                                                       });
-                                                 $('.shopPic').eq(i).find('.enlarge').unbind().bind('click', function () {
-                                                    var imgSrc = $(this).parent().siblings('img').attr('src');
-                                                    console.log(imgSrc);
-                                                    $("#enlargePic").find('img').attr('src',
-                                                                                      imgSrc);
-                                                    $("#enlargePic").modal("toggle");
-                                                });
-                                             });
-                                         });
+                                 beforeStr += response.data + '" alt="...">' +
+                                              '<div><span class="enlarge"></span><span class="delete"data-target="#enlargePic"></span></div></div>';
+                                 addShopPic.before(beforeStr);
+                                 $('.shopPic').each(function (i) {
+                                     $('.shopPic').eq(i).find('.delete').unbind().bind('click',
+                                           function () {
+                                               $(this).parent('div').parent('.shopPic').remove();
+                                           });
+                                     $('.shopPic').eq(i).find('.enlarge').unbind().bind('click', function () {
+                                        var imgSrc = $(this).parent().siblings('img').attr('src');
+                                        console.log(imgSrc);
+                                        $("#enlargePic").find('img').attr('src', imgSrc);
+                                        $("#enlargePic").modal("toggle");
+                                    });
+                                 });
+                             });
 
                         } else {
                             //IE下，使用滤镜

@@ -53,6 +53,9 @@ input::-webkit-input-placeholder {color:#888;}
 input:-moz-placeholder {color:#888;}
 input::-moz-placeholder {color:#888;}
 input:-ms-input-placeholder {color:#888;}
+.red-font{color: #ff2626;line-height: 34px;margin-left: -15px}
+.red-font-left{margin-left: 10px}
+input.red-border,select.red-border,.create-items div.red-border{border-color:#ff2626}
     /*商户二维码*/
 .items-manager .container-fluid > p{margin-top: 30px;}
 .items-manager .container-fluid > p span{font-size: 14px;color: #939393;cursor: pointer}
