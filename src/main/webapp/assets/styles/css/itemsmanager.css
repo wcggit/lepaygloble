@@ -2,12 +2,10 @@
 .my-items tr td:last-child a {
     margin-right: 15px
 }
-
 .my-items tr td.address {
     width: 20%;
     position: relative
 }
-
 .my-items .tool {
     display: inline-block;
     width: 90%;
@@ -21,12 +19,10 @@
     left: 0;
     background-color: #fff;
 }
-
 .my-items .tool:hover {
     white-space: normal;
     z-index: 10;
 }
-
 .select-jiao {
     display: block;
     position: absolute;
@@ -39,7 +35,7 @@
 }
 
 .my-items .select-jiao {
-    right: 163px;
+    right: 5px;
 }
 
 .my-items .ttl-add > span {

@@ -14,7 +14,7 @@ angular.module('lepayglobleApp')
                             $scope.per = toDecimal(data.totalCommission / data.currentBind);
                         }
                         var percent = data.currentBind / data.userLimit * 100;
-                        $(".sjgl .progress-bar").css({width: "" + percent + "%"})
+                        $(".sjgl .progress-bar").css({width: "" + percent + "%"});
                         //强制保留两位小数
                         function toDecimal(x) {
                             var f = parseFloat(x);
