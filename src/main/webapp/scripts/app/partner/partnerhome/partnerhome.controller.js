@@ -25,6 +25,10 @@ angular.module('lepayglobleApp')
                         $scope.total = result['total'];
                         $scope.dayCommission = result['dayCommission'];
                         $scope.dayBindLeJiaUser = result['dayBindLeJiaUser'];
+                        var progressWidth1=$scope.bindMerchant / $scope.merchantLimit * 100;
+                        var progressWidth2=$scope.bindLeJiaUser / $scope.userLimit * 100;
+                        $('.progress-bar1').css('width', progressWidth1+'%');
+                        $('.progress-bar2').css('width', progressWidth2+'%');
                     });
 
                     Partner.getMerchantTop5(0).then(function (result) {
@@ -37,8 +41,7 @@ angular.module('lepayglobleApp')
                         thirNum: 32.34,
                         forNum: 32.34
                     };
-                    $('.progress-bar1').css('width', '50%');
-                    $('.progress-bar2').css('width', '50%');
+
 
                     $scope.tx = function () {
                         $("#tx").modal("toggle");

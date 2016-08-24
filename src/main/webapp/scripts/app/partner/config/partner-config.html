@@ -5,16 +5,24 @@
             <div class="panel-heading">基本信息</div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-1">合伙人名称</div>
-                    <div class="col-md-5" ng-bind="partner.partnerName"></div>
-                    <div class="col-md-1">绑定手机</div>
-                    <div class="col-md-5" ng-bind="partner.phoneNumber"></div>
+                    <div class="col-md-6">
+                        <div class="col-md-3 text-right">合伙人名称：</div>
+                        <div class="col-md-9" ng-bind="partner.partnerName"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-3 text-right">绑定手机：</div>
+                        <div class="col-md-9" ng-bind="partner.phoneNumber"></div>
+                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-1">用户名</div>
-                    <div class="col-md-5" ng-bind="partner.name"></div>
-                    <div class="col-md-1">密码</div>
-                    <div class="col-md-5" >**********<a class="changePassword" data-target="#changePassword" ng-click="changePassword()">修改</a></div>
+                    <div class="col-md-6">
+                        <div class="col-md-3 text-right">用户名：</div>
+                        <div class="col-md-9" ng-bind="partner.name"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-3 text-right">密码：</div>
+                        <div class="col-md-9" >**********<a class="changePassword" data-target="#changePassword" ng-click="changePassword()">修改</a></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -22,14 +30,20 @@
             <div class="panel-heading">结算信息</div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-1">收款人</div>
-                    <div class="col-md-5" ng-bind="partner.payee"></div>
-                    <div class="col-md-1">银行卡号</div>
-                    <div class="col-md-5" ng-bind="partner.bankNumber"></div>
+                    <div class="col-md-6">
+                        <div class="col-md-3 text-right">收款人：</div>
+                        <div class="col-md-9" ng-bind="partner.payee"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-3 text-right">银行卡号：</div>
+                        <div class="col-md-9" ng-bind="partner.bankNumber"></div>
+                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-1">开户行</div>
-                    <div class="col-md-5" ng-bind="partner.bankName"></div>
+                    <div class="col-md-6">
+                        <div class="col-md-3 text-right">开户行：</div>
+                        <div class="col-md-9" ng-bind="partner.bankName"></div>
+                    </div>
                 </div>
             </div>
         </div>
