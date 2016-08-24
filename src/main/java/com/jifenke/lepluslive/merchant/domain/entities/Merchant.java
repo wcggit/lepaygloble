@@ -112,7 +112,7 @@ public class Merchant {
         this.ljBrokerage = ljBrokerage;
     }
 
-    @OneToMany(mappedBy = "merchant", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "merchant", fetch = FetchType.EAGER)
     private List<MerchantProtocol> merchantProtocols;
 
     private Integer cycle;  //结算周期  1 一个工作日 2 2个工作日

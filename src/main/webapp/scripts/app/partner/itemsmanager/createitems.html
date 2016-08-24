@@ -1,10 +1,7 @@
 <div class="container content main-content items-manager create-items">
     <div class="container-fluid">
-        <p class="clearfix">
-            <span ui-sref="myitems" ui-sref-opts="{reload:true}">
-                <span class="left-icon pull-left"></span>
-                <span>我的商户 / </span><font>新建商户</font>
-            </span>
+        <p class="clearfix"><span class="left-icon pull-left"></span><span ui-sref="myitems"
+                                                                           ui-sref-opts="{reload:true}">我的商户 / </span><font>新建商户</font>
         </p>
 
         <!--头部-->
@@ -29,22 +26,27 @@
             <div class="floor1" ng-show="currentState==1">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">商户名称</label>
+
                     <div class="col-sm-4">
-                        <input type="text" class="form-control " id="merchantName" ng-model="merchant.name"
-ng-init="123" value="{{name}}"                              placeholder="请输入商户名称" ng-class="{'red-border':merchantNameState}"
-                        ng-change="tipState(this,'merchantNameState')">
+                        <input type="text" class="form-control " id="merchantName"
+                               ng-model="merchant.name" value="{{merchant.name}}"
+                               placeholder="请输入商户名称" ng-class="{'red-border':merchantNameState}"
+                               ng-change="tipState(this,'merchantNameState')">
                     </div>
                     <div class="col-md-4 red-font" ng-show="merchantNameState">请输入商户名称</div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">商户分类</label>
+
                     <div class="col-sm-4">
-                        <select class="form-control" id="merchantType" ng-class="{'red-border':merchantTypeState}">
+                        <select class="form-control" id="merchantType"
+                                ng-class="{'red-border':merchantTypeState}" ng-model="merchant.merchantType.id" ng-options="value.id as value.name for value in merchantTypes">
                             <option value="">请选择分类</option>
-                            <option ng-repeat="merchantType in merchantTypes"
-                                    value="{{merchantType.id}}">
-                                {{merchantType.name}}
-                            </option>
+                            <!--<option ng-selected="merchantType.id==merchant.merchantType.id"-->
+                            <!--ng-repeat="merchantType in merchantTypes"-->
+                            <!--value="{{merchantType.id}}">-->
+                            <!--{{merchantType.name}}-->
+                            <!--</option>-->
                         </select>
                         <span class="select-jiao"></span>
                     </div>
@@ -68,20 +70,25 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
                             <!--&lt;!&ndash;</option>&ndash;&gt;-->
                             <!--</select>  -->
                             <select class="form-control" id="city" name="s_city"
-                                    ng-model="currentCity" ng-class="{'red-border':cityState}">
-                                <option value="" selected>城市</option>
-                                <option ng-repeat="city in cities" value="{{city.id}}">
-                                    {{city.name}}
-                                </option>
+                                    ng-model="merchant.city.id"  ng-class="{'red-border':cityState}"
+                                    ng-options="value.id as value.name for value in cities"
+                                >
+                                <option value="">城市</option>
+                                <!--<option ng-selected="city.id==merchant.city.id"-->
+                                <!--ng-repeat="city in cities" value="{{city.id}}">-->
+                                <!--{{city.name}}-->
+                                <!--</option>-->
                             </select>  
                             <span class="select-jiao"></span>
                         </div>
                         <div class="col-sm-2">
-                            <select class="form-control" id="area" name="s_county" ng-class="{'red-border':areaState}">
+                            <select class="form-control" id="area" name="s_county" ng-model="merchant.area.id"
+                                    ng-class="{'red-border':areaState}" ng-options="value.id as value.name for value in areas">
                                 <option value="">区域</option>
-                                <option ng-repeat="area in areas" value="{{area.id}}">
-                                    {{area.name}}
-                                </option>
+                                <!--<option ng-selected="area.id==merchant.area.id"-->
+                                <!--ng-repeat="area in areas" value="{{area.id}}">-->
+                                <!--{{area.name}}-->
+                                <!--</option>-->
                             </select>
                             <span class="select-jiao"></span>
                         </div>
@@ -95,7 +102,7 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
 
                     <div class="col-sm-4">
                         <input type="text" id="location" class="form-control"
-                               placeholder="请输入商户详细地址" ng-class="{'red-border':locationState}">
+                               placeholder="请输入商户详细地址" ng-class="{'red-border':locationState}"  value="{{merchant.location}}">
                     </div>
                     <div class="col-md-2 red-font" ng-show="locationState">请输入商户详细地址</div>
                 </div>
@@ -103,12 +110,15 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
                     <label class="col-sm-2 control-label">门店头图</label>
 
                     <div class="col-sm-8 clearfix">
-                        <div id="addShopPic1" class="pull-left addShopPic" ng-class="{'red-border':merchantPicState}">
+                        <div id="addShopPic1" class="pull-left addShopPic"
+                             ng-class="{'red-border':merchantPicState}">
                             <input type="file" id="picture" class="form-control"
                                    onchange="angular.element(this).scope().imgBtnChange(this,$('#addShopPic1'))">
                             <span class="text-center ">添加照片</span>
                         </div>
-                        <div class="red-font pull-left pic-tip red-font-left" ng-show="merchantPicState">请选择图片</div>
+                        <div class="red-font pull-left pic-tip red-font-left"
+                             ng-show="merchantPicState">请选择图片
+                        </div>
                     </div>
 
                 </div>
@@ -117,7 +127,9 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
 
                     <div class="col-sm-9">
                         <!--map-->
-                        <p class="map-ttl">请在下方地图标注出商户所在位置 <span class="red-font red-font-left" ng-show="lnglatState">请选择经纬度</span></p>
+                        <p class="map-ttl">请在下方地图标注出商户所在位置 <span class="red-font red-font-left"
+                                                                 ng-show="lnglatState">请选择经纬度</span>
+                        </p>
 
                         <div id="container" class="form-control"></div>
                         <div id="myPageTop">
@@ -132,7 +144,9 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
                                                id="tipinput"></td>
                                     <td class="column2"><input class="form-control" type="text"
                                                                readonly="true" id="lnglat"
-                                                               ng-class="{'red-border':lnglatState}"></td>
+                                                               ng-class="{'red-border':lnglatState}"
+                                                               value="{{merchant.lat}},{{merchant.lng}}">
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -143,8 +157,9 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
             <div class="floor2" ng-show="currentState==2">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">协议签约人</label>
+
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="merchantContact"
+                        <input type="text" class="form-control" id="merchantContact" value="{{merchant.contact}}"
                                placeholder="请输入签约人姓名" ng-class="{'red-border':merchantCtctState}">
                     </div>
                     <div class="col-md-4 red-font" ng-show="merchantCtctState">请输入签约人姓名</div>
@@ -153,7 +168,7 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
                     <label class="col-sm-2 control-label">绑定手机号</label>
 
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="merchantPhone"
+                        <input type="text" class="form-control" id="merchantPhone" value="{{merchant.merchantPhone}}"
                                placeholder="请输入签约人手机号" ng-class="{'red-border':merchantTelState}">
                     </div>
                     <div class="col-md-4 red-font" ng-show="merchantTelState">请输入签约人姓名</div>
@@ -164,15 +179,15 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
                     <div class="col-sm-4" id="cooperate-style">
                         <div class="radio-inline">
                             <label>
-                                <input ng-click="itemsStateFun()"  type="radio" name="optionsRadios"
-                                       id="optionsRadios1" value="option1" checked>
+                                <input ng-click="itemsStateFun()" type="radio" name="optionsRadios"
+                                       id="optionsRadios1" value="option1" ng-checked="merchant.partnership==1||merchant==null" >
                                 联盟商户
                             </label>
                         </div>
                         <div class="radio-inline">
                             <label>
                                 <input ng-click="itemsStateFun()" type="radio" name="optionsRadios"
-                                       id="optionsRadios2" value="option2">
+                                       id="optionsRadios2" value="option2" ng-checked="merchant.partnership==0">
                                 普通商户
                             </label>
                         </div>
@@ -189,10 +204,13 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
                     <label class="col-sm-2 control-label">会员订单手续费</label>
 
                     <div class="col-sm-8 form-inline">
-                        <input type="number" id="member-commission" class="form-control input-inline"
-                               ng-class="{'red-border':memberCmsnState}"> %
+                        <input type="number" id="member-commission"
+                               class="form-control input-inline"
+                               ng-class="{'red-border':memberCmsnState}" value="{{merchant.memberCommission}}"> %
                         <span class="tip">注：会员订单的手续费和官方微信手续费的差额，乐加会以红包形式发放给会员</span>
-                        <div class="red-font red-font-left" ng-show="memberCmsnState">请输入会员订单手续费</div>
+
+                        <div class="red-font red-font-left" ng-show="memberCmsnState">请输入会员订单手续费
+                        </div>
                     </div>
 
                 </div>
@@ -201,8 +219,9 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
 
                     <div class="col-sm-8 form-inline">
                         <input type="text" id="import-commission" class="form-control input-inline"
-                               ng-class="{'red-border':importCmsnState}"> %
-                        <span class="red-font red-font-left" ng-show="importCmsnState">请输入会员订单手续费</span>
+                               ng-class="{'red-border':importCmsnState}" value="{{merchant.ljCommission}}"> %
+                        <span class="red-font red-font-left"
+                              ng-show="importCmsnState">请输入会员订单手续费</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -220,11 +239,11 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
             <!--第三页-->
             <div class="floor3" ng-show="currentState==3">
                 <div class="form-group">
-                    <label for="merchantBankCard" class="col-sm-2 control-label">银行卡号</label>
+                    <label for="merchantBankCard" class="col-sm-2 control-label" >银行卡号</label>
 
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="merchantBankCard"
-                               placeholder="请输入银行卡号" ng-class="{'red-border':merchantBankCdState}">
+                               placeholder="请输入银行卡号" value="{{merchant.merchantBank.bankNumber}}" ng-class="{'red-border':merchantBankCdState}">
                     </div>
                     <div class="col-md-4 red-font" ng-show="merchantBankCdState">请输入银行卡号</div>
                 </div>
@@ -232,7 +251,7 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
                     <label for="merchantBank" class="col-sm-2 control-label">开户行</label>
 
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="merchantBank"
+                        <input type="text" value="{{merchant.merchantBank.bankName}}" class="form-control" id="merchantBank"
                                placeholder="请输入所在支行地址" ng-class="{'red-border':merchantBankState}">
                     </div>
                     <div class="col-md-4 red-font" ng-show="merchantBankState">请输入所在支行地址</div>
@@ -241,7 +260,7 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
                     <label for="payee" class="col-sm-2 control-label">收款人</label>
 
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="payee"
+                        <input type="text" value="{{merchant.payee}}" class="form-control" id="payee"
                                placeholder="请输入收款人姓名" ng-class="{'red-border':payeeState}">
                     </div>
                     <div class="col-md-4 red-font" ng-show="payeeState">请输入收款人姓名</div>
@@ -269,7 +288,8 @@ ng-init="123" value="{{name}}"                              placeholder="请输�
 
                         <input type="button" class="btn btn-default" value="上一页"
                                ng-click="currentStateFun2()" ng-show="currentState==3">
-                        <input type="button" class="btn btn-warning" value="确认" ng-click="sumMerchant()"
+                        <input type="button" class="btn btn-warning" value="确认"
+                               ng-click="subMerchant()"
                                ng-show="currentState==3">
                     </p>
                 </div>

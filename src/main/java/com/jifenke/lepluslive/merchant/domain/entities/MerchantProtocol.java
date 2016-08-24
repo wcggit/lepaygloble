@@ -1,5 +1,7 @@
 package com.jifenke.lepluslive.merchant.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +24,7 @@ public class MerchantProtocol {
   private String picture;
 
   @ManyToOne
+  @JsonIgnore
   private Merchant merchant;
 
   public Long getId() {

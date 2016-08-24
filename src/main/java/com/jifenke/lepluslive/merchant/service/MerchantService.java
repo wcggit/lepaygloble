@@ -193,9 +193,11 @@ public class MerchantService {
         }
         origin.setLjBrokerage(merchant.getLjBrokerage());
         origin.setLjCommission(merchant.getLjCommission());
+        origin.setPicture(merchant.getPicture());
         origin.setName(merchant.getName());
         origin.setLocation(merchant.getLocation());
-        // origin.setState(merchant.getState());
+        origin.setLng(merchant.getLng());
+        origin.setLat(merchant.getLat());
         origin.setPartner(merchant.getPartner());
         origin.setArea(merchant.getArea());
         origin.setUserLimit(merchant.getUserLimit());

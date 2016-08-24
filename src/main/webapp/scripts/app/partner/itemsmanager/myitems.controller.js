@@ -126,7 +126,7 @@ angular.module('lepayglobleApp')
             $state.go("lefuma", {id: id})
         };
         $scope.goEdit = function (id) {
-            $state.go("createitems1", {id: id})
+            $state.go("createitems", {id: id})
         };
         $scope.goMerchantUser = function (id) {
             $state.go("accountmanager", {id: id})

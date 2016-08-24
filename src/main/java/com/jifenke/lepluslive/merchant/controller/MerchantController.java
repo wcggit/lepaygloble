@@ -246,8 +246,9 @@ public class MerchantController {
         return LejiaResult.ok("添加商户成功");
     }
 
-    @RequestMapping(value = "/merchant", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/merchant/editMerchant", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public LejiaResult eidtMerchant(@RequestBody Merchant merchant) {
+        merchant.setPartner(partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin()));
         merchantService.editMerchant(merchant);
 
         return LejiaResult.ok("修改商户成功");
