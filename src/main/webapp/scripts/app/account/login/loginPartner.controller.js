@@ -23,7 +23,7 @@ angular.module('lepayglobleApp')
                                 || $rootScope.previousStateName == ""
                                 || $rootScope.previousStateName == "loginPartner") {
                                 if (Principal.hasAuthority('partner')) {
-                                    $state.go('partner');
+                                    $state.go('partnerhome');
                                 }
                             } else {
                                 $rootScope.back();

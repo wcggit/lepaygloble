@@ -28,7 +28,7 @@ angular.module('lepayglobleApp')
                 $state.go('merchant');
             }
             if(Principal.hasAnyAuthority(['partner'])){
-                $state.go('partner');
+                $state.go('partnerhome');
             }
         };
     });

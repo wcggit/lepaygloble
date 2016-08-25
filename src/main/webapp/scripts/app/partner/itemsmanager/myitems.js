@@ -36,7 +36,7 @@ angular.module('lepayglobleApp')
                            })
                     .state('accountmanager', {
                                parent: 'myitems',
-                               url: '/accountmanager',
+                               url: '/accountmanager?id',
                                data: {
                                    authorities: ["partner"]
                                },
@@ -63,6 +63,11 @@ angular.module('lepayglobleApp')
                                        controller: 'createItemsController'
                                    }
                                },
-                               resolve: {}
+                               resolve: {
+                                   check: ['Partner', '$stateParams',
+                                           function (Partner, $stateParams) {
+                                             return  Partner.countParnterBindMerchant($stateParams.id);
+                                           }]
+                               }
                            })
             });

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .factory('Partner', function Trade($q, $http) {
+    .factory('Partner', function Trade($q, $http,$state) {
                  return {
                      getPartnerHomePageData: function () {
                          var deferred = $q.defer();
@@ -101,6 +101,22 @@ angular.module('lepayglobleApp')
                              deferred.resolve(response);
                          });
                          return deferred.promise;
+                     },
+                     countParnterBindMerchant: function (id) {
+                         if(id==null){
+                             $http.get('/api/partner/exceed_limit', {
+                                 headers: {
+                                     'Content-Type': 'application/json'
+                                 }
+                             }).success(function (response) {
+                                 if(!response.data){
+                                     alert("商户绑定已满");
+                                     $state.go('home');
+                                     return false;
+                                 }
+                             });
+                         }
+                       return true;
                      }
                  };
              });

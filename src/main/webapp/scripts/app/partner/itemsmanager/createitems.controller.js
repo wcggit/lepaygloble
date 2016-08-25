@@ -89,7 +89,8 @@ angular.module('lepayglobleApp')
                     });
                     //为地图注册click事件获取鼠标点击出的经纬度坐标
                     var clickEventListener = map.on('click', function (e) {
-                        document.getElementById("lnglat").value = e.lnglat.getLng() + ',' + e.lnglat.getLat();
+                        document.getElementById("lnglat").value =
+                        e.lnglat.getLng() + ',' + e.lnglat.getLat();
                         $scope.lnglatState = false;
                     });
                     var auto = new AMap.Autocomplete({
@@ -116,16 +117,19 @@ angular.module('lepayglobleApp')
                     $scope.subMerchant = function () {
                         if ($("#merchantBankCard").val().trim() == "") {
                             $scope.merchantBankCdState = true;
+                            return;
                         } else {
                             $scope.merchantBankCdState = false;
                         }
                         if ($("#merchantBank").val().trim() == "") {
                             $scope.merchantBankState = true;
+                            return;
                         } else {
                             $scope.merchantBankState = false;
                         }
                         if ($("#payee").val().trim() == "") {
                             $scope.payeeState = true;
+                            return;
                         } else {
                             $scope.payeeState = false;
                         }
@@ -272,20 +276,17 @@ angular.module('lepayglobleApp')
                         }
                         if (($("#merchantPhone").val().trim() == "")) {
                             $scope.merchantTelState = true;
-                        }else {
+                        } else {
                             $scope.merchantTelState = false;
                         }
                         if ($('#optionsRadios1').prop('checked')) {
                             if ($("#member-commission").val().trim() == "") {
                                 $scope.memberCmsnState = true;
-                            } else {
-                                $scope.memberCmsnState = false;
                             }
                             if ($("#import-commission").val().trim() == "") {
                                 $scope.importCmsnState = true;
-                            } else {
-                                $scope.importCmsnState = false;
                             }
+
                         }
 
                         if ($scope.merchantCtctState || $scope.merchantTelState
@@ -295,49 +296,57 @@ angular.module('lepayglobleApp')
                             $scope.currentState = 3;
                         }
                     };
-                    $scope.inputState = function (x, stateName,idName) {
-                        if(idName==''||idName==null){
+                    $scope.inputState = function (x, stateName, idName) {
+                        if (idName == '' || idName == null) {
                             if (x.value !== '') {
                                 $scope[stateName] = false;
-                            }else {
+                            } else {
                                 $scope[stateName] = true;
                             }
-                        }else {
-                            if(idName==='merchantPhone'){
-                                var isTel=!/^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\d{8}$/i.test($("#merchantPhone").val());
-                                if (($("#merchantPhone").val().trim() == "")||isTel) {
+                        } else {
+                            if (idName === 'merchantPhone') {
+                                var isTel = !/^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\d{8}$/i.test($("#merchantPhone").val());
+                                if (($("#merchantPhone").val().trim() == "") || isTel) {
                                     $scope[stateName] = true;
-                                }else {
+                                } else {
                                     $scope[stateName] = false;
                                 }
-                            }else if(idName==='merchantBankCard'){
-                                var isBankCard=!/^(\d{16}|\d{19})$/.test($("#merchantBankCard").val());
-                                if (($("#merchantBankCard").val().trim() == "")||isBankCard) {
+                            } else if (idName === 'merchantBankCard') {
+                                var isBankCard = !/^(\d{16}|\d{19})$/.test($("#merchantBankCard").val());
+                                if (($("#merchantBankCard").val().trim() == "") || isBankCard) {
                                     $scope[stateName] = true;
-                                }else {
+                                } else {
+                                    $scope[stateName] = false;
+                                }
+                            } else if (idName === 'member-commission') {
+                                var isMemberCmsn = !(/^([1-9]\d?(\.\d{1,1})?|0.\d{1,1}|100)$/.test($("#member-commission").val()));
+                                if (($("#member-commission").val().trim() == "") || isMemberCmsn) {
+                                    $scope[stateName] = true;
+                                } else {
+                                    $scope[stateName] = false;
+                                }
+                            } else if (idName === 'import-commission') {
+                                var isImportCmsn = !(/^([1-9]\d?(\.\d{1,1})?|0.\d{1,1}|100)$/.test($("#import-commission").val()));
+                                if (($("#import-commission").val().trim() == "") || isImportCmsn) {
+                                    $scope[stateName] = true;
+                                } else {
                                     $scope[stateName] = false;
                                 }
                             }
                         }
-
 
                     };
 
                     // tel正则
                     // $scope.isTel=function () {
                     //     if(!/^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\d{8}$/i.test($("#merchantPhone").val())){
-                    //         $scope.merchantCtctState = true;
-                    //     }
-                    // };
-                    // $scope.picState = function (stateName) {
-                    //     if ($(".merchant-picture").length > 0) {
-                    //         $scope[stateName] = false;
-                    //     }
-                    // };
+                    // $scope.merchantCtctState = true; } }; $scope.picState = function (stateName)
+                    // { if ($(".merchant-picture").length > 0) { $scope[stateName] = false; } };
 
                     var arr = [];
-                    $scope.imgBtnChange = function (x, addShopPic,stateName) {
-                        if (addShopPic.attr('id') == "addShopPic1" && $(".merchant-picture").length == 1) {
+                    $scope.imgBtnChange = function (x, addShopPic, stateName) {
+                        if (addShopPic.attr('id') == "addShopPic1" && $(".merchant-picture").length
+                                                                      == 1) {
                             return;
                         }
                         addShopPic.attr('id');
@@ -362,7 +371,7 @@ angular.module('lepayglobleApp')
                                                  '<img class="images merchant-picture" src="http://lepluslive-image.oss-cn-beijing.aliyuncs.com/'
                                                  if ($(".merchant-picture").length > 0) {
                                                      $scope[stateName] = false;
-                                                 }else {
+                                                 } else {
                                                      $scope[stateName] = true;
                                                  }
                                              } else {

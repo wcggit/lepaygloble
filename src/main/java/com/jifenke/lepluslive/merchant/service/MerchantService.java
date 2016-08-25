@@ -9,7 +9,6 @@ import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.lejiauser.domain.entities.RegisterOrigin;
 import com.jifenke.lepluslive.lejiauser.repository.RegisterOriginRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantProtocol;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantType;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
@@ -20,7 +19,6 @@ import com.jifenke.lepluslive.merchant.repository.MerchantTypeRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
 import com.jifenke.lepluslive.merchant.repository.OpenRequestRepository;
-import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -71,6 +69,9 @@ public class MerchantService {
 
     @Value("${bucket.ossBarCodeReadRoot}")
     private String barCodeRootUrl;
+
+    @Inject
+    private MerchantWeiXinUserService merchantWeiXinUserService;
 
 
     /**
@@ -223,5 +224,27 @@ public class MerchantService {
             return null;
         }).collect(Collectors.toList());
         merchantRepository.save(origin);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void createMerchantUser(Merchant merchant, String username, String password) {
+        MerchantUser merchantUser = new MerchantUser();
+        merchantUser.setName(username);
+        merchantUser.setPassword(MD5Util.MD5Encode(password, "UTF-8"));
+        merchantUser.setMerchant(merchant);
+        merchantUserRepository.save(merchantUser);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void deleteMerchantUser(Long id, Partner partner) {
+        MerchantUser merchantUser = merchantUserRepository.findOne(id);
+        long partnerId = merchantUser.getMerchant().getPartner().getId();
+        if (partnerId == partner.getId()) {
+            merchantWeiXinUserService.unBindMerchantUser(merchantUser);
+            merchantUserRepository.delete(merchantUser);
+        } else {
+            throw new RuntimeException();
+        }
+
     }
 }

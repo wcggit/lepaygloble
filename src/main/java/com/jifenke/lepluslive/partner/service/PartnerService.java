@@ -245,4 +245,10 @@ public class PartnerService {
         }
 
     }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Boolean checkPartnerBindMerchantLimit(Partner partner) {
+        long currentBind = partnerRepository.countParnterBindMerchant(partner.getId());
+        return partner.getMerchantLimit() > currentBind;
+    }
 }

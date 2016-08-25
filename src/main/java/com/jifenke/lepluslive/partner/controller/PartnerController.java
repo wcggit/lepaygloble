@@ -185,5 +185,36 @@ public class PartnerController {
         }
     }
 
+    @RequestMapping(value = "/partner/create_merchant_user", method = RequestMethod.POST)
+    public LejiaResult createMerchantUser(HttpServletRequest request) {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String sid = request.getParameter("sid");
+        Merchant merchant = merchantService.findmerchantBySid(sid);
+        merchantService.createMerchantUser(merchant, username, password);
+        return LejiaResult.ok("创建成功");
+    }
 
+    @RequestMapping(value = "/partner/delete_merchant_user", method = RequestMethod.POST)
+    public LejiaResult deleteMerchantUser(HttpServletRequest request) {
+        String param = request.getParameter("param");
+        Partner
+            partner =
+            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+        try {
+            merchantService.deleteMerchantUser(Long.parseLong(param), partner);
+            return LejiaResult.ok("删除成功");
+        } catch (Exception e) {
+            return LejiaResult.build(400, "无权限");
+        }
+    }
+
+    @RequestMapping(value = "/partner/exceed_limit", method = RequestMethod.GET)
+    public LejiaResult checkPartnerBindMerchantLimit() {
+        Partner
+            partner =
+            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+        return LejiaResult.ok(partnerService.checkPartnerBindMerchantLimit(partner)
+        );
+    }
 }

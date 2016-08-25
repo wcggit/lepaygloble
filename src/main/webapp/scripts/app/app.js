@@ -11,7 +11,7 @@ angular.module('lepayglobleApp', ['LocalStorageModule',
     //'infinite-scroll',
                                   'angular-loading-bar', 'ngBootstrap'])//
 
-    .run(function ($rootScope, $location, $window, $http, $state, Auth, Principal, ENV, VERSION) {
+    .run(function ($rootScope, $location, $window, $http, $state, Auth, Principal, ENV, VERSION,Partner) {
              $rootScope.disappear = function () {
                  $rootScope.personal = false;
              };
