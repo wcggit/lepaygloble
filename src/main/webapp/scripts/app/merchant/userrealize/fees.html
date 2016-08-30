@@ -26,7 +26,7 @@
         <div class="panel panel-default">
             <table class="table ol-tab">
                 <thead class="active">
-                <tr><td>消费时间</td><td>交易会员</td><td>销售门店</td><td>销售金额</td><td>我的佣金</td></tr>
+                <tr><td>消费时间</td><td>交易会员</td><td>销售金额</td><td>我的佣金</td></tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="x in pulls">
@@ -38,7 +38,7 @@
                         <span class="touxiang"><img ng-src="{{x.offLineOrder.leJiaUser.weiXinUser.headImageUrl}}" alt=""></span>
                         <span ng-bind="x.offLineOrder.leJiaUser.weiXinUser.nickname"></span>
                     </td>
-                    <td ng-bind="x.offLineOrder.merchant.name"></td>
+                    <!--<td ng-bind="x.offLineOrder.merchant.name"></td>-->
                     <td ng-bind="'¥'+x.offLineOrder.totalPrice/100"></td>
                     <td ng-bind="'¥'+x.toLockMerchant/100"></td>
                 </tr>
