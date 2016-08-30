@@ -12,9 +12,9 @@
                         <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                     </div>
                 </div>
-                <div class="form-group col-md-6 ">
+                <div class="form-group col-md-4">
                     <label>会员锁定状态</label>
-                    <div class="input-group col-md-3">
+                    <div class="input-group col-md-6">
                         <select class="form-control" id="userBindState">
                             <option value="-1">全部</option>
                             <option value="0">未锁定</option>
@@ -30,9 +30,9 @@
                     <label for="merchantName">商户名称</label>
                     <input type="text" class="form-control" id="merchantName" placeholder="请输入商户名称">
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label>签约类型</label>
-                    <div class="input-group col-md-3">
+                    <div class="input-group col-md-6">
                         <select class="form-control" id="partnerShip">
                             <option value="-1">全部</option>
                             <option value="0">普通协议</option>
@@ -41,9 +41,7 @@
                         <span class="select-jiao"></span>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-4 col-md-offset-1">
+                <div class="form-group col-md-1">
                     <button type="button" class="btn btn-warning btn-check2"
                             ng-click="searchByCriteria()">查询
                     </button>
@@ -53,9 +51,8 @@
         <div>
             <!--表格信息总结-->
             <p class="ttl-add clearfix">
-                <span class="pull-left">注：有<font>{{fullMerchant}}</font>家商户的锁定名额以满 <a ng-click="showFullMerchant()">查看详情</a></span>
-                <a class="btn btn-warning pull-right" ui-sref="createitems"
-                   ui-sref-opts="{reload:true}">新建商户</a>
+                <a class="btn btn-primary pull-left" ui-sref="createitems" ui-sref-opts="{reload:true}">新建商户</a>
+                <span class="pull-right">注：共锁定<font>78</font>家商户，有<font>{{fullMerchant}}</font>家商户的锁定名额以满 <a ng-click="showFullMerchant()">查看详情</a></span>
             </p>
             <!--表格-->
             <div class="panel panel-default">
@@ -105,10 +102,9 @@
             <nav class="pull-right">
                 <ul class="pagination">
                     <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
-                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a
-                        aria-label="Previous">
-                        <span aria-hidden="true">‹</span>
-                    </a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
                     <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
                     <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
                     <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
