@@ -54,3 +54,6 @@ a:hover,a:hover span.icon-xiazai{text-decoration: none;color: #4069B2}
 }
 tbody td a{cursor: pointer}
 .pagination{cursor: pointer}
+select.form-control{
+    padding: 0;
+}
