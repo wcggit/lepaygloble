@@ -537,7 +537,7 @@
             <!--<artifactId>maven-surefire-plugin</artifactId>-->
             <!--<configuration>-->
             <!--<argLine>-Xmx256m ${surefireArgLine}</argLine>-->
-            <!--&lt;!&ndash; Force alphabetical order to have a reproducible build &ndash;&gt;-->
+            <!--&lt;!&ndash; Force alphabetical order to have a reucible build &ndash;&gt;-->
             <!--<runOrder>alphabetical</runOrder>-->
             <!--</configuration>-->
             <!--</plugin>-->
@@ -723,44 +723,6 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>com.github.trecloux</groupId>
-                        <artifactId>yeoman-maven-plugin</artifactId>
-                        <version>0.4</version>
-                        <executions>
-                            <execution>
-                                <id>run-frontend-build</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                                <configuration>
-                                    <buildTool>grunt</buildTool>
-                                    <buildArgs>build --no-color</buildArgs>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <yeomanProjectDirectory>${project.basedir}</yeomanProjectDirectory>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <version>2.5</version>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>src/main/webapp/dist</directory>
-                                </fileset>
-                                <fileset>
-                                    <directory>.tmp</directory>
-                                </fileset>
-                                <fileset>
-                                    <directory>node_modules</directory>
-                                </fileset>
-                            </filesets>
-                        </configuration>
-                    </plugin>
-                    <plugin>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
                         <configuration>
@@ -777,6 +739,11 @@
                 <logback.loglevel>INFO</logback.loglevel>
             </properties>
             <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-devtools</artifactId>
+                    <optional>true</optional>
+                </dependency>
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
