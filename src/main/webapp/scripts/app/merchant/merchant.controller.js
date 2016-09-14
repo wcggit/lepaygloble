@@ -20,8 +20,12 @@ angular.module('lepayglobleApp')
                             state: "mylepay"
                         },
                         {
-                            ttl: "交易管理",
+                            ttl: "扫码支付",
                             state: "trade"
+                        },
+                        {
+                            ttl: "我的POS",
+                            state: "myPOS"
                         },
                         {
                             ttl: "导流服务",
