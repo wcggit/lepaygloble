@@ -126,7 +126,7 @@ if $cygwin ; then
     M2_HOME=`cygpath --unix "$M2_HOME"`
   [ -n "$JAVA_HOME" ] &&
     JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
-  [ -n "$CLASSPATH" ] &&
+  [ -n "$CLASSPATH" ]
     CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 

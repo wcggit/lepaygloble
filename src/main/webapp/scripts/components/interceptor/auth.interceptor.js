@@ -12,11 +12,11 @@ angular.module('lepayglobleApp')
                              var Principal = $injector.get('Principal');
                              var state = null;
                              if (Principal.hasAnyAuthority(['merchant'])) {
-                                 state = 'merchant';
+                                 state = 'login';
 
                              }
                              if (Principal.hasAnyAuthority(['partner'])) {
-                                 state = 'partner';
+                                 state = 'loginPartner';
                              }
                              var $state = $injector.get('$state');
                              var to = $rootScope.toState;
@@ -24,7 +24,9 @@ angular.module('lepayglobleApp')
                              Auth.logout();
                              $rootScope.previousStateName = to.name;
                              $rootScope.previousStateNameParams = params;
-                             $state.go(state);
+                             if (state != null) {
+                                 $state.go(state);
+                             }
                          } else if (response.status == 403 && response.config.method != 'GET'
                                     && getCSRF() == '') {
                              // If the CSRF token expired, then try to get a new CSRF token and
