@@ -10,7 +10,6 @@ angular.module('lepayglobleApp')
                         $scope.payee = response.data.payee;
                         var bankNumber = response.data.bankNumber;
                         $scope.bank = bankNumber.substring(bankNumber.length - 4, bankNumber.length);
-                        $scope.id = response.data.id;
                     });
 
                     Principal.identity().then(function (account) {
@@ -54,12 +53,8 @@ angular.module('lepayglobleApp')
                         if(amount<200) {
                             return;
                         }
-                        var id = $scope.id;
                         var data = 'amount='
-                                   + encodeURIComponent($("#inputPassword1").val().trim())
-                                   + '&id='
-                                   + encodeURIComponent(id);
-
+                                   + encodeURIComponent($("#inputPassword1").val().trim());
                         $http.post('/withdraw/partner_withdraw',data, {
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded'
