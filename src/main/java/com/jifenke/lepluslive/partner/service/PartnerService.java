@@ -251,4 +251,9 @@ public class PartnerService {
         long currentBind = partnerRepository.countParnterBindMerchant(partner.getId());
         return partner.getMerchantLimit() > currentBind;
     }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Partner findPartnerById(Long id) {
+        return partnerRepository.findOne(id);
+    }
 }
