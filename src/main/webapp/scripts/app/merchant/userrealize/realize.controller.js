@@ -14,6 +14,11 @@ angular.module('lepayglobleApp')
                             state: "fees"
                         },
                         {
+                            pic: "left-menu-icon iconfont icon-tixianjilu small-font",
+                            name: "提现记录",
+                            state: "withdrawList"
+                        },
+                        {
                             pic: "left-menu-icon left-menu-icon3 iconfont icon-vip",
                             name: "我的会员",
                             state: "myMember"

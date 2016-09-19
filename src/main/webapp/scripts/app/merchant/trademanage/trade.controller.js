@@ -14,11 +14,6 @@ angular.module('lepayglobleApp')
                             state: "orderList"
                         },
                         {
-                            pic: "left-menu-icon iconfont icon-tixianjilu small-font",
-                            name: "提现记录",
-                            state: "withdrawList"
-                        },
-                        {
                             pic: "left-menu-icon iconfont icon-erweima01",
                             name: "我的乐付码",
                             state: "qrCode"

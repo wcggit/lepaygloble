@@ -42,20 +42,7 @@ angular.module('lepayglobleApp')
                                                      }
                                                  },
                                                  resolve: {}
-                                             }).state('withdrawList', {
-                                                          parent: 'trade',
-                                                          url: '/withdrawList',
-                                                          data: {
-                                                              authorities: []
-                                                          },
-                                                          views: {
-                                                              'tradeContent@trade': {
-                                                                  templateUrl: 'scripts/app/merchant/trademanage/withdraw.html',
-                                                                  controller: 'TradeController'
-                                                              }
-                                                          },
-                                                          resolve: {}
-                                                      }).state('qrCode', {
+                                             }).state('qrCode', {
                                                                    parent: 'trade',
                                                                    url: '/qrCode',
                                                                    data: {

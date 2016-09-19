@@ -1,0 +1,125 @@
+<div class="container-fluid content POSmanger">
+    <p class="ttl clearfix">POS管理 <input type="button" class="btn btn-warning pull-right" data-toggle="modal" data-target="#applicatePOS" value="申请新POS机"></p>
+    <div>
+        <!--表格-->
+        <div class="panel panel-default">
+            <table class="table ol-tab">
+                <thead class="active">
+                <tr>
+                    <td>POS终端号</td>
+                    <td>POS商户号</td>
+                    <td>POS注册手机号</td>
+                    <td>添加时间</td>
+                    <td>佣金状态</td>
+                    <td>手续费</td>
+                    <td>普通订单流水</td>
+                    <td>导流订单流水</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="x in pulls">
+                    <td>131231</td>
+                    <td>131231</td>
+                    <td>
+                        <p ng-bind="x.completeDate|date:'yyyy-MM-dd'"></p>
+                        <p ng-bind="x.completeDate|date:'HH:mm:ss'"></p>
+                    </td>
+                    <td>未开通</td>
+                    <td>2134</td>
+                    <td>
+                        <p>刷卡（0.7% 封顶20）</p>
+                        <p>微信（0.6%）</p>
+                        <p>支付宝（0.6）</p>
+                    </td>
+                    <td ng-bind="'¥'+x.ljCommission/100.0"></td>
+                    <td ng-bind="'¥'+x.transferMoney/100.0"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--分页-->
+    <div class=" clearfix">
+        <nav class="pull-right">
+            <ul class="pagination">
+                <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a
+                    aria-label="Previous">
+                    <span aria-hidden="true">‹</span>
+                </a></li>
+                <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page + 1}}</a>
+                </li>
+                <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                    2}}</a>
+                </li>
+                <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                    ng-click="loadPage(page+1)"><a aria-label="Next">
+                    <span aria-hidden="true">›</span>
+                </a></li>
+                <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                    ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+            </ul>
+        </nav>
+    </div>
+    <!--申请POS提示框-->
+    <div class="modal fade" id="applicatePOS">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">申请新POS机</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">申请商户</label>
+                            <div class="col-sm-6 text-style">棉花糖KTV</div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">申请台数</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 col-sm-offset-1 control-label">申请人手机号</label>
+                            <div class="col-sm-6 text-style">1111111111111</div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="clearfix btn-div">
+                        <button type="button" class="btn btn-warning pull-left" ng-class="{disabled: srgl.thirNum<=200}"
+                                data-toggle="modal" data-target="#applicatePOSYes">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--申请POS成功提示框-->
+    <div class="modal fade" id="applicatePOSYes">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">申请新POS机</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <h4 class="text-center">申请提交成功，乐加客服将会尽快与您取得联系！</h4>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
