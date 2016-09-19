@@ -129,7 +129,7 @@ angular.module("lepayglobleApp").controller("MyLePayController",
             data.push(day / 100);
             $scope.item = item;
             $scope.data = data;
-		
+
         });
 
         $http.get('api/merchant').success(function (response) {
@@ -139,7 +139,7 @@ angular.module("lepayglobleApp").controller("MyLePayController",
 			$scope.id = response.data.id;
         });
 		//  提现功能
-		$scope.withdDraw=function() {
+		$scope.withDraw=function() {
 		   var amount = $("#inputPassword1").val();
 		   if(amount<200) {
 			   return;
@@ -225,3 +225,6 @@ Date.prototype.format = function (fmt) {
     }
     return fmt;
 }
+
+
+
