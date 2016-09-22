@@ -6,6 +6,7 @@ import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
+import com.jifenke.lepluslive.security.SecurityUtils;
 import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
 import com.jifenke.lepluslive.withdraw.service.WithdrawService;
 
@@ -39,10 +40,12 @@ public class WithdrawController {
     @RequestMapping(value = "/merchant_withdraw", method = RequestMethod.POST)
     public LejiaResult merchantWithDraw(HttpServletRequest request) {
         try {
-            Long id = new Long(request.getParameter("id"));
             Long amount = new Long(request.getParameter("amount"));
-            //  根据 id 获取 merchant 账户信息 , 生成随机订单号
-            Merchant merchant = merchantService.findMerchantById(id);
+            //  获取 merchant 账户信息 , 生成随机订单号
+            Merchant
+                merchant =
+                merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+                    .getMerchant();
             String randomBillSid = MvUtil.getOrderNumber();
             //  生成订单实例
             WithdrawBill withdrawBill = new WithdrawBill();
@@ -68,10 +71,9 @@ public class WithdrawController {
     @RequestMapping(value = "/partner_withdraw", method = RequestMethod.POST)
     public LejiaResult partnerWithdraw(HttpServletRequest request) {
         try {
-            Long id = new Long(request.getParameter("id"));
             Long amount = new Long(request.getParameter("amount"));
-            //  根据 id 查询合伙人信息 ，生成随机订单号
-            Partner partner = partnerService.findPartnerById(id);
+            //  查询合伙人信息 ，生成随机订单号
+            Partner partner = partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
             String randomBillSid = MvUtil.getOrderNumber();
             //  生成订单实例
             WithdrawBill withdrawBill = new WithdrawBill();
