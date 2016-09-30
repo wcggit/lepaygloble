@@ -7,7 +7,7 @@
                 <div class="face-img">
                     <img src="../../../../assets/styles/images/head/touxiang.png" alt="">
                 </div>
-                <h5 class="text-center">{{account.login}}</h5>
+                <h5 class="text-center"><a class="bindWeixin" data-toggle="modal" data-target="#bindWeixin">立即绑定微信号</a><span>{{account.login}}</span></h5>
             </div>
             <div class="col-md-8 ttl-top">
                 <p class="money-ttl">账户佣金余额</p>
@@ -16,7 +16,7 @@
                     <span class="pull-left">￥{{available}}</span>
                     <input type="button" class="btn btn-warning btn-sm pull-left tx" ng-click="tx()"
                            value="提现">
-                    <a class="pull-left" onclick="alert('暂无提现详情！')">查看提现详情</a>
+                    <a class="pull-left" ui-sref="withdrawdetails" ui-sref-opts="{reload: true}">查看提现详情</a>
                 </p>
             </div>
         </div>
@@ -75,6 +75,20 @@
                         <h2 ng-bind="'¥'+perCommission"></h2>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container content main-content partner-home">
+    <div class="container-fluid marketingAccount">
+        <p class="ttl">营销账户</p>
+        <div class="row">
+            <div class="col-md-6">
+                <p class="text-center"><span>￥33.50</span><br>我的红包</p>
+            </div>
+            <div class="col-md-6">
+                <p class="text-center"><span>10000</span><br>我的积分</p>
             </div>
         </div>
     </div>
@@ -190,52 +204,75 @@
                 </div>
             </div>
         </div>
-        <!--表格-->
+    </div>
 </div>
-    <!--提现提示框-->
-    <div class="modal fade" id="tx">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <button type="button" class="close" data-dismiss="modal"><span
-                        aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">提现余额 <span>佣金余额：<font color="#fb991a">{{available}}</font>元</span>
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label for="inputPassword1"
-                                   class="col-sm-3 col-sm-offset-1 control-label">提现金额（元）</label>
+<!--提现提示框-->
+<div class="modal fade" id="tx">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">提现余额 <span>佣金余额：<font color="#fb991a">{{available}}</font>元</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="inputPassword1"
+                               class="col-sm-3 col-sm-offset-1 control-label">提现金额（元）</label>
 
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" id="inputPassword1"
-                                       placeholder="请输入金额">
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="inputPassword1"
+                                   placeholder="请输入金额">
 
-                            </div>
-                            <div class="col-sm-3"><span class="ts">至少提现200元</span></div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
-
-                            <div class="col-sm-7">
-                                <p class="text-muted" class="form-control">
-                                    xxxxxxxxxxxxxxxxxxx{{bank}}</p>
-
-                                <p class="text-muted" class="form-control">{{payee}}</p>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <div class="btn-div">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消
-                        </button>
-                        <button type="button" class="btn btn-warning  "
-                                ng-class="{disabled: available<=200}" ng-click="withDraw()">确认
-                        </button>
-
+                        <div class="col-sm-3"><span class="ts">至少提现200元</span></div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
+
+                        <div class="col-sm-7">
+                            <p class="text-muted" class="form-control">
+                                xxxxxxxxxxxxxxxxxxx{{bank}}</p>
+
+                            <p class="text-muted" class="form-control">{{payee}}</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" class="btn btn-warning  "
+                            ng-class="{disabled: available<=200}" ng-click="withDraw()">确认
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--绑定微信提示框-->
+<div class="modal fade" id="bindWeixin">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">绑定微信号</h4>
+            </div>
+            <div class="modal-body">
+                <div class="rvCode">
+                    <img src="../../../../assets/images/jygl/rvCode.png" alt="">
+                </div>
+                <p class="text-center">请使用微信扫描二维码绑定微信号</p>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
                 </div>
             </div>
         </div>
