@@ -28,6 +28,7 @@ angular.module('lepayglobleApp')
         } else if ($location.url().indexOf("qrCode") != -1) {
             $scope.currentTab = "qrCode";
         }
+        $scope.currentTab = "POStradeList";
         $scope.onClickTab = function (tab) {
             $scope.currentTab = tab.state;
             $state.go(tab.state);

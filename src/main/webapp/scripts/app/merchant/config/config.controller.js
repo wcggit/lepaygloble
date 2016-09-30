@@ -4,7 +4,7 @@ angular.module('lepayglobleApp')
     .controller('MerchantConfigController',
                 function ($scope, $http, $rootScope, $location, Principal, Auth) {
                     $('body').css({background: '#f3f3f3'});
-                    $('.main-content').css({height: '100vh'})
+                    // $('.main-content').css({height: '100vh'})
                     Principal.identity().then(function (account) {
                         $scope.account = account;
                     });

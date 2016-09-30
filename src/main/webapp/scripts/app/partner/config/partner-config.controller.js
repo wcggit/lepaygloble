@@ -4,7 +4,7 @@ angular.module('lepayglobleApp')
     .controller('PartnerConfigController',
                 function ($scope, $http, $rootScope, $location, Principal, Auth) {
                     $('body').css({background: '#f3f3f3'});
-                    $('.main-content').css({height: '100vh'})
+                    // $('.main-content').css({height: '100vh'});
                     $http.get('api/partner').success(function (response) {
                         $scope.partner = response.data;
                     });

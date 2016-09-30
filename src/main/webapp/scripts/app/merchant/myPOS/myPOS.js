@@ -14,7 +14,7 @@ angular.module('lepayglobleApp')
                                        templateUrl: 'scripts/app/merchant/myPOS/myPOS.html',
                                        controller: 'myPOSController'
                                    },
-                                   'tradeContent@myPOS': {
+                                   'myPOSContent@myPOS': {
                                        templateUrl: 'scripts/app/merchant/myPOS/POStradeList.html',
                                        controller: 'POStradeListController'
                                    }
@@ -36,7 +36,7 @@ angular.module('lepayglobleApp')
                                     authorities: []
                                 },
                                 views: {
-                                    'tradeContent@myPOS': {
+                                    'myPOSContent@myPOS': {
                                         templateUrl: 'scripts/app/merchant/myPOS/POSorderList.html',
                                         controller: 'POSorderListController'
                                     }
@@ -52,7 +52,7 @@ angular.module('lepayglobleApp')
                                     authorities: []
                                 },
                                 views: {
-                                    'tradeContent@myPOS': {
+                                    'myPOSContent@myPOS': {
                                         templateUrl: 'scripts/app/merchant/myPOS/POSmanager.html',
                                         controller: 'POSmanagerController'
                                     }
