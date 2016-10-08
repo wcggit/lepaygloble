@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.partner.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.global.websocket.dto.ActivityDTO;
 import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
@@ -11,6 +12,8 @@ import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,14 +44,27 @@ public class PartnerController {
     @Inject
     private MerchantService merchantService;
 
+    @Inject
+    SimpMessageSendingOperations messagingTemplate;
+
 
     @RequestMapping(value = "/partner", method = RequestMethod.GET)
     public
     @ResponseBody
     LejiaResult getPartner() {
         return LejiaResult.ok(partnerService
-                                  .findPartnerByName(SecurityUtils.getCurrentUserLogin()));
+                                  .findByPartnerSid(SecurityUtils.getCurrentUserLogin()));
     }
+
+    @RequestMapping(value = "/partner/info", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    LejiaResult getPartnerInfo() {
+        return LejiaResult.ok(partnerService
+                                  .findPartnerInfoByPartnerSid(
+                                      SecurityUtils.getCurrentUserLogin()));
+    }
+
 
     @RequestMapping(value = "/partner/bindUsers", method = RequestMethod.POST)
     public
@@ -60,7 +76,7 @@ public class PartnerController {
         Partner
             partner =
             partnerService
-                .findPartnerByName(SecurityUtils.getCurrentUserLogin());
+                .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         leJiaUserCriteria.setPartner(partner);
         return LejiaResult.ok(leJiaUserService.getUserByBindPartner(leJiaUserCriteria));
     }
@@ -75,7 +91,7 @@ public class PartnerController {
         Partner
             partner =
             partnerService
-                .findPartnerByName(SecurityUtils.getCurrentUserLogin());
+                .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         leJiaUserCriteria.setPartner(partner);
         return LejiaResult.ok(leJiaUserService.getTotalPagesByBindPartner(leJiaUserCriteria));
     }
@@ -87,7 +103,7 @@ public class PartnerController {
         Map result = new HashMap();
         Partner
             partner =
-            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         PartnerWallet partnerWallet = partnerService.findPartnerWalletByPartner(partner);
         Long bindLeJiaUser = leJiaUserService.countPartnerBindLeJiaUser(partner);
 
@@ -99,8 +115,15 @@ public class PartnerController {
         result.put("bindLeJiaUser", leJiaUserService.countPartnerBindLeJiaUser(partner));
         result.put("bindMerchant", merchantService.countPartnerBindMerchant(partner));
         result.put("dayBindLeJiaUser", leJiaUserService.countPartnerBindLeJiaUserByDate(partner));
-        result.put("perCommission", new BigDecimal(partnerWallet.getTotalMoney() / 100.0)
-            .divide(new BigDecimal(bindLeJiaUser), 2, BigDecimal.ROUND_HALF_UP).doubleValue());
+        result.put("availableScoreA", partnerWallet.getAvailableScoreA() / 100.0);
+        result.put("availableScoreB", partnerWallet.getAvailableScoreB());
+        if (bindLeJiaUser == 0) {
+            result.put("perCommission", 0);
+        } else {
+
+            result.put("perCommission", new BigDecimal(partnerWallet.getTotalMoney() / 100.0)
+                .divide(new BigDecimal(bindLeJiaUser), 2, BigDecimal.ROUND_HALF_UP).doubleValue());
+        }
         return result;
     }
 
@@ -110,7 +133,7 @@ public class PartnerController {
     LejiaResult getMerchantTop5(Integer sortType) {
         Partner
             partner =
-            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
 
         return LejiaResult.ok(partnerService.findMerchantTop5(sortType, partner));
     }
@@ -121,7 +144,7 @@ public class PartnerController {
     @ResponseBody
     LejiaResult getPartnerBindMerchantList(@RequestBody MerchantCriteria merchantCriteria) {
         merchantCriteria
-            .setPartner(partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin()));
+            .setPartner(partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin()));
         return LejiaResult.ok(partnerService.getMerchantList(merchantCriteria));
     }
 
@@ -130,7 +153,7 @@ public class PartnerController {
     @ResponseBody
     LejiaResult getPartnerBindMerchantListPage(@RequestBody MerchantCriteria merchantCriteria) {
         merchantCriteria
-            .setPartner(partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin()));
+            .setPartner(partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin()));
         return LejiaResult.ok(partnerService.getMerchantListPage(merchantCriteria));
     }
 
@@ -139,7 +162,7 @@ public class PartnerController {
     @ResponseBody
     LejiaResult countFullBindMerchant() {
         return LejiaResult.ok(partnerService.countPartnerBindFullMerchant(
-            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin())));
+            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin())));
     }
 
     @RequestMapping(value = "/partner/merchant", method = RequestMethod.GET)
@@ -149,7 +172,7 @@ public class PartnerController {
         Merchant merchant = merchantService.findmerchantBySid(sid);
         Partner
             partner =
-            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         if (merchant.getPartner().getId().toString().equals(partner.getId().toString())) {
             return LejiaResult.ok(merchant);
         }
@@ -163,7 +186,7 @@ public class PartnerController {
         Merchant merchant = merchantService.findmerchantBySid(sid);
         Partner
             partner =
-            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         if (merchant.getPartner().getId().toString().equals(partner.getId().toString())) {
             return LejiaResult.ok(merchantService.findMerchantUserByMerchant(merchant));
         }
@@ -176,7 +199,7 @@ public class PartnerController {
         String password = request.getParameter("password");
         Partner
             partner =
-            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         try {
             partnerService.resetPassword(partner, reset, password);
             return LejiaResult.ok();
@@ -200,7 +223,7 @@ public class PartnerController {
         String param = request.getParameter("param");
         Partner
             partner =
-            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         try {
             merchantService.deleteMerchantUser(Long.parseLong(param), partner);
             return LejiaResult.ok("删除成功");
@@ -213,8 +236,14 @@ public class PartnerController {
     public LejiaResult checkPartnerBindMerchantLimit() {
         Partner
             partner =
-            partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         return LejiaResult.ok(partnerService.checkPartnerBindMerchantLimit(partner)
         );
+    }
+
+    @RequestMapping(value = "/partner/bind_wx_user/{sid}", method = RequestMethod.GET)
+    public void partner(@PathVariable String sid) {
+        ActivityDTO activityDTO = new ActivityDTO();
+        messagingTemplate.convertAndSendToUser(sid, "/reply", activityDTO);
     }
 }

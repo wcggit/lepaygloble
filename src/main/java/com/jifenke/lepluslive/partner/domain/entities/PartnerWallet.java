@@ -21,15 +21,55 @@ public class PartnerWallet {
 
   private Long availableBalance = 0L;
 
-  private Long totalMoney = 0L;
+  private Long totalMoney = 0L; //获取的总佣金
+
+  private Long totalWithdrawals = 0L;//已经提现总额
+
+  private Long availableScoreA = 0L; //可用红包
+
+  private Long availableScoreB = 0L;//可用积分
+
+  private Long totalScoreA = 0L; //累计红包
+
+  private Long totalScoreB = 0L;//累计积分
 
   @OneToOne
   private Partner partner;
 
-
   @Version
   private Long version = 0L;
 
+  public Long getAvailableScoreA() {
+    return availableScoreA;
+  }
+
+  public void setAvailableScoreA(Long availableScoreA) {
+    this.availableScoreA = availableScoreA;
+  }
+
+  public Long getAvailableScoreB() {
+    return availableScoreB;
+  }
+
+  public void setAvailableScoreB(Long availableScoreB) {
+    this.availableScoreB = availableScoreB;
+  }
+
+  public Long getTotalScoreA() {
+    return totalScoreA;
+  }
+
+  public void setTotalScoreA(Long totalScoreA) {
+    this.totalScoreA = totalScoreA;
+  }
+
+  public Long getTotalScoreB() {
+    return totalScoreB;
+  }
+
+  public void setTotalScoreB(Long totalScoreB) {
+    this.totalScoreB = totalScoreB;
+  }
 
   public Partner getPartner() {
     return partner;
@@ -69,5 +109,13 @@ public class PartnerWallet {
 
   public void setTotalMoney(Long totalMoney) {
     this.totalMoney = totalMoney;
+  }
+
+  public Long getTotalWithdrawals() {
+    return totalWithdrawals;
+  }
+
+  public void setTotalWithdrawals(Long totalWithdrawals) {
+    this.totalWithdrawals = totalWithdrawals;
   }
 }

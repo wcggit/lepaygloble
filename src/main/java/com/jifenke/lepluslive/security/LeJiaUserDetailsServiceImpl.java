@@ -1,8 +1,5 @@
 package com.jifenke.lepluslive.security;
 
-import com.jifenke.lepluslive.global.config.LoginUser;
-import com.jifenke.lepluslive.jhipster.domain.entities.User;
-import com.jifenke.lepluslive.jhipster.repository.UserRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
@@ -20,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -63,9 +59,10 @@ public class LeJiaUserDetailsServiceImpl implements LeJiaUserDetailsService {
         } else {
             Optional<Partner> userFromDatabase = partnerRepository.findByName(lowercaseLogin);
             return userFromDatabase.map(user -> {
-                return new org.springframework.security.core.userdetails.User(lowercaseLogin,
-                                                                              user.getPassword(),
-                                                                              grantedAuthorities);
+                return new org.springframework.security.core.userdetails.User(
+                    userFromDatabase.get().getPartnerSid(),
+                    user.getPassword(),
+                    grantedAuthorities);
             }).orElseThrow(() -> new UsernameNotFoundException(
                 "User " + lowercaseLogin + " was not found in the " +
                 "database"));

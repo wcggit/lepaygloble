@@ -1,10 +1,12 @@
 package com.jifenke.lepluslive.partner.domain.entities;
 
+import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -19,9 +21,9 @@ public class Partner {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  private String partnerSid;
 
   private String name; //账户名
-
 
   private Long userLimit = 0L;
 
@@ -39,8 +41,26 @@ public class Partner {
 
   private String payee;
 
-  @ManyToOne
-  private PartnerManager partnerManager;
+  private Integer benefitTime; //发放福利次数
+
+  @OneToOne
+  private WeiXinUser weiXinUser;
+
+  public WeiXinUser getWeiXinUser() {
+    return weiXinUser;
+  }
+
+  public void setWeiXinUser(WeiXinUser weiXinUser) {
+    this.weiXinUser = weiXinUser;
+  }
+
+  public Integer getBenefitTime() {
+    return benefitTime;
+  }
+
+  public void setBenefitTime(Integer benefitTime) {
+    this.benefitTime = benefitTime;
+  }
 
   public String getPayee() {
     return payee;
@@ -64,14 +84,6 @@ public class Partner {
 
   public void setBankNumber(String bankNumber) {
     this.bankNumber = bankNumber;
-  }
-
-  public PartnerManager getPartnerManager() {
-    return partnerManager;
-  }
-
-  public void setPartnerManager(PartnerManager partnerManager) {
-    this.partnerManager = partnerManager;
   }
 
   public Long getMerchantLimit() {
@@ -135,5 +147,13 @@ public class Partner {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getPartnerSid() {
+    return partnerSid;
+  }
+
+  public void setPartnerSid(String partnerSid) {
+    this.partnerSid = partnerSid;
   }
 }

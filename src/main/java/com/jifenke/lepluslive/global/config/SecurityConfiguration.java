@@ -151,6 +151,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/merchant/editMerchant").hasAuthority(AuthoritiesConstants.PARTNER)
             .antMatchers("/api/merchant/merchantType").permitAll()
             .antMatchers("/api/merchant/**").hasAuthority(AuthoritiesConstants.MERCHANT)
+            .antMatchers("/api/partner/bind_wx_user/**").permitAll()
             .antMatchers("/api/partner/**").hasAuthority(AuthoritiesConstants.PARTNER)
             .antMatchers("/api/audits/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/api/**").authenticated()

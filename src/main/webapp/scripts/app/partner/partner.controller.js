@@ -15,6 +15,7 @@ angular.module('lepayglobleApp')
                     };
                     $http.get('api/partner').success(function (response) {
                         $scope.partnerName = response.data.partnerName;
+                        $scope.partneraccount = response.data.name;
                     });
                     $scope.headers = [
                         {

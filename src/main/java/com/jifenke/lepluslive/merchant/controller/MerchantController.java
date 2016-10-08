@@ -2,7 +2,6 @@ package com.jifenke.lepluslive.merchant.controller;
 
 import com.jifenke.lepluslive.global.util.ImageLoad;
 import com.jifenke.lepluslive.global.util.LejiaResult;
-import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.controller.dto.MerchantDto;
@@ -11,8 +10,6 @@ import com.jifenke.lepluslive.merchant.domain.entities.MerchantType;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
-import com.jifenke.lepluslive.order.domain.entities.FinancialStatistic;
-import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.service.FinanicalStatisticService;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
@@ -24,9 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 
 import java.awt.*;
@@ -35,7 +29,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.*;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -240,7 +233,7 @@ public class MerchantController {
     @RequestMapping(value = "/merchant/createMerchant", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public LejiaResult createMerchant(
         @RequestBody Merchant merchant) {
-        merchant.setPartner(partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin()));
+        merchant.setPartner(partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin()));
         merchantService.createMerchant(merchant);
 
         return LejiaResult.ok("添加商户成功");
@@ -248,7 +241,7 @@ public class MerchantController {
 
     @RequestMapping(value = "/merchant/editMerchant", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public LejiaResult eidtMerchant(@RequestBody Merchant merchant) {
-        merchant.setPartner(partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin()));
+        merchant.setPartner(partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin()));
         merchantService.editMerchant(merchant);
 
         return LejiaResult.ok("修改商户成功");

@@ -13,8 +13,10 @@ import java.util.Optional;
  */
 public interface PartnerRepository extends JpaRepository<Partner, Long> {
 
-    Optional<Partner> findByName(String userName);
+    Optional<Partner> findByPartnerSid(String userName);
 
     @Query(value = "select count(*) from merchant where partner_id = ?1", nativeQuery = true)
     Long countParnterBindMerchant(Long id);
+
+    Optional<Partner> findByName(String lowercaseLogin);
 }

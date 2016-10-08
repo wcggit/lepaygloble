@@ -2,7 +2,7 @@
 
 angular.module('lepayglobleApp')
     .controller('LoginPartnerController',
-                function ($rootScope, $scope, $state, $timeout, Auth, Principal) {
+                function ($rootScope, $scope, $state, $timeout, Auth, Principal,Tracker) {
                     $scope.user = {};
                     $scope.errors = {};
 
@@ -17,6 +17,8 @@ angular.module('lepayglobleApp')
                                        password: $scope.password.trim(),
                                        isPartner: true
                                    }).then(function () {
+                            //登录成功开启webSocket
+                            Tracker.connect();
                             $scope.authenticationError = false;
                             if ($rootScope.previousStateName === 'home'
                                 || $rootScope.previousStateName == null

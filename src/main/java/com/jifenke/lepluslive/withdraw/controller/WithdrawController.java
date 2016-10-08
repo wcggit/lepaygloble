@@ -73,7 +73,7 @@ public class WithdrawController {
         try {
             Long amount = new Long(request.getParameter("amount"));
             //  查询合伙人信息 ，生成随机订单号
-            Partner partner = partnerService.findPartnerByName(SecurityUtils.getCurrentUserLogin());
+            Partner partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
             String randomBillSid = MvUtil.getOrderNumber();
             //  生成订单实例
             WithdrawBill withdrawBill = new WithdrawBill();

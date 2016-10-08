@@ -3,9 +3,9 @@ package com.jifenke.lepluslive.partner.service;
 import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.partner.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerInfo;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
-import com.jifenke.lepluslive.partner.repository.PartnerManagerRepository;
-import com.jifenke.lepluslive.partner.repository.PartnerManagerWalletRepository;
+import com.jifenke.lepluslive.partner.repository.PartnerInfoRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerWalletRepository;
 
@@ -41,10 +41,13 @@ public class PartnerService {
     @Inject
     private EntityManager em;
 
+    @Inject
+    private PartnerInfoRepository partnerInfoRepository;
+
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Partner findPartnerByName(String currentUserLogin) {
-        return partnerRepository.findByName(currentUserLogin).get();
+    public Partner findByPartnerSid(String currentUserLogin) {
+        return partnerRepository.findByPartnerSid(currentUserLogin).get();
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -255,5 +258,9 @@ public class PartnerService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Partner findPartnerById(Long id) {
         return partnerRepository.findOne(id);
+    }
+
+    public PartnerInfo findPartnerInfoByPartnerSid(String currentUserLogin) {
+        return partnerInfoRepository.findByPartner(findByPartnerSid(currentUserLogin));
     }
 }
