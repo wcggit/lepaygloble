@@ -157,6 +157,15 @@ public class PartnerController {
         return LejiaResult.ok(partnerService.getMerchantListPage(merchantCriteria));
     }
 
+    @RequestMapping(value = "/partner/merchant_list_count", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    LejiaResult getPartnerBindMerchantListCount(@RequestBody MerchantCriteria merchantCriteria) {
+        merchantCriteria
+            .setPartner(partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin()));
+        return LejiaResult.ok(partnerService.getMerchantListCount(merchantCriteria));
+    }
+
     @RequestMapping(value = "/partner/count_full_merchant", method = RequestMethod.GET)
     public
     @ResponseBody

@@ -223,6 +223,54 @@ public class PartnerService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Long getMerchantListCount(MerchantCriteria merchantCriteria) {
+        int start = 10 * (merchantCriteria.getOffset() - 1);
+        StringBuffer sql = new StringBuffer();
+        sql.append(
+            "select count(*)from merchant where partner_id =");
+        sql.append(merchantCriteria.getPartner().getId());
+        if (merchantCriteria.getStartDate() != null && merchantCriteria.getStartDate() != "") {
+            sql.append(" and merchant.create_date  between '");
+            sql.append(merchantCriteria.getStartDate());
+            sql.append("' and '");
+            sql.append(merchantCriteria.getEndDate());
+            sql.append("'");
+        }
+        if (merchantCriteria.getMerchantName() != null
+            && merchantCriteria.getMerchantName() != "") {
+            sql.append(" and merchant.name like '%");
+            sql.append(merchantCriteria.getMerchantName());
+            sql.append("%'");
+        }
+        if (merchantCriteria.getPartnerShip() != null) {
+            sql.append(" and merchant.partnership =");
+            sql.append(merchantCriteria.getPartnerShip());
+        }
+
+        if (merchantCriteria.getUserBindState() != null) {
+            if (merchantCriteria.getUserBindState() == 0) {
+                sql.append(
+                    "  and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )=0");
+            }
+            if (merchantCriteria.getUserBindState() == 1) {
+                sql.append(
+                    " and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )>=0.85 and  (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )<1");
+            }
+            if (merchantCriteria.getUserBindState() == 2) {
+                sql.append(
+                    "  and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )=1");
+            }
+        }
+        sql.append(" order by merchant.create_date desc limit ");
+        sql.append(start);
+        sql.append(",10");
+        Query nativeQuery = em.createNativeQuery(sql.toString());
+        List<BigInteger> details = nativeQuery.getResultList();
+        return (long) Math.ceil(details.get(0).intValue());
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Long countPartnerBindFullMerchant(Partner partner) {
         StringBuffer sql = new StringBuffer();
         sql.append(
