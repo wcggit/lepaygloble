@@ -56,8 +56,8 @@ public class PartnerRechargeController {
      */
     @RequestMapping("/partner/recharge/findByPartner")
     @ResponseBody
-    public LejiaResult findByPage(@RequestBody PartnerRechargeCriteria criteria) {
-        Page<PartnerRecharge> page = partnerRechargeService.findByCriteria(criteria, 10);
+    public LejiaResult findByPage(@RequestBody PartnerRechargeCriteria rechargeCriteria) {
+        Page<PartnerRecharge> page = partnerRechargeService.findByCriteria(rechargeCriteria, 10);
         return LejiaResult.ok(page);
     }
 
