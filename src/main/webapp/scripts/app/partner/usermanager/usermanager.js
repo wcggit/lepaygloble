@@ -26,5 +26,44 @@ angular.module('lepayglobleApp')
                             authorities: []
                         },
                         resolve: {}
+                    }).state('inviteUser', {
+                        parent: 'userManager',
+                        url: '/inviteUser',
+                        data: {
+                            authorities: []
+                        },
+                        views: {
+                            'userManagerContent@userManager': {
+                                templateUrl: 'scripts/app/partner/usermanager/inviteUser.html',
+                                controller: 'inviteUserController'
+                            }
+                        },
+                        resolve: {}
+                    }).state('robWelfare', {
+                        parent: 'userManager',
+                        url: '/robWelfare',
+                        data: {
+                            authorities: []
+                        },
+                        views: {
+                            'userManagerContent@userManager': {
+                                templateUrl: 'scripts/app/partner/usermanager/robWelfare.html',
+                                controller: 'robWelfareController'
+                            }
+                        },
+                        resolve: {}
+                    }).state('marketingAccount', {
+                        parent: 'userManager',
+                        url: '/marketingAccount',
+                        data: {
+                            authorities: []
+                        },
+                        views: {
+                            'userManagerContent@userManager': {
+                                templateUrl: 'scripts/app/partner/usermanager/marketingAccount.html',
+                                controller: 'marketingAccountController'
+                            }
+                        },
+                        resolve: {}
                     })
             });
