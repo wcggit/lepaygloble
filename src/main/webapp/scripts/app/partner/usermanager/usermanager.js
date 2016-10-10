@@ -3,19 +3,28 @@
 angular.module('lepayglobleApp')
     .config(function ($stateProvider) {
                 $stateProvider
-                    .state('usermanager', {
-                               parent: 'partner',
-                               url: '/usermanager',
-                               data: {
-                                   authorities: ["partner"]
-                               },
-                               views: {
-                                   'content@': {
-                                       templateUrl: 'scripts/app/partner/usermanager/usermanager.html',
-                                       controller: 'UserManagerController'
-                                   }
-                               },
-                               resolve: {
-                               }
-                           });
+                    .state('userManager', {
+                        parent: 'partner',
+                        url: '/myUser',
+                        data: {
+                            authorities: []
+                        },
+                        views: {
+                            'content@': {
+                                templateUrl: 'scripts/app/partner/usermanager/usermanager.html',
+                                controller: 'userManagerController'
+                            },
+                            'userManagerContent@userManager': {
+                                templateUrl: 'scripts/app/partner/usermanager/myUser.html',
+                                controller: 'myUserController'
+                            }
+                        },
+                        resolve: {}
+                    }).state('myUser', {
+                        parent: 'userManager',
+                        data: {
+                            authorities: []
+                        },
+                        resolve: {}
+                    })
             });
