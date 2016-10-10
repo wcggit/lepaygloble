@@ -1,116 +1,116 @@
 <div class="container content main-content user-manager wdhy">
     <div class="container-fluid">
-            <p class="ttl">我的会员</p>
-            <!--查询表单-->
-            <form class="form-inline">
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label>锁定时间</label>
-                        <div class="input-group timePicker col-md-8">
-                            <input type="text" name="reservation" id="timePicker1" class="form-control" />
-                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>锁定商户</label>
-                        <input type="text" class="form-control" placeholder="请输入商户名称">
+        <p class="ttl">我的会员</p>
+        <!--查询表单-->
+        <form class="form-inline">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>锁定时间</label>
+                    <div class="input-group timePicker col-md-8">
+                        <input type="text" name="reservation" id="timePicker1" class="form-control" />
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label>导流消费</label>
-                            <select name="" class="form-control">
-                                <option value="">大于</option>
-                                <option value="">等于</option>
-                                <option value="">小于</option>
-                            </select>
-                            <input type="number" class="form-control" placeholder="请输入消费次数" /> 次
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>为我带来</label>
-                        <select name="" class="form-control">
-                            <option value="">超过</option>
-                            <option value="">等于</option>
-                            <option value="">低于</option>
-                        </select>
-                        <input type="number" class="form-control" placeholder="请输入微信昵称" /> 元收入
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label for="phone">手机号码</label>
-                        <input type="text" class="form-control" id="phone" placeholder="请输入手机号">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="weixinNickNmame">微信昵称</label>
-                        <input type="text" class="form-control" id="weixinNickNmame" placeholder="请输入微信昵称">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-4">
-                        <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
-                    </div>
-                </div>
-
-            </form>
-            <div>
-                <!--表格信息总结-->
-                <p class="ttl-add clearfix">
-                    <span class="pull-right">供选择4人&nbsp;&nbsp;<a class="btn btn-warning" data-toggle="modal" data-target="#pffl">批量发福利</a></span>
-                    <span class="pull-left">注：所选条件下，共有<font>78</font>个会员，累计为我带来<font>￥2500</font>收入</span>
-                </p>
-                <!--表格-->
-                <div class="panel panel-default">
-                    <table class="table ol-tab">
-                        <thead class="active">
-                        <tr><td class="clearfix"><span class="chbx pull-left"><input type="checkbox" id="checkbox-1"><label class="chbx-init">✔</label></span>锁定时间</td>
-                            <td>微信信息</td><td>锁定商户</td><td>手机号</td><td>店铺佣金贡献</td><td>我的佣金贡献</td></tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="x in pulls">
-                            <td class="clearfix"><span class="chbx pull-left">
-                                <input type="checkbox" class="checkbox-2" id="{{x[0]}}" ng-click="checkClick(x[0])"><label class="chbx-init">✔</label></span>
-                                <span class="touxiang"><img  ng-src="{{x[2]}}" alt=""></span>
-                                <span ng-bind="x[1]"></span>
-                            </td>
-                            <td>
-                                <p ng-bind="x[3]|date:'yyyy-MM-dd'"></p>
-                                <p ng-bind="x[3]|date:'HH:mm:ss'"></p>
-                            </td>
-                            <td><span ng-bind="x[4]"></span></td>
-                            <td ng-show="x[5]!=null" ng-bind="x[5]"></td>
-                            <td ng-show="x[5]==null">--</td>
-                            <td ng-bind="'¥'+x[6]/100.0"></td>
-                            <td ng-bind="'¥'+x[7]/100.0"></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="form-group col-md-4">
+                    <label>锁定商户</label>
+                    <input type="text" class="form-control" placeholder="请输入商户名称">
                 </div>
             </div>
-            <!--分页-->
-            <div class=" clearfix">
-                <nav class="pull-right">
-                    <ul class="pagination">
-                        <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
-                        <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a aria-label="Previous">
-                            <span aria-hidden="true">‹</span>
-                        </a></li>
-                        <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
-                        <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
-                        <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
-                        <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page + 1}}</a>
-                        </li>
-                        <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
-                            2}}</a>
-                        </li>
-                        <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(page+1)"><a aria-label="Next">
-                            <span aria-hidden="true">›</span>
-                        </a></li>
-                        <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
-                    </ul>
-                </nav>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>导流消费</label>
+                        <select name="" class="form-control">
+                            <option value="">大于</option>
+                            <option value="">等于</option>
+                            <option value="">小于</option>
+                        </select>
+                        <input type="number" class="form-control" placeholder="请输入消费次数" /> 次
+                </div>
+                <div class="form-group col-md-6">
+                    <label>为我带来</label>
+                    <select name="" class="form-control">
+                        <option value="">超过</option>
+                        <option value="">等于</option>
+                        <option value="">低于</option>
+                    </select>
+                    <input type="number" class="form-control" placeholder="请输入微信昵称" /> 元收入
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="phone">手机号码</label>
+                    <input type="text" class="form-control" id="phone" placeholder="请输入手机号">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="weixinNickNmame">微信昵称</label>
+                    <input type="text" class="form-control" id="weixinNickNmame" placeholder="请输入微信昵称">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+                </div>
+            </div>
+
+        </form>
+        <div>
+            <!--表格信息总结-->
+            <p class="ttl-add clearfix">
+                <span class="pull-right">供选择4人&nbsp;&nbsp;<a class="btn btn-warning" data-toggle="modal" data-target="#pffl">批量发福利</a></span>
+                <span class="pull-left">注：所选条件下，共有<font>78</font>个会员，累计为我带来<font>￥2500</font>收入</span>
+            </p>
+            <!--表格-->
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr><td class="clearfix"><span class="chbx pull-left"><input type="checkbox" id="checkbox-1"><label class="chbx-init">✔</label></span>锁定时间</td>
+                        <td>微信信息</td><td>锁定商户</td><td>手机号</td><td>店铺佣金贡献</td><td>我的佣金贡献</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in pulls">
+                        <td class="clearfix"><span class="chbx pull-left">
+                            <input type="checkbox" class="checkbox-2" id="{{x[0]}}" ng-click="checkClick(x[0])"><label class="chbx-init">✔</label></span>
+                            <span class="touxiang"><img  ng-src="{{x[2]}}" alt=""></span>
+                            <span ng-bind="x[1]"></span>
+                        </td>
+                        <td>
+                            <p ng-bind="x[3]|date:'yyyy-MM-dd'"></p>
+                            <p ng-bind="x[3]|date:'HH:mm:ss'"></p>
+                        </td>
+                        <td><span ng-bind="x[4]"></span></td>
+                        <td ng-show="x[5]!=null" ng-bind="x[5]"></td>
+                        <td ng-show="x[5]==null">--</td>
+                        <td ng-bind="'¥'+x[6]/100.0"></td>
+                        <td ng-bind="'¥'+x[7]/100.0"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a aria-label="Previous">
+                        <span aria-hidden="true">‹</span>
+                    </a></li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page + 1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
 <!--批量发福利提示框-->
 <div class="modal fade" id="pffl">
