@@ -255,4 +255,11 @@ public class PartnerController {
         ActivityDTO activityDTO = new ActivityDTO();
         messagingTemplate.convertAndSendToUser(sid, "/reply", activityDTO);
     }
+
+    @RequestMapping(value="/partner/unbind_wx_user",method = RequestMethod.GET)
+    public LejiaResult unbindWxUser() {
+        Partner partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        partnerService.unbindWeiXinUser(partner);
+        return  LejiaResult.ok();
+    }
 }

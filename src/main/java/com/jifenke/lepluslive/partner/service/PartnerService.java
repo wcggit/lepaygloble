@@ -311,4 +311,10 @@ public class PartnerService {
     public PartnerInfo findPartnerInfoByPartnerSid(String currentUserLogin) {
         return partnerInfoRepository.findByPartner(findByPartnerSid(currentUserLogin));
     }
+
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
+    public void unbindWeiXinUser(Partner partner) {
+        partner.setWeiXinUser(null);
+        partnerRepository.save(partner);
+    }
 }
