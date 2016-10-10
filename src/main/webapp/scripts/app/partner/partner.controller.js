@@ -28,7 +28,7 @@ angular.module('lepayglobleApp')
                         },
                         {
                             ttl: "我的会员",
-                            state: "usermanager"
+                            state: "userManager"
                         }
                     ];
                     if ($location.url().indexOf( "/partnerhome")!=-1) {
