@@ -4,26 +4,7 @@ angular.module('lepayglobleApp')
     .controller('inviteUserController', function ($scope, Commission) {
                     $('body').css({background: '#fff'});
                     $('.main-content').css({height: 'auto'});
-                    $('#timePicker1')
-                        // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' +
-                        // moment().format('YYYY/MM/DD HH:mm:59'))
-                        .daterangepicker({
-                                             timePicker: true, //是否显示小时和分钟
-                                             timePickerIncrement: 1, //时间的增量，单位为分钟
-                                             opens: 'right', //日期选择框的弹出位置
-                                             startDate: moment().format('YYYY/MM/DD HH:mm:00'),
-                                             endDate: moment().format('YYYY/MM/DD HH:mm:59'),
-                                             format: 'YYYY/MM/DD HH:mm:ss', //控件中from和to 显示的日期格式
-                                             ranges: {
-                                                 '最近1小时': [moment().subtract('hours', 1), moment()],
-                                                 '今日': [moment().startOf('day'), moment()],
-                                                 '昨日': [moment().subtract('days', 1).startOf('day'),
-                                                        moment().subtract('days', 1).endOf('day')],
-                                                 '最近7日': [moment().subtract('days', 6), moment()],
-                                                 '最近30日': [moment().subtract('days', 29), moment()]
-                                             }
-                                         }, function (start, end, label) {
-                                         });
+
                     $("#timePicker1").val("");
                     var currentPage = 1;
                     var criteria = {};
@@ -78,27 +59,14 @@ angular.module('lepayglobleApp')
                         currentPage = 1;
                         getTotalPage()
                     }
-
-                    // 复选框
-                    $('#checkbox-1').click(function () {
-                        if($('#checkbox-1').prop('checked')==true){
-                            $(this).next('label').removeClass('chbx-init').addClass('chbx-focus');
-                            $('.checkbox-2').next('label').removeClass('chbx-init').addClass('chbx-focus');
-
-                        }else {
-                            $(this).next('label').removeClass('chbx-focus').addClass('chbx-init');
-                            $('.checkbox-2').next('label').removeClass('chbx-focus').addClass('chbx-init');
-                        }
-                    });
-
-                    $scope.checkClick=function(id){
-                        var idName=document.getElementById(id);
-                        if($(idName).prop('checked')==true){
-                            $(idName).next('label').removeClass('chbx-init').addClass('chbx-focus');
-                        }else {
-                            $(idName).next('label').removeClass('chbx-focus').addClass('chbx-init');
-                        }
-                    }
+                    $("input[type=number]").attr("disabled","disabled");
+                   $("input[type=radio]").click(function(){
+                       var name = $(this).attr("name");
+                      $("input[name=" + name + "]").next().attr("disabled","disabled");
+                       $("input[name=" + name + "]").next().next().attr("disabled","disabled");
+                       $(this).next().removeAttr("disabled");
+                       $(this).next().next().removeAttr("disabled");
+                   });
 
                 });
 
