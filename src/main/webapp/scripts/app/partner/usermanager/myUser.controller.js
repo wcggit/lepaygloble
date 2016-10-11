@@ -84,10 +84,12 @@ angular.module('lepayglobleApp')
                         if($('#checkbox-1').prop('checked')==true){
                             $(this).next('label').removeClass('chbx-init').addClass('chbx-focus');
                             $('.checkbox-2').next('label').removeClass('chbx-init').addClass('chbx-focus');
+                            $('.checkbox-2').prop('checked','true');
 
                         }else {
                             $(this).next('label').removeClass('chbx-focus').addClass('chbx-init');
                             $('.checkbox-2').next('label').removeClass('chbx-focus').addClass('chbx-init');
+                            $('.checkbox-2').prop('checked','false');
                         }
                     });
 
