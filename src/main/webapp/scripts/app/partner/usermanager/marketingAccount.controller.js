@@ -99,6 +99,22 @@ angular.module('lepayglobleApp')
                             $(idName).next('label').removeClass('chbx-focus').addClass('chbx-init');
                         }
                     }
-
+        // TOP5
+        var navBtn = $('.partner-home .nav-pills li');
+        var navDiv = $('.partner-home .tab-content .tab-pane');
+        navBtn.each(function (i) {
+            navBtn.eq(i).click(function () {
+                for (var t = 0; t < 3; t++) {
+                    navBtn.eq(t).removeClass('active');
+                    navDiv.eq(t).removeClass('active')
+                }
+                var index = $(this).index();
+                //Partner.getMerchantTop5(index).then(function (result) {
+                //    $scope.homeTab = result.data;
+                //});
+                navBtn.eq(index).addClass('active');
+                navDiv.eq(index).addClass('active')
+            })
+        })
                 });
 
