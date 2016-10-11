@@ -1,0 +1,255 @@
+<div class="container content main-content user-manager wdhy">
+    <div class="container-fluid">
+        <p class="ttl">我的会员</p>
+        <!--查询表单-->
+        <form class="form-inline">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>锁定时间</label>
+                    <div class="input-group timePicker col-md-8">
+                        <input type="text" name="reservation" id="timePicker1" class="form-control" />
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>锁定商户</label>
+                    <input type="text" class="form-control" placeholder="请输入商户名称">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>导流消费</label>
+                        <select name="" class="form-control">
+                            <option value="">大于</option>
+                            <option value="">等于</option>
+                            <option value="">小于</option>
+                        </select>
+                        <input type="number" class="form-control" placeholder="请输入消费次数" /> 次
+                </div>
+                <div class="form-group col-md-6">
+                    <label>为我带来</label>
+                    <select name="" class="form-control">
+                        <option value="">超过</option>
+                        <option value="">等于</option>
+                        <option value="">低于</option>
+                    </select>
+                    <input type="number" class="form-control" placeholder="请输入微信昵称" /> 元收入
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="phone">手机号码</label>
+                    <input type="text" class="form-control" id="phone" placeholder="请输入手机号">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="weixinNickNmame">微信昵称</label>
+                    <input type="text" class="form-control" id="weixinNickNmame" placeholder="请输入微信昵称">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+                </div>
+            </div>
+
+        </form>
+        <div>
+            <!--表格信息总结-->
+            <p class="ttl-add clearfix">
+                <span class="pull-right">供选择4人&nbsp;&nbsp;<a class="btn btn-warning" data-toggle="modal" data-target="#pffl">批量发福利</a></span>
+                <span class="pull-left">注：所选条件下，共有<font>78</font>个会员，累计为我带来<font>￥2500</font>收入</span>
+            </p>
+            <!--表格-->
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr><td class="clearfix"><span class="chbx pull-left"><input type="checkbox" id="checkbox-1"><label class="chbx-init">✔</label></span>锁定时间</td>
+                        <td>微信信息</td><td>锁定商户</td><td>手机号</td><td>店铺佣金贡献</td><td>我的佣金贡献</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in pulls">
+                        <td class="clearfix"><span class="chbx pull-left">
+                            <input type="checkbox" class="checkbox-2" id="{{x[0]}}" ng-click="checkClick(x[0])"><label class="chbx-init">✔</label></span>
+                            <span class="touxiang"><img  ng-src="{{x[2]}}" alt=""></span>
+                            <span ng-bind="x[1]"></span>
+                        </td>
+                        <td>
+                            <p ng-bind="x[3]|date:'yyyy-MM-dd'"></p>
+                            <p ng-bind="x[3]|date:'HH:mm:ss'"></p>
+                        </td>
+                        <td><span ng-bind="x[4]"></span></td>
+                        <td ng-show="x[5]!=null" ng-bind="x[5]"></td>
+                        <td ng-show="x[5]==null">--</td>
+                        <td ng-bind="'¥'+x[6]/100.0"></td>
+                        <td ng-bind="'¥'+x[7]/100.0"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a aria-label="Previous">
+                        <span aria-hidden="true">‹</span>
+                    </a></li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page + 1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<!--批量发福利提示框-->
+<div class="modal fade" id="pffl">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <div class="logo-img"></div>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">发放对象</label>
+                        <div class="col-sm-1">
+                            <img class="pffl-wxFace" src="../../../../assets/images/hipster.png" alt="">
+                        </div>
+                        <div class="col-sm-3 pffl-top"><span>夜空总最亮的星</span></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label pffl-top">发放福利</label>
+                        <div class="col-sm-6">
+                            <div class="row pffl-top">
+                                <div class="col-sm-3 pffl-top"><span>发放积分</span></div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" ng-model="jfNum" type="number" placeholder="请输入积分值">
+                                </div>
+                                <div class="col-sm-5 pffl-top"><span>积分余额：2000积分</span></div>
+                            </div>
+                            <div class="row pffl-top">
+                                <div class="col-sm-3 col pffl-top"><span>发放红包</span></div>
+                                <div class="col-sm-4">
+                                    <input class="form-control"ng-model="hbNum" type="number" placeholder="请输入红包金额">
+                                </div>
+                                <div class="col-sm-5 pffl-top"><span>红包余额：2000元</span></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">留言（选填）</label>
+                        <div class="col-sm-6 pffl-top">
+                            <textarea class="form-control" name="" id="" cols="30" rows="5" ng-model="liuyan"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">点击后跳转</label>
+                        <div class="col-sm-7">
+                            <div class="radio-inline">
+                                <label>
+                                    <input ng-click="itemsStateFun()" type="radio" name="optionsRadios"
+                                           value="option1" ng-checked="merchant.partnership==1||merchant==null">
+                                    我的钱包
+                                </label>
+                            </div>
+                            <div class="radio-inline">
+                                <label>
+                                    <input ng-click="itemsStateFun()" type="radio" name="optionsRadios"
+                                           value="option2" ng-checked="merchant.partnership==0">
+                                    甄品商城
+                                </label>
+                            </div>
+                            <div class="radio-inline">
+                                <label>
+                                    <input ng-click="itemsStateFun()" type="radio" name="optionsRadios"
+                                           value="option2" ng-checked="merchant.partnership==0">
+                                    周边好店
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="pffl-right">
+                     <ul>
+                         <li><span>到账金额：</span>￥{{hbNum}}+{{jfNum}}积分</li>
+                         <li><span>到账状态：</span>土豪王尼玛送你豪华大礼包</li>
+                         <li><span>到账时间：</span>2016.03.04</li>
+                         <li><span>到账详情：</span>{{liuyan}}</li>
+                     </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" class="btn btn-warning  "
+                            ng-class="{disabled: available<=200}" ng-click="withDraw()">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--批量发福利成功提示框-->
+<div class="modal fade" id="pffl-success">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <div class="logo-img"></div>
+            </div>
+            <div class="modal-body">
+                <div class="success-img"></div>
+                <p class="text-center success-ttl">福利发放成功</p>
+                <div class="success-fl clearfix">
+                    <div class="pull-left">红包余额：￥24.33</div>
+                    <div class="pull-right">积分余额：2345积分</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" class="btn btn-warning  "
+                            ng-class="{disabled: available<=200}" ng-click="withDraw()">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--批量发福利限制提示框-->
+<div class="modal fade" id="pffl-limit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <div class="logo-img"></div>
+            </div>
+            <div class="modal-body">
+                <div>您一天只能给同一个会员发放一次福利</div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div text-center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

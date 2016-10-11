@@ -1,83 +1,53 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('UserManagerController', function ($scope, Commission) {
-                    $('body').css({background: '#f3f3f3'});
-                    $('.main-content').css({height: 'auto'});
-                    $('#timePicker1')
-                        // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' +
-                        // moment().format('YYYY/MM/DD HH:mm:59'))
-                        .daterangepicker({
-                                             timePicker: true, //是否显示小时和分钟
-                                             timePickerIncrement: 1, //时间的增量，单位为分钟
-                                             opens: 'right', //日期选择框的弹出位置
-                                             startDate: moment().format('YYYY/MM/DD HH:mm:00'),
-                                             endDate: moment().format('YYYY/MM/DD HH:mm:59'),
-                                             format: 'YYYY/MM/DD HH:mm:ss', //控件中from和to 显示的日期格式
-                                             ranges: {
-                                                 '最近1小时': [moment().subtract('hours', 1), moment()],
-                                                 '今日': [moment().startOf('day'), moment()],
-                                                 '昨日': [moment().subtract('days', 1).startOf('day'),
-                                                        moment().subtract('days', 1).endOf('day')],
-                                                 '最近7日': [moment().subtract('days', 6), moment()],
-                                                 '最近30日': [moment().subtract('days', 29), moment()]
-                                             }
-                                         }, function (start, end, label) {
-                                         });
-                    $("#timePicker1").val("");
-                    var currentPage = 1;
-                    var criteria = {};
-                    criteria.offset = 1;
-                    getTotalPage();
-                    function loadContent() {
-                        Commission.getUsersByBindPartner(criteria).then(function (response) {
-                            var data = response.data;
-                            $scope.page = currentPage;
-                            $scope.pulls = data;
-                        });
-                    }
-
-                    $scope.loadPage = function (page) {
-                        if (page == 0) {
-                            return;
-                        }
-                        if (page > $scope.totalPages) {
-                            return;
-                        }
-                        if (currentPage == $scope.totalPages && page == $scope.totalPages) {
-                            return;
-                        }
-                        if (currentPage == 1 && page == 1) {
-                            return;
-                        }
-                        currentPage = page;
-                        criteria.offset = page;
-                        loadContent();
-                    };
-
-                    function getTotalPage() {
-                        Commission.getTotalPagesByBindPartner(criteria).then(function (response) {
-                            $scope.totalPages = response.data;
-                            loadContent();
-                        });
-                    }
-
-                    $scope.searchByCriteria = function () {
-                        var dateStr = $("#timePicker1").val();
-                        var phone = $("#phone").val();
-                        var merchantName = $("#merchantName").val();
-                        if (dateStr != null && dateStr != "") {
-                            var startDate = dateStr.split("-")[0].trim();
-                            var endDate = dateStr.split("-")[1].trim();
-                            criteria.partnerStartDate = startDate;
-                            criteria.partnerEndDate = endDate;
-                        }
-                        criteria.offset = 1;
-                        criteria.merchantName = merchantName;
-                        criteria.phone = phone;
-                        currentPage = 1;
-                        getTotalPage()
-                    }
-
-                });
-
+    .controller('userManagerController', function ($scope, $state, $location) {
+        $scope.lefts = [
+            {
+                pic: 'left-menu-icon iconfont icon-2wodezhangdan18x20',
+                name: "我的会员",
+                state: "myUser"
+            },
+            {
+                pic: "left-menu-icon iconfont icon-jiaoyijilu",
+                name: "邀请会员",
+                state: "inviteUser"
+            },
+            {
+                pic: "left-menu-icon iconfont icon-erweima01",
+                name: "营销账户",
+                state: "marketingAccount"
+            }
+        ];
+        if ($location.url() == "/merchant/trade") {
+            $scope.currentTab = "tradeList";
+        } else if ($location.url().indexOf("orderList") != -1) {
+            $scope.currentTab = "orderList";
+        } else if ($location.url().indexOf("withdrawList") != -1) {
+            $scope.currentTab = "withdrawList";
+        } else if ($location.url().indexOf("qrCode") != -1) {
+            $scope.currentTab = "qrCode";
+        }
+        $scope.currentTab = "myUser";
+        $scope.onClickTab = function (tab) {
+            $scope.currentTab = tab.state;
+            $state.go(tab.state);
+        };
+        $scope.isActiveTab = function (tabState) {
+            return tabState == $scope.currentTab;
+        };
+    }).controller('SampleCtrl', function ($scope, $filter) {
+        $scope.dates1 = {
+            startDate: moment().subtract(1, 'day'),
+            endDate: moment().subtract(1, 'day'),
+            timePicker: true
+        };
+        $scope.ranges = {
+            '今天': [moment(), moment()],
+            '昨天': [moment().subtract('days', 1),
+                   moment().subtract('days', 1)],
+            '最近7天': [moment().subtract('days', 7), moment()],
+            '最近30天': [moment().subtract('days', 30), moment()],
+            '这个月': [moment().startOf('month'), moment().endOf('month')]
+        };
+  });
