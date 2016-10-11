@@ -29,6 +29,12 @@ angular.module('lepayglobleApp')
                         controller: 'withdrawDetailsController'
                     }
                 },
-                resolve: {}
+                resolve: {
+                    tracker: ['Tracker',
+                              function (Tracker) {
+                                  Tracker.connect();
+                              }
+                    ]
+                }
             });
     });

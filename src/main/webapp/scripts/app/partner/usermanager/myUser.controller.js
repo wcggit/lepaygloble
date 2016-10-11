@@ -57,7 +57,9 @@ angular.module('lepayglobleApp')
 
                     function getTotalPage() {
                         Commission.getTotalPagesByBindPartner(criteria).then(function (response) {
-                            $scope.totalPages = response.data;
+                            $scope.totalPages = response.data.totalPages;
+                            $scope.totalElements = response.data.totalElements;
+                            $scope.totalIncome = response.data.totalIncome;
                             loadContent();
                         });
                     }
@@ -75,30 +77,43 @@ angular.module('lepayglobleApp')
                         criteria.offset = 1;
                         criteria.merchantName = merchantName;
                         criteria.phone = phone;
+                        criteria.nickname = $("#weixinNickNmame").val();
+                        criteria.consumptionCount = $("#consumptionCount").val();
+                        criteria.countSelect = $("#countSelect").val();
+                        criteria.timeSelect = $("#timeSelect").val();
+                        criteria.consumptionTimes = $("#consumptionTimes").val();
                         currentPage = 1;
                         getTotalPage()
                     }
 
                     // 复选框
                     $('#checkbox-1').click(function () {
-                        if($('#checkbox-1').prop('checked')==true){
+                        if ($('#checkbox-1').prop('checked') == true) {
                             $(this).next('label').removeClass('chbx-init').addClass('chbx-focus');
                             $('.checkbox-2').next('label').removeClass('chbx-init').addClass('chbx-focus');
-                            $('.checkbox-2').prop('checked','true');
+                            $('.checkbox-2').prop('checked', 'true');
 
-                        }else {
+                        } else {
                             $(this).next('label').removeClass('chbx-focus').addClass('chbx-init');
                             $('.checkbox-2').next('label').removeClass('chbx-focus').addClass('chbx-init');
-                            $('.checkbox-2').prop('checked','false');
+                            $('.checkbox-2').prop('checked', 'false');
                         }
                     });
 
-                    $scope.checkClick=function(id){
-                        var idName=document.getElementById(id);
-                        if($(idName).prop('checked')==true){
+                    $scope.checkClick = function (id) {
+                        var idName = document.getElementById(id);
+                        if ($(idName).prop('checked') == true) {
                             $(idName).next('label').removeClass('chbx-init').addClass('chbx-focus');
-                        }else {
+                        } else {
                             $(idName).next('label').removeClass('chbx-focus').addClass('chbx-init');
+                        }
+                    }
+
+                    function reloadCheakbox() {
+                        if ($('#checkbox-1').prop('checked') == true) {//全选
+
+                        }else{
+
                         }
                     }
 

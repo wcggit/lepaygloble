@@ -20,11 +20,7 @@ angular.module('lepayglobleApp')
                                    }
                                },
                                resolve: {
-                                   tracker: ['Tracker',
-                                             function (Tracker) {
-                                                 Tracker.connect();
-                                             }
-                                   ]
+
                                }
                            });
             });
