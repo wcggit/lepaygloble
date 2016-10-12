@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.partner.service;
 
 import com.jifenke.lepluslive.global.util.MD5Util;
+import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.partner.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerInfo;
