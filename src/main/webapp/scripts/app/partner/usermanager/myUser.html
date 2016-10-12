@@ -63,9 +63,10 @@
         <div>
             <!--表格信息总结-->
             <p class="ttl-add clearfix">
-                <span class="pull-right">共选择4人&nbsp;&nbsp;<a class="btn btn-warning"
-                                                             data-toggle="modal"
-                                                             data-target="#pffl-success">批量发福利</a></span>
+                <span class="pull-right">共选择{{selectedCheckbox}}人&nbsp;&nbsp;<a
+                    class="btn btn-warning"
+                    data-toggle="modal"
+                    data-target="#pffl-success">批量发福利</a></span>
                 <span
                     class="pull-left">注：所选条件下，共有<font>{{totalElements}}</font>个会员，累计为我带来<font>￥{{totalIncome}}</font>收入</span>
             </p>
@@ -90,6 +91,7 @@
                     <tr ng-repeat="x in pulls">
                         <td class="clearfix"><span class="chbx pull-left">
                             <input type="checkbox" class="checkbox-2" id="{{x[0]}}"
+                                   my-repeat-directive
                                    ng-click="checkClick(x[0])"><label
                             class="chbx-init">✔</label></span>
                             <span class="touxiang pull-left"><img ng-src="{{x[2]}}" alt=""></span>
@@ -104,7 +106,8 @@
                         <td>¥{{x[9]/100}}/{{x[10]}}</td>
                         <td>{{x[8]}}</td>
                         <td>¥{{x[7]/100.0}}</td>
-                        <td><a data-toggle="modal" data-target="#ffl-limit">发福利</a></td>
+                        <td><a
+                               ng-click="welfare(x[0])">发福利</a></td>
                     </tr>
                     </tbody>
                 </table>

@@ -291,12 +291,13 @@ public class PartnerController {
                                                                                       : length
                                                                                         - length
                                                                                           % 5,
-                                                                      length), count,partnerWelfareLog);
+                                                                      length), count,
+                                                     partnerWelfareLog);
                 }));
             } else {
                 executor.execute(new Thread(() -> {
                     partnerService.sendWelfareToUser(
-                        Arrays.copyOfRange(userIds, n * 5, n * 5 + 5), count,partnerWelfareLog);
+                        Arrays.copyOfRange(userIds, n * 5, n * 5 + 5), count, partnerWelfareLog);
                 }));
             }
         }

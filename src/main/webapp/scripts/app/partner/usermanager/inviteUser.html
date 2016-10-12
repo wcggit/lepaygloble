@@ -80,28 +80,31 @@
     .hb > div:last-child > div,.jf > div:last-child > div {
         margin-bottom: 25px;
     }
-    input[type=radio] {
-        margin-right: 20px;
-    }
-    input[type=number] {
-        margin-left: 10px;
-    }
     .setStyle > div > div {
         float: left;
         padding: 25px 0 0 0;
     }
     .setStyle > div > div:first-child {
+        width: 20%;
         font-size: 18px;
     }
     .setStyle > div > div:last-child {
-        width: 70%;
+        width: 80%;
         font-size: 16px;
-        margin-left: 30px;
         margin-top: -2px;
+    }
+    .setStyle > div > div:last-child > div > input {
+        width: 30% !important;
+    }
+    .setStyle > div > div:last-child > div > input[type=radio] {
+        width: 5% !important;
+    }
+    .setStyle > div > div:last-child > div > p {
+        width: 10% !important;
+        display: inline;
     }
     .form-control {
         display: inline !important;
-        width: 30% !important;
     }
     .setStyle > div:after,.w-title:after {
         content: '\20';
@@ -218,10 +221,10 @@
                     <div>红包奖励</div>
                     <div>
                         <div>
-                            <input type="radio" name="hb" />固定数值 <input type="number" class="form-control" placeholder="红包金额"/>
+                            <input type="radio" name="hb" /><p> 固定数值 </p><input type="number" class="form-control" placeholder="红包金额"/>
                         </div>
                         <div>
-                            <input type="radio" name="hb" />随机数值 <input type="number" class="form-control" placeholder="金额下限"/>  至<input type="number" class="form-control" placeholder="金额上限"/>
+                            <input type="radio" name="hb" /><p> 随机数值 </p><input type="number" class="form-control" placeholder="金额下限"/><p> 至 </p><input type="number" class="form-control" placeholder="金额上限"/>
                         </div>
                     </div>
                 </div>
@@ -229,13 +232,13 @@
                     <div>积分奖励</div>
                     <div>
                         <div>
-                            <input type="radio" name="jf" />固定数值 <input type="number" class="form-control" placeholder="积分值"/>
+                            <input type="radio" name="jf" /><p> 固定数值 </p><input type="number" class="form-control" placeholder="积分值"/>
                         </div>
                         <div>
-                            <input type="radio" name="jf" />随机数值 <input type="number" class="form-control" placeholder="积分下限"/>  至<input type="number" class="form-control" placeholder="积分上限"/>
+                            <input type="radio" name="jf" /><p> 随机数值 </p><input type="number" class="form-control" placeholder="积分下限"/><p> 至 </p><input type="number" class="form-control" placeholder="积分上限"/>
                         </div>
                         <div>
-                            <input type="radio" name="jf" />没有奖励
+                            <input type="radio" name="jf" /><p>没有奖励</p>
                         </div>
                     </div>
                 </div>
