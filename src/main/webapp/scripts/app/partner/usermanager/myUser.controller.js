@@ -1,7 +1,11 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('myUserController', function ($scope, Commission) {
+    .controller('myUserController', function ($scope, Commission, Welfare) {
+                    $scope.inclusiveMap = []; //个选包含的数组
+                    $scope.exclusiveMap = [];//全选排开的数组
+                    $scope.selectedCheckbox = 0;
+                    $scope.selected = false; //全选
                     $('body').css({background: '#fff'});
                     $('.main-content').css({height: 'auto'});
                     $('#timePicker1')
@@ -34,7 +38,7 @@ angular.module('lepayglobleApp')
                             var data = response.data;
                             $scope.page = currentPage;
                             $scope.pulls = data;
-                        });
+                        })
                     }
 
                     $scope.loadPage = function (page) {
@@ -88,34 +92,97 @@ angular.module('lepayglobleApp')
 
                     // 复选框
                     $('#checkbox-1').click(function () {
-                        if ($('#checkbox-1').prop('checked') == true) {
+                        if ($('#checkbox-1').prop('checked')) {
+                            $scope.exclusiveMap = [];
+                            $scope.inclusiveMap = [];
+                            $scope.selected = true;
+                            $scope.selectedCheckbox = $scope.totalElements;
                             $(this).next('label').removeClass('chbx-init').addClass('chbx-focus');
                             $('.checkbox-2').next('label').removeClass('chbx-init').addClass('chbx-focus');
                             $('.checkbox-2').prop('checked', 'true');
 
                         } else {
+                            $scope.exclusiveMap = [];
+                            $scope.inclusiveMap = [];
+                            $scope.selected = true;
+                            $scope.selectedCheckbox = 0;
                             $(this).next('label').removeClass('chbx-focus').addClass('chbx-init');
                             $('.checkbox-2').next('label').removeClass('chbx-focus').addClass('chbx-init');
-                            $('.checkbox-2').prop('checked', 'false');
+                            $('.checkbox-2').removeAttr('checked');
                         }
                     });
-
                     $scope.checkClick = function (id) {
                         var idName = document.getElementById(id);
-                        if ($(idName).prop('checked') == true) {
+                        if ($(idName).prop('checked')) {
                             $(idName).next('label').removeClass('chbx-init').addClass('chbx-focus');
+                            $scope.selectedCheckbox = $scope.selectedCheckbox + 1;
+                            if ($('#checkbox-1').prop('checked')) {
+                                $scope.exclusiveMap =
+                                $scope.exclusiveMap.filter(function (item) {
+                                    return item !== id;
+                                });
+
+                            } else {
+                                if ($scope.inclusiveMap.indexOf(id) == -1) {
+                                    $scope.inclusiveMap.push(id);
+                                }
+                            }
                         } else {
+                            $scope.selectedCheckbox = $scope.selectedCheckbox - 1;
                             $(idName).next('label').removeClass('chbx-focus').addClass('chbx-init');
+                            if ($('#checkbox-1').prop('checked')) {
+                                if ($scope.exclusiveMap.indexOf(id) == -1) {
+                                    $scope.exclusiveMap.push(id);
+                                }
+                            } else {
+                                $scope.inclusiveMap =
+                                $scope.inclusiveMap.filter(function (item) {
+                                    return item !== id;
+                                });
+                            }
                         }
                     }
 
-                    function reloadCheakbox() {
-                        if ($('#checkbox-1').prop('checked') == true) {//全选
+                    $scope.welfare = function (id) {
+                        Welfare.checkUserWelfare(id).then(function (data) {
 
-                        }else{
-
-                        }
-                    }
-
+                        });
+                    };
                 });
+angular.module('lepayglobleApp')
+    .directive('myRepeatDirective', function () {
+                   return function (scope, element, attrs) {
+                       if (scope.$parent.selected) {//代表全选
+                           var map = scope.$parent.exclusiveMap;
+                           if (map.length > 0) {
+                               var currentId = scope.x[0];
+                               try {
+                                   angular.forEach(map, function (id) {//全选去除
+                                       if (id == currentId) {
+                                           throw Error();
+                                       }
+                                   });
+                                   angular.element(element).prop('checked', 'true');
+                                   angular.element(element).next('label').removeClass('chbx-init').addClass('chbx-focus');
+                               } catch (e) {
+                                   angular.element(element).prop('checked', 'false');
+                               }
+                           } else {
+                               angular.element(element).prop('checked', 'true');
+                               angular.element(element).next('label').removeClass('chbx-init').addClass('chbx-focus');
+                           }
+                       } else {
+                           var map = scope.$parent.inclusiveMap;
+                           if (map.length > 0) {
+                               var currentId = scope.x[0];
+                               angular.forEach(map, function (id) {//全部选择
+                                   if (id == currentId) {
+                                       angular.element(element).prop('checked', 'true');
+                                       angular.element(element).next('label').removeClass('chbx-init').addClass('chbx-focus');
+                                   }
+                               });
+                           }
+                       }
+                   };
+               })
 

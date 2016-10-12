@@ -191,7 +191,7 @@ public class LeJiaUserService {
         StringBuffer
             sql = new StringBuffer();
         sql.append(
-            "select   count(*),ifnull(sum(ifnull(audit.to_partner,0)),0) from (select le_jia_user.id id  from le_jia_user,wei_xin_user,merchant where  wei_xin_user.le_jia_user_id= le_jia_user.id and le_jia_user.bind_merchant_id = merchant.id and  le_jia_user.bind_partner_id =");
+            "select   count(*),ifnull(sum(ifnull(audit.to_partner,0)),0) from (select le_jia_user.id id,wei_xin_user.nickname name,le_jia_user.phone_number phone  from le_jia_user,wei_xin_user,merchant where  wei_xin_user.le_jia_user_id= le_jia_user.id and le_jia_user.bind_merchant_id = merchant.id and  le_jia_user.bind_partner_id =");
         sql.append(leJiaUserCriteria.getPartner().getId());
         if (leJiaUserCriteria.getPartnerStartDate() != null
             && leJiaUserCriteria.getPartnerStartDate() != "") {
