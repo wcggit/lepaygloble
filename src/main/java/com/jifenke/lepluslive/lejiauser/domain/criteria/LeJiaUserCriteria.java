@@ -26,6 +26,55 @@ public class LeJiaUserCriteria {
 
     private Partner partner;
 
+    private Integer consumptionTimes;
+
+    private Integer timeSelect; //0< 1= 2>
+
+    private String consumptionCount;//消费总价
+
+    private Integer countSelect; //0< 1= 2>
+
+    private String nickname; // 微信昵称
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public Integer getConsumptionTimes() {
+        return consumptionTimes;
+    }
+
+    public void setConsumptionTimes(Integer consumptionTimes) {
+        this.consumptionTimes = consumptionTimes;
+    }
+
+    public Integer getTimeSelect() {
+        return timeSelect;
+    }
+
+    public void setTimeSelect(Integer timeSelect) {
+        this.timeSelect = timeSelect;
+    }
+
+    public String getConsumptionCount() {
+        return consumptionCount;
+    }
+
+    public void setConsumptionCount(String consumptionCount) {
+        this.consumptionCount = consumptionCount;
+    }
+
+    public Integer getCountSelect() {
+        return countSelect;
+    }
+
+    public void setCountSelect(Integer countSelect) {
+        this.countSelect = countSelect;
+    }
 
     public Partner getPartner() {
         return partner;

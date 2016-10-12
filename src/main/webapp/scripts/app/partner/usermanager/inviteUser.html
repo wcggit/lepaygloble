@@ -1,0 +1,251 @@
+<style>
+    .invite .row {
+        margin: 25px 0 !important;
+    }
+    .line {
+        border-top: 1px solid #dddddd;
+        border-bottom: 1px solid #dddddd;
+    }
+    .line > div > div:first-child {
+        border-right: 1px solid #dddddd;
+    }
+    .line p {
+        text-align: center;
+        font-size: 16px;
+        color:#333;
+        margin-bottom: 32px !important;
+    }
+    .line p > span {
+        font-size: 30px;
+    }
+    .mg {
+        padding-top: 20px;
+    }
+    .w-title {
+        width: 100%;
+    }
+    .w-title > div:first-child{
+        float: left;
+    }
+    .w-title > div:last-child{
+        width: 20%;
+        float: right;
+        text-align: right;
+        margin-top: 24px;
+    }
+    /*.btn-set {*/
+        /*width: 120px;*/
+        /*position: absolute;*/
+        /*right:;*/
+        /*margin-top: -48px;*/
+    /*}*/
+    .tc {
+        margin-bottom: 20px !important;
+    }
+    .w-download > div{
+        float: left;
+    }
+    .w-download > div:first-child{
+        margin: 2% 0 0 2%;
+    }
+    .w-download > div:nth-child(2){
+        width: 34px;
+        margin: 14% 0 0 3%;
+    }
+    .w-download > div:last-child{
+        margin: 12% 0 0 5%;
+        font-size: 16px;
+        text-align: center;
+    }
+    .w-download > div img{
+        width: 100%;
+    }
+    .w-download:after {
+        content: '\20';
+        display: block;
+        clear: both;
+    }
+    .setStyle > p{
+        color:#999;
+        text-align: center;
+        font-size: 16px;
+    }
+    .setStyle > div {
+        width: 90%;
+        margin: 0 auto;
+    }
+    .hb {
+        border-bottom: 1px solid #e1e1e1;
+    }
+    .hb > div:last-child > div,.jf > div:last-child > div {
+        margin-bottom: 25px;
+    }
+    input[type=radio] {
+        margin-right: 20px;
+    }
+    input[type=number] {
+        margin-left: 10px;
+    }
+    .setStyle > div > div {
+        float: left;
+        padding: 25px 0 0 0;
+    }
+    .setStyle > div > div:first-child {
+        font-size: 18px;
+    }
+    .setStyle > div > div:last-child {
+        width: 70%;
+        font-size: 16px;
+        margin-left: 30px;
+        margin-top: -2px;
+    }
+    .form-control {
+        display: inline !important;
+        width: 30% !important;
+    }
+    .setStyle > div:after,.w-title:after {
+        content: '\20';
+        display: block;
+        clear: both;
+    }
+</style>
+<div class="container-fluid content main-content user-manager invite">
+    <div class="container-fluid">
+        <div class="w-title">
+            <div class="ttl tc">邀请会员</div>
+            <div>
+                <button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#pffl-set">设置邀请礼包</button>
+            </div>
+        </div>
+        <!--显示信息-->
+        <div class="form-inline line">
+            <div class="row">
+                <div class="form-group col-md-7">
+                    <div class="mg">
+                        <div class="col-md-4">
+                            <p><span>569</span>人</p>
+                            <p>累计邀请会员</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><span style="color:#f54339;">300.00</span>元</p>
+                            <p>邀请发红包</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><span style="color:#fb991a;">569</span>积分</p>
+                            <p>邀请发积分</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 0 !important;"><span style="color:#f54339;font-size: 16px;">※</span> 您邀请的会员可得1-3元红包，5-20积分的礼包</p>
+                </div>
+                <div class="form-group col-md-5 w-download">
+                    <div>
+                        <img width="150" height="150" src="../../assets/styles/images/yqhy/er.png" alt=""/>
+                    </div>
+                    <div>
+                        <img src="../../assets/styles/images/yqhy/jian.png" alt=""/>
+                    </div>
+                    <div>
+                        <div>扫描二维码将海报下载到手机</div>
+                        <div>或 <a href="">点击下载到本地</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <!--表格信息总结-->
+            <p class="ttl">邀请记录</p>
+            <!--表格-->
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr><td class="clearfix">邀请会员信息</td>
+                        <td>邀请时间</td><td>邀请获得礼包</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in pulls">
+                        <td class="clearfix">
+                            <span class="touxiang"><img  ng-src="{{x[2]}}" alt=""></span>
+                            <span ng-bind="x[1]"></span>
+                        </td>
+                        <td>
+                            <p ng-bind="x[3]|date:'yyyy-MM-dd'"></p>
+                            <p ng-bind="x[3]|date:'HH:mm:ss'"></p>
+                        </td>
+                        <td><span ng-bind="x[4]"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a aria-label="Previous">
+                        <span aria-hidden="true">‹</span>
+                    </a></li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page + 1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!--设置邀请礼包提示框-->
+<div class="modal fade" id="pffl-set">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <div class="logo-img"></div>
+            </div>
+            <div class="modal-body setStyle">
+                <p>请设置您邀请的会员单人能获得的礼包</p>
+                <div class="hb">
+                    <div>红包奖励</div>
+                    <div>
+                        <div>
+                            <input type="radio" name="hb" />固定数值 <input type="number" class="form-control" placeholder="红包金额"/>
+                        </div>
+                        <div>
+                            <input type="radio" name="hb" />随机数值 <input type="number" class="form-control" placeholder="金额下限"/>  至<input type="number" class="form-control" placeholder="金额上限"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="jf">
+                    <div>积分奖励</div>
+                    <div>
+                        <div>
+                            <input type="radio" name="jf" />固定数值 <input type="number" class="form-control" placeholder="积分值"/>
+                        </div>
+                        <div>
+                            <input type="radio" name="jf" />随机数值 <input type="number" class="form-control" placeholder="积分下限"/>  至<input type="number" class="form-control" placeholder="积分上限"/>
+                        </div>
+                        <div>
+                            <input type="radio" name="jf" />没有奖励
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div text-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

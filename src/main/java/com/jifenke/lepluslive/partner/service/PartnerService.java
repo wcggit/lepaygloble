@@ -5,10 +5,13 @@ import com.jifenke.lepluslive.partner.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerInfo;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerWelfareLog;
 import com.jifenke.lepluslive.partner.repository.PartnerInfoRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerWalletRepository;
+import com.jifenke.lepluslive.partner.repository.PartnerWelfareLogRepository;
 
+import org.hibernate.LockMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -43,6 +47,9 @@ public class PartnerService {
 
     @Inject
     private PartnerInfoRepository partnerInfoRepository;
+
+    @Inject
+    private PartnerWelfareLogRepository partnerWelfareLogRepository;
 
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -308,13 +315,54 @@ public class PartnerService {
         return partnerRepository.findOne(id);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public PartnerInfo findPartnerInfoByPartnerSid(String currentUserLogin) {
         return partnerInfoRepository.findByPartner(findByPartnerSid(currentUserLogin));
     }
 
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void unbindWeiXinUser(Partner partner) {
         partner.setWeiXinUser(null);
         partnerRepository.save(partner);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void insertPartnerWelfareLog(PartnerWelfareLog partnerWelfareLog) {
+        partnerWelfareLogRepository.save(partnerWelfareLog);
+    }
+
+    /**
+     * 发福利给用户
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void sendWelfareToUser(String[] userSids, AtomicLong count,
+                                  PartnerWelfareLog partnerWelfareLog) {
+        for (String userSid : userSids) {
+            StringBuffer sql = new StringBuffer();
+            sql.append(
+                "select id from scorea where scorea.le_jia_user_id = (select id from le_jia_user where le_jia_user.user_sid = ");
+            sql.append(userSid);
+            sql.append(")");
+            Query nativeQuery = em.createNativeQuery(sql.toString());
+            int aid = nativeQuery.getFirstResult();
+            sql.setLength(0);
+            sql.append("update scorea set score = score+");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(",total_score=total_score+");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(" ,last_update_date=now() where id = ");
+            sql.append(aid);
+            em.createNativeQuery(sql.toString());
+            sql.setLength(0);
+            sql.append(
+                "insert into  scorea_detail (date_created,number,operate,scorea_id,order_sid,origin) values (now(),");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(",");
+            sql.append("'合伙人发福利',");
+            sql.append(aid);
+            sql.append(",");
+            sql.append(partnerWelfareLog.getSid());
+            sql.append(",");
+        }
     }
 }

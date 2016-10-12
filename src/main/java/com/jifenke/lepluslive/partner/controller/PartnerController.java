@@ -9,6 +9,7 @@ import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.partner.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerWelfareLog;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
@@ -22,8 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +51,6 @@ public class PartnerController {
 
     @Inject
     SimpMessageSendingOperations messagingTemplate;
-
 
     @RequestMapping(value = "/partner", method = RequestMethod.GET)
     public
@@ -262,4 +266,44 @@ public class PartnerController {
         partnerService.unbindWeiXinUser(partner);
         return  LejiaResult.ok();
     }
+    @RequestMapping(value = "/partner/send_welfare", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    LejiaResult sendWelfareToUser(@RequestBody PartnerWelfareLog partnerWelfareLog) {
+        AtomicLong count = new AtomicLong(0);
+        partnerService.insertPartnerWelfareLog(partnerWelfareLog);
+        String[] userIds = partnerWelfareLog.getUserArray().split(" ");
+        int length = userIds.length;
+        int threads = (int) Math.ceil(length / 5.0);
+        ExecutorService executor;
+        if (threads <= 30) {
+            executor = Executors.newFixedThreadPool(threads);
+        } else {
+            executor = Executors.newFixedThreadPool(30);
+        }
+        for (int i = 0; i < threads; i++) {
+            int n = i;
+            if (n == threads - 1) {
+                executor.execute(new Thread(() -> {
+                    partnerService.sendWelfareToUser(Arrays
+                                                         .copyOfRange(userIds,
+                                                                      length % 5 == 0 ? length - 5
+                                                                                      : length
+                                                                                        - length
+                                                                                          % 5,
+                                                                      length), count,partnerWelfareLog);
+                }));
+            } else {
+                executor.execute(new Thread(() -> {
+                    partnerService.sendWelfareToUser(
+                        Arrays.copyOfRange(userIds, n * 5, n * 5 + 5), count,partnerWelfareLog);
+                }));
+            }
+        }
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+        }
+        return LejiaResult.ok();
+    }
+
 }

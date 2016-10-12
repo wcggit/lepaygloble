@@ -1,0 +1,203 @@
+.chbx{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    margin-right: 25px;
+    margin-top: 1px;
+    cursor: pointer;
+}
+.chbx input{
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    margin-top: 0;
+    opacity:0;
+}
+.chbx label{
+    display: inline-block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+    text-align: center;
+    line-height: 20px;
+    z-index: 1;
+    margin-bottom: 0;
+    margin-right: 0;
+    /*display: none;*/
+}
+tbody .chbx{
+    margin-top: 4px;
+}
+.chbx-init {
+    background: #e5e5e5;
+    border:solid 1px #cfd1d3;
+    color: #e5e5e5;
+}
+.chbx-focus {
+    color: #fff;
+    content: '✔';
+    border:solid 1px #fb991a;
+    background: #fb991a;
+}
+.ffl1 .pffl-wxFace{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+.ffl1 .pffl-top{
+    margin-top: 6px;
+}
+.ffl1 .modal-body{
+    position: relative;
+}
+.ffl1 .pffl-right{
+    position: absolute;
+    width: 260px;
+    height: 324px;
+    top:30px;
+    right: 20px;
+    border-left: solid 1px #dbdbdb;
+    background: url("../images/wdhy/mobile.png") no-repeat 10px 10px;
+    background-size: 210px 315px;
+}
+.ffl1 .pffl-right ul{
+    position: absolute;
+    top:84px;
+    left:18px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    padding: 30px 0 0 15px;
+    list-style: none;
+    overflow: hidden;
+    line-height: 30px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #5b5b5b;
+}
+.ffl1 .pffl-right ul span{
+    color: #9e9e9e;
+}
+.ffl1 .modal-body .form-group > label{
+    position: relative;
+    width: 120px;
+    margin-left: 35px;
+}
+.ffl1 .modal-body .form-group > label:before{
+    content: "*";
+    color: #FB991A;
+    position: absolute;
+    left: 0px;
+    top: 10px;
+}
+.ffl1 .modal-body .row .col-sm-3{
+    width: 90px;
+    margin-right: -15px;
+    padding: 1px 2px 1px 12px;
+}
+.ffl1 .modal-body .row .col-sm-4 {
+    width: 175px;
+}
+.ffl1 .modal-body .row:first-child .col-sm-3 span{
+    color: #FB991A;
+}
+.ffl1 .modal-body .row:nth-child(2) .col-sm-3 span{
+    color: #e84644;
+}
+
+.ffl1 .modal-header,.ffl2 .modal-header  {
+    border-bottom:none;
+    height: 100px;
+    position: relative;
+}
+#pffl .logo-img,.ffl2 .logo-img{
+    width: 389px;
+    height: 183px;
+    background: url("../images/wdhy/pffl.png") no-repeat;
+    background-size: 100% 100%;
+    position: absolute;
+    top: -80px;
+    left:0;
+    right: 0;
+    margin: auto;
+}
+#ffl .logo-img,.ffl2 .logo-img{
+    width: 483px;
+    height: 141px;
+    background: url("../images/wdhy/ffl.png") no-repeat;
+    background-size: 100% 100%;
+    position: absolute;
+    top: -50px;
+    left:0;
+    right: 0;
+    margin: auto;
+}
+.ffl2 .success-img{
+    width: 80px;
+    height: 80px;
+    background: url("../images/wdhy/success.png") no-repeat;
+    background-size: 100% 100%;
+    margin: auto;
+}
+.ffl2 .success-ttl{
+    font-size: 32px;
+    color: #666666;
+    line-height: 55px;
+}
+.ffl2 .success-fl{
+    padding: 55px 90px;
+}
+.ffl2 .success-fl div{
+    color: #666;
+    font-size: 28px;
+    padding-left: 50px;
+}
+.ffl2 .success-fl .pull-left{
+    background: url("../images/wdhy/hb.png") no-repeat 10px 10px;
+    background-size: 26px 22px;
+}
+.ffl2 .success-fl .pull-right{
+    background: url("../images/wdhy/jf.png") no-repeat 10px 10px;
+    background-size: 26px 22px;
+}
+.ffl3 .modal-body div{
+    background: url("../images/wdhy/warning.png") no-repeat;
+    background-size: 50px 50px;
+    width: 380px;
+    line-height: 50px;
+    color: #666;
+    font-size: 18px;
+    margin: 60px auto;
+    padding-left: 65px;
+}
+
+.wdhy tbody tr td{padding-bottom: 0}
+.wdhy tbody tr td p{margin: 0}
+.wdhy tbody tr td:nth-of-type(4){
+    width: 110px;
+}
+.wdhy tbody tr td:nth-child(5),.wdhy tbody tr td:nth-child(6),.wdhy tbody tr td:nth-child(7){
+    line-height: 35px;
+}
+.wdhy tbody tr td:last-child{
+    width: 75px;
+    line-height: 35px;
+}
+.wdhy tbody tr td:nth-child(6){
+    width: 95px;
+
+}
+.wdhy tbody tr td:first-child{
+    width: 210px;
+}
+.wdhy tbody tr td:first-child span:nth-of-type(3){
+    width: 80px;
+    display: inline-block;
+    line-height: 20px;
+}
+.wdhy tbody tr td:last-child a{
+    color: #FB991A;
+}

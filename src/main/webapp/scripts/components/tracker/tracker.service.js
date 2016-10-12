@@ -80,7 +80,9 @@ angular.module('lepayglobleApp')
                      disconnect: function () {
                          alreadyConnectedOnce = false;
                          if (stompClient != null) {
-                             stompClient.disconnect();
+                             if (stompClient.connected) {
+                                 stompClient.disconnect();
+                             }
                              stompClient = null;
                          }
                      }

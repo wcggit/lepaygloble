@@ -11,15 +11,14 @@ angular.module('lepayglobleApp')
                              var Auth = $injector.get('Auth');
                              var Principal = $injector.get('Principal');
                              var state = null;
-                             if (Principal.hasAnyAuthority(['merchant'])) {
-                                 state = 'login';
-
-                             }
-                             if (Principal.hasAnyAuthority(['partner'])) {
-                                 state = 'loginPartner';
-                             }
                              var $state = $injector.get('$state');
                              var to = $rootScope.toState;
+                             if (to.data.authorities[0] == "merchant") {
+                                 state = 'login';
+                             }
+                             if (to.data.authorities[0] == "partner") {
+                                 state = 'loginPartner';
+                             }
                              var params = $rootScope.toStateParams;
                              Auth.logout();
                              $rootScope.previousStateName = to.name;
