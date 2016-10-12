@@ -3,7 +3,7 @@
 .partner-home .face-img img{width: 80px;height: 80px;}
 .partner-home .money-ttl{font-size: 16px;margin-bottom: 10px}
 .partner-home .money-content span{font-size: 40px}
-.partner-home .money-content input{width: 60px;margin:16px 30px 0}
+.partner-home .money-content input{width: 80px;margin:16px 30px 0}
 .partner-home .money-content a{margin-top:21px;cursor: pointer}
 .partner-home .col-md-2:first-child{margin-left: 20px}
 .partner-home .ttl-top{margin-left: -24px}
@@ -178,5 +178,24 @@
 }
 .partner-home .table>tbody>tr>td,.partner-home .table>tbody>tr>td span{
     font-size: 14px;
+}
+.panel tbody tr:last-child {
+    border-bottom: 0 !important;
+}
+.panel thead tr {
+    border-bottom: 1px solid #ddd;
+}
+.btn-div {
+    text-align: center;
+}
+.btn-div button:first-child {
+    margin-right: 0;
+}
+.modal-title {
+    margin-left: 10px;
+}
+.modal-body .text-center {
+    margin-top: 5px;
+    margin-bottom: 0 !important;
 }
 

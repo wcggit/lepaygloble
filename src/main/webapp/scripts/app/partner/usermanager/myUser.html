@@ -53,19 +53,19 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-4">
-                    <button type="button" class="btn btn-warning btn-check2"
+                    <button style="margin-left: 38.5%" type="button" class="btn btn-warning btn-check2"
                             ng-click="searchByCriteria()">查询
                     </button>
                 </div>
             </div>
 
         </form>
-        <div>
+        <div class="w-margin">
             <!--表格信息总结-->
             <p class="ttl-add clearfix">
                 <span class="pull-right">共选择4人&nbsp;&nbsp;<a class="btn btn-warning"
                                                              data-toggle="modal"
-                                                             data-target="#pffl-success">批量发福利</a></span>
+                                                             data-target="#pffl">批量发福利</a></span>
                 <span
                     class="pull-left">注：所选条件下，共有<font>{{totalElements}}</font>个会员，累计为我带来<font>￥{{totalIncome}}</font>收入</span>
             </p>
@@ -93,7 +93,10 @@
                                    ng-click="checkClick(x[0])"><label
                             class="chbx-init">✔</label></span>
                             <span class="touxiang pull-left"><img ng-src="{{x[2]}}" alt=""></span>
-                            <span class="pull-left" ng-bind="x[1]"></span>
+                            <span class="pull-left">
+                                <span class="w-name" ng-bind="x[1]"></span><br />
+                                <span>18888888888</span>
+                            </span>
                         </td>
                         <td><span ng-bind="x[4]"></span></td>
                         <td>

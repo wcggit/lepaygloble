@@ -1,9 +1,9 @@
 .chbx{
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     position: relative;
-    margin-right: 25px;
+    margin-right: 22px;
     margin-top: 1px;
     cursor: pointer;
 }
@@ -22,14 +22,14 @@
     height: 100%;
     border-radius: 2px;
     text-align: center;
-    line-height: 20px;
+    line-height: 17px;
     z-index: 1;
     margin-bottom: 0;
     margin-right: 0;
     /*display: none;*/
 }
 tbody .chbx{
-    margin-top: 4px;
+    margin-top: 11px;
 }
 .chbx-init {
     background: #e5e5e5;
@@ -38,6 +38,7 @@ tbody .chbx{
 }
 .chbx-focus {
     color: #fff;
+    font-size: 12px;
     content: '✔';
     border:solid 1px #fb991a;
     background: #fb991a;
@@ -174,30 +175,51 @@ tbody .chbx{
     padding-left: 65px;
 }
 
-.wdhy tbody tr td{padding-bottom: 0}
+/*.wdhy tbody tr td{padding-bottom: 0}*/
 .wdhy tbody tr td p{margin: 0}
 .wdhy tbody tr td:nth-of-type(4){
     width: 110px;
 }
-.wdhy tbody tr td:nth-child(5),.wdhy tbody tr td:nth-child(6),.wdhy tbody tr td:nth-child(7){
+.wdhy tbody tr td:nth-child(5),.wdhy tbody tr td:nth-child(6),.wdhy tbody tr td:nth-child(7),.wdhy tbody tr td:nth-child(4){
     line-height: 35px;
+}
+.wdhy tbody tr td:nth-child(4) {
+    width: 120px;
+}
+.wdhy tbody tr td:nth-child(5) {
+    width: 100px;
+}
+.wdhy tbody tr td:nth-child(2) {
+    width: 150px;
+    line-height: 40px;
+    display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .wdhy tbody tr td:last-child{
     width: 75px;
     line-height: 35px;
 }
 .wdhy tbody tr td:nth-child(6){
-    width: 95px;
+    width: 90px;
 
 }
 .wdhy tbody tr td:first-child{
-    width: 210px;
+    width: 241px;
 }
 .wdhy tbody tr td:first-child span:nth-of-type(3){
-    width: 80px;
-    display: inline-block;
+    width: 100px;
     line-height: 20px;
+    display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .wdhy tbody tr td:last-child a{
     color: #FB991A;
 }
+.wdhy .ttl-add {
+    margin-bottom: 6px;
+}
+.wdhy .ttl-add .pull-left {
+    margin-top: 6px;
+}
+.wdhy .w-margin {
+    padding-top: 10px;
+}
+

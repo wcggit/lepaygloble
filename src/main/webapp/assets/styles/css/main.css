@@ -57,3 +57,6 @@ tbody td a{cursor: pointer}
 select.form-control{
     padding: 0;
 }
+.form-control {
+    color:#999;
+}
