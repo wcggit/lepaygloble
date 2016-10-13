@@ -29,12 +29,12 @@
     top: 2px;
     width: 13px;
     height: 30px;
-    background: url("../images/wdlf/select_jiao.jpg") no-repeat;
+    /*background: url("../images/wdlf/select_jiao.jpg") no-repeat;*/
     background-size: 100% 100%;
     z-index: 10;
 }
 .my-items .select-jiao {
-    right: 3px;
+    right: 6px;
 }
 .my-items .ttl-add > span {
     margin-top: 14px;
@@ -44,7 +44,11 @@
     cursor: pointer;
 }
 .my-items .ttl-add > a.btn{
-    padding: 5px 18px;
+    width: 8%;
+}
+.btn-primary:hover {
+    background-color: #3591e7;
+    border: 1px solid #3591e7;
 }
 .user-manager .ttl-add> span {
     color: #666;

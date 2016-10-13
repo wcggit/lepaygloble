@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('myUserController', function ($scope, Commission, Welfare) {
+    .controller('myUserController', function ($scope, Commission) {
                     $scope.inclusiveMap = []; //个选包含的数组
                     $scope.exclusiveMap = [];//全选排开的数组
                     $scope.selectedCheckbox = 0;
@@ -144,10 +144,12 @@ angular.module('lepayglobleApp')
                     }
 
                     $scope.welfare = function (id) {
-                        Welfare.checkUserWelfare(id).then(function (data) {
-
-                        });
+                        //Welfare.checkUserWelfare(id).then(function (data) {
+                        //
+                        //});
                     };
+
+
                 });
 angular.module('lepayglobleApp')
     .directive('myRepeatDirective', function () {

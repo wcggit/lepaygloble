@@ -1,114 +1,21 @@
-<style>
-    .line {
-        border-top: 1px solid #dddddd;
-        border-bottom: 1px solid #dddddd;
-    }
-    .w-title {
-        width: 100%;
-    }
-    .w-title > div:first-child{
-        float: left;
-    }
-    .w-title > div:last-child{
-        width: 40%;
-        float: right;
-        text-align: right;
-        margin-top: 24px;
-    }
-    .btn-set > span {
-        margin-right: 20px;
-        font-size: 16px;
-        color:#333;
-    }
-    .tc {
-        margin-bottom: 20px !important;
-    }
-    .line > .row > div {
-        padding: 50px 0;
-        text-align: center;
-    }
-    .line > .row > div:first-child {
-        border-right: 1px solid #dddddd;
-    }
-    .line > .row > div > p:last-child {
-        font-size: 16px;
-        color:#333;
-    }
-    .line > .row > div:first-child > p:first-child {
-        font-size: 40px;
-        color:#f54339;
-    }
-    .line > .row > div:last-child > p:first-child {
-        font-size: 40px;
-        color:#fb991a;
-    }
-    .rechargeStyle {
-        padding: 40px 0;
-    }
-    .rechargeStyle > div:first-child {
-        margin-bottom: 30px;
-    }
-    .rechargeStyle > div {
-        width: 80%;
-        margin: 0 auto;
-        font-size: 16px;
-        color:#333;
-    }
-    .rechargeStyle  input {
-        margin: 0 4%;
-    }
-    .form-control {
-        display: inline !important;
-        width: 40% !important;
-    }
-    .re > div {
-        margin-bottom: 10px;
-    }
-    .success > div > div {
-        float: left;
-    }
-    .success > div > div:last-child {
-        margin:12px 0 0 20px;
-        font-size: 20px;
-        color:#333;
-    }
-    .success > div {
-        width: 270px;
-        margin: 0 auto;
-    }
-    .success p {
-        text-align: center;
-        margin-top: 28px;
-        color:#666;
-    }
-    .w-width {
-        width: 98%;
-    }
-    .success > div:after,.w-title:after {
-        content: '\20';
-        display: block;
-        clear: both;
-    }
-</style>
 <div class="container-fluid content main-content user-manager">
     <div class="container-fluid">
         <div class="w-title">
             <div class="ttl tc">营销账户</div>
             <div class="btn-set">
-                <span>已发放：20.00元和200积分</span>
-                <button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#pffl-recharge">充值</button>
+                <button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#pffl-chargeSuccess">立即充值</button>
             </div>
         </div>
         <!--显示信息-->
         <div class="form-inline line">
             <div class="row">
                 <div class="form-group col-md-6">
-                    <p>80.00</p>
-                    <p>红包账户余额（元）</p>
+                    <p class="w-makeMargin">80.00<span>元</span></p>
+                    <p class="w-makeMargin">红包账户余额</p><span class="w-ffhb" style="color:#f54339;">已发放：20.00元</span>
                 </div>
                 <div class="form-group col-md-6">
-                    <p>800</p>
-                    <p>积分账户余额（元）</p>
+                    <p class="w-makeMargin">800<span>积分</span></p>
+                    <p class="w-makeMargin">积分账户余额</p><span class="w-ffhb" style="color:#fb991a;">已发放：200积分</span>
                 </div>
             </div>
         </div>
@@ -202,10 +109,11 @@
 </div>
 
 <!--设置充值提示框-->
-<div class="modal fade" id="pffl-recharge">
+<div class="modal fade w-maketing" id="pffl-recharge">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-warning">
+                <p class="w-flTitle">立即充值</p>
                 <button type="button" class="close" data-dismiss="modal"><span
                     aria-hidden="true">×</span><span class="sr-only">Close</span></button>
                 <div class="logo-img"></div>
@@ -215,9 +123,30 @@
                     <div>充值红包<input type="number" class="form-control" placeholder="请输入充值红包金额" /><span>红包余额：2.00元</span></div>
                     <div>充值积分<input type="number" class="form-control" placeholder="请输入充值积分金额" /><span>积分余额：120积分</span></div>
                 </div>
-                <div class="success" style="display: none;">
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div text-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--设置充值提示框-->
+<div class="modal fade" id="pffl-chargeSuccess">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <p class="w-flTitle">充值成功</p>
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <div class="logo-img"></div>
+            </div>
+            <div class="modal-body rechargeStyle">
+                <div class="success">
                     <div>
-                        <div><img width="50" height="50" src="../../assets/styles/images/yxzh/success.png" alt=""/></div>
+                        <div><img width="60" height="60" src="../../assets/styles/images/yxzh/success.png" alt=""/></div>
                         <div>您的充值申请已提交！</div>
                     </div>
                     <p>乐加客服将尽快和你取得联系，客服电话：400-0412-800</p>
@@ -225,13 +154,7 @@
             </div>
             <div class="modal-footer">
                 <div class="btn-div text-center">
-                    <div>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess">确定</button>
-                    </div>
-                    <div style="display: none;">
-                        <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess">知道了</button>
-                    </div>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess">知道了</button>
                 </div>
             </div>
         </div>
