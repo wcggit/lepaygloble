@@ -70,6 +70,17 @@ public class PartnerController {
     }
 
 
+    @RequestMapping(value = "/partner/wallet", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    LejiaResult getPartnerWallet() {
+        Partner
+            partner =
+            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        return LejiaResult.ok(partnerService.findPartnerWalletByPartner(partner));
+    }
+
+
     @RequestMapping(value = "/partner/bindUsers", method = RequestMethod.POST)
     public
     @ResponseBody

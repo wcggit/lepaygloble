@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.partner.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.partner.controller.dto.ExclusiveArrayDto;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.partner.service.PartnerWelfareService;
@@ -35,13 +36,25 @@ public class PartnerWelfareController {
         return LejiaResult.ok(!partnerWelfareService.checkUserWelfareLimit(partner, id));
     }
 
-    @RequestMapping(value = "/partner/welfare", method = RequestMethod.POST)
-    public LejiaResult checkUserArrayWelfareLimit(@RequestBody Long[] ids) {
+    @RequestMapping(value = "/partner/welfare/inclusive", method = RequestMethod.POST)
+    public LejiaResult checkInclusiveArrayWelfareLimit(@RequestBody Long[] ids) {
         Partner
             partner =
             partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        return LejiaResult.ok(partnerWelfareService.checkUserArrayWelfareLimit(partner, ids));
+        return LejiaResult.ok(partnerWelfareService.checkInclusiveArrayWelfareLimit(partner, ids));
     }
+
+    @RequestMapping(value = "/partner/welfare/exclusive", method = RequestMethod.POST)
+    public LejiaResult checkExclusiveArrayWelfareLimit(
+        @RequestBody ExclusiveArrayDto exclusiveArrayDto) {
+        Partner
+            partner =
+            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        return LejiaResult
+            .ok(partnerWelfareService.checkExclusiveArrayWelfareLimit(partner, exclusiveArrayDto));
+    }
+
+
 
 
 }
