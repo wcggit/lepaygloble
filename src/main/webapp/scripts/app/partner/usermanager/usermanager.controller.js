@@ -4,22 +4,22 @@ angular.module('lepayglobleApp')
     .controller('userManagerController', function ($scope, $state, $location) {
         $scope.lefts = [
             {
-                pic: 'left-menu-icon iconfont icon-2wodezhangdan18x20',
+                pic: 'left-menu-icon iconfont icon-myUser',
                 name: "我的会员",
                 state: "myUser"
             },
             {
-                pic: "left-menu-icon iconfont icon-jiaoyijilu",
+                pic: "left-menu-icon iconfont icon-addUser",
                 name: "邀请会员",
                 state: "inviteUser"
             },
+            //{
+            //    pic: "left-menu-icon iconfont icon-erweima01",
+            //    name: "抢福利活动",
+            //    state: "robWelfare"
+            //},
             {
-                pic: "left-menu-icon iconfont icon-erweima01",
-                name: "抢福利活动",
-                state: "robWelfare"
-            },
-            {
-                pic: "left-menu-icon iconfont icon-erweima01",
+                pic: "left-menu-icon iconfont icon-yxzh",
                 name: "营销账户",
                 state: "marketingAccount"
             }

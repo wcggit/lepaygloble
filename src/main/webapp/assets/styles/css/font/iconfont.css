@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1468383953'); /* IE9*/
-  src: url('iconfont.eot?t=1468383953#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1468383953') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1468383953') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1468383953#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1476357021'); /* IE9*/
+  src: url('iconfont.eot?t=1476357021#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1476357021') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1476357021') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1476357021#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -26,3 +26,6 @@
 .icon-jiaoyijilu:before { content: "\e607"; }
 .icon-tixianjilu:before { content: "\e60d"; }
 .icon-2wodezhangdan18x20:before { content: "\e60e"; }
+.icon-myUser:before { content: "\e600"; }
+.icon-addUser:before { content: "\e605"; }
+.icon-yxzh:before { content: "\e606"; }
