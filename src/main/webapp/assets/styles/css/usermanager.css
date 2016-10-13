@@ -44,12 +44,13 @@ tbody .chbx{
     background: #fb991a;
 }
 .ffl1 .pffl-wxFace{
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
 }
 .ffl1 .pffl-top{
     margin-top: 6px;
+    margin-left: -15px;
 }
 .ffl1 .modal-body{
     position: relative;
@@ -57,8 +58,8 @@ tbody .chbx{
 .ffl1 .pffl-right{
     position: absolute;
     width: 260px;
-    height: 324px;
-    top:30px;
+    height: 345px;
+    top:0px;
     right: 20px;
     border-left: solid 1px #dbdbdb;
     background: url("../images/wdhy/mobile.png") no-repeat 10px 10px;
@@ -86,6 +87,7 @@ tbody .chbx{
     position: relative;
     width: 120px;
     margin-left: 35px;
+    text-align: left;
 }
 .ffl1 .modal-body .form-group > label:before{
     content: "*";
@@ -105,7 +107,7 @@ tbody .chbx{
 .ffl1 .modal-body .row:first-child .col-sm-3 span{
     color: #FB991A;
 }
-.ffl1 .modal-body .row:nth-child(2) .col-sm-3 span{
+.ffl1 .modal-body .row:nth-child(3) .col-sm-3 span{
     color: #e84644;
 }
 
@@ -114,28 +116,28 @@ tbody .chbx{
     height: 100px;
     position: relative;
 }
-#pffl .logo-img,.ffl2 .logo-img{
+#pffl .logo-img,#pffl-success .logo-img{
     width: 389px;
     height: 183px;
     background: url("../images/wdhy/pffl.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
-    top: -80px;
+    top: -98px;
     left:0;
     right: 0;
     margin: auto;
 }
-#ffl .logo-img,.ffl2 .logo-img{
-    width: 483px;
-    height: 141px;
-    background: url("../images/wdhy/ffl.png") no-repeat;
-    background-size: 100% 100%;
-    position: absolute;
-    top: -50px;
-    left:0;
-    right: 0;
-    margin: auto;
-}
+#ffl .logo-img,#ffl-success .logo-img{
+     width: 483px;
+     height: 141px;
+     background: url("../images/wdhy/ffl.png") no-repeat;
+     background-size: 100% 100%;
+     position: absolute;
+     top: -75px;
+     left:0;
+     right: 0;
+     margin: auto;
+ }
 .ffl2 .success-img{
     width: 80px;
     height: 80px;
@@ -144,7 +146,7 @@ tbody .chbx{
     margin: auto;
 }
 .ffl2 .success-ttl{
-    font-size: 32px;
+    font-size: 30px;
     color: #666666;
     line-height: 55px;
 }
@@ -153,7 +155,7 @@ tbody .chbx{
 }
 .ffl2 .success-fl div{
     color: #666;
-    font-size: 28px;
+    font-size: 27px;
     padding-left: 50px;
 }
 .ffl2 .success-fl .pull-left{
@@ -222,4 +224,301 @@ tbody .chbx{
 .wdhy .w-margin {
     padding-top: 10px;
 }
+.wdhy .w-phone {
+    color:#999;
+}
+.wdhy .w-cantCheck {
+    background-color: #eee !important;
+    border: 1px solid #e1e1e1;
+}
+.close {
+    margin: 4px 15px 0 0;
+}
+.w-pllMargin {
+    padding-top: 0 !important;
+    padding-left: 38px;
+}
+.w-pllTextarea {
+    width: 92%;
+}
+.radio-inline:first-child {
+    margin-left: -27px;
+}
+.radio-inline {
+    padding-left: 0;
+    margin-right: 34px;
+}
+.radio-inline:last-child {
+    margin-right: 0px;
+}
+.w-cost {
+    padding: 5px 0 10px 0;
+}
+.w-cost > div:last-child {
+    color:#666;
+}
+.w-p {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    margin-top: 330px;
+    margin-left: -6px;
+}
+.w-costText {
+    width: 100%;
+    text-align: center;
+    font-size: 21px;
+    color:#666;
+}
+.modal-footer {
+    padding: 22px;
+}
+.modal-footer .btn+.btn {
+    margin-left: 16px;
+}
+.w-flTitle {
+    position: absolute;
+    margin-top: 9px;
+    margin-left: 10px;
+    font-size: 18px;
+}
+.btn {
+    font-size: 16px;
+}
+.w-hb:focus {
+    border-color: #e84644;
+}
 
+/*邀请会员信息*/
+.invite .row {
+    margin: 25px 0 !important;
+}
+.line {
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+}
+.line > div > div:first-child {
+    border-right: 1px solid #dddddd;
+}
+.line p {
+    text-align: center;
+    font-size: 16px;
+    color:#333;
+    margin-bottom: 20px !important;
+}
+.line p > span {
+    font-size: 30px;
+}
+.mg {
+    padding-top: 20px;
+}
+.w-title {
+    width: 100%;
+}
+.w-title > div:first-child{
+    float: left;
+}
+.w-title > div:last-child{
+    width: 20%;
+    float: right;
+    text-align: right;
+    margin-top: 24px;
+}
+.tc {
+    margin-bottom: 20px !important;
+}
+.w-download > div{
+    float: left;
+}
+.w-download > div:first-child{
+    margin: 16px 0 0 8px;
+}
+.w-download > div:nth-child(2){
+    width: 30px;
+    margin: 70px 0 0 10px;
+}
+.w-download > div:last-child{
+    margin: 55px 0 0 10px;
+    font-size: 16px;
+    text-align: center;
+}
+.w-download:after {
+    content: '\20';
+    display: block;
+    clear: both;
+}
+.setStyle > p{
+    color:#999;
+    text-align: center;
+    font-size: 16px;
+}
+.setStyle > div {
+    width: 87%;
+    margin-left: 82px;
+}
+.hb {
+    border-bottom: 1px solid #e1e1e1;
+}
+.hb > div:last-child > div,.jf > div:last-child > div {
+    margin-bottom: 25px;
+}
+.setStyle > div > div {
+    float: left;
+    padding: 25px 0 0 0;
+}
+.setStyle > div > div:first-child {
+    width: 16%;
+    font-size: 18px;
+}
+.setStyle > div > div:last-child {
+    width: 80%;
+    font-size: 16px;
+    margin-top: -2px;
+}
+.setStyle > div > div:last-child > div > input {
+    width: 30% !important;
+}
+.setStyle > div > div:last-child > div > input[type=radio] {
+    width: 5% !important;
+}
+.setStyle > div > div:last-child > div > p {
+    width: 10% !important;
+    display: inline;
+    margin-right: 16px;
+}
+.w-z {
+    margin: 0px 5px !important;
+}
+.form-control {
+    display: inline !important;
+}
+.invite .w-invite tbody td:first-child {
+    width: 470px;
+}
+.invite .w-invite tbody td:first-child .touxiang {
+    margin-left: 30px;
+}
+.invite .w-invite thead td:first-child span {
+    margin-left: 32px;
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: #f2f2f2;
+    border: 1px solid #ebebeb;
+}
+.form-control {
+    box-shadow: none;
+}
+.setStyle > div:after,.w-title:after,.mg:after {
+    content: '\20';
+    display: block;
+    clear: both;
+}
+
+/*营销账户*/
+.line {
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+}
+.w-title {
+    width: 100%;
+}
+.w-title > div:first-child{
+    float: left;
+}
+.w-title > div:last-child{
+    width: 40%;
+    float: right;
+    text-align: right;
+    margin-top: 33px;
+}
+.btn-set > span {
+    margin-right: 20px;
+    font-size: 16px;
+    color:#333;
+}
+.tc {
+    margin-bottom: 20px !important;
+}
+.line > .row > div {
+    padding: 22px 0;
+    text-align: center;
+}
+.line > .row > div:first-child {
+    border-right: 1px solid #dddddd;
+}
+.line > .row > div > p:last-child {
+    font-size: 16px;
+    color:#333;
+}
+.line > .row > div:first-child > p:first-child {
+    font-size: 40px;
+}
+.line > .row > div > p:first-child > span {
+    font-size: 20px;
+    color:#333;
+    margin-left: 5px;
+}
+.line > .row > div:last-child > p:first-child {
+    font-size: 40px;
+}
+.rechargeStyle {
+    padding: 40px 0;
+}
+.rechargeStyle > div {
+    width: 80%;
+    margin-left: 75px;
+    font-size: 16px;
+    color:#333;
+}
+.rechargeStyle  input {
+    margin: 0 4%;
+}
+.w-maketing .form-control {
+    display: inline !important;
+    width: 40% !important;
+}
+.re > div {
+    margin-bottom: 30px;
+}
+.re > div:first-child {
+    color:#f54339;
+}
+.re > div:first-child input:focus {
+    border: 1px solid #f54339;
+}
+.re > div:last-child {
+    color:#fb991a;
+    margin-bottom: 0px;
+}
+.success > div > div {
+    float: left;
+}
+.success > div > div:last-child {
+    margin:16px 0 0 15px;
+    font-size: 20px;
+    color:#333;
+}
+.success > div {
+    width: 285px;
+    margin: 0 auto;
+}
+.success p {
+    text-align: center;
+    margin-top: 28px;
+    color:#666;
+}
+.w-ffhb {
+    font-size: 14px !important;
+    margin-left: 20px;
+    position: absolute;
+    right: 74px;
+    margin-top: -40px;
+}
+.w-makeMargin {
+    margin-left: -100px;
+}
+.success > div:after,.w-title:after {
+    content: '\20';
+    display: block;
+    clear: both;
+}

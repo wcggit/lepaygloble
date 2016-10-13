@@ -151,14 +151,14 @@
 .partner-home{position: relative}
 .partner-home .nav-pills{
     position: absolute;
-    top:25px;
+    top:33px;
     right: 20px;
 }
 .partner-home .nav>li{
     cursor: pointer;
 }
 .partner-home .nav>li>a {
-    padding: 9px 0;
+    padding: 7px 0;
     width: 88px;
     text-align: center;
 }

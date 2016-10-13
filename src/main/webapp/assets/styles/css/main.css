@@ -42,7 +42,7 @@ tr{border-bottom: solid 1px #e2e2e2}
 thead tr{border-bottom: solid 1px #d6d7dc;font-size: 16px}
 thead{background-color: #f4f5f9}
 table{border-color: #d6d7dc}
-.close span:first-child{font-size: 32px}
+.close span:first-child{font-size: 40px}
 .ol-tab >tbody tr td > p{margin: 0;line-height:18px !important;}
 .ol-tab >thead tr td > p{line-height:10px !important;}
 td > p:last-child{color: #666}
@@ -60,3 +60,7 @@ select.form-control{
 .form-control {
     color:#999;
 }
+textarea {
+    resize: none;
+}
+

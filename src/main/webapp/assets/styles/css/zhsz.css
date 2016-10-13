@@ -1,5 +1,5 @@
 /*.content{height: 100vh}*/
-.content .ttl{margin:30px 0 30px 10px;padding-left: 10px;border-left: solid 3px #fb991a;font-size: 16px}
+.content .ttl{margin:40px 0 22px 10px;padding-left: 10px;border-left: solid 3px #fb991a;font-size: 16px}
 .content .row{margin: 25px 0}
 .changePassword{cursor: pointer;}
 #changePassword label{position: relative;text-align: left;width: 17%;}
