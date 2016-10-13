@@ -62,11 +62,9 @@ angular.module('lepayglobleApp')
                     $("input[type=number]").attr("disabled","disabled");
                    $("input[type=radio]").click(function(){
                        var name = $(this).attr("name");
-                      $("input[name=" + name + "]").next().attr("disabled","disabled");
-                       $("input[name=" + name + "]").next().next().attr("disabled","disabled");
-                       $(this).next().removeAttr("disabled");
+                      $("input[name=" + name + "]").next().next().attr("disabled","disabled");
+                       $("input[name=" + name + "]").next().next().next().next().attr("disabled","disabled");
                        $(this).next().next().removeAttr("disabled");
+                       $(this).next().next().next().next().removeAttr("disabled");
                    });
-
                 });
-

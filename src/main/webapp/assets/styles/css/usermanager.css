@@ -105,10 +105,10 @@ tbody .chbx{
     width: 175px;
 }
 .ffl1 .modal-body .row:first-child .col-sm-3 span{
-    color: #FB991A;
+    color: #e84644;
 }
 .ffl1 .modal-body .row:nth-child(3) .col-sm-3 span{
-    color: #e84644;
+    color: #FB991A;
 }
 
 .ffl1 .modal-header,.ffl2 .modal-header  {
@@ -228,8 +228,9 @@ tbody .chbx{
     color:#999;
 }
 .wdhy .w-cantCheck {
-    background-color: #eee !important;
-    border: 1px solid #e1e1e1;
+    background-color: #f0f0f0 !important;
+    border: 1px solid #d9d9d9;
+    color:#c5c5c5;
 }
 .close {
     margin: 4px 15px 0 0;
@@ -288,6 +289,9 @@ tbody .chbx{
 .w-hb:focus {
     border-color: #e84644;
 }
+.w-ffla {
+    margin: 30px 0 0 0;
+}
 
 /*邀请会员信息*/
 .invite .row {
@@ -331,7 +335,7 @@ tbody .chbx{
     float: left;
 }
 .w-download > div:first-child{
-    margin: 16px 0 0 8px;
+    margin: 16px 0 0 33px;
 }
 .w-download > div:nth-child(2){
     width: 30px;

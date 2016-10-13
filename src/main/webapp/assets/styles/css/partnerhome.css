@@ -4,7 +4,7 @@
 .partner-home .money-ttl{font-size: 16px;margin-bottom: 10px}
 .partner-home .money-content span{font-size: 40px}
 .partner-home .money-content input{width: 80px;margin:16px 30px 0}
-.partner-home .money-content a{margin-top:21px;cursor: pointer}
+.partner-home .money-content a{margin-top:24px;cursor: pointer}
 .partner-home .col-md-2:first-child{margin-left: 20px}
 .partner-home .ttl-top{margin-left: -24px}
 .partner-home .ttl-top p:last-child{margin-left: -8px}
@@ -198,4 +198,12 @@
     margin-top: 5px;
     margin-bottom: 0 !important;
 }
-
+.w-yxzh a {
+    position: absolute;
+    right: 0;
+    top:0;
+    margin-top: 34px;
+    margin-right: 20px;
+    font-size: 14px;
+    cursor: pointer;
+}

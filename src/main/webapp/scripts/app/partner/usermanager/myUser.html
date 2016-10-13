@@ -37,13 +37,13 @@
                         <option value="0">低于</option>
                     </select>
                     <input type="number" id="consumptionCount" class="form-control"
-                           placeholder="请输入微信昵称"/> 元收入
+                           placeholder="请输入金额"/> 元收入
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="phone">手机号码</label>
-                    <input type="text" class="form-control" id="phone" placeholder="请输入手机号">
+                    <input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" class="form-control" id="phone" placeholder="请输入手机号">
                 </div>
                 <div class="form-group col-md-5">
                     <label for="weixinNickNmame">微信昵称</label>
@@ -65,7 +65,7 @@
             <p class="ttl-add clearfix">
                 <span class="pull-right">共选择{{selectedCheckbox}}人&nbsp;&nbsp;<a class="btn btn-warning w-cantCheck"
                                                              data-toggle="modal"
-                                                             data-target="#ffl-success">批量发福利</a></span>
+                                                             data-target="#pffl">批量发福利</a></span>
                 <span
                     class="pull-left">注：所选条件下，共有<font><span class="chooseNumber">{{totalElements}}</span></font>个会员，累计为我带来<font>￥{{totalIncome}}</font>收入</span>
             </p>
@@ -155,28 +155,15 @@
                 <form class="form-horizontal w-pllMargin">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">发放对象</label>
-                        <div class="col-sm-4 pffl-top"><span>35个会员（今日已发放过福利）</span></div>
+                        <div class="col-sm-4 pffl-top"><span>35个会员（已有x会员发放过福利）</span></div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group w-ffla">
                         <label class="col-sm-2 control-label pffl-top">发放福利</label>
-
                         <div class="col-sm-6">
-                            <div class="row pffl-top">
-                                <div class="col-sm-3 pffl-top"><span>发放积分</span></div>
-                                <div class="col-sm-4">
-                                    <input class="form-control" ng-model="jfNum" type="number"
-                                           placeholder="请输入积分值">
-                                </div>
-                                <div class="col-sm-5 pffl-top"><span>积分余额：2000积分</span></div>
-                            </div>
-                            <div class="row w-cost">
-                                <div class="col-sm-3"></div>
-                                <div class="col-sm-4">消耗积分：360积分</div>
-                            </div>
                             <div class="row pffl-top">
                                 <div class="col-sm-3 col pffl-top"><span>发放红包</span></div>
                                 <div class="col-sm-4">
-                                    <input class="form-control" ng-model="hbNum" type="number"
+                                    <input class="form-control w-limitHb" ng-model="hbNum" type="number"
                                            placeholder="请输入红包金额">
                                 </div>
                                 <div class="col-sm-5 pffl-top"><span>红包余额：2000元</span></div>
@@ -184,6 +171,18 @@
                             <div class="row w-cost">
                                 <div class="col-sm-3"></div>
                                 <div class="col-sm-4">消耗红包：360积分</div>
+                            </div>
+                            <div class="row pffl-top">
+                                <div class="col-sm-3 pffl-top"><span>发放积分</span></div>
+                                <div class="col-sm-4">
+                                    <input class="form-control w-limitJf" ng-model="jfNum" type="number"
+                                           placeholder="请输入积分值">
+                                </div>
+                                <div class="col-sm-5 pffl-top"><span>积分余额：2000积分</span></div>
+                            </div>
+                            <div class="row w-cost">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-4">消耗积分：360积分</div>
                             </div>
                         </div>
 
@@ -262,7 +261,7 @@
             <div class="modal-body">
                 <div class="success-img"></div>
                 <p class="text-center success-ttl">福利发放成功</p>
-                <p class="w-costText">您已成功发放100红包和100积分</p>
+                <p class="w-costText">您本次成功发放100红包和100积分</p>
                 <div class="success-fl clearfix">
                     <div class="pull-left">红包余额：￥24.33</div>
                     <div class="pull-right">积分余额：2345积分</div>
@@ -424,7 +423,7 @@
             <div class="modal-body">
                 <div class="success-img"></div>
                 <p class="text-center success-ttl">福利发放成功</p>
-                <p class="w-costText">您已成功发放100红包和100积分</p>
+                <p class="w-costText">您本次成功发放100红包和100积分</p>
                 <div class="success-fl clearfix">
                     <div class="pull-left">红包余额：￥24.33</div>
                     <div class="pull-right">积分余额：2345积分</div>
@@ -463,3 +462,4 @@
         </div>
     </div>
 </div>
+
