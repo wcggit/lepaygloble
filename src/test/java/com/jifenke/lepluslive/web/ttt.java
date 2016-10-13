@@ -6,9 +6,11 @@ import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantRepository;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.partner.domain.criteria.PartnerScoreLogCriteria;
+import com.jifenke.lepluslive.partner.domain.criteria.WeiXinUserInfoCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerScoreLog;
 import com.jifenke.lepluslive.partner.service.PartnerScoreLogService;
 import com.jifenke.lepluslive.weixin.repository.WeiXinUserRepository;
+import com.jifenke.lepluslive.weixin.service.WeiXinUserService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +25,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -106,22 +109,7 @@ public class ttt {
 //
 //  }
 
-    @Inject
-    private PartnerScoreLogService scoreLogService;
 
-    @Test
-    public void simpleTest() {
-        PartnerScoreLogCriteria scoreLogCriteria = new PartnerScoreLogCriteria();
-        scoreLogCriteria.setOffset(1);
-        scoreLogCriteria.setPartnerId(4L);
-        scoreLogCriteria.setNumberType(1);
-        Page page = scoreLogService.findPageScoreByCriteria(scoreLogCriteria, 10);
-        List<PartnerScoreLog> logs = page.getContent();
-        for (PartnerScoreLog log : logs) {
-            System.out.println(log.getId()+"---"+log.getCreateDate());
-        }
-        System.out.println("共查询到了:  "+page.getTotalElements()+"条记录.");
-    }
 
 
 }

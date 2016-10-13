@@ -7,6 +7,7 @@ angular.module('lepayglobleApp')
                     var currentPage = 1;
                     var scoreLogCriteria = {};
                     scoreLogCriteria.offset = 1;
+                    // *  Loading ...
                     loadContent();
                     function loadContent() {
                         marketingAccount.getPartnerScoreLog(scoreLogCriteria).then(function (response) {
@@ -55,7 +56,23 @@ angular.module('lepayglobleApp')
                         $scope.totalScorea = result['totalScorea'];
                         $scope.totalScoreb = result['totalScoreb'];
                     });
+                    // * Recharge
+                    $scope.pushRecharge = function() {
+                        if($("#inScorea").val()=='' && $("#inScoreb").val()=='') {
+                            alert("请输入有效的充值金额 !");
+                            return;
+                        }
+                        var partnerRecharge = {}
+                        partnerRecharge.scorea = $("#inScorea").val();
+                        partnerRecharge.scoreb = $("#inScoreb").val();
+                        marketingAccount.requestRecharge(partnerRecharge).then(function (result) {
+                            if(result.status==200) {
 
+                                $("#inScorea").val('');
+                                $("#inScoreb").val('');
+                            }
+                        });
+                    }
                     // TOP5
                     var navBtn = $('.partner-home .nav-pills li');
                     var navDiv = $('.partner-home .tab-content .tab-pane');

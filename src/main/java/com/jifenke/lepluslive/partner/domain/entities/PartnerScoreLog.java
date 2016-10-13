@@ -27,7 +27,7 @@ public class PartnerScoreLog {
 
   private Integer scoreAOrigin; //红包变更来源  0 注册送红包 1 送邀请会员
 
-  private Integer scoreBOrigin;//积分变更来源 0 注册送积分 1 送邀请会员
+  private Integer scoreBOrigin; //积分变更来源 0 注册送积分 1 送邀请会员
 
   private String description;//描述
 

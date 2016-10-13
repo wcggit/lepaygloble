@@ -126,15 +126,15 @@
                 <div class="form-group col-md-7">
                     <div class="mg">
                         <div class="col-md-4">
-                            <p><span>569</span>人</p>
+                            <p><span>{{inviteM}}</span>  人</p>
                             <p>累计邀请会员</p>
                         </div>
                         <div class="col-md-4">
-                            <p><span style="color:#f54339;">300.00</span>元</p>
+                            <p><span style="color:#f54339;">{{totalA}}</span>  元</p>
                             <p>邀请发红包</p>
                         </div>
                         <div class="col-md-4">
-                            <p><span style="color:#fb991a;">569</span>积分</p>
+                            <p><span style="color:#fb991a;">{{totalB}}</span>  积分</p>
                             <p>邀请发积分</p>
                         </div>
                     </div>
@@ -167,14 +167,14 @@
                     <tbody>
                     <tr ng-repeat="x in pulls">
                         <td class="clearfix">
-                            <span class="touxiang"><img  ng-src="{{x[2]}}" alt=""></span>
-                            <span ng-bind="x[1]"></span>
+                            <span class="touxiang"><img  ng-src="{{x.headImageUrl}}" alt=""></span>
+                            <span ng-bind="x.nickname"></span>
                         </td>
                         <td>
-                            <p ng-bind="x[3]|date:'yyyy-MM-dd'"></p>
-                            <p ng-bind="x[3]|date:'HH:mm:ss'"></p>
+                            <p ng-bind="x.dateCreated|date:'yyyy-MM-dd'"></p>
+                            <p ng-bind="x.dateCreated|date:'HH:mm:ss'"></p>
                         </td>
-                        <td><span ng-bind="x[4]"></span></td>
+                        <td><span>￥{{wxScoreas[$index]/100.0}} 红包 &nbsp; {{wxScorebs[$index]/1.0}} 积分</span></td>
                     </tr>
                     </tbody>
                 </table>

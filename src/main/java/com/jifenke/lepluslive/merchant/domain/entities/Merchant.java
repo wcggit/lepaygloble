@@ -369,4 +369,14 @@ public class Merchant {
     }
 
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private MerchantInfo merchantInfo;   //商家详情介绍
+
+    public MerchantInfo getMerchantInfo() {
+        return merchantInfo;
+    }
+
+    public void setMerchantInfo(MerchantInfo merchantInfo) {
+        this.merchantInfo = merchantInfo;
+    }
 }

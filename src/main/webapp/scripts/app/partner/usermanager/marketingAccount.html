@@ -263,8 +263,8 @@
             </div>
             <div class="modal-body rechargeStyle">
                 <div class="re">
-                    <div>充值红包<input type="number" class="form-control" placeholder="请输入充值红包金额" /><span>红包余额：2.00元</span></div>
-                    <div>充值积分<input type="number" class="form-control" placeholder="请输入充值积分金额" /><span>积分余额：120积分</span></div>
+                    <div>充值红包<input type="number" class="form-control" id="inScorea" placeholder="请输入充值红包金额" /><span>红包余额：￥{{availableScoreA}}元</span></div>
+                    <div>充值积分<input type="number" class="form-control" id="inScoreb" placeholder="请输入充值积分金额" /><span>积分余额：{{availableScoreB}}积分</span></div>
                 </div>
                 <div class="success" style="display: none;">
                     <div>
@@ -278,10 +278,10 @@
                 <div class="btn-div text-center">
                     <div>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess">确定</button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess" ng-click="pushRecharge()" id="btnConfirm">确定</button>
                     </div>
                     <div style="display: none;">
-                        <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess">知道了</button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess" id="btnKnow">知道了</button>
                     </div>
                 </div>
             </div>
