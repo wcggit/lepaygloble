@@ -1,11 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-<<<<<<< HEAD
-    .controller('myUserController', function ($scope, Commission) {
-=======
     .controller('myUserController', function ($scope, Commission, Welfare, $http) {
->>>>>>> 3031fe6ae75c8526a3328ced1ed535237330a0d3
                     $scope.inclusiveMap = []; //个选包含的数组
                     $scope.exclusiveMap = [];//全选排开的数组
                     $scope.selectedCheckbox = 0;
@@ -148,13 +144,6 @@ angular.module('lepayglobleApp')
                         }
                     }
 
-<<<<<<< HEAD
-                    /*$scope.welfare = function (id) {
-                        Welfare.checkUserWelfare(id).then(function (data) {
-
-                        });
-                    };*/
-=======
                     $scope.welfare = function (user) {
                         Welfare.checkUserWelfare(user[0]).then(function (data) {
                             $http.get('api/partner/wallet').success(function (response) {
@@ -200,10 +189,9 @@ angular.module('lepayglobleApp')
                     });
                     $scope.$watch('selectedCheckbox', function (newVal, oldVal) {
                         if (newVal > 0) {
-                            alert(1)
+                            //alert(1)
                         }
                     });
->>>>>>> 3031fe6ae75c8526a3328ced1ed535237330a0d3
                 });
 angular.module('lepayglobleApp')
     .directive('myRepeatDirective', function () {

@@ -60,6 +60,14 @@ angular.module('lepayglobleApp')
                     $scope.pushRecharge = function() {
                         if($("#inScorea").val()=='' && $("#inScoreb").val()=='') {
                             alert("请输入有效的充值金额 !");
+                            $("#inScorea").val('');
+                            $("#inScoreb").val('');
+                            return;
+                        }
+                        if($("#inScorea").val()<0 || $("#inScoreb").val()<0) {
+                            alert("请输入有效的充值金额 !");
+                            $("#inScorea").val('');
+                            $("#inScoreb").val('');
                             return;
                         }
                         var partnerRecharge = {}
@@ -67,7 +75,7 @@ angular.module('lepayglobleApp')
                         partnerRecharge.scoreb = $("#inScoreb").val();
                         marketingAccount.requestRecharge(partnerRecharge).then(function (result) {
                             if(result.status==200) {
-
+                                $("#pffl-chargeSuccess").modal();
                                 $("#inScorea").val('');
                                 $("#inScoreb").val('');
                             }

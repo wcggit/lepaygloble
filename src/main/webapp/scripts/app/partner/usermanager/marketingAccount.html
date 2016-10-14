@@ -3,33 +3,19 @@
         <div class="w-title">
             <div class="ttl tc">营销账户</div>
             <div class="btn-set">
-<<<<<<< HEAD
-                <span>已发放：{{totalScorea-availableScoreA}} 元 和 {{totalScorea-availableScoreB}} 积分</span>
-                <button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#pffl-recharge">充值</button>
-=======
-                <button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#pffl-chargeSuccess">立即充值</button>
->>>>>>> 3031fe6ae75c8526a3328ced1ed535237330a0d3
+                <button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#pffl-recharge">立即充值</button>
             </div>
         </div>
         <!--显示信息-->
         <div class="form-inline line">
             <div class="row">
                 <div class="form-group col-md-6">
-<<<<<<< HEAD
-                    <p>￥{{availableScoreA}}</p>
-                    <p>红包账户余额（元）</p>
+                    <p class="w-makeMargin">￥{{availableScoreA}}<span>元</span></p>
+                    <p class="w-makeMargin">红包账户余额</p><span class="w-ffhb" style="color:#f54339;">已发放：{{totalScorea-availableScoreA}}元</span>
                 </div>
                 <div class="form-group col-md-6">
-                    <p>{{availableScoreB}}</p>
-                    <p>积分账户余额</p>
-=======
-                    <p class="w-makeMargin">80.00<span>元</span></p>
-                    <p class="w-makeMargin">红包账户余额</p><span class="w-ffhb" style="color:#f54339;">已发放：20.00元</span>
-                </div>
-                <div class="form-group col-md-6">
-                    <p class="w-makeMargin">800<span>积分</span></p>
-                    <p class="w-makeMargin">积分账户余额</p><span class="w-ffhb" style="color:#fb991a;">已发放：200积分</span>
->>>>>>> 3031fe6ae75c8526a3328ced1ed535237330a0d3
+                    <p class="w-makeMargin">{{availableScoreB}}<span>积分</span></p>
+                    <p class="w-makeMargin">积分账户余额</p><span class="w-ffhb" style="color:#fb991a;">已发放：{{totalScorea-availableScoreB}}积分</span>
                 </div>
             </div>
         </div>
@@ -192,7 +178,7 @@
             <div class="modal-footer">
                 <div class="btn-div text-center">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess">确定</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="pushRecharge()" id="btnConfirm">确定</button>
                 </div>
             </div>
         </div>
@@ -219,17 +205,7 @@
             </div>
             <div class="modal-footer">
                 <div class="btn-div text-center">
-<<<<<<< HEAD
-                    <div>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess" ng-click="pushRecharge()" id="btnConfirm">确定</button>
-                    </div>
-                    <div style="display: none;">
-                        <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess" id="btnKnow">知道了</button>
-                    </div>
-=======
                     <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess">知道了</button>
->>>>>>> 3031fe6ae75c8526a3328ced1ed535237330a0d3
                 </div>
             </div>
         </div>
