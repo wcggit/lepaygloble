@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -364,6 +365,58 @@ public class PartnerService {
             sql.append(",");
             sql.append(partnerWelfareLog.getSid());
             sql.append(",");
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void welfareToUser(Serializable userId,
+                              PartnerWelfareLog partnerWelfareLog) {
+
+        if (partnerWelfareLog.getScoreA() > 0) {
+            StringBuffer sql = new StringBuffer();
+            sql.append("update scorea set score = score+");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(",total_score=total_score+");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(" ,last_update_date=now() where scorea.le_jia_user_id =  ");
+            sql.append(userId);
+            em.createNativeQuery(sql.toString()).executeUpdate();
+            sql.setLength(0);
+            sql.append(
+                "insert into  scorea_detail (date_created,number,operate,scorea_id,order_sid,origin) values (now(),");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(",");
+            sql.append("'合伙人发福利',");
+            sql.append("(select id from scorea where scorea.le_jia_user_id = ");
+            sql.append(userId);
+            sql.append("),");
+            sql.append(partnerWelfareLog.getSid());
+            sql.append(",");
+            sql.append("10)");
+            em.createNativeQuery(sql.toString()).executeUpdate();
+        }
+        if (partnerWelfareLog.getScoreB() > 0) {
+            StringBuffer sql = new StringBuffer();
+            sql.append("update scoreb set score = score+");
+            sql.append(partnerWelfareLog.getScoreB());
+            sql.append(",total_score=total_score+");
+            sql.append(partnerWelfareLog.getScoreB());
+            sql.append(" ,last_update_date=now() where scoreb.le_jia_user_id =  ");
+            sql.append(userId);
+            em.createNativeQuery(sql.toString()).executeUpdate();
+            sql.setLength(0);
+            sql.append(
+                "insert into  scoreb_detail (date_created,number,operate,scoreb_id,order_sid,origin) values (now(),");
+            sql.append(partnerWelfareLog.getScoreB());
+            sql.append(",");
+            sql.append("'合伙人发福利',");
+            sql.append("(select id from scoreb where scoreb.le_jia_user_id = ");
+            sql.append(userId);
+            sql.append("),");
+            sql.append(partnerWelfareLog.getSid());
+            sql.append(",");
+            sql.append("10)");
+            em.createNativeQuery(sql.toString()).executeUpdate();
         }
     }
 }
