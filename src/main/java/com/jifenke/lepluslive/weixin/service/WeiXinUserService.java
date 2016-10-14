@@ -58,7 +58,8 @@ public class WeiXinUserService {
         //  分页查询数据
         Sort sort = new Sort(Sort.Direction.DESC, "dateCreated");
         Page page = weiXinUserRepository.findAll(getWhereClause(infoCriteria),
-                                         new PageRequest(infoCriteria.getOffset() - 1, limit, sort));
+                                                 new PageRequest(infoCriteria.getOffset() - 1,
+                                                                 limit, sort));
         List<WeiXinUser> weixinUsers = page.getContent();
         List<Long> wxScoreas = new ArrayList<>();
         List<Long> wxScorebs = new ArrayList<>();
@@ -70,9 +71,9 @@ public class WeiXinUserService {
         }
         //  封装数据
         Map map = new HashMap();
-        map.put("page",page);
-        map.put("wxScoreas",wxScoreas);
-        map.put("wxScorebs",wxScorebs);
+        map.put("page", page);
+        map.put("wxScoreas", wxScoreas);
+        map.put("wxScorebs", wxScorebs);
         return map;
     }
 
