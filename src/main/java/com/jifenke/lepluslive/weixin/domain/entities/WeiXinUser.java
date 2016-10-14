@@ -193,4 +193,20 @@ public class WeiXinUser {
   public void setState(Integer state) {
     this.state = state;
   }
+
+    //  类型_活动ID_来源ID
+    // 1_2_0表示送红包活动,活动id为2,0无意义
+    // 2_3_456表示裂变活动,活动id为3,邀请人weiXinUser的id为456
+    // 0_0_0表示表示默认关注
+    // 3_4_1表示其他活动,活动id为4,1无意义
+    // 4_0_123表示商家邀请码，商家Id为123
+    private String subSource;   //关注来源
+
+    public String getSubSource() {
+        return subSource;
+    }
+
+    public void setSubSource(String subSource) {
+        this.subSource = subSource;
+    }
 }

@@ -3,19 +3,19 @@
         <div class="w-title">
             <div class="ttl tc">营销账户</div>
             <div class="btn-set">
-                <button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#pffl-chargeSuccess">立即充值</button>
+                <button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#pffl-recharge">立即充值</button>
             </div>
         </div>
         <!--显示信息-->
         <div class="form-inline line">
             <div class="row">
                 <div class="form-group col-md-6">
-                    <p class="w-makeMargin">80.00<span>元</span></p>
-                    <p class="w-makeMargin">红包账户余额</p><span class="w-ffhb" style="color:#f54339;">已发放：20.00元</span>
+                    <p class="w-makeMargin">￥{{availableScoreA}}<span>元</span></p>
+                    <p class="w-makeMargin">红包账户余额</p><span class="w-ffhb" style="color:#f54339;">已发放：{{totalScorea-availableScoreA}}元</span>
                 </div>
                 <div class="form-group col-md-6">
-                    <p class="w-makeMargin">800<span>积分</span></p>
-                    <p class="w-makeMargin">积分账户余额</p><span class="w-ffhb" style="color:#fb991a;">已发放：200积分</span>
+                    <p class="w-makeMargin">{{availableScoreB}}<span>积分</span></p>
+                    <p class="w-makeMargin">积分账户余额</p><span class="w-ffhb" style="color:#fb991a;">已发放：{{totalScorea-availableScoreB}}积分</span>
                 </div>
             </div>
         </div>
@@ -23,30 +23,38 @@
             <div class="clearfix">
                 <p class="ttl">营销记录</p>
                 <ul class="nav nav-pills">
-                    <li role="presentation" class="active"><a>全部</a></li>
-                    <li role="presentation"><a>增值记录</a></li>
-                    <li role="presentation" ng-class="{active:currentTab2}"><a>减扣记录</a></li>
+                    <li role="presentation" class="active"><a ng-click="loadAll()">全部</a></li>
+                    <li role="presentation" ng-click="loadIncrease()"><a>增值记录</a></li>
+                    <li role="presentation" ng-class="{active:currentTab2}" ng-click="loadDecrease()"><a>减扣记录</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active">
                         <div class="panel panel-default">
-                            <table class="table ol-tab">
+                          <table class="table ol-tab">
                                 <thead class="active">
                                 <tr>
                                     <td>变更账户</td>
-                                    <td>变更时间</td>
-                                    <td>变更项目</td>
                                     <td>变更值</td>
+                                    <td>变更项目</td>
+                                    <td>变更时间</td>
                                     <td>备注</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="x in homeTab">
-                                    <td ng-show="x.rebateWay!=0"></td>
-                                    <td ng-bind="'¥'+x[2]/100"></td>
-                                    <td ng-bind="'¥'+x[1]/100"></td>
-                                    <td ng-bind="'¥'+x[2]/100"></td>
-                                    <td ng-bind="'¥'+x[1]/100"></td>
+                                    <td ng-show="x.type==0">积分变更</td>
+                                    <td ng-show="x.type==1">红包变更</td>
+                                    <td ng-show="x.type==0">
+                                        <span ng-bind="x.number"></span>
+                                    </td>
+                                    <td ng-show="x.type==1"><span ng-bind="'¥ '+x.number/100"></span></td>
+
+                                    <td ng-show="x.scoreAOrigin==0">注册送红包</td>
+                                    <td ng-show="x.scoreAOrigin==1">送邀请会员</td>
+                                    <td ng-show="x.scoreBOrigin==0">注册送积分</td>
+                                    <td ng-show="x.scoreBOrigin==1">送邀请会员</td>
+                                    <td ng-bind="x.createDate|date:'yyyy/MM/dd HH:mm:ss'"></td>
+                                    <td ng-bind="x.description"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -59,19 +67,27 @@
                                 <thead class="active">
                                 <tr>
                                     <td>变更账户</td>
-                                    <td>变更时间</td>
-                                    <td>变更项目</td>
                                     <td>变更值</td>
+                                    <td>变更项目</td>
+                                    <td>变更时间</td>
                                     <td>备注</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="x in homeTab">
-                                    <td ng-show="x.rebateWay!=0"></td>
-                                    <td ng-bind="'¥'+x[2]/100"></td>
-                                    <td ng-bind="'¥'+x[1]/100"></td>
-                                    <td ng-bind="'¥'+x[2]/100"></td>
-                                    <td ng-bind="'¥'+x[1]/100"></td>
+                                    <td ng-show="x.type==0">积分变更</td>
+                                    <td ng-show="x.type==1">红包变更</td>
+                                    <td ng-show="x.type==0">
+                                        <span ng-bind="x.number"></span>
+                                    </td>
+                                    <td ng-show="x.type==1"><span ng-bind="'¥ '+x.number/100"></span></td>
+
+                                    <td ng-show="x.scoreAOrigin==0">注册送红包</td>
+                                    <td ng-show="x.scoreAOrigin==1">送邀请会员</td>
+                                    <td ng-show="x.scoreBOrigin==0">注册送积分</td>
+                                    <td ng-show="x.scoreBOrigin==1">送邀请会员</td>
+                                    <td ng-bind="x.createDate|date:'yyyy/MM/dd HH:mm:ss'"></td>
+                                    <td ng-bind="x.description"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -84,25 +100,60 @@
                                 <thead class="active">
                                 <tr>
                                     <td>变更账户</td>
-                                    <td>变更时间</td>
-                                    <td>变更项目</td>
                                     <td>变更值</td>
+                                    <td>变更项目</td>
+                                    <td>变更时间</td>
                                     <td>备注</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="x in homeTab">
-                                    <td ng-show="x.rebateWay!=0"></td>
-                                    <td ng-bind="'¥'+x[2]/100"></td>
-                                    <td ng-bind="'¥'+x[1]/100"></td>
-                                    <td ng-bind="'¥'+x[2]/100"></td>
-                                    <td ng-bind="'¥'+x[1]/100"></td>
+                                    <td ng-show="x.type==0">积分变更</td>
+                                    <td ng-show="x.type==1">红包变更</td>
+                                    <td ng-show="x.type==0">
+                                        <span ng-bind="x.number"></span>
+                                    </td>
+                                    <td ng-show="x.type==1"><span ng-bind="'¥ '+x.number/100"></span></td>
+
+                                    <td ng-show="x.scoreAOrigin==0">注册送红包</td>
+                                    <td ng-show="x.scoreAOrigin==1">送邀请会员</td>
+                                    <td ng-show="x.scoreBOrigin==0">注册送积分</td>
+                                    <td ng-show="x.scoreBOrigin==1">送邀请会员</td>
+                                    <td ng-bind="x.createDate|date:'yyyy/MM/dd HH:mm:ss'"></td>
+                                    <td ng-bind="x.description"></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!--分页-->
+            <div class=" clearfix">
+                <nav class="pull-right">
+                    <ul class="pagination">
+                        <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                        <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                            <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                        </li>
+                        <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                        <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                        <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                        <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                            1}}</a>
+                        </li>
+                        <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                            2}}</a>
+                        </li>
+                        <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                            ng-click="loadPage(page+1)"><a aria-label="Next">
+                            <span aria-hidden="true">›</span>
+                        </a></li>
+                        <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                            ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -120,14 +171,14 @@
             </div>
             <div class="modal-body rechargeStyle">
                 <div class="re">
-                    <div>充值红包<input type="number" class="form-control" placeholder="请输入充值红包金额" /><span>红包余额：2.00元</span></div>
-                    <div>充值积分<input type="number" class="form-control" placeholder="请输入充值积分金额" /><span>积分余额：120积分</span></div>
+                    <div>充值红包<input type="number" class="form-control" id="inScorea" placeholder="请输入充值红包金额" /><span>红包余额：￥{{availableScoreA}}元</span></div>
+                    <div>充值积分<input type="number" class="form-control" id="inScoreb" placeholder="请输入充值积分金额" /><span>积分余额：{{availableScoreB}}积分</span></div>
                 </div>
             </div>
             <div class="modal-footer">
                 <div class="btn-div text-center">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess">确定</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="pushRecharge()" id="btnConfirm">确定</button>
                 </div>
             </div>
         </div>

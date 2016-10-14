@@ -189,7 +189,7 @@ angular.module('lepayglobleApp')
                     });
                     $scope.$watch('selectedCheckbox', function (newVal, oldVal) {
                         if (newVal > 0) {
-                            alert(1)
+                            //alert(1)
                         }
                     });
                 });
