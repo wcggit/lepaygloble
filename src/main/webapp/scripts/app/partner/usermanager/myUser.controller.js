@@ -1,10 +1,15 @@
 'use strict';
 
 angular.module('lepayglobleApp')
+<<<<<<< HEAD
     .controller('myUserController', function ($scope, Commission) {
+=======
+    .controller('myUserController', function ($scope, Commission, Welfare, $http) {
+>>>>>>> 3031fe6ae75c8526a3328ced1ed535237330a0d3
                     $scope.inclusiveMap = []; //个选包含的数组
                     $scope.exclusiveMap = [];//全选排开的数组
                     $scope.selectedCheckbox = 0;
+                    $scope.date = new Date();
                     $scope.selected = false; //全选
                     $('body').css({background: '#fff'});
                     $('.main-content').css({height: 'auto'});
@@ -143,11 +148,62 @@ angular.module('lepayglobleApp')
                         }
                     }
 
+<<<<<<< HEAD
                     /*$scope.welfare = function (id) {
                         Welfare.checkUserWelfare(id).then(function (data) {
 
                         });
                     };*/
+=======
+                    $scope.welfare = function (user) {
+                        Welfare.checkUserWelfare(user[0]).then(function (data) {
+                            $http.get('api/partner/wallet').success(function (response) {
+                                $scope.partnerWallet = response.data;
+                                $scope.currentUser = user;
+                                if (data.data) {
+                                    $("#pffl").modal("toggle");
+                                } else {
+                                    $("#pffl-limit").modal("toggle");
+                                }
+                            });
+                        });
+                    };
+                    $scope.$watch('hbNum', function (newVal, oldVal) {
+                        if (Number(newVal)) {
+
+                            if (newVal <= $scope.partnerWallet.availableScoreA / 100.0) {
+                                $scope.hbNum = newVal;
+                            } else {
+                                $scope.hbNum =
+                                $scope.partnerWallet.availableScoreA / 100.0.toFixed(2);
+                            }
+                        } else {
+                            if (!newVal == null) {
+                                alert("请输入有效数字");
+                            }
+                        }
+                    });
+                    $scope.$watch('jfNum', function (newVal, oldVal) {
+                        if (Number(newVal)) {
+
+                            if (newVal <= $scope.partnerWallet.availableScoreB) {
+                                $scope.jfNum = newVal;
+                            } else {
+                                $scope.jfNum =
+                                $scope.partnerWallet.availableScoreB;
+                            }
+                        } else {
+                            if (!newVal == null) {
+                                alert("请输入有效数字");
+                            }
+                        }
+                    });
+                    $scope.$watch('selectedCheckbox', function (newVal, oldVal) {
+                        if (newVal > 0) {
+                            alert(1)
+                        }
+                    });
+>>>>>>> 3031fe6ae75c8526a3328ced1ed535237330a0d3
                 });
 angular.module('lepayglobleApp')
     .directive('myRepeatDirective', function () {
