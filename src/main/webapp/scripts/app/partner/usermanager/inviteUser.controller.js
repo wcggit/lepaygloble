@@ -26,6 +26,30 @@ angular.module('lepayglobleApp')
                             $scope.wxScoreas = data.wxScoreas;
                             $scope.wxScorebs = data.wxScorebs;
                         });
+                        InviteUser.getPartnerInfo().then(function (response) {
+                            //  QrCode
+                            $("#qrCodeImg").attr("src",response.hbQrCodeUrl);
+
+                            //  Gift
+                            if(response.scoreAType==0) {
+                                $("#stableSaRio").attr("checked",true);
+                                $("#stableSaNum").val(response.maxScoreA/100.0);
+                            }
+                            if(response.scoreAType==1) {
+                                $("#randSaRio").attr("checked",true);
+                                $("#randSaMaxNum").val(response.maxScoreA/100.0);
+                                $("#randSaMinNum").val(response.minScoreA/100.0);
+                            }
+                            if(response.scoreBType==0) {
+                                $("#stableSbRio").attr("checked",true);
+                                $("#stableSbNum").val(response.maxScoreB);
+                            }
+                            if(response.scoreBType==1) {
+                                $("#randSbRio").attr("checked",true);
+                                $("#randSbMaxNum").val(response.maxScoreB);
+                                $("#randSbMinNum").val(response.minScoreB);
+                            }
+                        });
                     }
 
                     $scope.loadPage = function (page) {
@@ -45,7 +69,57 @@ angular.module('lepayglobleApp')
                         criteria.offset = page;
                         loadContent();
                     };
-
+                    $scope.submitPartnerInfo = function() {
+                        var partnerInfo = {};
+                        if($("#stableSaRio").is(":checked")) {
+                            partnerInfo.scoreAType = 0;
+                            partnerInfo.maxScoreA = $("#stableSaNum").val();
+                            partnerInfo.minScoreA = $("#stableSaNum").val();
+                        }
+                        if($("#randSaRio").is(":checked")){
+                            partnerInfo.scoreAType = 1;
+                            partnerInfo.maxScoreA = $("#randSaMaxNum").val();
+                            partnerInfo.minScoreA = $("#randSaMinNum").val();
+                        }
+                        if($("#stableSbRio").is(":checked")) {
+                            partnerInfo.scoreBType = 0;
+                            partnerInfo.maxScoreB = $("#stableSbNum").val();
+                            partnerInfo.minScoreB = $("#stableSbNum").val();
+                        }
+                        if($("#randSbRio").is(":checked")){
+                            partnerInfo.scoreBType = 1;
+                            partnerInfo.maxScoreB = $("#randSbMaxNum").val();
+                            partnerInfo.minScoreB = $("#randSbMinNum").val();
+                        }
+                        if($("#noScoreRio").is(":checked")) {
+                            partnerInfo.scoreBType = 0;
+                            partnerInfo.maxScoreB = 0;
+                            partnerInfo.minScoreB = 0;
+                        }
+                        InviteUser.savePartnerInfo(partnerInfo).then(function (response) {
+                            if(response.status==200) {
+                                alert("新设置已成功保存 !");
+                            }
+                        });
+                    }
+                    $scope.clearRandA = function () {
+                        $("#randSaMinNum").val('');
+                        $("#randSaMaxNum").val('');
+                    }
+                    $scope.clearStableA = function () {
+                        $("#stableSaNum").val('');
+                    }
+                    $scope.clearRandB =function () {
+                        $("#randSbMinNum").val('');
+                        $("#randSbMaxNum").val('');
+                    }
+                    $scope.clearStableB = function () {
+                        $("#stableSbNum").val('');
+                    }
+                    $scope.clearAllB = function () {
+                        $scope.clearRandB();
+                        $scope.clearStableB();
+                    }
                     $scope.searchByCriteria = function () {
                         var dateStr = $("#timePicker1").val();
                         var phone = $("#phone").val();
@@ -70,3 +144,6 @@ angular.module('lepayglobleApp')
                        $(this).next().next().next().next().removeAttr("disabled");
                    });
                 });
+
+
+

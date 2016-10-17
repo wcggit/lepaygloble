@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group col-md-5 w-download">
                     <div>
-                        <img width="120" height="120" src="../../assets/styles/images/yqhy/er.png" alt=""/>
+                        <img id="qrCodeImg" width="120" height="120" src="../../assets/styles/images/yqhy/er.png" alt=""/>
                     </div>
                     <div>
                         <img style="width: 100%;" src="../../assets/styles/images/yqhy/jian.png" alt=""/>
@@ -92,8 +92,11 @@
     </div>
 </div>
 
+
+
+
 <!--设置邀请礼包提示框-->
-<div class="modal fade" id="pffl-set">
+<div class="modal fade" id="pffl-set" ng-controller="inviteUserController">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-warning">
@@ -106,12 +109,12 @@
                 <p>请设置您邀请的会员单人能获得的礼包</p>
                 <div class="hb">
                     <div>红包奖励</div>
-                    <div ng-app="myApp" ng-controller="personCtrl">
+                    <div>
                         <div>
-                            <input type="radio" name="hb" /><p> 固定数值 </p><input type="number" class="form-control" placeholder="输入发放红包金额"/>
+                            <input type="radio" name="hb" id="stableSaRio" ng-click="clearRandA()"/><p> 固定数值 </p><input type="number" id="stableSaNum" class="form-control" placeholder="输入发放红包金额"/>
                         </div>
                         <div>
-                            <input type="radio" name="hb" /><p> 随机数值 </p><input type="number" class="form-control" placeholder="输入红包金额下限"/><p class="w-z"> 至 </p><input type="number" class="form-control" placeholder="输入红包金额上限"/>
+                            <input type="radio" name="hb" id="randSaRio"   ng-click="clearStableA()"/><p> 随机数值 </p><input type="number"  id="randSaMinNum" class="form-control" placeholder="输入红包金额下限"/><p class="w-z"> 至 </p><input type="number"  id="randSaMaxNum" class="form-control" placeholder="输入红包金额上限"/>
                         </div>
                     </div>
                 </div>
@@ -119,13 +122,13 @@
                     <div>积分奖励</div>
                     <div>
                         <div>
-                            <input type="radio" name="jf" /><p> 固定数值 </p><input type="number" class="form-control" placeholder="输入发放积分值"/>
+                            <input type="radio" name="jf" id="stableSbRio" ng-click="clearRandB()"/><p> 固定数值 </p><input type="number" id="stableSbNum" class="form-control" placeholder="输入发放积分值"/>
                         </div>
                         <div>
-                            <input type="radio" name="jf" /><p> 随机数值 </p><input type="number" class="form-control" placeholder="输入积分值下限"/><p class="w-z"> 至 </p><input type="number" class="form-control" placeholder="输入积分值上限"/>
+                            <input type="radio" name="jf" id="randSbRio" ng-click="clearStableB()"/><p> 随机数值 </p><input type="number" id="randSbMinNum"  class="form-control" placeholder="输入积分值下限"/><p class="w-z"> 至 </p><input type="number" id="randSbMaxNum" class="form-control" placeholder="输入积分值上限"/>
                         </div>
                         <div>
-                            <input type="radio" name="jf" /><p>没有奖励</p><span style="color:#999;font-size: 14px"> （别那么小气，多少给点吧）</span>
+                            <input type="radio" name="jf" id="noScoreRio" ng-click="clearAllB()"/><p>没有奖励</p><span style="color:#999;font-size: 14px"> （别那么小气，多少给点吧）</span>
                         </div>
                     </div>
                 </div>
@@ -133,9 +136,11 @@
             <div class="modal-footer">
                 <div class="btn-div text-center">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-warning" data-dismiss="modal">确定</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="submitPartnerInfo()">确定</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
