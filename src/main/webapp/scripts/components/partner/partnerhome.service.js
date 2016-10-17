@@ -47,6 +47,17 @@ angular.module('lepayglobleApp')
                          });
                          return deferred.promise;
                      },
+                     getPartnerBindMerchantListCount: function (data) {
+                         var deferred = $q.defer();
+                         $http.post('/api/partner/merchant_list_count', data, {
+                             headers: {
+                                 'Content-Type': 'application/json'
+                             }
+                         }).success(function (response) {
+                             deferred.resolve(response);
+                         });
+                         return deferred.promise;
+                     },
                      countFullMerchant: function () {
                          var deferred = $q.defer();
                          $http.get('/api/partner/count_full_merchant', {

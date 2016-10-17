@@ -59,6 +59,19 @@ angular.module('lepayglobleApp')
                             }
                         })
                     };
+                    //  解除绑定
+                    $scope.unbindWx = function() {
+                            if($scope.partner.weiXinUser!=null && $scope.partner.weiXinUser!='') {
+                                $http.get('api/partner/unbind_wx_user').success(function (response) {
+                                    if(response.status==200) {
+                                        alert("解除绑定成功 !");
+                                        window.location.reload();
+                                    }
+                                });
+                            }else {
+                                        alert("尚未绑定微信账号 !");
+                            }
+                    }
 
                 });
 

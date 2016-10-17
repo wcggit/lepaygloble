@@ -18,7 +18,8 @@
                     <div class="col-md-6 bdwx">
                         <div class="col-md-3 text-right">绑定微信号：</div>
                         <div class="col-md-9 clearfix" >
-                            <span class="pull-left"><img src="../../../../assets/images/hipster.png" alt=""></span><span class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;微信昵称</span>
+                            <span class="pull-left"><img src="../../../../assets/images/hipster.png" alt=""></span><span class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;微信昵称: </span>
+                            <span class="pull-left" ng-bind="partner.weiXinUser.nickname"></span>
                             <a class="changePassword pull-left" data-toggle="modal" data-target="#removeBind">解除绑定</a>
                         </div>
                         <!--<div class="col-md-9 clearfix" >-->
@@ -126,7 +127,7 @@
             <div class="modal-footer">
                 <div class="btn-div">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-warning" data-dismiss="modal">确定</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="unbindWx()">确定</button>
                 </div>
             </div>
         </div>

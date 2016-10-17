@@ -7,6 +7,7 @@ import com.jifenke.lepluslive.global.config.Constants;
 import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.lejiauser.domain.entities.RegisterOrigin;
+import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.lejiauser.repository.RegisterOriginRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantType;
@@ -20,6 +21,8 @@ import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
 import com.jifenke.lepluslive.merchant.repository.OpenRequestRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
+import com.jifenke.lepluslive.weixin.repository.WeiXinUserRepository;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,7 +30,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -73,6 +79,11 @@ public class MerchantService {
     @Inject
     private MerchantWeiXinUserService merchantWeiXinUserService;
 
+    @Inject
+    private LeJiaUserRepository leJiaUserRepository;
+
+    @Inject
+    private WeiXinUserRepository weiXinUserRepository;
 
     /**
      * 获取商家详情
@@ -247,4 +258,46 @@ public class MerchantService {
         }
 
     }
+
+    /**
+     * 获取合伙人虚拟商户
+     * @param partner
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Merchant findPartnerVirtualMerchant(Partner partner) {
+        return merchantRepository.findVtMerchantByPartner(partner.getId());
+    }
+
+    /**
+     * 获取合伙人抢福利页面所需数据 16/10/13
+     *
+     * @return 数据
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Map findMerchantCodeData(Merchant merchant) {
+        Integer count = null;
+        List scoreAs = null;
+        List scoreBs = null;
+        Map<String, Object> map = new HashMap<>();
+        String subSource = "4_0_" + merchant.getId();  //关注来源
+        //获取注册来源为该商家的用户总数
+        count = leJiaUserRepository.countBySubSource(subSource);
+        if (count == 0) {
+            map.put("inviteM", 0);//邀请会员数
+            map.put("totalA", 0); //邀请会员的会员累计获得红包额
+            map.put("totalB", 0); //邀请会员的会员累计获得红包额
+        } else {
+            //邀请会员数
+            count = leJiaUserRepository.countBySubSourceAndState(subSource);
+            map.put("inviteM", count);
+            //邀请会员的会员累计红包额和使用红包额
+            scoreAs = leJiaUserRepository.countScoreAByMerchant(subSource);
+            scoreBs = leJiaUserRepository.countScoreBByMerchant(subSource);
+            map.put("totalA", scoreAs.get(0));
+            map.put("totalB", scoreBs.get(0));
+        }
+        return map;
+    }
+
 }

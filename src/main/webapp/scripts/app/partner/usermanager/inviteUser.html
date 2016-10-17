@@ -12,15 +12,15 @@
                 <div class="form-group col-md-7">
                     <div class="mg">
                         <div class="col-md-4">
-                            <p><span>569</span>人</p>
+                            <p><span>{{inviteM}}</span>  人</p>
                             <p>累计邀请会员</p>
                         </div>
                         <div class="col-md-4">
-                            <p><span style="color:#f54339;">300.00</span>元</p>
+                            <p><span style="color:#f54339;">{{totalA}}</span>  元</p>
                             <p>邀请发红包</p>
                         </div>
                         <div class="col-md-4">
-                            <p><span style="color:#fb991a;">569</span>积分</p>
+                            <p><span style="color:#fb991a;">{{totalB}}</span>  积分</p>
                             <p>邀请发积分</p>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group col-md-5 w-download">
                     <div>
-                        <img width="120" height="120" src="../../assets/styles/images/yqhy/er.png" alt=""/>
+                        <img id="qrCodeImg" width="120" height="120" src="../../assets/styles/images/yqhy/er.png" alt=""/>
                     </div>
                     <div>
                         <img style="width: 100%;" src="../../assets/styles/images/yqhy/jian.png" alt=""/>
@@ -53,14 +53,14 @@
                     <tbody>
                     <tr ng-repeat="x in pulls">
                         <td class="clearfix">
-                            <span class="touxiang"><img  ng-src="{{x[2]}}" alt=""></span>
-                            <span ng-bind="x[1]"></span>
+                            <span class="touxiang"><img  ng-src="{{x.headImageUrl}}" alt=""></span>
+                            <span ng-bind="x.nickname"></span>
                         </td>
                         <td>
-                            <p ng-bind="x[3]|date:'yyyy-MM-dd'"></p>
-                            <p ng-bind="x[3]|date:'HH:mm:ss'"></p>
+                            <p ng-bind="x.dateCreated|date:'yyyy-MM-dd'"></p>
+                            <p ng-bind="x.dateCreated|date:'HH:mm:ss'"></p>
                         </td>
-                        <td><span ng-bind="x[4]"></span></td>
+                        <td><span>￥{{wxScoreas[$index]/100.0}} 红包 &nbsp; {{wxScorebs[$index]/1.0}} 积分</span></td>
                     </tr>
                     </tbody>
                 </table>
@@ -92,8 +92,11 @@
     </div>
 </div>
 
+
+
+
 <!--设置邀请礼包提示框-->
-<div class="modal fade" id="pffl-set">
+<div class="modal fade" id="pffl-set" ng-controller="inviteUserController">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-warning">
@@ -108,10 +111,10 @@
                     <div>红包奖励</div>
                     <div>
                         <div>
-                            <input type="radio" name="hb" /><p> 固定数值 </p><input type="number" class="form-control" placeholder="输入发放红包金额"/>
+                            <input type="radio" name="hb" id="stableSaRio" ng-click="clearRandA()"/><p> 固定数值 </p><input type="number" id="stableSaNum" class="form-control" placeholder="输入发放红包金额"/>
                         </div>
                         <div>
-                            <input type="radio" name="hb" /><p> 随机数值 </p><input type="number" class="form-control" placeholder="输入红包金额下限"/><p class="w-z"> 至 </p><input type="number" class="form-control" placeholder="输入红包金额上限"/>
+                            <input type="radio" name="hb" id="randSaRio"   ng-click="clearStableA()"/><p> 随机数值 </p><input type="number"  id="randSaMinNum" class="form-control" placeholder="输入红包金额下限"/><p class="w-z"> 至 </p><input type="number"  id="randSaMaxNum" class="form-control" placeholder="输入红包金额上限"/>
                         </div>
                     </div>
                 </div>
@@ -119,13 +122,13 @@
                     <div>积分奖励</div>
                     <div>
                         <div>
-                            <input type="radio" name="jf" /><p> 固定数值 </p><input type="number" class="form-control" placeholder="输入发放积分值"/>
+                            <input type="radio" name="jf" id="stableSbRio" ng-click="clearRandB()"/><p> 固定数值 </p><input type="number" id="stableSbNum" class="form-control" placeholder="输入发放积分值"/>
                         </div>
                         <div>
-                            <input type="radio" name="jf" /><p> 随机数值 </p><input type="number" class="form-control" placeholder="输入积分值下限"/><p class="w-z"> 至 </p><input type="number" class="form-control" placeholder="输入积分值上限"/>
+                            <input type="radio" name="jf" id="randSbRio" ng-click="clearStableB()"/><p> 随机数值 </p><input type="number" id="randSbMinNum"  class="form-control" placeholder="输入积分值下限"/><p class="w-z"> 至 </p><input type="number" id="randSbMaxNum" class="form-control" placeholder="输入积分值上限"/>
                         </div>
                         <div>
-                            <input type="radio" name="jf" /><p>没有奖励</p><span style="color:#999;font-size: 14px"> （别那么小气，多少给点吧）</span>
+                            <input type="radio" name="jf" id="noScoreRio" ng-click="clearAllB()"/><p>没有奖励</p><span style="color:#999;font-size: 14px"> （别那么小气，多少给点吧）</span>
                         </div>
                     </div>
                 </div>
@@ -133,9 +136,15 @@
             <div class="modal-footer">
                 <div class="btn-div text-center">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+<<<<<<< HEAD
                     <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="testAS()">确定</button>
+=======
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="submitPartnerInfo()">确定</button>
+>>>>>>> 57daf7c2ef4aac4eb5680054d34c4c09e7de7f9b
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+

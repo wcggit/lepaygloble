@@ -106,4 +106,15 @@ public class PartnerInfo {
     public void setScoreBType(Integer scoreBType) {
         this.scoreBType = scoreBType;
     }
+
+    private String hbQrCodeUrl;      // 海报url
+
+    public String getHbQrCodeUrl() {
+        return hbQrCodeUrl;
+    }
+
+    public void setHbQrCodeUrl(String hbQrCodeUrl) {
+        this.hbQrCodeUrl = hbQrCodeUrl;
+    }
 }
+

@@ -172,6 +172,15 @@ public class PartnerController {
         return LejiaResult.ok(partnerService.getMerchantListPage(merchantCriteria));
     }
 
+    @RequestMapping(value = "/partner/merchant_list_count", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    LejiaResult getPartnerBindMerchantListCount(@RequestBody MerchantCriteria merchantCriteria) {
+        merchantCriteria
+            .setPartner(partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin()));
+        return LejiaResult.ok(partnerService.getMerchantListCount(merchantCriteria));
+    }
+
     @RequestMapping(value = "/partner/count_full_merchant", method = RequestMethod.GET)
     public
     @ResponseBody
@@ -262,6 +271,12 @@ public class PartnerController {
         messagingTemplate.convertAndSendToUser(sid, "/reply", activityDTO);
     }
 
+    @RequestMapping(value="/partner/unbind_wx_user",method = RequestMethod.GET)
+    public LejiaResult unbindWxUser() {
+        Partner partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        partnerService.unbindWeiXinUser(partner);
+        return  LejiaResult.ok();
+    }
     @RequestMapping(value = "/partner/send_welfare", method = RequestMethod.POST)
     public
     @ResponseBody

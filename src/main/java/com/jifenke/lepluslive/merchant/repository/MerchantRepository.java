@@ -5,6 +5,7 @@ import com.jifenke.lepluslive.partner.domain.entities.Partner;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,7 +15,16 @@ import java.util.List;
  * Created by wcg on 16/3/17.
  */
 public interface MerchantRepository extends JpaRepository<Merchant, Long> {
+
     Page<Merchant> findAll(Pageable pageable);
+
+    /**
+     * 查询合伙人虚拟商户
+     * @param partnerId
+     * @return
+     */
+    @Query(value="SELECT * FROM merchant WHERE partner_id = ?1 AND partnership = 2",nativeQuery = true)
+    Merchant findVtMerchantByPartner(Long partnerId);
 
     @Query(value = "select count(*) from merchant group by ?1", nativeQuery = true)
     int getMerchantSid(String location);
