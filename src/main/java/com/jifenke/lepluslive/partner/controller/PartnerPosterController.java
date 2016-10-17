@@ -7,13 +7,12 @@ import com.jifenke.lepluslive.partner.domain.entities.PartnerInfo;
 import com.jifenke.lepluslive.partner.domain.entities.Poster;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
-
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -27,10 +26,11 @@ import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
+
 /**
  * Created by xf on 2016/10/14. 海报生成 Controller
  */
-@RestController
+@Controller
 @RequestMapping("/poster")
 public class PartnerPosterController {
 
@@ -38,12 +38,9 @@ public class PartnerPosterController {
     private PartnerService partnerService;
 
     @RequestMapping(value="/partner/downloadPage/{sid}",method= RequestMethod.GET)
-    public String showPage(@PathVariable String sid) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("/activity/hbDownload");
-//        modelAndView.addObject("sid",sid);
-//        return "hbDownload";
-        return "/hbDownload";
+    public String showPage(@PathVariable String sid,Model model) {
+        model.addAttribute("sid",sid);
+        return "hbDownload/hbDownload";
     }
 
     @RequestMapping(value = "/partner/downloadPoster")

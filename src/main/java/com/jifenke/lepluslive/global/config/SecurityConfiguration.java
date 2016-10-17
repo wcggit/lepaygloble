@@ -74,7 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/test/**")
             .antMatchers("/api/partnerAuthentication")
             .antMatchers("/api/offLineOrder/message/**")
-            .antMatchers("/api/partner/go/test");
+            .antMatchers("/poster/**");
     }
 
     @Bean
