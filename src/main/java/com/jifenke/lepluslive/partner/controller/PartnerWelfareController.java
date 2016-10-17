@@ -116,6 +116,4 @@ public class PartnerWelfareController {
         return LejiaResult
             .ok(partnerWelfareService.batchWelfareInclusive(partner, exclusiveArrayDto));
     }
-
-
 }
