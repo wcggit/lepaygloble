@@ -59,4 +59,3 @@ angular.module('lepayglobleApp')
                     };
                     $('.dropdown').dropdown('toggle')
                 });
-

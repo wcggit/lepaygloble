@@ -106,7 +106,7 @@
                 <p>请设置您邀请的会员单人能获得的礼包</p>
                 <div class="hb">
                     <div>红包奖励</div>
-                    <div ng-app="myApp" ng-controller="personCtrl">
+                    <div>
                         <div>
                             <input type="radio" name="hb" /><p> 固定数值 </p><input type="number" class="form-control" placeholder="输入发放红包金额"/>
                         </div>
@@ -133,7 +133,7 @@
             <div class="modal-footer">
                 <div class="btn-div text-center">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-warning" data-dismiss="modal">确定</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="testAS()">确定</button>
                 </div>
             </div>
         </div>

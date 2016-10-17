@@ -1,5 +1,4 @@
 'use strict';
-
 angular.module('lepayglobleApp')
     .controller('inviteUserController', function ($scope, Commission) {
                     $('body').css({background: '#fff'});
@@ -17,7 +16,6 @@ angular.module('lepayglobleApp')
                             $scope.pulls = data;
                         });
                     }
-
                     $scope.loadPage = function (page) {
                         if (page == 0) {
                             return;
@@ -58,7 +56,10 @@ angular.module('lepayglobleApp')
                         criteria.phone = phone;
                         currentPage = 1;
                         getTotalPage()
-                    }
+                    };
+                    $scope.testAS = function(e) {
+                        alert(1);
+                    };
                     $("input[type=number]").attr("disabled","disabled");
                    $("input[type=radio]").click(function(){
                        var name = $(this).attr("name");
