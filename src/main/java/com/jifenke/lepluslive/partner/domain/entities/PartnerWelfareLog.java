@@ -2,6 +2,8 @@ package com.jifenke.lepluslive.partner.domain.entities;
 
 import com.jifenke.lepluslive.global.util.MvUtil;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +22,7 @@ public class PartnerWelfareLog {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String userArray; //用户ID数组
+    private String userArray; //用户ID数组 或者失败人id
 
     private String sid = MvUtil.getOrderNumber();
 
@@ -30,10 +32,40 @@ public class PartnerWelfareLog {
 
     private String description;
 
+    private Long userCount; //发送人数
+
+    private Long failCount;
+
     private Integer redirectUrl; //跳转页面 0我的钱包 1 臻品商城 2周边好店
 
     @ManyToOne
     private Partner partner;
+
+    private Date createDate = new Date();
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Long getUserCount() {
+        return userCount;
+    }
+
+    public void setUserCount(Long userCount) {
+        this.userCount = userCount;
+    }
+
+    public Long getFailCount() {
+        return failCount;
+    }
+
+    public void setFailCount(Long failCount) {
+        this.failCount = failCount;
+    }
 
     public Partner getPartner() {
         return partner;

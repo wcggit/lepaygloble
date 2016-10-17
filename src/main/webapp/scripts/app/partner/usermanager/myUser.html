@@ -43,7 +43,9 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="phone">手机号码</label>
-                    <input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" class="form-control" id="phone" placeholder="请输入手机号">
+                    <input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                           onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                           class="form-control" id="phone" placeholder="请输入手机号">
                 </div>
                 <div class="form-group col-md-5">
                     <label for="weixinNickNmame">微信昵称</label>
@@ -53,7 +55,8 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-4">
-                    <button style="margin-left: 38.5%" type="button" class="btn btn-warning btn-check2"
+                    <button style="margin-left: 38.5%" type="button"
+                            class="btn btn-warning btn-check2"
                             ng-click="searchByCriteria()">查询
                     </button>
                 </div>
@@ -63,11 +66,13 @@
         <div class="w-margin">
             <!--表格信息总结-->
             <p class="ttl-add clearfix">
-                <span class="pull-right">共选择{{selectedCheckbox}}人&nbsp;&nbsp;<a class="btn btn-warning w-cantCheck"
-                                                             data-toggle="modal"
-                                                             data-target="#pffl">批量发福利</a></span>
+                <span class="pull-right">共选择{{selectedCheckbox}}人&nbsp;&nbsp;<a
+                    class="btn btn-warning w-cantCheck"
+                    id="batchWelfare"
+                    ng-click="selectedCheckbox==0||batchWelfareCheck()">批量发福利</a></span>
                 <span
-                    class="pull-left">注：所选条件下，共有<font><span class="chooseNumber">{{totalElements}}</span></font>个会员，累计为我带来<font>￥{{totalIncome}}</font>收入</span>
+                    class="pull-left">注：所选条件下，共有<font><span
+                    class="chooseNumber">{{totalElements}}</span></font>个会员，累计为我带来<font>￥{{totalIncome}}</font>收入</span>
             </p>
             <!--表格-->
             <div class="panel panel-default">
@@ -90,12 +95,13 @@
                     <tr ng-repeat="x in pulls">
                         <td class="clearfix"><span class="chbx pull-left">
                             <input type="checkbox" class="checkbox-2" id="{{x[0]}}"
-                                   ng-click="checkClick(x[0])"><label
+                                   ng-click="checkClick(x[0])" my-repeat-directive><label
                             class="chbx-init">✔</label></span>
                             <span class="touxiang pull-left"><img ng-src="{{x[2]}}" alt=""></span>
                             <span class="pull-left">
-                                <span class="w-name" ng-bind="x[1]"></span><br />
-                                <span class="w-phone">18888888888</span>
+                                <span class="w-name" ng-bind="x[1]"></span><br/>
+                                <span class="w-phone" ng-show="x[5]!=null">{{x[5]}}</span>
+                                <span class="w-phone" ng-show="x[5]==null">--</span>
                             </span>
                         </td>
                         <td><span ng-bind="x[4]"></span></td>
@@ -107,7 +113,7 @@
                         <td>¥{{x[9]/100}}/{{x[10]}}</td>
                         <td>{{x[8]}}</td>
                         <td>¥{{x[7]/100.0}}</td>
-                        <td><a data-toggle="modal" data-target="#ffl-limit">发福利</a></td>
+                        <td><a ng-click="welfare(x)">发福利</a></td>
                     </tr>
                     </tbody>
                 </table>
@@ -155,44 +161,59 @@
                 <form class="form-horizontal w-pllMargin">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">发放对象</label>
-                        <div class="col-sm-4 pffl-top"><span>35个会员（已有x会员发放过福利）</span></div>
+
+                        <div class="col-sm-4 pffl-top"><span>{{selectedCheckbox-conflict}}个会员（已有{{conflict}}会员发放过福利）</span>
+                        </div>
                     </div>
                     <div class="form-group w-ffla">
                         <label class="col-sm-2 control-label pffl-top">发放福利</label>
+
                         <div class="col-sm-6">
                             <div class="row pffl-top">
                                 <div class="col-sm-3 col pffl-top"><span>发放红包</span></div>
                                 <div class="col-sm-4">
-                                    <input class="form-control w-limitHb" ng-model="hbNum" type="number"
+                                    <input class="form-control w-limitHb" ng-model="hbNumBatch"
+                                           type="number"
                                            placeholder="请输入红包金额">
                                 </div>
-                                <div class="col-sm-5 pffl-top"><span>红包余额：2000元</span></div>
+                                <div class="col-sm-5 pffl-top"><span>红包余额：{{partnerWallet.availableScoreA/100.0|number:2}}元</span>
+                                </div>
                             </div>
                             <div class="row w-cost">
                                 <div class="col-sm-3"></div>
-                                <div class="col-sm-4">消耗红包：360积分</div>
+                                <div class="col-sm-4">
+                                    消耗红包：¥{{hbNumBatch==null?0:hbNumBatch*(selectedCheckbox-conflict)|number
+                                    :2}}
+                                </div>
                             </div>
                             <div class="row pffl-top">
                                 <div class="col-sm-3 pffl-top"><span>发放积分</span></div>
                                 <div class="col-sm-4">
-                                    <input class="form-control w-limitJf" ng-model="jfNum" type="number"
+                                    <input class="form-control w-limitJf" ng-model="jfNumBatch"
+                                           type="number"
                                            placeholder="请输入积分值">
                                 </div>
-                                <div class="col-sm-5 pffl-top"><span>积分余额：2000积分</span></div>
+                                <div class="col-sm-5 pffl-top"><span>积分余额：{{partnerWallet.availableScoreB}}积分</span>
+                                </div>
                             </div>
                             <div class="row w-cost">
                                 <div class="col-sm-3"></div>
-                                <div class="col-sm-4">消耗积分：360积分</div>
+                                <div class="col-sm-4">
+                                    消耗积分：{{jfNumBatch==null?0:jfNumBatch*(selectedCheckbox-conflict)}}积分
+                                </div>
                             </div>
                         </div>
 
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">留言<span style="font-size: 14px">（选填）</span></label>
+                        <label class="col-sm-2 control-label">留言<span
+                            style="font-size: 14px">（选填）</span></label>
 
                         <div class="col-sm-6 pffl-top">
-                            <textarea class="form-control w-pllTextarea" name="" id="" cols="30" rows="2"
-                                      ng-model="liuyan" placeholder="请输入您给会员的留言信息，不超过50字。"></textarea>
+                            <textarea class="form-control w-pllTextarea" name="" id="" cols="30"
+                                      rows="2"
+                                      ng-model="liuyan"
+                                      placeholder="请输入您给会员的留言信息，不超过50字。"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -201,26 +222,26 @@
                         <div class="col-sm-7">
                             <div class="radio-inline">
                                 <label>
-                                    <input ng-click="itemsStateFun()" type="radio"
+                                    <input type="radio"
                                            name="optionsRadios"
-                                           value="option1"
-                                           ng-checked="merchant.partnership==1||merchant==null">
+                                           value="0"
+                                           checked>
                                     我的钱包
                                 </label>
                             </div>
                             <div class="radio-inline">
                                 <label>
-                                    <input ng-click="itemsStateFun()" type="radio"
+                                    <input type="radio"
                                            name="optionsRadios"
-                                           value="option2" ng-checked="merchant.partnership==0">
+                                           value="1">
                                     甄品商城
                                 </label>
                             </div>
                             <div class="radio-inline">
                                 <label>
-                                    <input ng-click="itemsStateFun()" type="radio"
+                                    <input type="radio"
                                            name="optionsRadios"
-                                           value="option2" ng-checked="merchant.partnership==0">
+                                           value="2" n>
                                     周边好店
                                 </label>
                             </div>
@@ -229,9 +250,8 @@
                 </form>
                 <div class="pffl-right">
                     <ul>
-                        <li><span>到账金额：</span>￥{{hbNum}}+{{jfNum}}积分</li>
-                        <li><span>到账状态：</span>土豪王尼玛送你豪华大礼包</li>
-                        <li><span>到账时间：</span>2016.03.04</li>
+                        <li><span>到账金额：</span>￥{{hbNumBatch}}+{{jfNumBatch}}积分</li>
+                        <li><span>到账时间：</span>{{date | date:'yyyy-MM-dd'}}</li>
                         <li><span>到账详情：</span>{{liuyan}}</li>
                     </ul>
                     <p class="w-p">乐+微信示意图</p>
@@ -242,7 +262,7 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消
                     </button>
                     <button type="button" class="btn btn-warning  "
-                            ng-class="{disabled: available<=200}" ng-click="withDraw()">确定
+                            ng-class="{disabled: available<=200}" ng-click="batchWelfare()">确定
                     </button>
                 </div>
             </div>
@@ -261,10 +281,14 @@
             <div class="modal-body">
                 <div class="success-img"></div>
                 <p class="text-center success-ttl">福利发放成功</p>
-                <p class="w-costText">您本次成功发放100红包和100积分</p>
+
+                <p class="w-costText">您本次成功发放{{hbNumBatch==null?0:hbNumBatch*(selectedCheckbox-conflict)|number
+                    :2}}红包和{{jfNumBatch==null?0:jfNumBatch*(selectedCheckbox-conflict)}}积分</p>
+
                 <div class="success-fl clearfix">
-                    <div class="pull-left">红包余额：￥24.33</div>
-                    <div class="pull-right">积分余额：2345积分</div>
+                    <div class="pull-left">红包余额：￥{{partnerWallet.availableScoreA/100.0|number:2}}
+                    </div>
+                    <div class="pull-right">积分余额：{{partnerWallet.availableScoreB}}积分</div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -272,7 +296,7 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消
                     </button>
                     <button type="button" class="btn btn-warning  "
-                            ng-class="{disabled: available<=200}" ng-click="withDraw()">确定
+                            data-dismiss="modal">确定
                     </button>
                 </div>
             </div>
@@ -290,7 +314,7 @@
                 <div class="logo-img"></div>
             </div>
             <div class="modal-body">
-                <div>您一天只能给同一个会员发放一次福利</div>
+                <div>您一天只能给同一个会员发放{{partnerWallet.partner.benefitTime}}次福利</div>
             </div>
             <div class="modal-footer">
                 <div class="btn-div text-center">
@@ -315,10 +339,10 @@
                         <label class="col-sm-2 control-label">发放对象</label>
 
                         <div class="col-sm-1">
-                            <img class="pffl-wxFace" src="../../../../assets/images/hipster.png"
+                            <img class="pffl-wxFace" src="{{currentUser[2]}}"
                                  alt="">
                         </div>
-                        <div class="col-sm-3 pffl-top"><span>夜空总最亮的星</span></div>
+                        <div class="col-sm-3 pffl-top"><span>{{currentUser[1]}}</span></div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label pffl-top">发放福利</label>
@@ -330,7 +354,8 @@
                                     <input class="form-control" ng-model="jfNum" type="number"
                                            placeholder="请输入积分值">
                                 </div>
-                                <div class="col-sm-5 pffl-top"><span>积分余额：2000积分</span></div>
+                                <div class="col-sm-5 pffl-top"><span>积分余额：{{partnerWallet.availableScoreB}}积分</span>
+                                </div>
                             </div>
                             <div class="row w-cost"></div>
                             <div class="row pffl-top">
@@ -339,7 +364,8 @@
                                     <input class="form-control w-hb" ng-model="hbNum" type="number"
                                            placeholder="请输入红包金额">
                                 </div>
-                                <div class="col-sm-5 pffl-top"><span>红包余额：2000元</span></div>
+                                <div class="col-sm-5 pffl-top"><span>红包余额：{{partnerWallet.availableScoreA/100.0|number:2}}元</span>
+                                </div>
                                 <div class="row w-cost"></div>
                                 <div class="row w-cost"></div>
                             </div>
@@ -350,8 +376,10 @@
                         <label class="col-sm-2 control-label">留言（选填）</label>
 
                         <div class="col-sm-6 pffl-top">
-                            <textarea class="form-control w-pllTextarea" name="" id="" cols="30" rows="2"
-                                      ng-model="liuyan" placeholder="请输入您给会员的留言信息，不超过50字。"></textarea>
+                            <textarea class="form-control w-pllTextarea" name="" id="" cols="30"
+                                      rows="2"
+                                      ng-model="description"
+                                      placeholder="请输入您给会员的留言信息，不超过50字。"></textarea>
                         </div>
 
                         <div class="row w-cost"></div>
@@ -363,25 +391,25 @@
                             <div class="radio-inline">
                                 <label>
                                     <input ng-click="itemsStateFun()" type="radio"
-                                           name="optionsRadios"
-                                           value="option1"
-                                           ng-checked="merchant.partnership==1||merchant==null">
+                                           name="optionsRadios-one"
+                                           value="0"
+                                           checked>
                                     我的钱包
                                 </label>
                             </div>
                             <div class="radio-inline">
                                 <label>
                                     <input ng-click="itemsStateFun()" type="radio"
-                                           name="optionsRadios"
-                                           value="option2" ng-checked="merchant.partnership==0">
+                                           name="optionsRadios-one"
+                                           value="1">
                                     甄品商城
                                 </label>
                             </div>
                             <div class="radio-inline">
                                 <label>
                                     <input ng-click="itemsStateFun()" type="radio"
-                                           name="optionsRadios"
-                                           value="option2" ng-checked="merchant.partnership==0">
+                                           name="optionsRadios-one"
+                                           value="2">
                                     周边好店
                                 </label>
                             </div>
@@ -392,9 +420,8 @@
                 <div class="pffl-right">
                     <ul>
                         <li><span>到账金额：</span>￥{{hbNum}}+{{jfNum}}积分</li>
-                        <li><span>到账状态：</span>土豪王尼玛送你豪华大礼包</li>
-                        <li><span>到账时间：</span>2016.03.04</li>
-                        <li><span>到账详情：</span>{{liuyan}}</li>
+                        <li><span>到账时间：</span>{{date | date:'yyyy-MM-dd'}}</li>
+                        <li><span>到账详情：</span>{{description}}</li>
                     </ul>
                     <p class="w-p">乐+微信示意图</p>
                 </div>
@@ -403,8 +430,8 @@
                 <div class="btn-div">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消
                     </button>
-                    <button type="button" class="btn btn-warning  "
-                            ng-class="{disabled: available<=200}" ng-click="withDraw()">确定
+                    <button type="button" class="btn btn-warning"
+                            ng-click="welfareOneUser()">确定
                     </button>
                 </div>
             </div>
@@ -423,10 +450,12 @@
             <div class="modal-body">
                 <div class="success-img"></div>
                 <p class="text-center success-ttl">福利发放成功</p>
-                <p class="w-costText">您本次成功发放100红包和100积分</p>
+
+                <p class="w-costText">您本次成功发放{{hbNum}}红包和{{jfNum}}积分</p>
+
                 <div class="success-fl clearfix">
-                    <div class="pull-left">红包余额：￥24.33</div>
-                    <div class="pull-right">积分余额：2345积分</div>
+                    <div class="pull-left">红包余额：￥{{partnerWallet.availableScoreA/100.0|number:2}}</div>
+                    <div class="pull-right">积分余额：{{partnerWallet.availableScoreB}}积分</div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -452,7 +481,7 @@
                 <div class="logo-img"></div>
             </div>
             <div class="modal-body">
-                <div>您一天只能给同一个会员发放一次福利</div>
+                <div>您一天只能给同一个会员发放{{partnerWallet.partner.benefitTime}}次福利</div>
             </div>
             <div class="modal-footer">
                 <div class="btn-div text-center">

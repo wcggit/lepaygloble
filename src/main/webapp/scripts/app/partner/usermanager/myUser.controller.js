@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('myUserController', function ($scope, Commission, Welfare, $http) {
-                    $scope.inclusiveMap = []; //个选包含的数组
-                    $scope.exclusiveMap = [];//全选排开的数组
+    .controller('myUserController', function ($scope, Commission, Welfare, $http, $filter) {
+                    $scope.inclusiveArray = []; //个选包含的数组
+                    $scope.exclusiveArray = [];//全选排开的数组
                     $scope.selectedCheckbox = 0;
                     $scope.date = new Date();
                     $scope.selected = false; //全选
@@ -65,6 +65,9 @@ angular.module('lepayglobleApp')
                             $scope.totalPages = response.data.totalPages;
                             $scope.totalElements = response.data.totalElements;
                             $scope.totalIncome = response.data.totalIncome;
+                            if ($('#checkbox-1').prop('checked')){
+                                $scope.selectedCheckbox = response.data.totalElements;
+                            }
                             loadContent();
                         });
                     }
@@ -94,8 +97,8 @@ angular.module('lepayglobleApp')
                     // 复选框
                     $('#checkbox-1').click(function () {
                         if ($('#checkbox-1').prop('checked')) {
-                            $scope.exclusiveMap = [];
-                            $scope.inclusiveMap = [];
+                            $scope.exclusiveArray = [];
+                            $scope.inclusiveArray = [];
                             $scope.selected = true;
                             $scope.selectedCheckbox = $scope.totalElements;
                             $(this).next('label').removeClass('chbx-init').addClass('chbx-focus');
@@ -103,9 +106,9 @@ angular.module('lepayglobleApp')
                             $('.checkbox-2').prop('checked', 'true');
 
                         } else {
-                            $scope.exclusiveMap = [];
-                            $scope.inclusiveMap = [];
-                            $scope.selected = true;
+                            $scope.exclusiveArray = [];
+                            $scope.inclusiveArray = [];
+                            $scope.selected = false;
                             $scope.selectedCheckbox = 0;
                             $(this).next('label').removeClass('chbx-focus').addClass('chbx-init');
                             $('.checkbox-2').next('label').removeClass('chbx-focus').addClass('chbx-init');
@@ -118,26 +121,26 @@ angular.module('lepayglobleApp')
                             $(idName).next('label').removeClass('chbx-init').addClass('chbx-focus');
                             $scope.selectedCheckbox = $scope.selectedCheckbox + 1;
                             if ($('#checkbox-1').prop('checked')) {
-                                $scope.exclusiveMap =
-                                $scope.exclusiveMap.filter(function (item) {
+                                $scope.exclusiveArray =
+                                $scope.exclusiveArray.filter(function (item) {
                                     return item !== id;
                                 });
 
                             } else {
-                                if ($scope.inclusiveMap.indexOf(id) == -1) {
-                                    $scope.inclusiveMap.push(id);
+                                if ($scope.inclusiveArray.indexOf(id) == -1) {
+                                    $scope.inclusiveArray.push(id);
                                 }
                             }
                         } else {
                             $scope.selectedCheckbox = $scope.selectedCheckbox - 1;
                             $(idName).next('label').removeClass('chbx-focus').addClass('chbx-init');
                             if ($('#checkbox-1').prop('checked')) {
-                                if ($scope.exclusiveMap.indexOf(id) == -1) {
-                                    $scope.exclusiveMap.push(id);
+                                if ($scope.exclusiveArray.indexOf(id) == -1) {
+                                    $scope.exclusiveArray.push(id);
                                 }
                             } else {
-                                $scope.inclusiveMap =
-                                $scope.inclusiveMap.filter(function (item) {
+                                $scope.inclusiveArray =
+                                $scope.inclusiveArray.filter(function (item) {
                                     return item !== id;
                                 });
                             }
@@ -150,9 +153,9 @@ angular.module('lepayglobleApp')
                                 $scope.partnerWallet = response.data;
                                 $scope.currentUser = user;
                                 if (data.data) {
-                                    $("#pffl").modal("toggle");
+                                    $("#ffl").modal("toggle");
                                 } else {
-                                    $("#pffl-limit").modal("toggle");
+                                    $("#ffl-limit").modal("toggle");
                                 }
                             });
                         });
@@ -161,7 +164,8 @@ angular.module('lepayglobleApp')
                         if (Number(newVal)) {
 
                             if (newVal <= $scope.partnerWallet.availableScoreA / 100.0) {
-                                $scope.hbNum = newVal;
+                                $scope.hbNum = parseFloat($filter('number')(newVal, 2));
+                                ;
                             } else {
                                 $scope.hbNum =
                                 $scope.partnerWallet.availableScoreA / 100.0.toFixed(2);
@@ -189,15 +193,161 @@ angular.module('lepayglobleApp')
                     });
                     $scope.$watch('selectedCheckbox', function (newVal, oldVal) {
                         if (newVal > 0) {
-                            //alert(1)
+                            $("#batchWelfare").removeClass("w-cantCheck");
+                        } else {
+                            $("#batchWelfare").addClass("w-cantCheck");
                         }
                     });
-                });
+                    $scope.welfareOneUser = function () {
+                        var map = {};
+                        map.userId = $scope.currentUser[0];
+                        map.scoreA = $scope.hbNum;
+                        map.scoreB = $scope.jfNum;
+                        map.description = $scope.description;
+                        if ($scope.hbNum == null && $scope.jfNum == null) {
+                            alert("至少发放红包或积分");
+                        }
+                        map.redirectUrl = $("input:radio[name='optionsRadios-one']:checked").val();
+                        Welfare.welfareOneUser(map).then(function () {
+                            $http.get('api/partner/wallet').success(function (response) {
+                                $scope.partnerWallet = response.data;
+                                $("#ffl").modal("hide");
+                                $("#ffl-success").modal("toggle");
+                            });
+                        });
+                    }
+
+                    $scope.batchWelfareCheck = function () {
+                        if ($('#checkbox-1').prop('checked')) {
+                            var exclusiveArrayDto = {};
+                            exclusiveArrayDto.ids = $scope.exclusiveArray;
+                            exclusiveArrayDto.leJiaUserCriteria = criteria;
+                            Welfare.exclusiveCheck(exclusiveArrayDto).then(function (response) {
+                                var data = response.data;
+                                $scope.conflict = data.conflict;
+                                $scope.conflictList = data.conflictList;
+                                if ($scope.selectedCheckbox == $scope.conflict) {
+                                    $("#pffl-limit").modal("toggle");
+                                } else {
+                                    $http.get('api/partner/wallet').success(function (response) {
+                                        $scope.partnerWallet = response.data;
+                                        $("#pffl").modal("toggle");
+                                    });
+                                }
+                            });
+                        } else {
+                            Welfare.inclusiveCheck($scope.inclusiveArray).then(function (response) {
+                                var data = response.data;
+                                $scope.conflict = data.conflict;
+                                $scope.filterArray = data.filterArray;
+                                if ($scope.selectedCheckbox == $scope.conflict) {
+                                    $("#pffl-limit").modal("toggle");
+                                } else {
+                                    $http.get('api/partner/wallet').success(function (response) {
+                                        $scope.partnerWallet = response.data;
+                                        $("#pffl").modal("toggle");
+                                    });
+                                }
+                            });
+                        }
+                    }
+
+                    $scope.$watch('hbNumBatch', function (newVal, oldVal) {
+                        if (Number(newVal)) {
+                            if (newVal * ($scope.selectedCheckbox - $scope.conflict)
+                                <= $scope.partnerWallet.availableScoreA / 100.0) {
+                                $scope.hbNumBatch = parseFloat($filter('number')(newVal, 2));
+                            } else {
+                                var result = $scope.partnerWallet.availableScoreA / 100.0
+                                             / ($scope.selectedCheckbox
+                                                - $scope.conflict);
+
+                                $scope.hbNumBatch =
+                                Math.floor(result * 100) / 100;
+                            }
+                        } else {
+                            if (!newVal == null) {
+                                alert("请输入有效数字");
+                            }
+                        }
+                    });
+                    $scope.$watch('jfNumBatch', function (newVal, oldVal) {
+                        if (Number(newVal)) {
+
+                            if (newVal * ($scope.selectedCheckbox - $scope.conflict)
+                                <= $scope.partnerWallet.availableScoreB) {
+                                $scope.jfNumBatch = parseInt(new BigDecimal(newVal + ''));
+                            } else {
+                                var result = new BigDecimal($scope.partnerWallet.availableScoreB
+                                                            + '').divide(new BigDecimal($scope.selectedCheckbox
+                                                                                        - $scope.conflict
+                                                                                        + ''),
+                                                                         MathContext.ROUND_FLOOR);
+                                $scope.jfNumBatch = Math.floor(result);
+                            }
+                        } else {
+                            if (!newVal == null) {
+                                alert("请输入有效数字");
+                            }
+                        }
+                    });
+
+                    $scope.batchWelfare = function () {
+                        if ($scope.jfNumBatch == null && $scope.hbNumBatch == null) {
+                            alert("至少发送红包或积分");
+                            return;
+                        }
+                        var partnerWelfareLog = {};
+                        partnerWelfareLog.userCount = $scope.selectedCheckbox - $scope.conflict;
+                        if ($scope.hbNumBatch != null) {
+                            partnerWelfareLog.scoreA =
+                            parseInt(new BigDecimal($scope.hbNumBatch
+                                                    + '').multiply(new BigDecimal('100')));
+                        }
+                        partnerWelfareLog.scoreB = $scope.jfNumBatch;
+                        partnerWelfareLog.description = $scope.liuyan;
+                        partnerWelfareLog.redirectUrl =
+                        $("input:radio[name='optionsRadios']:checked").val();
+                        var exclusiveArrayDto = {};
+                        exclusiveArrayDto.partnerWelfareLog = partnerWelfareLog;
+                        if ($('#checkbox-1').prop('checked')) {
+                            angular.forEach($scope.conflictList, function (obj) {//全选去除
+                                $scope.exclusiveArray.push(obj[0]);
+                            });
+                            exclusiveArrayDto.ids = $scope.exclusiveArray;
+                            exclusiveArrayDto.leJiaUserCriteria = criteria;
+                            Welfare.batchWelfareExclusive(exclusiveArrayDto).then(function (response) {
+                                $http.get('api/partner/wallet').success(function (response) {
+                                    $("#pffl").modal("hide");
+                                    $("#pffl-success").modal("toggle");
+                                    $scope.partnerWallet = response.data;
+                                });
+                            })
+                        } else {
+                            if ($scope.filterArray != null) {
+                                exclusiveArrayDto.ids = $scope.filterArray;
+                            } else {
+                                exclusiveArrayDto.ids = $scope.inclusiveArray;
+                            }
+                            Welfare.batchWelfareInclusive(exclusiveArrayDto).then(function (response) {
+                                $http.get('api/partner/wallet').success(function (response) {
+                                    $("#pffl").modal("hide");
+                                    $("#pffl-success").modal("toggle");
+                                    $scope.partnerWallet = response.data;
+                                });
+                            })
+                        }
+
+                    }
+
+                }
+)
+;
 angular.module('lepayglobleApp')
     .directive('myRepeatDirective', function () {
                    return function (scope, element, attrs) {
                        if (scope.$parent.selected) {//代表全选
-                           var map = scope.$parent.exclusiveMap;
+                           var map = scope.$parent.exclusiveArray;
                            if (map.length > 0) {
                                var currentId = scope.x[0];
                                try {
@@ -206,22 +356,25 @@ angular.module('lepayglobleApp')
                                            throw Error();
                                        }
                                    });
-                                   angular.element(element).prop('checked', 'true');
+                                   angular.element(element).prop('checked',
+                                                                 'true');
                                    angular.element(element).next('label').removeClass('chbx-init').addClass('chbx-focus');
                                } catch (e) {
-                                   angular.element(element).prop('checked', 'false');
+                                   angular.element(element).prop('checked',
+                                                                 'false');
                                }
                            } else {
                                angular.element(element).prop('checked', 'true');
                                angular.element(element).next('label').removeClass('chbx-init').addClass('chbx-focus');
                            }
                        } else {
-                           var map = scope.$parent.inclusiveMap;
+                           var map = scope.$parent.inclusiveArray;
                            if (map.length > 0) {
                                var currentId = scope.x[0];
                                angular.forEach(map, function (id) {//全部选择
                                    if (id == currentId) {
-                                       angular.element(element).prop('checked', 'true');
+                                       angular.element(element).prop('checked',
+                                                                     'true');
                                        angular.element(element).next('label').removeClass('chbx-init').addClass('chbx-focus');
                                    }
                                });
