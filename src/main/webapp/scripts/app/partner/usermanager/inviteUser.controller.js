@@ -28,7 +28,7 @@ angular.module('lepayglobleApp')
                         });
                         InviteUser.getPartnerInfo().then(function (response) {
                             //  QrCode
-                            $("#qrCodeImg").attr("src",response.qrCodeUrl);
+                            $("#qrCodeImg").attr("src",response.hbQrCodeUrl);
 
                             //  Gift
                             if(response.scoreAType==0) {
