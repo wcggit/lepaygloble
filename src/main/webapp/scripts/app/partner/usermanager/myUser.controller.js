@@ -205,7 +205,8 @@ angular.module('lepayglobleApp')
                         map.scoreB = $scope.jfNum;
                         map.description = $scope.description;
                         if ($scope.hbNum == null && $scope.jfNum == null) {
-                            alert("至少发放红包或积分");
+//                            alert("至少发放红包或积分");
+                              $(".writeTrueNumber").show();
                         }
                         map.redirectUrl = $("input:radio[name='optionsRadios-one']:checked").val();
                         Welfare.welfareOneUser(map).then(function () {
