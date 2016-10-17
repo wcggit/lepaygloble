@@ -65,6 +65,9 @@ angular.module('lepayglobleApp')
                             $scope.totalPages = response.data.totalPages;
                             $scope.totalElements = response.data.totalElements;
                             $scope.totalIncome = response.data.totalIncome;
+                            if ($('#checkbox-1').prop('checked')){
+                                $scope.selectedCheckbox = response.data.totalElements;
+                            }
                             loadContent();
                         });
                     }
@@ -105,7 +108,7 @@ angular.module('lepayglobleApp')
                         } else {
                             $scope.exclusiveArray = [];
                             $scope.inclusiveArray = [];
-                            $scope.selected = true;
+                            $scope.selected = false;
                             $scope.selectedCheckbox = 0;
                             $(this).next('label').removeClass('chbx-focus').addClass('chbx-init');
                             $('.checkbox-2').next('label').removeClass('chbx-focus').addClass('chbx-init');
@@ -236,6 +239,7 @@ angular.module('lepayglobleApp')
                             Welfare.inclusiveCheck($scope.inclusiveArray).then(function (response) {
                                 var data = response.data;
                                 $scope.conflict = data.conflict;
+                                $scope.filterArray = data.filterArray;
                                 if ($scope.selectedCheckbox == $scope.conflict) {
                                     $("#pffl-limit").modal("toggle");
                                 } else {
@@ -289,6 +293,10 @@ angular.module('lepayglobleApp')
                     });
 
                     $scope.batchWelfare = function () {
+                        if ($scope.jfNumBatch == null && $scope.hbNumBatch == null) {
+                            alert("至少发送红包或积分");
+                            return;
+                        }
                         var partnerWelfareLog = {};
                         partnerWelfareLog.userCount = $scope.selectedCheckbox - $scope.conflict;
                         if ($scope.hbNumBatch != null) {
@@ -310,19 +318,19 @@ angular.module('lepayglobleApp')
                             exclusiveArrayDto.leJiaUserCriteria = criteria;
                             Welfare.batchWelfareExclusive(exclusiveArrayDto).then(function (response) {
                                 $http.get('api/partner/wallet').success(function (response) {
-                                    $scope.welfareBatchScoreA =
-                                    $scope.welfareBatchScoreB =
                                     $("#pffl").modal("hide");
                                     $("#pffl-success").modal("toggle");
                                     $scope.partnerWallet = response.data;
                                 });
                             })
                         } else {
-                            exclusiveArrayDto.ids = $scope.inclusiveArray;
+                            if ($scope.filterArray != null) {
+                                exclusiveArrayDto.ids = $scope.filterArray;
+                            } else {
+                                exclusiveArrayDto.ids = $scope.inclusiveArray;
+                            }
                             Welfare.batchWelfareInclusive(exclusiveArrayDto).then(function (response) {
                                 $http.get('api/partner/wallet').success(function (response) {
-                                    $scope.welfareBatchScoreA =
-                                    $scope.welfareBatchScoreB =
                                     $("#pffl").modal("hide");
                                     $("#pffl-success").modal("toggle");
                                     $scope.partnerWallet = response.data;

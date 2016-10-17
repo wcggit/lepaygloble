@@ -374,6 +374,11 @@ public class PartnerService {
 
         if (partnerWelfareLog.getScoreA() > 0) {
             StringBuffer sql = new StringBuffer();
+            sql.append("select id from scorea where scorea.le_jia_user_id = ");
+            sql.append(userId);
+            sql.append("  for update ;");
+            em.createNativeQuery(sql.toString()).getResultList();
+            sql.setLength(0);
             sql.append("update scorea set score = score+");
             sql.append(partnerWelfareLog.getScoreA());
             sql.append(",total_score=total_score+");
@@ -397,6 +402,11 @@ public class PartnerService {
         }
         if (partnerWelfareLog.getScoreB() > 0) {
             StringBuffer sql = new StringBuffer();
+            sql.append("select id from scoreb where scoreb.le_jia_user_id = ");
+            sql.append(userId);
+            sql.append("  for update ;");
+            em.createNativeQuery(sql.toString()).getResultList();
+            sql.setLength(0);
             sql.append("update scoreb set score = score+");
             sql.append(partnerWelfareLog.getScoreB());
             sql.append(",total_score=total_score+");

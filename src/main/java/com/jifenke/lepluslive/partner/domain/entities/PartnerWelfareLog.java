@@ -2,6 +2,8 @@ package com.jifenke.lepluslive.partner.domain.entities;
 
 import com.jifenke.lepluslive.global.util.MvUtil;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,6 +40,16 @@ public class PartnerWelfareLog {
 
     @ManyToOne
     private Partner partner;
+
+    private Date createDate = new Date();
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
     public Long getUserCount() {
         return userCount;

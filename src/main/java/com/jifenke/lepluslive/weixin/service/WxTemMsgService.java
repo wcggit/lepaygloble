@@ -163,19 +163,19 @@ public class WxTemMsgService {
 
             response = httpclient.execute(httpPost);
             HttpEntity entity = response.getEntity();
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, String>
-                map =
-                mapper.readValue(
-                    new BufferedReader(new InputStreamReader(entity.getContent(), "utf-8")),
-                    Map.class);
-
-            EntityUtils.consume(entity);
-            //如果catch到异常,则跳出递归,并且纪录bug
-            if (!map.get("errmsg").equals("ok") && !String.valueOf(map.get("errcode"))
-                .equals("43004")) {
-                log.error("出现异常" + map.toString());
-            }
+//            ObjectMapper mapper = new ObjectMapper();
+//            Map<String, String>
+//                map =
+//                mapper.readValue(
+//                    new BufferedReader(new InputStreamReader(entity.getContent(), "utf-8")),
+//                    Map.class);
+//
+//            EntityUtils.consume(entity);
+//            //如果catch到异常,则跳出递归,并且纪录bug
+//            if (!map.get("errmsg").equals("ok") && !String.valueOf(map.get("errcode"))
+//                .equals("43004")) {
+//                log.error("出现异常" + map.toString());
+//            }
             response.close();
         } catch (IOException e) {
             e.printStackTrace();

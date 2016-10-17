@@ -110,7 +110,9 @@ public class PartnerWelfareController {
         Partner
             partner =
             partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        exclusiveArrayDto.getLeJiaUserCriteria().setPartner(partner);
+        PartnerWelfareLog partnerWelfareLog = exclusiveArrayDto.getPartnerWelfareLog();
+        partnerWelfareLog.setPartner(partner);
+        partnerWelfareService.savePartnerWelfareLog(partnerWelfareLog);
         return LejiaResult
             .ok(partnerWelfareService.batchWelfareInclusive(partner, exclusiveArrayDto));
     }

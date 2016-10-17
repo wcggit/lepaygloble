@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -88,10 +89,10 @@ public class PartnerWelfareService {
         String end = sdf.format(endOfDay);
         Integer
             dayTimes =
-            partnerScoreLogRepository
-                .countByPartnerIdAndCreateDateBetween(partner.getId(), startOfDay, endOfDay);
+            partnerWelfareLogRepository
+                .countByPartnerAndCreateDateBetween(partner, startOfDay, endOfDay);
         if (dayTimes.intValue() >= partner.getBenefitTime()) {
-            String idstr = Arrays.toString(ids).replaceAll("[\\,\\[\\]\\ ]", "");
+            String idstr = Arrays.toString(ids).replaceAll("[\\[\\]\\ ]", "");
             StringBuffer sql = new StringBuffer();
             sql.append(
                 "select id from (select count(*)count,scorea.le_jia_user_id id from scorea,scorea_detail where   scorea_detail.scorea_id = scorea.id and scorea_detail.origin = 10 and scorea_detail.date_created between '");
@@ -105,8 +106,14 @@ public class PartnerWelfareService {
             sql.append(")statistic");
             List<BigInteger> resultList = em.createNativeQuery(sql.toString()).getResultList();
             if (resultList.size() > 0) {
+                List<Long> collect = resultList.stream()
+                    .map(id -> {
+                        return id.longValue();
+                    }).collect(
+                        Collectors.toList());
                 map.put("conflict", resultList.size());
-                map.put("filterArray", Arrays.stream(ids).filter(id -> !resultList.contains(id))
+                map.put("filterArray", Arrays.stream(ids).filter(
+                    id -> !collect.contains(id))
                     .toArray(Long[]::new));
             } else {
                 map.put("conflict", 0);
@@ -130,8 +137,8 @@ public class PartnerWelfareService {
         String end = sdf.format(endOfDay);
         Integer
             dayTimes =
-            partnerScoreLogRepository
-                .countByPartnerIdAndCreateDateBetween(partner.getId(), startOfDay, endOfDay);
+            partnerWelfareLogRepository
+                .countByPartnerAndCreateDateBetween(partner, startOfDay, endOfDay);
         if (dayTimes.intValue() >= partner.getBenefitTime()) {
             LeJiaUserCriteria leJiaUserCriteria = exclusiveArrayDto.getLeJiaUserCriteria();
             Long[] ids = exclusiveArrayDto.getIds();
@@ -212,7 +219,7 @@ public class PartnerWelfareService {
             sql.append(partner.getBenefitTime());
             if (ids.length > 0) {
                 sql.append(" and user.id not in (");
-                sql.append(Arrays.toString(ids).replaceAll("[\\,\\[\\]\\ ]", ""));
+                sql.append(Arrays.toString(ids).replaceAll("[\\[\\]\\ ]", ""));
                 sql.append(")");
             }
             List<BigInteger> resultList = em.createNativeQuery(sql.toString()).getResultList();
@@ -292,8 +299,8 @@ public class PartnerWelfareService {
                         } catch (Exception e) {
 
                         }
-//                        wxTemMsgService.sendToClient(partnerWelfareLog,
-//                                                     findOpenIdByLeJiaUserId(userId.toString()));
+                        wxTemMsgService.sendToClient(partnerWelfareLog,
+                                                     findOpenIdByLeJiaUserId(userId.toString()));
                     });
                 }));
             }
@@ -441,7 +448,23 @@ public class PartnerWelfareService {
         Long scoreA = partnerWelfareLog.getScoreA() * partnerWelfareLog.getUserCount();
         Long scoreB = partnerWelfareLog.getScoreB() * partnerWelfareLog.getUserCount();
         if (updatePartnerWalletByWelfare(partner, scoreA, scoreB, partnerWelfareLog)) {
+            new Thread(() -> {
+                Arrays.stream(exclusiveArrayDto.getIds()).forEach(id -> {
+                                                                      try {
+                                                                          partnerService
+                                                                              .welfareToUser(
+                                                                                  id.intValue(),
+                                                                                  partnerWelfareLog);
+                                                                      } catch (Exception e) {
 
+                                                                      }
+                                                                      wxTemMsgService.sendToClient(
+                                                                          partnerWelfareLog,
+                                                                          findOpenIdByLeJiaUserId(
+                                                                              id.toString()));
+                                                                  }
+                );
+            }).start();
             return true;
         } else {
             return false;
