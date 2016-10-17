@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="telephone=yes"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <title>海报下载</title>
+    <link rel="stylesheet" th:href="@{http://www.lepluslife.com/resource/frontRes/activity/forever/css/hbreset.css}">
+</head>
+<style>
+    .ewm {
+        margin-top: 20px;
+    }
+    .ewm > div{
+        width: 72%;
+        margin: 0 auto;
+    }
+    .ewm img {
+        width: 100%;
+    }
+    .text {
+        text-align: center;
+        color:#333;
+        font-size: 18px;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+</style>
+<body>
+<section class="ewm">
+    <div>
+        <img src="/api/poster/partner/downloadPoster?sid=1" alt="">
+    </div>
+</section>
+<section class="text">
+    <p>请长按上图海报，将海报保存到本地</p>
+</section>
+</body>
+</html>
