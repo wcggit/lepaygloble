@@ -13,3 +13,13 @@
 .bdwx .col-md-9 span:last-child,.bdwx .col-md-9 a{margin-bottom: 20px}
 .weixinFace,.weixinFace img{width: 110px;height: 110px;overflow: hidden;border-radius: 50%;margin: auto}
 .weixinFace{margin: 20px auto 10px}
+.bdwx {
+    margin-bottom: -11px;
+}
+.zhsz > div > div {
+    width: 92%;
+    margin: 35px auto;
+}
+.w .modal-body {
+    padding: 0 !important;
+}

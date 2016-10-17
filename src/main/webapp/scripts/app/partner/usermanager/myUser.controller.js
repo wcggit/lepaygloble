@@ -294,7 +294,7 @@ angular.module('lepayglobleApp')
 
                     $scope.batchWelfare = function () {
                         if ($scope.jfNumBatch == null && $scope.hbNumBatch == null) {
-                            alert("至少发送红包或积分");
+                            $(".P-writeTrueNumber").show();
                             return;
                         }
                         var partnerWelfareLog = {};

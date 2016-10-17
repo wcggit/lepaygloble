@@ -1,5 +1,4 @@
 'use strict';
-
 angular.module('lepayglobleApp')
     .controller('inviteUserController', function ($scope,InviteUser) {
                     $('body').css({background: '#fff'});
@@ -51,7 +50,6 @@ angular.module('lepayglobleApp')
                             }
                         });
                     }
-
                     $scope.loadPage = function (page) {
                         if (page == 0) {
                             return;
@@ -134,7 +132,15 @@ angular.module('lepayglobleApp')
                         criteria.merchantName = merchantName;
                         criteria.phone = phone;
                         currentPage = 1;
+<<<<<<< HEAD
+                        getTotalPage()
+                    };
+                    $scope.testAS = function(e) {
+                        alert(1);
+                    };
+=======
                     }
+>>>>>>> 57daf7c2ef4aac4eb5680054d34c4c09e7de7f9b
                     $("input[type=number]").attr("disabled","disabled");
                     $("input[type=radio]").click(function(){
                        var name = $(this).attr("name");
