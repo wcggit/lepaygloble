@@ -161,7 +161,7 @@ public class PartnerService {
             sql.append(" and merchant.partnership =");
             sql.append(merchantCriteria.getPartnerShip());
         }
-
+        sql.append(" and merchant.partnership !=2");
         if (merchantCriteria.getUserBindState() != null) {
             if (merchantCriteria.getUserBindState() == 0) {
                 sql.append(
