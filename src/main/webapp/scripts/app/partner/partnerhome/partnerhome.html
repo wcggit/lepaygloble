@@ -20,7 +20,7 @@
                     <span class="pull-left">￥{{available}}</span>
                     <input type="button" class="btn btn-warning btn-sm pull-left tx" ng-click="tx()"
                            value="提现">
-                    <a class="pull-left" ui-sref="withdrawdetails" ui-sref-opts="{reload: true}">查看提现详情</a>
+                    <!--<a class="pull-left" ui-sref="withdrawdetails" ui-sref-opts="{reload: true}">查看提现详情</a>-->
                 </p>
             </div>
         </div>
@@ -88,7 +88,7 @@
     <div class="container-fluid marketingAccount">
         <div class="w-yxzh">
             <p class="ttl">营销账户</p>
-            <a>查看详情</a>
+            <a ui-sref="marketingAccount">查看详情</a>
         </div>
         <div class="row">
             <div class="col-md-6">

@@ -24,16 +24,13 @@ angular.module('lepayglobleApp')
                 state: "marketingAccount"
             }
         ];
-        if ($location.url() == "/merchant/trade") {
-            $scope.currentTab = "tradeList";
-        } else if ($location.url().indexOf("orderList") != -1) {
-            $scope.currentTab = "orderList";
-        } else if ($location.url().indexOf("withdrawList") != -1) {
-            $scope.currentTab = "withdrawList";
-        } else if ($location.url().indexOf("qrCode") != -1) {
-            $scope.currentTab = "qrCode";
+        if ($location.url().indexOf("inviteUser") != -1) {
+            $scope.currentTab = "inviteUser";
+        } else if ($location.url().indexOf("marketingAccount") != -1) {
+            $scope.currentTab = "marketingAccount";
+        } else {
+            $scope.currentTab = "myUser";
         }
-        $scope.currentTab = "myUser";
         $scope.onClickTab = function (tab) {
             $scope.currentTab = tab.state;
             $state.go(tab.state);

@@ -677,7 +677,7 @@
             </activation>
             <properties>
                 <!-- log configuration -->
-                <logback.loglevel>DEBUG</logback.loglevel>
+                <logback.loglevel>WARN</logback.loglevel>
             </properties>
             <dependencies>
                 <dependency>
