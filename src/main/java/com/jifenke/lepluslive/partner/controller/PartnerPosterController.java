@@ -2,10 +2,13 @@ package com.jifenke.lepluslive.partner.controller;
 
 import com.jifenke.lepluslive.global.util.ImageLoad;
 import com.jifenke.lepluslive.global.util.MvUtil;
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerInfo;
 import com.jifenke.lepluslive.partner.domain.entities.Poster;
 import com.jifenke.lepluslive.partner.service.PartnerService;
+import com.jifenke.lepluslive.security.SecurityUtils;
 import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +39,8 @@ public class PartnerPosterController {
 
     @Inject
     private PartnerService partnerService;
+    @Inject
+    private MerchantService merchantService;
 
     @RequestMapping(value="/partner/downloadPage/{sid}",method= RequestMethod.GET)
     public String showPage(@PathVariable String sid,Model model) {
@@ -57,8 +62,8 @@ public class PartnerPosterController {
         }
         String partnerName = partner.getPartnerName();                       // 用户名
         String backgroundPictureUrl = Poster.POSTER_BACKIMAGE_URL;           // 背景url
-        String
-            qrCodeUrl = partnerInfo.getHbQrCodeUrl();                        // 海报二维码
+        Merchant merchant = merchantService.findPartnerVirtualMerchant(partner);
+        String qrCodeUrl ="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+merchant.getMerchantInfo().getTicket();                        // 海报二维码
         response.setContentType("application/x-msdownload;");
         response.setHeader("Content-disposition", "attachment; filename=image.png");
         response.setCharacterEncoding("UTF-8");
@@ -133,4 +138,5 @@ public class PartnerPosterController {
             e.printStackTrace();
         }
     }
+
 }

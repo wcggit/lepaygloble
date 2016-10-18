@@ -17,10 +17,15 @@
                 <div class="row">
                     <div class="col-md-6 bdwx">
                         <div class="col-md-3 text-right">绑定微信号：</div>
-                        <div class="col-md-9 clearfix" >
-                            <span class="pull-left"><img src="../../../../assets/images/hipster.png" alt=""></span><span class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;微信昵称: </span>
+                        <div class="col-md-9 clearfix w-ybd">
+                            <span class="pull-left" id="wx-HeadImage"><img src="{{partner.weiXinUser.headImageUrl}}" alt=""></span>
+                            <span class="pull-left" id="no-HeadImage"><img style="width: 40px;height: 40px;border-radius: 50%;overflow: hidden;display: inline-block;margin-top: -10px;" src="../../../../assets/images/hipster.png" alt=""></span>
+                            <span class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;微信昵称: </span>
                             <span class="pull-left" ng-bind="partner.weiXinUser.nickname"></span>
                             <a class="changePassword pull-left" data-toggle="modal" data-target="#removeBind">解除绑定</a>
+                        </div>
+                        <div class="col-md-9 clearfix w-wbd"><!--ng-click="showBindWin()"ng-show="{{flag==null}}"-->
+                            <a class="changePassword pull-left" data-toggle="modal" data-target="#bindWeixin">立即绑定</a>
                         </div>
                     </div>
                 </div>
@@ -125,6 +130,30 @@
                 <div class="btn-div">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="unbindWx()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--绑定微信提示框-->
+<div class="modal fade" id="bindWeixin">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">绑定微信号</h4>
+            </div>
+            <div class="modal-body">
+                <div class="rvCode">
+                    <img src="{{qrCodeUrl}}" alt="">
+                </div>
+                <p class="text-center">请使用微信扫描二维码绑定微信号</p>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
                 </div>
             </div>
         </div>

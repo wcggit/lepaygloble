@@ -1,10 +1,12 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('inviteUserController', function ($scope,InviteUser) {
+    .controller('inviteUserController', function ($scope,InviteUser,$http) {
                     $('body').css({background: '#fff'});
                     $('.main-content').css({height: 'auto'});
-
+                    $http.get('api/partner').success(function (response) {
+                        $scope.partnerSid = response.data.partnerSid;
+                    });
                     var currentPage = 1;
                     var criteria = {};
                     criteria.offset = 1;
@@ -33,19 +35,27 @@ angular.module('lepayglobleApp')
                             //  Gift
                             if(response.scoreAType==0) {
                                 $("#stableSaRio").attr("checked",true);
+                                $("#stableSaRio").next().next().removeAttr("disabled");
+                                $("#stableSaRio").next().next().next().next().removeAttr("disabled");
                                 $("#stableSaNum").val(response.maxScoreA/100.0);
                             }
                             if(response.scoreAType==1) {
                                 $("#randSaRio").attr("checked",true);
+                                $("#randSaRio").next().next().removeAttr("disabled");
+                                $("#randSaRio").next().next().next().next().removeAttr("disabled");
                                 $("#randSaMaxNum").val(response.maxScoreA/100.0);
                                 $("#randSaMinNum").val(response.minScoreA/100.0);
                             }
                             if(response.scoreBType==0) {
                                 $("#stableSbRio").attr("checked",true);
+                                $("#stableSbRio").next().next().removeAttr("disabled");
+                                $("#stableSbRio").next().next().next().next().removeAttr("disabled");
                                 $("#stableSbNum").val(response.maxScoreB);
                             }
                             if(response.scoreBType==1) {
                                 $("#randSbRio").attr("checked",true);
+                                $("#randSbRio").next().next().removeAttr("disabled");
+                                $("#randSbRio").next().next().next().next().removeAttr("disabled");
                                 $("#randSbMaxNum").val(response.maxScoreB);
                                 $("#randSbMinNum").val(response.minScoreB);
                             }
@@ -101,6 +111,9 @@ angular.module('lepayglobleApp')
                                 alert("新设置已成功保存 !");
                             }
                         });
+                    }
+                    $scope.showBindWin = function() {
+                        $("#bindWeixin").modal();
                     }
                     $scope.clearRandA = function () {
                         $("#randSaMinNum").val('');
