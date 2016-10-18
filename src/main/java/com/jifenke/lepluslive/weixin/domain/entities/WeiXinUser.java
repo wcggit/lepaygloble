@@ -52,7 +52,6 @@ public class WeiXinUser {
 
   private Integer state; //1 代表关注公众号的会员 0 代表未关注公众号会员
 
-
   Date dateCreated;
   Date lastUpdated;
   Date lastUserInfoDate;   //上次从微信服务器抓取用户信息的时间
@@ -208,5 +207,15 @@ public class WeiXinUser {
 
     public void setSubSource(String subSource) {
         this.subSource = subSource;
+    }
+
+    private Date subDate;
+
+    public Date getSubDate() {
+        return subDate;
+    }
+
+    public void setSubDate(Date subDate) {
+        this.subDate = subDate;
     }
 }
