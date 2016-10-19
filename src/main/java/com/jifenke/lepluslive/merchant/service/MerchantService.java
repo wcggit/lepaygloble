@@ -292,8 +292,8 @@ public class MerchantService {
             count = leJiaUserRepository.countBySubSourceAndState(subSource);
             map.put("inviteM", count);
             //邀请会员的会员累计红包额和使用红包额
-            scoreAs = leJiaUserRepository.countScoreAByMerchant(subSource);
-            scoreBs = leJiaUserRepository.countScoreBByMerchant(subSource);
+            scoreAs = leJiaUserRepository.countScoreAByMerchant(merchant.getPartner().getId());
+            scoreBs = leJiaUserRepository.countScoreBByMerchant(merchant.getPartner().getId());
             map.put("totalA", scoreAs.get(0));
             map.put("totalB", scoreBs.get(0));
         }

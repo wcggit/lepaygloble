@@ -330,7 +330,7 @@ public class PartnerWelfareService {
                 partnerScoreLog.setScoreAOrigin(2);
                 partnerScoreLog.setDescription("送红包给会员");
                 partnerScoreLog.setPartnerId(partner.getId());
-                partnerScoreLog.setNumber(-partnerWelfareLog.getScoreA());
+                partnerScoreLog.setNumber(-scoreA);
                 partnerScoreLogRepository.save(partnerScoreLog);
             }
             if (scoreB > 0) {
@@ -341,7 +341,7 @@ public class PartnerWelfareService {
                 partnerScoreLog.setScoreBOrigin(2);
                 partnerScoreLog.setDescription("送积分给会员");
                 partnerScoreLog.setPartnerId(partner.getId());
-                partnerScoreLog.setNumber(-partnerWelfareLog.getScoreB());
+                partnerScoreLog.setNumber(-scoreB);
                 partnerScoreLogRepository.save(partnerScoreLog);
             }
             partnerWallet.setAvailableScoreA(

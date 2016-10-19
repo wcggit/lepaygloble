@@ -258,12 +258,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="writeTrueNumber" style="display:none;color: #f54339;text-align: center;">至少发放红包或积分</div>
+                <div class="writeTrueNumber"
+                     style="display:none;color: #f54339;text-align: center;">至少发放红包或积分
+                </div>
                 <div class="btn-div">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消
                     </button>
                     <button type="button" class="btn btn-warning  "
-                            ng-class="{disabled: available<=200}" ng-click="batchWelfare()">确定
+                            ng-click="batchWelfare()">确定
                     </button>
                 </div>
             </div>
@@ -283,7 +285,8 @@
                 <div class="success-img"></div>
                 <p class="text-center success-ttl">福利发放成功</p>
 
-                <p class="w-costText">您本次成功发放{{hbNumBatch==null?0:hbNumBatch*(selectedCheckbox-conflict)|number
+                <p class="w-costText">
+                    您本次成功发放{{hbNumBatch==null?0:hbNumBatch*(selectedCheckbox-conflict)|number
                     :2}}红包和{{jfNumBatch==null?0:jfNumBatch*(selectedCheckbox-conflict)}}积分</p>
 
                 <div class="success-fl clearfix">
@@ -294,10 +297,8 @@
             </div>
             <div class="modal-footer">
                 <div class="btn-div">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
-                    </button>
-                    <button type="button" class="btn btn-warning  "
-                            data-dismiss="modal">确定
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"
+                            data-dismiss="modal">知道了
                     </button>
                 </div>
             </div>
@@ -428,7 +429,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="writeTrueNumber" style="display:none;color: #f54339;text-align: center;">至少发放红包或积分</div>
+                <div class="writeTrueNumber"
+                     style="display:none;color: #f54339;text-align: center;">至少发放红包或积分
+                </div>
                 <div class="btn-div">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消
                     </button>
@@ -456,16 +459,15 @@
                 <p class="w-costText">您本次成功发放{{hbNum}}红包和{{jfNum}}积分</p>
 
                 <div class="success-fl clearfix">
-                    <div class="pull-left">红包余额：￥{{partnerWallet.availableScoreA/100.0|number:2}}</div>
+                    <div class="pull-left">红包余额：￥{{partnerWallet.availableScoreA/100.0|number:2}}
+                    </div>
                     <div class="pull-right">积分余额：{{partnerWallet.availableScoreB}}积分</div>
                 </div>
             </div>
             <div class="modal-footer">
                 <div class="btn-div">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
-                    </button>
-                    <button type="button" class="btn btn-warning  "
-                            ng-class="{disabled: available<=200}" ng-click="withDraw()">确定
+                    <button type="button" class="btn btn-warning  " data-dismiss="modal"
+                            ng-class="{disabled: available<=200}" ng-click="withDraw()">知道了
                     </button>
                 </div>
             </div>

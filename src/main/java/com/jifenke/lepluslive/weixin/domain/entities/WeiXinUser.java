@@ -23,176 +23,186 @@ import javax.persistence.Table;
 @Cacheable
 public class WeiXinUser {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  private String openId;
+    private String openId;
 
-  private String nickname;
-  private Long sex;
-  private String language;
-  private String city;
-  private String province;
-  private String country;
-
-
-  private String headImageUrl;
-
-  private String accessToken;
-
-  private String refreshToken;
-
-  private Integer hongBaoState = 0; //红包状态 0 未开红包, 1 已开红包;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  @JsonIgnore
-  private LeJiaUser leJiaUser; //真实的乐加会员
+    private String nickname;
+    private Long sex;
+    private String language;
+    private String city;
+    private String province;
+    private String country;
 
 
-  private Integer state; //1 代表关注公众号的会员 0 代表未关注公众号会员
+    private String headImageUrl;
+
+    private String accessToken;
+
+    private String refreshToken;
+
+    private Integer hongBaoState = 0; //红包状态 0 未开红包, 1 已开红包;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private LeJiaUser leJiaUser; //真实的乐加会员
+
+    private Date subDate;
+
+    private Integer state; //1 代表关注公众号的会员 0 代表未关注公众号会员
 
 
-  Date dateCreated;
-  Date lastUpdated;
-  Date lastUserInfoDate;   //上次从微信服务器抓取用户信息的时间
-
-  public Integer getHongBaoState() {
-    return hongBaoState;
-  }
-
-  public void setHongBaoState(Integer hongBaoState) {
-    this.hongBaoState = hongBaoState;
-  }
-
-  public LeJiaUser getLeJiaUser() {
-    return leJiaUser;
-  }
-
-  public void setLeJiaUser(LeJiaUser leJiaUser) {
-    this.leJiaUser = leJiaUser;
-  }
-
-  public String getOpenId() {
-    return openId;
-  }
-
-  public void setOpenId(String openId) {
-    this.openId = openId;
-  }
+    Date dateCreated;
+    Date lastUpdated;
+    Date lastUserInfoDate;   //上次从微信服务器抓取用户信息的时间
 
 
-  public Long getId() {
-    return id;
-  }
+    public Date getSubDate() {
+        return subDate;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setSubDate(Date subDate) {
+        this.subDate = subDate;
+    }
 
-  public String getNickname() {
-    return nickname;
-  }
+    public Integer getHongBaoState() {
+        return hongBaoState;
+    }
 
-  public void setNickname(String nickname) {
-    this.nickname = nickname;
-  }
+    public void setHongBaoState(Integer hongBaoState) {
+        this.hongBaoState = hongBaoState;
+    }
 
-  public Long getSex() {
-    return sex;
-  }
+    public LeJiaUser getLeJiaUser() {
+        return leJiaUser;
+    }
 
-  public void setSex(Long sex) {
-    this.sex = sex;
-  }
+    public void setLeJiaUser(LeJiaUser leJiaUser) {
+        this.leJiaUser = leJiaUser;
+    }
 
-  public String getLanguage() {
-    return language;
-  }
+    public String getOpenId() {
+        return openId;
+    }
 
-  public void setLanguage(String language) {
-    this.language = language;
-  }
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
 
-  public String getCity() {
-    return city;
-  }
 
-  public void setCity(String city) {
-    this.city = city;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public String getProvince() {
-    return province;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setProvince(String province) {
-    this.province = province;
-  }
+    public String getNickname() {
+        return nickname;
+    }
 
-  public String getCountry() {
-    return country;
-  }
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
-  public void setCountry(String country) {
-    this.country = country;
-  }
+    public Long getSex() {
+        return sex;
+    }
 
-  public String getHeadImageUrl() {
-    return headImageUrl;
-  }
+    public void setSex(Long sex) {
+        this.sex = sex;
+    }
 
-  public void setHeadImageUrl(String headImageUrl) {
-    this.headImageUrl = headImageUrl;
-  }
+    public String getLanguage() {
+        return language;
+    }
 
-  public Date getDateCreated() {
-    return dateCreated;
-  }
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
-  public void setDateCreated(Date dateCreated) {
-    this.dateCreated = dateCreated;
-  }
+    public String getCity() {
+        return city;
+    }
 
-  public Date getLastUpdated() {
-    return lastUpdated;
-  }
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-  public void setLastUpdated(Date lastUpdated) {
-    this.lastUpdated = lastUpdated;
-  }
+    public String getProvince() {
+        return province;
+    }
 
-  public Date getLastUserInfoDate() {
-    return lastUserInfoDate;
-  }
+    public void setProvince(String province) {
+        this.province = province;
+    }
 
-  public void setLastUserInfoDate(Date lastUserInfoDate) {
-    this.lastUserInfoDate = lastUserInfoDate;
-  }
+    public String getCountry() {
+        return country;
+    }
 
-  public String getAccessToken() {
-    return accessToken;
-  }
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-  public void setAccessToken(String accessToken) {
-    this.accessToken = accessToken;
-  }
+    public String getHeadImageUrl() {
+        return headImageUrl;
+    }
 
-  public String getRefreshToken() {
-    return refreshToken;
-  }
+    public void setHeadImageUrl(String headImageUrl) {
+        this.headImageUrl = headImageUrl;
+    }
 
-  public void setRefreshToken(String refreshToken) {
-    this.refreshToken = refreshToken;
-  }
+    public Date getDateCreated() {
+        return dateCreated;
+    }
 
-  public Integer getState() {
-    return state;
-  }
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
 
-  public void setState(Integer state) {
-    this.state = state;
-  }
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public Date getLastUserInfoDate() {
+        return lastUserInfoDate;
+    }
+
+    public void setLastUserInfoDate(Date lastUserInfoDate) {
+        this.lastUserInfoDate = lastUserInfoDate;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
     //  类型_活动ID_来源ID
     // 1_2_0表示送红包活动,活动id为2,0无意义
