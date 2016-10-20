@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -47,6 +50,9 @@ public class PartnerWelfareService {
 
     @Inject
     private EntityManager em;
+
+    @Inject
+    private ExecutorService executor;
 
     @Inject
     private PartnerScoreLogRepository partnerScoreLogRepository;
@@ -281,12 +287,6 @@ public class PartnerWelfareService {
         if (updatePartnerWalletByWelfare(partner, scoreA, scoreB, partnerWelfareLog)) {
             Long length = partnerWelfareLog.getUserCount();
             int threads = (int) Math.ceil(length / 10.0);
-            ExecutorService executor;
-            if (threads <= 100) {
-                executor = Executors.newFixedThreadPool(threads);
-            } else {
-                executor = Executors.newFixedThreadPool(100);
-            }
             for (int i = 0; i < threads; i++) {
                 int n = i;
                 executor.execute(new Thread(() -> {
@@ -304,7 +304,6 @@ public class PartnerWelfareService {
                     });
                 }));
             }
-            executor.shutdown();
             return true;
         } else {
             return false;
