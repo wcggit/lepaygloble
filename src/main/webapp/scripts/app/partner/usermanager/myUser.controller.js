@@ -164,7 +164,8 @@ angular.module('lepayglobleApp')
                         if (Number(newVal)) {
 
                             if (newVal <= $scope.partnerWallet.availableScoreA / 100.0) {
-                                $scope.hbNum = parseFloat($filter('number')(newVal, 2));
+                                //var re = $filter('number')(newVal, 2)/1.0;
+                                //$scope.hbNum = re;
                                 ;
                             } else {
                                 $scope.hbNum =
@@ -257,7 +258,8 @@ angular.module('lepayglobleApp')
                         if (Number(newVal)) {
                             if (newVal * ($scope.selectedCheckbox - $scope.conflict)
                                 <= $scope.partnerWallet.availableScoreA / 100.0) {
-                                $scope.hbNumBatch = parseFloat($filter('number')(newVal, 2));
+                                //var re = $filter('number')(newVal, 2);
+                                //$scope.hbNumBatch =parseString(re);
                             } else {
                                 var result = $scope.partnerWallet.availableScoreA / 100.0
                                              / ($scope.selectedCheckbox

@@ -24,6 +24,11 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
@@ -146,6 +151,13 @@ public class WebConfigurer
             source.registerCorsConfiguration("/oauth/**", config);
         }
         return new CorsFilter(source);
+    }
+
+    @Bean
+    public ExecutorService executorService() {
+        return new ThreadPoolExecutor(0, 30,
+                                      60L, TimeUnit.SECONDS,
+                                      new LinkedBlockingQueue<Runnable>());
     }
 
 //    public static void main(String[] args) {

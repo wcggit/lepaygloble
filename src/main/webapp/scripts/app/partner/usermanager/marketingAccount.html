@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <p class="w-makeMargin">{{availableScoreA}}<span>元</span></p>
-                    <p class="w-makeMargin">红包账户余额</p><span class="w-ffhb" style="color:#f54339;">已发放：{{totalScorea-availableScoreA}}元</span>
+                    <p class="w-makeMargin">红包账户余额</p><span class="w-ffhb" style="color:#f54339;">已发放：{{(totalScorea-availableScoreA)|number : 2}}元</span>
                 </div>
                 <div class="form-group col-md-6">
                     <p class="w-makeMargin">{{availableScoreB}}<span>积分</span></p>
@@ -48,10 +48,7 @@
                                     </td>
                                     <td ng-show="x.type==1 && x.number<0"><span ng-bind="'- ¥'+(-x.number)/100"></span></td>
                                     <td ng-show="x.type==1 && x.number>=0"><span ng-bind="'¥ '+x.number/100"></span></td>
-                                    <td ng-show="x.scoreAOrigin==0">注册送红包</td>
-                                    <td ng-show="x.scoreAOrigin==1">送邀请会员</td>
-                                    <td ng-show="x.scoreBOrigin==0">注册送积分</td>
-                                    <td ng-show="x.scoreBOrigin==1">送邀请会员</td>
+                                    <td >{{x.description}}</td>
                                     <td ng-bind="x.createDate|date:'yyyy/MM/dd HH:mm:ss'"></td>
                                 </tr>
                                 </tbody>
@@ -79,10 +76,7 @@
                                     </td>
                                     <td ng-show="x.type==1 && x.number<0"><span ng-bind="'- ¥'+(-x.number)/100"></span></td>
                                     <td ng-show="x.type==1 && x.number>=0"><span ng-bind="'¥ '+x.number/100"></span></td>
-                                    <td ng-show="x.scoreAOrigin==0">注册送红包</td>
-                                    <td ng-show="x.scoreAOrigin==1">送邀请会员</td>
-                                    <td ng-show="x.scoreBOrigin==0">注册送积分</td>
-                                    <td ng-show="x.scoreBOrigin==1">送邀请会员</td>
+                                    <td >{{x.description}}</td>
                                     <td ng-bind="x.createDate|date:'yyyy/MM/dd HH:mm:ss'"></td>
                                 </tr>
                                 </tbody>
@@ -110,10 +104,7 @@
                                     </td>
                                     <td ng-show="x.type==1 && x.number<0"><span ng-bind="'- ¥'+(-x.number)/100"></span></td>
                                     <td ng-show="x.type==1 && x.number>=0"><span ng-bind="'¥ '+x.number/100"></span></td>
-                                    <td ng-show="x.scoreAOrigin==0">注册送红包</td>
-                                    <td ng-show="x.scoreAOrigin==1">送邀请会员</td>
-                                    <td ng-show="x.scoreBOrigin==0">注册送积分</td>
-                                    <td ng-show="x.scoreBOrigin==1">送邀请会员</td>
+                                    <td >{{x.description}}</td>
                                     <td ng-bind="x.createDate|date:'yyyy/MM/dd HH:mm:ss'"></td>
                                 </tr>
                                 </tbody>
