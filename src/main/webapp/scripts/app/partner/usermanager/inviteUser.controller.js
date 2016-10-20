@@ -38,6 +38,7 @@ angular.module('lepayglobleApp')
                                 $("#stableSaRio").next().next().removeAttr("disabled");
                                 $("#stableSaRio").next().next().next().next().removeAttr("disabled");
                                 $("#stableSaNum").val(response.maxScoreA/100.0);
+                                $("#txtScoreA").text(response.maxScoreA/100.0);
                             }
                             if(response.scoreAType==1) {
                                 $("#randSaRio").attr("checked",true);
@@ -45,12 +46,14 @@ angular.module('lepayglobleApp')
                                 $("#randSaRio").next().next().next().next().removeAttr("disabled");
                                 $("#randSaMaxNum").val(response.maxScoreA/100.0);
                                 $("#randSaMinNum").val(response.minScoreA/100.0);
+                                $("#txtScoreA").text(response.minScoreA/100.0+'-'+response.maxScoreA/100.0);
                             }
                             if(response.scoreBType==0) {
                                 $("#stableSbRio").attr("checked",true);
                                 $("#stableSbRio").next().next().removeAttr("disabled");
                                 $("#stableSbRio").next().next().next().next().removeAttr("disabled");
                                 $("#stableSbNum").val(response.maxScoreB);
+                                $("#txtScoreB").text(response.maxScoreB);
                             }
                             if(response.scoreBType==1) {
                                 $("#randSbRio").attr("checked",true);
@@ -58,6 +61,7 @@ angular.module('lepayglobleApp')
                                 $("#randSbRio").next().next().next().next().removeAttr("disabled");
                                 $("#randSbMaxNum").val(response.maxScoreB);
                                 $("#randSbMinNum").val(response.minScoreB);
+                                $("#txtScoreB").text(response.minScoreB+'-'+response.maxScoreB);
                             }
                         });
                     }
@@ -109,6 +113,7 @@ angular.module('lepayglobleApp')
                         InviteUser.savePartnerInfo(partnerInfo).then(function (response) {
                             if(response.status==200) {
                                 alert("新设置已成功保存 !");
+                                location.reload();
                             }
                         });
                     }
