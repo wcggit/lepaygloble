@@ -230,11 +230,13 @@ public class OrderController {
     @RequestMapping(value = "/offLineOrder/export", method = RequestMethod.GET)
     public ModelAndView exportExcel(@RequestParam(required = false) String startDate,
                                     @RequestParam(required = false) String endDate,
-                                    @RequestParam(required = false) String orderSid) {
+                                    @RequestParam(required = false) String orderSid,
+                                    @RequestParam(required = false) Integer rebateWay) {
         OLOrderCriteria olOrderCriteria = new OLOrderCriteria();
         olOrderCriteria.setStartDate(startDate);
         olOrderCriteria.setEndDate(endDate);
         olOrderCriteria.setOrderSid(orderSid);
+        olOrderCriteria.setRebateWay(rebateWay);
         olOrderCriteria.setState(1);
         if (olOrderCriteria.getOffset() == null) {
             olOrderCriteria.setOffset(1);
