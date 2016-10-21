@@ -10,7 +10,24 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <title>海报下载</title>
     <link rel="stylesheet" th:href="@{http://www.lepluslife.com/resource/frontRes/activity/forever/css/hbreset.css}">
+    <script th:src="@{http://res.wx.qq.com/open/js/jweixin-1.0.0.js}"></script>
 </head>
+<script>
+    function onBridgeReady(){
+        WeixinJSBridge.call('hideOptionMenu');
+    }
+
+    if (typeof WeixinJSBridge == "undefined"){
+        if( document.addEventListener ){
+            document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+        }else if (document.attachEvent){
+            document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+            document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+        }
+    }else{
+        onBridgeReady();
+    }
+</script>
 <style>
     .ewm {
         margin-top: 40px;

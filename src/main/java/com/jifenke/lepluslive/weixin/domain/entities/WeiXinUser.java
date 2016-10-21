@@ -219,4 +219,6 @@ public class WeiXinUser {
     public void setSubSource(String subSource) {
         this.subSource = subSource;
     }
+
+
 }
