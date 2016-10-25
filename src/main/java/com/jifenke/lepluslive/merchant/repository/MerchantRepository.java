@@ -42,7 +42,7 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
     List<Object[]> findOrderByDistance(Double latitude, Double longitude, Integer startNum,
                                        Integer pageSize);
 
-    Long countByPartner(Partner partner);
+    Long countByPartnerAndPartnershipNot(Partner partner, Integer partnerShip);
 
     Merchant findByMerchantSid(String sid);
 

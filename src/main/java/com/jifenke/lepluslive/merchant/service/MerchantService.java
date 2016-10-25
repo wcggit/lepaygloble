@@ -21,7 +21,6 @@ import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
 import com.jifenke.lepluslive.merchant.repository.OpenRequestRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
-import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
 import com.jifenke.lepluslive.weixin.repository.WeiXinUserRepository;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +29,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +128,7 @@ public class MerchantService {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Long countPartnerBindMerchant(Partner partner) {
-        return merchantRepository.countByPartner(partner);
+        return merchantRepository.countByPartnerAndPartnershipNot(partner, 2);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)

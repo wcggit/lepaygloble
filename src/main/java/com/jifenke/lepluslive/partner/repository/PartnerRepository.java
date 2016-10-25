@@ -20,7 +20,7 @@ public interface PartnerRepository extends JpaRepository<Partner, Long> {
 
     Optional<Partner> findByPartnerSid(String userName);
 
-    @Query(value = "select count(*) from merchant where partner_id = ?1", nativeQuery = true)
+    @Query(value = "select count(*) from merchant where partner_id = ?1 and partnerShip != 2", nativeQuery = true)
     Long countParnterBindMerchant(Long id);
 
     Optional<Partner> findByName(String lowercaseLogin);
