@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('withdrawDetailsController', function ($scope,Commission) {
+    .controller('withdrawDetailsController', function ($scope,$http) {
         $('body').css({background: '#f3f3f3'});
         $('.main-content').css({height: 'auto'});
         $('#timePicker1')
@@ -49,14 +49,20 @@ angular.module('lepayglobleApp')
 
 
         var currentPage = 1;
-        var criteria = {};
-        criteria.offset = 1;
-        getTotalPage();
+        var withdrawCriteria = {};
+        withdrawCriteria.offset = 1;
+
+        loadContent();
         function loadContent() {
-            Commission.getUsersByBindPartner(criteria).then(function (response) {
+            $http.post('/withdraw/partner_withdraw/findAll', withdrawCriteria, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function (response) {
                 var data = response.data;
                 $scope.page = currentPage;
-                $scope.pulls = data;
+                $scope.totalPages = data.totalPages;
+                $scope.pulls = data.content;
             });
         }
 
@@ -74,31 +80,35 @@ angular.module('lepayglobleApp')
                 return;
             }
             currentPage = page;
-            criteria.offset = page;
+            withdrawCriteria.offset = page;
             loadContent();
         };
 
-        function getTotalPage() {
-            Commission.getTotalPagesByBindPartner(criteria).then(function (response) {
-                $scope.totalPages = response.data;
-                loadContent();
-            });
-        }
-
         $scope.searchByCriteria = function () {
-            var dateStr = $("#timePicker1").val();
-            var phone = $("#phone").val();
-            var merchantName = $("#merchantName").val();
 
-            var startDate = dateStr.split("-")[0].trim();
-            var endDate = dateStr.split("-")[1].trim();
-            criteria.partnerStartDate = startDate;
-            criteria.partnerEndDate = endDate;
-            criteria.offset = 1;
-            criteria.merchantName = merchantName;
-            criteria.phone = phone;
+            if($("#timePicker1").val()!=null&&$("#timePicker1").val()!='') {
+                var startDateStr = $("#timePicker1").val();
+                var withDrawStartDate = startDateStr.split("-")[0].trim();
+                var withDrawEndDate = startDateStr.split("-")[1].trim();
+                withdrawCriteria.withDrawStartDate = withDrawStartDate;
+                withdrawCriteria.withDrawEndDate = withDrawEndDate;
+            }
+            if($("#timePicker2").val()!=null&&$("#timePicker2").val()!='') {
+                var completeDateStr = $("#timePicker2").val();
+                var completeDateStartDate = completeDateStr.split("-")[0].trim();
+                var completeDateEndDate = completeDateStr.split("-")[1].trim();
+                withdrawCriteria.completeDateStartDate = completeDateStartDate;
+                withdrawCriteria.completeDateEndDate = completeDateEndDate;
+            }
+            if($("#state").val()!=-1) {
+                withdrawCriteria.state = $("#state").val();
+            }else {
+                withdrawCriteria.state = null;
+            }
+            withdrawCriteria.offset = 1;
             currentPage = 1;
-            getTotalPage()
+            loadContent();
+
         }
     });
 
