@@ -73,4 +73,11 @@ public interface LeJiaUserRepository extends JpaRepository<LeJiaUser, Long> {
     @Query(value = "select sum(number) from scoreb b,scoreb_detail sd where sd.scoreb_id = b.id and le_jia_user_id = ?1 and origin = 0 ", nativeQuery = true)
     Long findTotalScoreb(Long leJiaUserId);
 
+
+    @Query(value = "SELECT SUM(detail.number) FROM wei_xin_user u,scorea a,scorea_detail detail WHERE u.le_jia_user_id=a.le_jia_user_id AND u.sub_source=?1 AND u.state=1 and detail.scorea_id = a.id and detail.origin = 0", nativeQuery = true)
+    List countScoreABySubSource(String subSource);
+
+    @Query(value = "SELECT SUM(detail.number) FROM wei_xin_user u,scoreb b,scoreb_detail detail WHERE u.le_jia_user_id=b.le_jia_user_id AND u.sub_source=?1 AND u.state=1 and detail.scorea_id = b.id and detail.origin = 0", nativeQuery = true)
+    List countScoreBBySubSource(String subSource);
+
 }

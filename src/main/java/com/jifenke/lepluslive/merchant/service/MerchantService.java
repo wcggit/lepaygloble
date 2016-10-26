@@ -21,6 +21,7 @@ import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
 import com.jifenke.lepluslive.merchant.repository.OpenRequestRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.weixin.repository.WeiXinUserRepository;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -82,6 +83,9 @@ public class MerchantService {
 
     @Inject
     private WeiXinUserRepository weiXinUserRepository;
+
+    @Inject
+    private PartnerService partnerService;
 
     /**
      * 获取商家详情
@@ -259,8 +263,6 @@ public class MerchantService {
 
     /**
      * 获取合伙人虚拟商户
-     * @param partner
-     * @return
      */
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Merchant findPartnerVirtualMerchant(Partner partner) {
@@ -289,9 +291,14 @@ public class MerchantService {
             //邀请会员数
             count = leJiaUserRepository.countBySubSourceAndState(subSource);
             map.put("inviteM", count);
-            //邀请会员的会员累计红包额和使用红包额
-            scoreAs = leJiaUserRepository.countScoreAByMerchant(merchant.getPartner().getId());
-            scoreBs = leJiaUserRepository.countScoreBByMerchant(merchant.getPartner().getId());
+            if (partnerService.findPartnerInfoByPartnerSid(merchant.getPartner().getPartnerSid())
+                    .getInviteLimit() == 1) {
+                scoreAs = leJiaUserRepository.countScoreAByMerchant(merchant.getPartner().getId());
+                scoreBs = leJiaUserRepository.countScoreBByMerchant(merchant.getPartner().getId());
+            } else {
+                scoreAs = leJiaUserRepository.countScoreABySubSource(subSource);
+                scoreBs = leJiaUserRepository.countScoreBBySubSource(subSource);
+            }
             map.put("totalA", scoreAs.get(0));
             map.put("totalB", scoreBs.get(0));
         }
