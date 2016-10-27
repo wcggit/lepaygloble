@@ -277,8 +277,8 @@ public class MerchantService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Map findMerchantCodeData(Merchant merchant) {
         Integer count = null;
-        List scoreAs = null;
-        List scoreBs = null;
+        Long scoreAs = null;
+        Long scoreBs = null;
         Map<String, Object> map = new HashMap<>();
         String subSource = "4_0_" + merchant.getId();  //关注来源
         //获取注册来源为该商家的用户总数
@@ -296,11 +296,13 @@ public class MerchantService {
                 scoreAs = leJiaUserRepository.countScoreAByMerchant(merchant.getPartner().getId());
                 scoreBs = leJiaUserRepository.countScoreBByMerchant(merchant.getPartner().getId());
             } else {
-                scoreAs = leJiaUserRepository.countScoreABySubSource(subSource);
-                scoreBs = leJiaUserRepository.countScoreBBySubSource(subSource);
+                scoreAs = leJiaUserRepository.countScoreABySubSource(
+                    subSource);
+                scoreBs =
+                    leJiaUserRepository.countScoreBBySubSource(subSource);
             }
-            map.put("totalA", scoreAs.get(0));
-            map.put("totalB", scoreBs.get(0));
+            map.put("totalA", scoreAs);
+            map.put("totalB", scoreBs);
         }
         return map;
     }
