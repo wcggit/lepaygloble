@@ -1,9 +1,5 @@
 package com.jifenke.lepluslive.merchant.domain.entities;
 
-import com.jifenke.lepluslive.global.config.LoginUser;
-
-import org.apache.catalina.User;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,54 +12,58 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "MERCHANT_USER")
-public class MerchantUser implements LoginUser {
+public class MerchantUser {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  private String name;
+    private String name;
 
-  private String password;
+    private String password;
 
-  @ManyToOne
-  private Merchant merchant;
+    @ManyToOne
+    private Merchant merchant;
 
+    private Integer type; //0收营员 1 店主 一个商户只有一个店主
 
-  public Long getId() {
-    return id;
-  }
+    public Integer getType() {
+        return type;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public String getPassword() {
-    return password;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public Merchant getMerchant() {
-    return merchant;
-  }
-
-  public void setMerchant(Merchant merchant) {
-    this.merchant = merchant;
-  }
-
-    @Override
-    public String getPwd() {
+    public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
     }
 }

@@ -114,7 +114,6 @@ public class MerchantService {
             openRequest.setMerchant(merchant);
         }
         openRequestRepository.save(openRequest);
-
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -245,6 +244,7 @@ public class MerchantService {
         merchantUser.setName(username);
         merchantUser.setPassword(MD5Util.MD5Encode(password, "UTF-8"));
         merchantUser.setMerchant(merchant);
+        merchantUser.setType(0);
         merchantUserRepository.save(merchantUser);
     }
 
@@ -258,7 +258,6 @@ public class MerchantService {
         } else {
             throw new RuntimeException();
         }
-
     }
 
     /**
