@@ -66,5 +66,7 @@ public class FinancialViewExcel extends AbstractExcelView {
         excelRow.createCell(4).setCellValue(
             financialStatistic.getMerchant().getMerchantBank().getBankNumber());
     }
+
+
   }
 }
