@@ -74,6 +74,10 @@ public class PartnerWelfareController {
         partnerWelfareLog.setUserCount(1L);
         partnerWelfareLog.setPartner(partner);
         partnerWelfareLog.setRedirectUrl(Integer.parseInt(map.get("redirectUrl").toString()));
+        if (partnerWelfareLog.getScoreA() < 0 || partnerWelfareLog.getScoreB() < 0) {
+            return LejiaResult
+                .build(400, "积分红包不能为负");
+        }
         partnerWelfareService.savePartnerWelfareLog(partnerWelfareLog);
         Boolean flag = true;
         try {
@@ -98,6 +102,10 @@ public class PartnerWelfareController {
         exclusiveArrayDto.getLeJiaUserCriteria().setPartner(partner);
         PartnerWelfareLog partnerWelfareLog = exclusiveArrayDto.getPartnerWelfareLog();
         partnerWelfareLog.setPartner(partner);
+        if (partnerWelfareLog.getScoreA() < 0 || partnerWelfareLog.getScoreB() < 0) {
+            return LejiaResult
+                .build(400, "积分红包不能为负");
+        }
         partnerWelfareService.savePartnerWelfareLog(partnerWelfareLog);
 
         return LejiaResult
@@ -112,6 +120,10 @@ public class PartnerWelfareController {
             partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         PartnerWelfareLog partnerWelfareLog = exclusiveArrayDto.getPartnerWelfareLog();
         partnerWelfareLog.setPartner(partner);
+        if (partnerWelfareLog.getScoreA() < 0 || partnerWelfareLog.getScoreB() < 0) {
+            return LejiaResult
+                .build(400, "积分红包不能为负");
+        }
         partnerWelfareService.savePartnerWelfareLog(partnerWelfareLog);
         return LejiaResult
             .ok(partnerWelfareService.batchWelfareInclusive(partner, exclusiveArrayDto));

@@ -65,7 +65,7 @@ angular.module('lepayglobleApp')
                             $scope.totalPages = response.data.totalPages;
                             $scope.totalElements = response.data.totalElements;
                             $scope.totalIncome = response.data.totalIncome;
-                            if ($('#checkbox-1').prop('checked')){
+                            if ($('#checkbox-1').prop('checked')) {
                                 $scope.selectedCheckbox = response.data.totalElements;
                             }
                             loadContent();
@@ -206,16 +206,24 @@ angular.module('lepayglobleApp')
                         map.scoreB = $scope.jfNum;
                         map.description = $scope.description;
                         if ($scope.hbNum == null && $scope.jfNum == null) {
-//                            alert("至少发放红包或积分");
-                              $(".writeTrueNumber").show();
+                            $(".writeTrueNumber").show();
+                            return;
+                        }
+                        if ($scope.hbNum < 0 && $scope.jfNum < 0) {
+                            alert("红包积分不能为负");
+                            return;
                         }
                         map.redirectUrl = $("input:radio[name='optionsRadios-one']:checked").val();
-                        Welfare.welfareOneUser(map).then(function () {
-                            $http.get('api/partner/wallet').success(function (response) {
-                                $scope.partnerWallet = response.data;
-                                $("#ffl").modal("hide");
-                                $("#ffl-success").modal("toggle");
-                            });
+                        Welfare.welfareOneUser(map).then(function (response) {
+                            if (response.status == 200) {
+                                $http.get('api/partner/wallet').success(function (response) {
+                                    $scope.partnerWallet = response.data;
+                                    $("#ffl").modal("hide");
+                                    $("#ffl-success").modal("toggle");
+                                });
+                            } else {
+                                alert("出现未知错误");
+                            }
                         });
                     }
 
@@ -300,6 +308,10 @@ angular.module('lepayglobleApp')
                             alert("至少发送红包或积分");
                             return;
                         }
+                        if ($scope.jfNumBatch < 0 || $scope.hbNumBatch < 0) {
+                            alert("红包或积分不能为负");
+                            return;
+                        }
                         var partnerWelfareLog = {};
                         partnerWelfareLog.userCount = $scope.selectedCheckbox - $scope.conflict;
                         if ($scope.hbNumBatch != null) {
@@ -320,11 +332,16 @@ angular.module('lepayglobleApp')
                             exclusiveArrayDto.ids = $scope.exclusiveArray;
                             exclusiveArrayDto.leJiaUserCriteria = criteria;
                             Welfare.batchWelfareExclusive(exclusiveArrayDto).then(function (response) {
-                                $http.get('api/partner/wallet').success(function (response) {
-                                    $("#pffl").modal("hide");
-                                    $("#pffl-success").modal("toggle");
-                                    $scope.partnerWallet = response.data;
-                                });
+                                if (response.status == 200) {
+                                    $http.get('api/partner/wallet').success(function (response) {
+
+                                        $("#pffl").modal("hide");
+                                        $("#pffl-success").modal("toggle");
+                                        $scope.partnerWallet = response.data;
+                                    })
+                                } else {
+                                    alert("出现未知错误")
+                                }
                             })
                         } else {
                             if ($scope.filterArray != null) {
@@ -333,11 +350,15 @@ angular.module('lepayglobleApp')
                                 exclusiveArrayDto.ids = $scope.inclusiveArray;
                             }
                             Welfare.batchWelfareInclusive(exclusiveArrayDto).then(function (response) {
-                                $http.get('api/partner/wallet').success(function (response) {
-                                    $("#pffl").modal("hide");
-                                    $("#pffl-success").modal("toggle");
-                                    $scope.partnerWallet = response.data;
-                                });
+                                if (response.status == 200) {
+                                    $http.get('api/partner/wallet').success(function (response) {
+                                        $("#pffl").modal("hide");
+                                        $("#pffl-success").modal("toggle");
+                                        $scope.partnerWallet = response.data;
+                                    });
+                                } else {
+                                    alert("出现未知错误")
+                                }
                             })
                         }
 
