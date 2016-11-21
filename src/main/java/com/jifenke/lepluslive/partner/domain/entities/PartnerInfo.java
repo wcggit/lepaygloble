@@ -32,6 +32,16 @@ public class PartnerInfo {
 
     private String qrCodeUrl;//绑定微信号地址
 
+    private Integer inviteLimit;
+
+    public Integer getInviteLimit() {
+        return inviteLimit;
+    }
+
+    public void setInviteLimit(Integer inviteLimit) {
+        this.inviteLimit = inviteLimit;
+    }
+
     public String getQrCodeUrl() {
         return qrCodeUrl;
     }

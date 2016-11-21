@@ -88,10 +88,17 @@ public class OffLineOrderService {
                         predicate.getExpressions().add(
                             cb.equal(r.get("rebateWay"),
                                      1));
-                    } else {
+                    } else if (orderCriteria.getRebateWay() == 2) {
                         predicate.getExpressions().add(
                             cb.notEqual(r.get("rebateWay"),
                                         1));
+                        predicate.getExpressions().add(
+                            cb.notEqual(r.get("rebateWay"),
+                                        3));
+                    } else {
+                        predicate.getExpressions().add(
+                            cb.equal(r.get("rebateWay"),
+                                     3));
                     }
 
                 }

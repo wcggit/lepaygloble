@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('inviteUserController', function ($scope,InviteUser,$http) {
+    .controller('inviteUserController', function ($scope, InviteUser, $http) {
                     $('body').css({background: '#fff'});
                     $('.main-content').css({height: 'auto'});
                     $http.get('api/partner').success(function (response) {
@@ -15,7 +15,7 @@ angular.module('lepayglobleApp')
                         InviteUser.getTotalCount().then(function (response) {
                             var data = response.data;
                             $scope.inviteM = data.inviteM;
-                            $scope.totalA = data.totalA/100.0;
+                            $scope.totalA = data.totalA / 100.0;
                             $scope.totalB = data.totalB;
                             $scope.page = currentPage;
                         });
@@ -30,38 +30,39 @@ angular.module('lepayglobleApp')
                         });
                         InviteUser.getPartnerInfo().then(function (response) {
                             //  QrCode
-                            $("#qrCodeImg").attr("src",response.hbQrCodeUrl);
-
+                            $("#qrCodeImg").attr("src", response.hbQrCodeUrl);
+                            $scope.inviteLimit = response.inviteLimit;
                             //  Gift
-                            if(response.scoreAType==0) {
-                                $("#stableSaRio").attr("checked",true);
+                            if (response.scoreAType == 0) {
+                                $("#stableSaRio").attr("checked", true);
                                 $("#stableSaRio").next().next().removeAttr("disabled");
                                 $("#stableSaRio").next().next().next().next().removeAttr("disabled");
-                                $("#stableSaNum").val(response.maxScoreA/100.0);
-                                $("#txtScoreA").text(response.maxScoreA/100.0);
+                                $("#stableSaNum").val(response.maxScoreA / 100.0);
+                                $("#txtScoreA").text(response.maxScoreA / 100.0);
                             }
-                            if(response.scoreAType==1) {
-                                $("#randSaRio").attr("checked",true);
+                            if (response.scoreAType == 1) {
+                                $("#randSaRio").attr("checked", true);
                                 $("#randSaRio").next().next().removeAttr("disabled");
                                 $("#randSaRio").next().next().next().next().removeAttr("disabled");
-                                $("#randSaMaxNum").val(response.maxScoreA/100.0);
-                                $("#randSaMinNum").val(response.minScoreA/100.0);
-                                $("#txtScoreA").text(response.minScoreA/100.0+'-'+response.maxScoreA/100.0);
+                                $("#randSaMaxNum").val(response.maxScoreA / 100.0);
+                                $("#randSaMinNum").val(response.minScoreA / 100.0);
+                                $("#txtScoreA").text(response.minScoreA / 100.0 + '-'
+                                                     + response.maxScoreA / 100.0);
                             }
-                            if(response.scoreBType==0) {
-                                $("#stableSbRio").attr("checked",true);
+                            if (response.scoreBType == 0) {
+                                $("#stableSbRio").attr("checked", true);
                                 $("#stableSbRio").next().next().removeAttr("disabled");
                                 $("#stableSbRio").next().next().next().next().removeAttr("disabled");
                                 $("#stableSbNum").val(response.maxScoreB);
                                 $("#txtScoreB").text(response.maxScoreB);
                             }
-                            if(response.scoreBType==1) {
-                                $("#randSbRio").attr("checked",true);
+                            if (response.scoreBType == 1) {
+                                $("#randSbRio").attr("checked", true);
                                 $("#randSbRio").next().next().removeAttr("disabled");
                                 $("#randSbRio").next().next().next().next().removeAttr("disabled");
                                 $("#randSbMaxNum").val(response.maxScoreB);
                                 $("#randSbMinNum").val(response.minScoreB);
-                                $("#txtScoreB").text(response.minScoreB+'-'+response.maxScoreB);
+                                $("#txtScoreB").text(response.minScoreB + '-' + response.maxScoreB);
                             }
                         });
                     }
@@ -83,41 +84,41 @@ angular.module('lepayglobleApp')
                         criteria.offset = page;
                         loadContent();
                     };
-                    $scope.submitPartnerInfo = function() {
+                    $scope.submitPartnerInfo = function () {
                         var partnerInfo = {};
-                        if($("#stableSaRio").is(":checked")) {
+                        if ($("#stableSaRio").is(":checked")) {
                             partnerInfo.scoreAType = 0;
                             partnerInfo.maxScoreA = $("#stableSaNum").val();
                             partnerInfo.minScoreA = $("#stableSaNum").val();
                         }
-                        if($("#randSaRio").is(":checked")){
+                        if ($("#randSaRio").is(":checked")) {
                             partnerInfo.scoreAType = 1;
                             partnerInfo.maxScoreA = $("#randSaMaxNum").val();
                             partnerInfo.minScoreA = $("#randSaMinNum").val();
                         }
-                        if($("#stableSbRio").is(":checked")) {
+                        if ($("#stableSbRio").is(":checked")) {
                             partnerInfo.scoreBType = 0;
                             partnerInfo.maxScoreB = $("#stableSbNum").val();
                             partnerInfo.minScoreB = $("#stableSbNum").val();
                         }
-                        if($("#randSbRio").is(":checked")){
+                        if ($("#randSbRio").is(":checked")) {
                             partnerInfo.scoreBType = 1;
                             partnerInfo.maxScoreB = $("#randSbMaxNum").val();
                             partnerInfo.minScoreB = $("#randSbMinNum").val();
                         }
-                        if($("#noScoreRio").is(":checked")) {
+                        if ($("#noScoreRio").is(":checked")) {
                             partnerInfo.scoreBType = 0;
                             partnerInfo.maxScoreB = 0;
                             partnerInfo.minScoreB = 0;
                         }
                         InviteUser.savePartnerInfo(partnerInfo).then(function (response) {
-                            if(response.status==200) {
+                            if (response.status == 200) {
                                 alert("新设置已成功保存 !");
                                 location.reload();
                             }
                         });
                     }
-                    $scope.showBindWin = function() {
+                    $scope.showBindWin = function () {
                         $("#bindWeixin").modal();
                     }
                     $scope.clearRandA = function () {
@@ -127,7 +128,7 @@ angular.module('lepayglobleApp')
                     $scope.clearStableA = function () {
                         $("#stableSaNum").val('');
                     }
-                    $scope.clearRandB =function () {
+                    $scope.clearRandB = function () {
                         $("#randSbMinNum").val('');
                         $("#randSbMaxNum").val('');
                     }
@@ -153,14 +154,15 @@ angular.module('lepayglobleApp')
                         criteria.phone = phone;
                         currentPage = 1;
                     }
-                    $("input[type=number]").attr("disabled","disabled");
-                    $("input[type=radio]").click(function(){
-                       var name = $(this).attr("name");
-                      $("input[name=" + name + "]").next().next().attr("disabled","disabled");
-                       $("input[name=" + name + "]").next().next().next().next().attr("disabled","disabled");
-                       $(this).next().next().removeAttr("disabled");
-                       $(this).next().next().next().next().removeAttr("disabled");
-                   });
+                    $("input[type=number]").attr("disabled", "disabled");
+                    $("input[type=radio]").click(function () {
+                        var name = $(this).attr("name");
+                        $("input[name=" + name + "]").next().next().attr("disabled", "disabled");
+                        $("input[name=" + name + "]").next().next().next().next().attr("disabled",
+                                                                                       "disabled");
+                        $(this).next().next().removeAttr("disabled");
+                        $(this).next().next().next().next().removeAttr("disabled");
+                    });
                 });
 
 

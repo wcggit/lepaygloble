@@ -393,7 +393,7 @@ tbody .chbx{
 .w-z {
     margin: 0px 5px !important;
 }
-.form-control {
+#pffl-set .form-control {
     display: inline !important;
 }
 .invite .w-invite tbody td:first-child {

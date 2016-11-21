@@ -21,7 +21,7 @@ import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
 import com.jifenke.lepluslive.merchant.repository.OpenRequestRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
-import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
+import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.weixin.repository.WeiXinUserRepository;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +84,9 @@ public class MerchantService {
     @Inject
     private WeiXinUserRepository weiXinUserRepository;
 
+    @Inject
+    private PartnerService partnerService;
+
     /**
      * 获取商家详情
      */
@@ -112,7 +114,6 @@ public class MerchantService {
             openRequest.setMerchant(merchant);
         }
         openRequestRepository.save(openRequest);
-
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -130,7 +131,7 @@ public class MerchantService {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Long countPartnerBindMerchant(Partner partner) {
-        return merchantRepository.countByPartner(partner);
+        return merchantRepository.countByPartnerAndPartnershipNot(partner, 2);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -243,6 +244,7 @@ public class MerchantService {
         merchantUser.setName(username);
         merchantUser.setPassword(MD5Util.MD5Encode(password, "UTF-8"));
         merchantUser.setMerchant(merchant);
+        merchantUser.setType(0);
         merchantUserRepository.save(merchantUser);
     }
 
@@ -256,13 +258,10 @@ public class MerchantService {
         } else {
             throw new RuntimeException();
         }
-
     }
 
     /**
      * 获取合伙人虚拟商户
-     * @param partner
-     * @return
      */
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Merchant findPartnerVirtualMerchant(Partner partner) {
@@ -277,8 +276,8 @@ public class MerchantService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Map findMerchantCodeData(Merchant merchant) {
         Integer count = null;
-        List scoreAs = null;
-        List scoreBs = null;
+        Long scoreAs = null;
+        Long scoreBs = null;
         Map<String, Object> map = new HashMap<>();
         String subSource = "4_0_" + merchant.getId();  //关注来源
         //获取注册来源为该商家的用户总数
@@ -291,11 +290,18 @@ public class MerchantService {
             //邀请会员数
             count = leJiaUserRepository.countBySubSourceAndState(subSource);
             map.put("inviteM", count);
-            //邀请会员的会员累计红包额和使用红包额
-            scoreAs = leJiaUserRepository.countScoreAByMerchant(merchant.getPartner().getId());
-            scoreBs = leJiaUserRepository.countScoreBByMerchant(merchant.getPartner().getId());
-            map.put("totalA", scoreAs.get(0));
-            map.put("totalB", scoreBs.get(0));
+            if (partnerService.findPartnerInfoByPartnerSid(merchant.getPartner().getPartnerSid())
+                    .getInviteLimit() == 1) {
+                scoreAs = leJiaUserRepository.countScoreAByMerchant(merchant.getPartner().getId());
+                scoreBs = leJiaUserRepository.countScoreBByMerchant(merchant.getPartner().getId());
+            } else {
+                scoreAs = leJiaUserRepository.countScoreABySubSource(
+                    subSource);
+                scoreBs =
+                    leJiaUserRepository.countScoreBBySubSource(subSource);
+            }
+            map.put("totalA", scoreAs);
+            map.put("totalB", scoreBs);
         }
         return map;
     }

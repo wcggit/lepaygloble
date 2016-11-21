@@ -150,8 +150,8 @@ angular.module('lepayglobleApp')
                         merchant.payee = $("#payee").val().trim();
                         merchant.picture = $(".merchant-picture")[0].src;
                         merchant.cycle = 1;
-                        merchant.lat = $("#lnglat").val().split(",")[0]
-                        merchant.lng = $("#lnglat").val().split(",")[1]
+                        merchant.lng = $("#lnglat").val().split(",")[0]
+                        merchant.lat = $("#lnglat").val().split(",")[1]
                         if ($('#optionsRadios1').prop('checked')) {
                             merchant.partnership = 1;
                             merchant.ljCommission = $("#import-commission").val().trim();
