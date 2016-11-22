@@ -279,6 +279,8 @@ angular.module('lepayglobleApp')
                         } else {
                             if (!newVal == null) {
                                 alert("请输入有效数字");
+                            }else {
+                                $scope.hbNumBatch = 0;
                             }
                         }
                     });
@@ -299,12 +301,15 @@ angular.module('lepayglobleApp')
                         } else {
                             if (!newVal == null) {
                                 alert("请输入有效数字");
+                            }else {
+                                $scope.jfNumBatch = 0;
                             }
                         }
                     });
 
                     $scope.batchWelfare = function () {
-                        if ($scope.jfNumBatch == null && $scope.hbNumBatch == null) {
+                        //  if ($scope.jfNumBatch == null && $scope.hbNumBatch == null) {
+                        if ($scope.jfNumBatch == 0 && $scope.hbNumBatch == 0) {
                             alert("至少发送红包或积分");
                             return;
                         }
