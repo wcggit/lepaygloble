@@ -5,10 +5,8 @@ import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.controller.dto.MerchantDto;
-import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantType;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
+import com.jifenke.lepluslive.merchant.domain.entities.*;
+import com.jifenke.lepluslive.merchant.service.MerchantRebatePolicyService;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.order.service.FinanicalStatisticService;
 import com.jifenke.lepluslive.partner.service.PartnerService;
@@ -29,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -59,6 +58,8 @@ public class MerchantController {
     @Inject
     private PartnerService partnerService;
 
+    @Inject
+    private MerchantRebatePolicyService merchantRebatePolicyService;
 
     @RequestMapping(value = "/merchant/getCommission", method = RequestMethod.GET)
     public LejiaResult getAvaliableCommission() {
@@ -235,7 +236,28 @@ public class MerchantController {
         @RequestBody Merchant merchant) {
         merchant.setPartner(partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin()));
         merchantService.createMerchant(merchant);
-
+        MerchantRebatePolicy merchantRebatePolicy = new MerchantRebatePolicy();
+        if(merchant.getPartnership()==0) {
+            merchantRebatePolicy.setImportScoreBScale(new BigDecimal(0));
+            merchantRebatePolicy.setUserScoreBScaleB(new BigDecimal(0));
+            merchantRebatePolicy.setUserScoreBScale(new BigDecimal(0));
+            merchantRebatePolicy.setUserScoreAScale(new BigDecimal(0));
+            merchantRebatePolicy.setRebateFlag(2);     // 不发放
+        }
+        if(merchant.getPartnership()==1) {
+            int result = merchant.getLjCommission().intValue() * 5;
+            merchantRebatePolicy.setImportScoreBScale(new BigDecimal(result));
+            merchantRebatePolicy.setUserScoreBScaleB(new BigDecimal(result));
+            merchantRebatePolicy.setUserScoreAScale(new BigDecimal(0));
+            merchantRebatePolicy.setRebateFlag(1);      // 全额发放
+        }
+        // 发放策略
+        merchantRebatePolicy.setMerchantId(merchant.getId());
+        merchantRebatePolicy.setStageOne(10);
+        merchantRebatePolicy.setStageTwo(80);
+        merchantRebatePolicy.setStageThree(6);
+        merchantRebatePolicy.setStageFour(3);
+        merchantRebatePolicyService.saveMerchantRebatePolicy(merchantRebatePolicy);
         return LejiaResult.ok("添加商户成功");
     }
 

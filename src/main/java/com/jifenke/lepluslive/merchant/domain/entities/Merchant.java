@@ -56,7 +56,7 @@ public class Merchant {
 
     private String phoneNumber; //服务电话
 
-    private Integer partnership; //合作关系
+    private Integer partnership; //合作关系 0普通商户  1 联盟商户 2 虚拟商户 未天使合伙人创建默认自带商户
 
     private Double lng = 0.0;
 
