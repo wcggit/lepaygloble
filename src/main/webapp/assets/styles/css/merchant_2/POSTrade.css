@@ -1,0 +1,25 @@
+.nav-POSTrade>li{
+    float: left;
+}
+.nav-POSTrade>li>a, .nav-POSTrade>li>a:focus, .nav-POSTrade>li>a:hover{
+    color: #555;
+    cursor: pointer;
+    background-color: #fff;
+}
+.nav-POSTrade>li.active>a, .nav-POSTrade>li.active>a:focus, .nav-POSTrade>li.active>a:hover{
+    cursor: default;
+    background-color: #fff;
+    border-bottom:solid 2px #fb991a;
+    color: #fb991a;
+}
+.POSTrade .panel-body{padding-bottom: 65px;position: relative}
+.POSTrade .nav-POSTrade{
+    margin-bottom: -20px;
+    position: absolute;
+    bottom: 19px;
+    left:0px;
+}
+.POSTrade table tr td:nth-of-type(6){
+    width: 15%;
+}
+

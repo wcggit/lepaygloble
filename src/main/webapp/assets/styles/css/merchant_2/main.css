@@ -1,0 +1,115 @@
+/*自定义*/
+*{color: #222;font-size:16px;margin: 0;padding: 0;font-family: "microsoft yahei";}
+:focus {
+    outline:none;
+}
+html,body{height:100%;position: relative;background-color: #e7e8eb}
+input::-webkit-input-placeholder {
+    color: #888;
+}
+input:-moz-placeholder {
+    color: #888;
+}
+input::-moz-placeholder {
+    color: #888;
+}
+input:-ms-input-placeholder {
+    color: #888;
+}
+/*框架改造*/
+.timePicker i{
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    top: auto;
+    cursor: pointer;
+    z-index: 10;
+}
+.clear-float:after{
+    content: '';
+    clear: both;
+    height: 0;
+    display: block;
+}
+hr{margin-top: 10px;margin-bottom: 10px}
+ul,li{list-style: none}
+.btn{padding: 5px 24px}
+.btn-default:hover {
+    color: #fff;
+    background-color: #fb991a;
+    border-color: #adadad;
+}
+.tooltip-inner {
+    max-width: 500px;
+    color: #fb991a;
+    border: solid 1px #fb991a;
+    background-color: #fff;
+    font-size: 12px;
+}
+.tooltip.top .tooltip-arrow{
+    border-width: 0;
+}
+.tooltip.right .tooltip-arrow{
+    width: 8px;
+    height: 8px;
+    border-left: solid 1px #fb991a;
+    border-top: solid 1px #fb991a;
+    transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg); /* IE 9 */
+    -webkit-transform: rotate(-45deg); /* Safari and Chrome */
+    border-right-color: transparent;
+    background-color: #fff;
+    left:1px;
+    border-width: 1px;
+}
+.tooltip.top .tooltip-arrow{
+    width: 8px;
+    height: 8px;
+    border-left: solid 1px #fb991a;
+    border-top: solid 1px #fb991a;
+    transform: rotate(-1355deg);
+    -ms-transform: rotate(-135deg); /* IE 9 */
+    -webkit-transform: rotate(-135deg); /* Safari and Chrome */
+    border-right-color: transparent;
+    background-color: #fff;
+    bottom:1px;
+
+}
+.modal-content{border-radius: 0}
+label{
+    font-weight: normal;
+    font-size: 14px;
+    text-align: right;
+    width: 90px;
+    display: inline-block;
+}
+.table>tbody>tr>td, .table>tbody>tr>th,
+.table>tfoot>tr>td, .table>tfoot>tr>th,
+.table>thead>tr>td, .table>thead>tr>th{
+    vertical-align:middle;
+}
+.table>tbody>tr>td>p, .table>tbody>tr>th>p,
+.table>tfoot>tr>td>p, .table>tfoot>tr>th>p,
+.table>thead>tr>td>p, .table>thead>tr>th>p{
+    margin: 0;
+}
+thead>tr>td,tbody>tr>td,thead>tr>td>p,tbody>tr>td>p{font-size: 14px;}
+/*自定义属性*/
+.page-top{border: none;border-bottom: solid 1px #e7e8eb;border-radius: 0px}
+.page-bottom{border: none;border-bottom: solid 1px #e7e8eb;border-top: solid 1px #e7e8eb;border-radius: 0px}
+.ttl{border-left: solid 2px #fb991a;height: 20px;line-height: 20px;padding-left: 10px;margin: 24px 0 20px}
+.tooltip-problem{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #fb991a;
+    color: #fff;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+}
+.list-check .row{margin: 10px 0 30px}
+.timePicker{cursor: pointer ;}
+.font-yellow{color: #fb991a}
+.table-title{font-size: 14px}

@@ -1,0 +1,20 @@
+.withdrawRecord .page-top .left-icon{
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background: url("../../../../assets/styles/images/merchant_2/homePage/left-icon.png") no-repeat;
+    background-size: 100% 100%;
+    margin-right: 10px;
+}
+.withdrawRecord .page-top .left-icon+span{
+    cursor: pointer;
+    font-size: 16px;
+}
+.withdrawRecord .page-top .current-page{
+    color: #fb991a;
+    font-size: 16px;
+}
+.withdrawRecord .tr-noEmpty td.td-date p:last-child{
+    color: #999;
+    font-size: 14px;
+}

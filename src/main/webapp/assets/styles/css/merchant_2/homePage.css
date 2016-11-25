@@ -1,0 +1,190 @@
+.homePage .basic-info .face-img{width: 90px;height: 90px;border-radius: 50%;overflow: hidden;border: solid 1px #e2e2e2;margin: auto}
+.homePage .basic-info .face-img img{width: 100%;height: 100%;}
+.homePage .basic-info .money-ttl{font-size: 16px;margin-bottom: 10px}
+.homePage .basic-info .money-content span{font-size: 40px}
+.homePage .basic-info .money-content input{margin:16px 30px}
+.homePage .basic-info .money-content a{margin-top:21px;cursor: pointer}
+.homePage .basic-info .ttl-te4e4e4op{margin-left: -24px}
+.homePage .basic-info .ttl-top p:last-child{margin-left: -8px}
+.homePage .basic-info h5{
+    font-size: 14px;
+    color: #666;
+}
+.homePage .merchant-data .col-md-3 .out-div{
+    width: 210px;
+    border: solid 1px #e4e4e4;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+.homePage .merchant-data .col-md-3 .out-div p:first-child{
+    color: #666;
+    font-size: 14px;
+    line-height: 35px;
+}
+.homePage .merchant-data .col-md-3 .out-div p:last-child{
+    color: #444;
+    font-size: 28px;
+}
+.homePage .form-control{
+    width: auto;
+    display: inline-block;
+}
+.homePage .page-bottom .current-store{
+    margin: 0 10px;
+}
+
+/*list*/
+.homePage .dd-list{
+    padding-top: 15px;
+}
+.homePage .list{
+    width: 85%;
+    height: 120px;
+    border-left: solid 2px #e1e1e1;
+    position: relative;
+}
+.homePage .list .list-detail{
+    position: relative;
+    border: solid 1px #d7d7d7;
+    width: 95%;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-top: -16px;
+}
+.homePage .list .list-info1{
+    font-size: 14px;
+    color: #333;
+margin-bottom: 15px}
+.homePage .list .list-info1 .hydd-font,.homePage .list .list-info1 .dldd-font{
+    color: #f54339;
+    font-size: 14px;
+}
+.homePage .list .list-info1 .ptdd-font{
+    font-size: 14px;
+    color: #666;
+}
+.homePage .list .list-info2 .pay-detail{
+    font-size: 20px;
+    color: #444;
+    line-height: 40px;
+}
+.homePage .list .list-info2 .pay-detail span{
+    font-size: 14px;
+    color: #666;
+}
+.homePage .list .list-info2 .face-img{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+}
+.homePage .list .list-info2 .face-img img{
+    width: 100%;
+    height: 100%;
+}
+.homePage .list .list-info2 .nickname{
+    font-size: 14px;
+    color: #333;
+    line-height: 40px;
+}
+.homePage .list .list-detail .left-icon{
+    width: 15px;
+    height: 15px;
+    border-left: solid 1px #d7d7d7;
+    border-top: solid 1px #d7d7d7;
+    transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg); /* IE 9 */
+    -webkit-transform: rotate(-45deg); /* Safari and Chrome */
+    position: absolute;
+    left:-8px;
+    top:10px;
+    background-color: #fff;
+}
+.homePage .list .ddIcon{
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    left: -16px;
+    top: -16px;
+}
+.homePage .list .hyIcon{
+    background: url("../../images/merchant_2/homePage/hyddIcon.png") no-repeat;
+    background-size: 100% 100%;
+}
+.homePage .list .dlIcon{
+    background: url("../../images/merchant_2/homePage/dlddIcon.png") no-repeat;
+    background-size: 100% 100%;
+}
+.homePage .list .dd-time{
+    color: #333;
+    font-size: 16px;
+    position: absolute;
+    left: -122px;
+    top:-16px;
+    line-height: 20px;
+}
+.homePage .list .dd-time span{
+    color: #666;
+    font-size: 14px;
+}
+.homePage .look-more{
+    margin: 15px auto;
+    display: block;
+}
+.homePage .list-out-div{
+    width: 100%;
+    height: 600px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 30px 0;
+    margin-bottom: 30px;
+}
+
+/*提现*/
+#tx p {
+    margin-top: 6px;
+    color: #4f4f4f;
+}
+#tx .modal-header > h4 > span {
+    font-size: 14px;
+    color:#666;
+    margin-left: 20px;
+}
+#tx .modal-header > h4 > span >font{
+    color: #f75555;
+}
+#tx .modal-body .ts{
+    color: #fb991a;
+    display: inline-block;
+    line-height: 30px;
+    margin-left: -10px
+}
+#tx label{
+    color: #4f4f4f;
+    font-size: 16px;
+    font-weight: normal;
+}
+.btn-div {
+    width: 400px;
+    margin: 0 auto;
+}
+#tx-success .modal-body .icon-success{
+    width: 60px;
+    height: 60px;
+    background: url("../../../../assets/styles/images/merchant_2/homePage/success.png") no-repeat;
+    background-size: 100% 100%;
+    margin: 20px auto 10px;
+}
+#tx-success .modal-body p{
+    color: #4f4f4f;
+    text-align: center;
+}
+#tx-success .modal-body p:nth-of-type(1){
+    font-size: 22px;
+}
+#tx-success .modal-body p:nth-of-type(2){
+    font-size: 16px;
+    padding: 20px 0;
+}

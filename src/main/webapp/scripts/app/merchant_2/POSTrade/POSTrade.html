@@ -1,0 +1,250 @@
+<div class="POSTrade">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">
+            POS交易
+            <ul class="nav nav-POSTrade">
+                <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab()"><a>交易记录</a></li>
+                <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab()"><a>我的POS机</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="tab-content">
+            <div class="tab-pane" ng-class="{active:currentTab0}" >
+                <!--查询表单-->
+                <form class="form-inline list-check">
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label>门店名称</label>
+                            <div class="input-group col-md-6">
+                                <select class="form-control">
+                                    <option value="-1">某店</option>
+                                    <option value="0">某某店</option>
+                                </select>
+                                <span class="select-jiao"></span>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>交易完成时间</label>
+                            <date-choice class="input-group timePicker col-md-9"></date-choice>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label>订单类型</label>
+                            <div class="input-group col-md-6">
+                                <select class="form-control">
+                                    <option value="-1">某类型</option>
+                                    <option value="0">某某类型</option>
+                                </select>
+                                <span class="select-jiao"></span>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>支付方式</label>
+                            <div class="input-group col-md-6">
+                                <select class="form-control">
+                                    <option value="-1">某方式</option>
+                                    <option value="0">某某方式</option>
+                                </select>
+                                <span class="select-jiao"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label>POS设备尾号</label>
+                            <div class="input-group col-md-6">
+                                <select class="form-control">
+                                    <option value="-1">某号</option>
+                                    <option value="0">某某号</option>
+                                </select>
+                                <span class="select-jiao"></span>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>订单号</label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-5">
+                            <label></label>
+                            <button type="button" class="btn btn-warning btn-check2">查询</button>
+                        </div>
+                    </div>
+                </form>
+                <!--表格信息总结-->
+                <p class="ttl-add table-title">
+                    所选条件下，共有<span class="font-yellow">258</span>条交易记录，订单总金额
+                    <span class="font-yellow">￥8520.56</span>，使用红包<span class="font-yellow">￥20</span>，
+                    刷卡实付<span class="font-yellow">￥8988</span>，微信实付<span class="font-yellow">￥8500</span>，
+                    实际入账<span class="font-yellow">￥23233+￥12</span>红包
+                </p>
+                <!--表格-->
+                <div class="panel panel-default">
+                    <table class="table ol-tab">
+                        <thead class="active">
+                        <tr>
+                            <td>交易完成时间</td>
+                            <td>交易门店</td>
+                            <td>订单号</td>
+                            <td>设备尾号</td>
+                            <td>支付方式</td>
+                            <td>订单金额</td>
+                            <td>交易类型(费率)</td>
+                            <td>实际入账</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="tr-empty"><td class="text-center" colspan="8">暂无数据！</td></tr>
+                        <tr class="tr-noEmpty">
+                            <td class="td-date">
+                                <p>2016-05-05 </p>
+                                <p>11:30</p>
+                            </td>
+                            <td>一拼江南</td>
+                            <td>
+                                <p>363636366</p>
+                                <p>15269845</p>
+                            </td>
+                            <td>1512</td>
+                            <td>刷卡+红包</td>
+                            <td>
+                                <p>￥81550.12</p>
+                                <p>(微信￥100.00+红包￥1200.23)</p>
+                            </td>
+                            <td>普通订单(0.82)</td>
+                            <td>￥80.55+￥55.20红包</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--分页-->
+                <div class=" clearfix">
+                    <nav class="pull-right">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                            </li>
+                            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                                1}}</a>
+                            </li>
+                            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                                2}}</a>
+                            </li>
+                            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                                ng-click="loadPage(page+1)"><a aria-label="Next">
+                                <span aria-hidden="true">›</span>
+                            </a></li>
+                            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                                ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="tab-pane" ng-class="{active:currentTab1}">
+                <!--查询表单-->
+                <form class="form-inline list-check">
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label>POS设备尾号</label>
+                            <div class="input-group col-md-6">
+                                <select class="form-control">
+                                    <option value="-1">某号</option>
+                                    <option value="0">某某号</option>
+                                </select>
+                                <span class="select-jiao"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-5">
+                            <label></label>
+                            <button type="button" class="btn btn-warning btn-check2">查询</button>
+                        </div>
+                    </div>
+                </form>
+                <!--表格-->
+                <div class="panel panel-default">
+                    <table class="table ol-tab">
+                        <thead class="active">
+                        <tr>
+                            <td>设备号</td>
+                            <td>所在门店</td>
+                            <td>添加时间</td>
+                            <td>储蓄卡</td>
+                            <td>信用卡</td>
+                            <td>微信</td>
+                            <td>支付宝</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="tr-empty"><td class="text-center" colspan="8">暂无数据！</td></tr>
+                        <tr class="tr-noEmpty">
+                            <td>
+                                <p>WP6366</p>
+                                <p>152698</p>
+                            </td>
+                            <td>
+                                <p>棉花糖啦啦啦</p>
+                                <p>(朝阳店)</p>
+                            </td>
+                            <td class="td-date">
+                                <p>2016-05-05 </p>
+                                <p>11:30</p>
+                            </td>
+                            <td>
+                                <p>普通费率(0.6% 26元封顶)</p>
+                                <p>佣金费率(10%)</p>
+                            </td>
+                            <td>
+                                <p>普通费率(0.6%)</p>
+                                <p>佣金费率(10%)</p>
+                            </td>
+                            <td>
+                                <p>普通费率(0.6%)</p>
+                                <p>佣金费率(10%)</p>
+                            </td>
+                            <td>
+                                <p>普通费率(0.6%)</p>
+                                <p>佣金费率(10%)</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--分页-->
+                <div class=" clearfix">
+                    <nav class="pull-right">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                            </li>
+                            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                                1}}</a>
+                            </li>
+                            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                                2}}</a>
+                            </li>
+                            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                                ng-click="loadPage(page+1)"><a aria-label="Next">
+                                <span aria-hidden="true">›</span>
+                            </a></li>
+                            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                                ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
