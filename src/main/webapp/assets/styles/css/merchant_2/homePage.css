@@ -1,3 +1,4 @@
+/*---------------首页开始---------------*/
 .homePage .basic-info .face-img{width: 90px;height: 90px;border-radius: 50%;overflow: hidden;border: solid 1px #e2e2e2;margin: auto}
 .homePage .basic-info .face-img img{width: 100%;height: 100%;}
 .homePage .basic-info .money-ttl{font-size: 16px;margin-bottom: 10px}
@@ -188,3 +189,27 @@ margin-bottom: 15px}
     font-size: 16px;
     padding: 20px 0;
 }
+/*---------------首页结束---------------*/
+
+/*---------------提现记录开始---------------*/
+.withdrawRecord .page-top .left-icon{
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background: url("../../../../assets/styles/images/merchant_2/homePage/left-icon.png") no-repeat;
+    background-size: 100% 100%;
+    margin-right: 10px;
+}
+.withdrawRecord .page-top .left-icon+span{
+    cursor: pointer;
+    font-size: 16px;
+}
+.withdrawRecord .page-top .current-page{
+    color: #fb991a;
+    font-size: 16px;
+}
+.withdrawRecord .tr-noEmpty td.td-date p:last-child{
+    color: #999;
+    font-size: 14px;
+}
+/*---------------提现记录结束---------------*/

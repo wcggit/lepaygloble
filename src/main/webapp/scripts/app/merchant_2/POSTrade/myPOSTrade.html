@@ -1,0 +1,96 @@
+<!--查询表单-->
+<form class="form-inline list-check">
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label>POS设备尾号</label>
+            <div class="input-group col-md-6">
+                <select class="form-control">
+                    <option value="-1">某号</option>
+                    <option value="0">某某号</option>
+                </select>
+                <span class="select-jiao"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-5">
+            <label></label>
+            <button type="button" class="btn btn-warning btn-check2">查询</button>
+        </div>
+    </div>
+</form>
+<!--表格-->
+<div class="panel panel-default">
+    <table class="table ol-tab">
+        <thead class="active">
+        <tr>
+            <td>设备号</td>
+            <td>所在门店</td>
+            <td>添加时间</td>
+            <td>储蓄卡</td>
+            <td>信用卡</td>
+            <td>微信</td>
+            <td>支付宝</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="tr-empty"><td class="text-center" colspan="8">暂无数据！</td></tr>
+        <tr class="tr-noEmpty">
+            <td>
+                <p>WP6366</p>
+                <p>152698</p>
+            </td>
+            <td>
+                <p>棉花糖啦啦啦</p>
+                <p>(朝阳店)</p>
+            </td>
+            <td class="td-date">
+                <p>2016-05-05 </p>
+                <p>11:30</p>
+            </td>
+            <td>
+                <p>普通费率(0.6% 26元封顶)</p>
+                <p>佣金费率(10%)</p>
+            </td>
+            <td>
+                <p>普通费率(0.6%)</p>
+                <p>佣金费率(10%)</p>
+            </td>
+            <td>
+                <p>普通费率(0.6%)</p>
+                <p>佣金费率(10%)</p>
+            </td>
+            <td>
+                <p>普通费率(0.6%)</p>
+                <p>佣金费率(10%)</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--分页-->
+<div class=" clearfix">
+    <nav class="pull-right">
+        <ul class="pagination">
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+            </li>
+            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                1}}</a>
+            </li>
+            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                2}}</a>
+            </li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(page+1)"><a aria-label="Next">
+                <span aria-hidden="true">›</span>
+            </a></li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+        </ul>
+    </nav>
+</div>

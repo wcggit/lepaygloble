@@ -113,3 +113,9 @@ thead>tr>td,tbody>tr>td,thead>tr>td>p,tbody>tr>td>p{font-size: 14px;}
 .timePicker{cursor: pointer ;}
 .font-yellow{color: #fb991a}
 .table-title{font-size: 14px}
+.margin-center{display:block;margin: 20px auto;}
+.color222{color: #222}
+.color666{color: #666}
+.fontSize12{font-size: 12px}
+.fontSize14{font-size: 14px}
+.fontSize16{font-size: 16px}
