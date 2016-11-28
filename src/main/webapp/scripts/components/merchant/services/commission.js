@@ -113,6 +113,17 @@ angular.module('lepayglobleApp')
                      hasValidToken: function () {
                          var token = this.getToken();
                          return !!token;
+                     },
+                     getOnLineCommissionIncome: function () {
+                         var deferred = $q.defer();
+                         $http.get('/api/merchant/getOnLineCommissionIncome', {
+                             headers: {
+                                 'Content-Type': 'application/json'
+                             }
+                         }).success(function (response) {
+                             deferred.resolve(response);
+                         });
+                         return deferred.promise;
                      }
                  };
              });
