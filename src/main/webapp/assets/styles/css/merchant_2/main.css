@@ -116,6 +116,29 @@ thead>tr>td,tbody>tr>td,thead>tr>td>p,tbody>tr>td>p{font-size: 14px;}
 .margin-center{display:block;margin: 20px auto;}
 .color222{color: #222}
 .color666{color: #666}
+.colorfff{color: #fff}
 .fontSize12{font-size: 12px}
 .fontSize14{font-size: 14px}
 .fontSize16{font-size: 16px}
+/*头部*/
+.nav-style>li{
+    float: left;
+}
+.nav-style>li>a, .nav-style>li>a:focus, .nav-style>li>a:hover{
+    color: #555;
+    cursor: pointer;
+    background-color: #fff;
+}
+.nav-style>li.active>a, .nav-style>li.active>a:focus, .nav-style>li.active>a:hover{
+    cursor: default;
+    background-color: #fff;
+    border-bottom:solid 2px #fb991a;
+    color: #fb991a;
+}
+.top-style1 .panel-body{padding-bottom: 65px;position: relative}
+.top-style1 .nav-style{
+    margin-bottom: -20px;
+    position: absolute;
+    bottom: 19px;
+    left:0px;
+}

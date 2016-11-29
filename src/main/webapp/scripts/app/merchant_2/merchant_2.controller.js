@@ -28,7 +28,7 @@ angular.module('lepayglobleApp')
                 contentState:"1",
                 clickState:"1",
                 name:"乐加账单",
-                state:"lejiaBilling",
+                state:"lePlusBilling",
                 icon:""
             },
             {
@@ -51,8 +51,8 @@ angular.module('lepayglobleApp')
             {
                 contentState:"1",
                 clickState:"0",
-                name:"会员变现",
-                state:"",
+                name:"佣金收入",
+                state:"commissionIncome",
                 icon:"iconfont icon-2wodezhangdan18x20"
             },
             {

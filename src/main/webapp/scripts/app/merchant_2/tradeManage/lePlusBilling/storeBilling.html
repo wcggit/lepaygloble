@@ -1,0 +1,76 @@
+<!--查询表单-->
+<form class="form-inline list-check">
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>交易完成时间</label>
+            <date-choice class="input-group timePicker col-md-9"></date-choice>
+        </div>
+        <div class="form-group col-md-4">
+            <button type="button" class="btn btn-warning btn-check2">查询</button>
+        </div>
+    </div>
+</form>
+<!--表格信息总结-->
+<p class="ttl-add table-title clearfix">
+    详细数据<span class="pull-right"><i class="iconfont icon-2wodezhangdan18x20"></i>下载表格</span>
+</p>
+<!--表格-->
+<div class="panel panel-default">
+    <table class="table ol-tab">
+        <thead class="active">
+        <tr>
+            <td>门店名称</td>
+            <td>时段内总入账</td>
+            <td>扫码微信入账</td>
+            <td>POS刷卡入账</td>
+            <td>POS移动支付入账</td>
+            <td>红包支付入账</td>
+            <td>操作</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="tr-empty"><td class="text-center" colspan="8">暂无数据！</td></tr>
+        <tr class="tr-noEmpty">
+            <td>一拼江南主题餐厅</td>
+            <td>￥81550.12</td>
+            <td>￥81550.12</td>
+            <td>￥81550.12</td>
+            <td>
+                <p>￥81550.12</p>
+                <p>(微信￥100.00+支付包￥1200.23)</p>
+            </td>
+            <td>
+                <p>￥81550.12</p>
+                <p>(扫码￥100.00+POS￥1200.23)</p>
+            </td>
+            <td><a>下载表格</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--分页-->
+<div class=" clearfix">
+    <nav class="pull-right">
+        <ul class="pagination">
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+            </li>
+            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                1}}</a>
+            </li>
+            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                2}}</a>
+            </li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(page+1)"><a aria-label="Next">
+                <span aria-hidden="true">›</span>
+            </a></li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+        </ul>
+    </nav>
+</div>

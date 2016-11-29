@@ -11,26 +11,26 @@ angular.module('lepayglobleApp')
                 },
                 views: {
                     'right-content@merchant_2': {
-                        templateUrl: 'scripts/app/merchant_2/POSTrade/POSTrade.html',
+                        templateUrl: 'scripts/app/merchant_2/tradeManage/POSTrade/POSTrade.html',
                         controller: 'POSTradeController'
                     },
                     'POSTradeTab@POSTrade': {
-                        templateUrl: 'scripts/app/merchant_2/POSTrade/tradeRecord.html',
-                        controller: 'tradeRecordController'
+                        templateUrl: 'scripts/app/merchant_2/tradeManage/POSTrade/POSTradeRecord.html',
+                        controller: 'POSTradeRecordController'
                     }
                 },
                 resolve: {}
             })
-            .state('tradeRecord', {
+            .state('POSTradeRecord', {
                 parent: 'POSTrade',
-                url: '/tradeRecord',
+                url: '/POSTradeRecord',
                 data: {
                     authorities: ["merchant"]
                 },
                 views: {
                     'POSTradeTab@POSTrade': {
-                        templateUrl: 'scripts/app/merchant_2/POSTrade/tradeRecord.html',
-                        controller: 'tradeRecordController'
+                        templateUrl: 'scripts/app/merchant_2/tradeManage/POSTrade/POSTradeRecord.html',
+                        controller: 'POSTradeRecordController'
                     }
                 },
                 resolve: {}
@@ -43,7 +43,7 @@ angular.module('lepayglobleApp')
                 },
                 views: {
                     'POSTradeTab@POSTrade': {
-                        templateUrl: 'scripts/app/merchant_2/POSTrade/myPOSTrade.html',
+                        templateUrl: 'scripts/app/merchant_2/tradeManage/POSTrade/myPOSTrade.html',
                         controller: 'myPOSTradeController'
                     }
                 },
@@ -57,7 +57,7 @@ angular.module('lepayglobleApp')
                 },
                 views: {
                     'POSTradeTab@POSTrade': {
-                        templateUrl: 'scripts/app/merchant_2/POSTrade/myPOSEmpty.html',
+                        templateUrl: 'scripts/app/merchant_2/tradeManage/POSTrade/myPOSEmpty.html',
                         controller: 'myPOSEmptyController'
                     }
                 },
