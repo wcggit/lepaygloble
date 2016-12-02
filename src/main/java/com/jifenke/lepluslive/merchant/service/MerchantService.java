@@ -9,17 +9,8 @@ import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.lejiauser.domain.entities.RegisterOrigin;
 import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.lejiauser.repository.RegisterOriginRepository;
-import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantType;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
-import com.jifenke.lepluslive.merchant.domain.entities.OpenRequest;
-import com.jifenke.lepluslive.merchant.repository.MerchantProtocolRepository;
-import com.jifenke.lepluslive.merchant.repository.MerchantRepository;
-import com.jifenke.lepluslive.merchant.repository.MerchantTypeRepository;
-import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
-import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
-import com.jifenke.lepluslive.merchant.repository.OpenRequestRepository;
+import com.jifenke.lepluslive.merchant.domain.entities.*;
+import com.jifenke.lepluslive.merchant.repository.*;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.weixin.repository.WeiXinUserRepository;
@@ -86,6 +77,9 @@ public class MerchantService {
 
     @Inject
     private PartnerService partnerService;
+
+    @Inject
+    private MerchantInfoRepository merchantInfoRepository;
 
     /**
      * 获取商家详情
@@ -176,7 +170,10 @@ public class MerchantService {
         new Thread(() -> {
             fileImageService.SaveBarCode(finalBytes, filePath);
         }).start();
-
+        //  MerchantInfo   02/12/16
+        MerchantInfo merchantInfo = new MerchantInfo();
+        merchantInfoRepository.save(merchantInfo);
+        merchant.setMerchantInfo(merchantInfo);
         merchantRepository.save(merchant);
         RegisterOrigin registerOrigin = new RegisterOrigin();
         registerOrigin.setOriginType(3);
