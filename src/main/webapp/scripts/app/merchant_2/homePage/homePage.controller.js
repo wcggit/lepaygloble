@@ -36,7 +36,6 @@ angular.module('lepayglobleApp')
 
         HomePage.getMerchantsInfo().then(function(response) {
             var data = response.data;
-            console.log(JSON.stringify(data));
             $scope.merchants = data;
         });
 
@@ -64,7 +63,7 @@ angular.module('lepayglobleApp')
             };
         });
 
-        //  首页 - 交易看板
+        //  首页 - 交易看板 - 当前门店
         HomePage.opraBoardInfo().then(function(data) {
            var data = data.data;
             $scope.obinfo = {
@@ -75,4 +74,20 @@ angular.module('lepayglobleApp')
             };
         });
 
+        // 首页 - 交易看板 - 订单提示
+        HomePage.opraBoardList(0).then(function (data) {
+            var data = data.data;
+            $scope.offset=0;
+            $scope.orderList = data;
+            console.log(JSON.stringify(data));
+        });
+
+        // 按钮绑定事件
+        $scope.findAll = function(){
+            $scope.offset=($scope.offset+1);
+            HomePage.opraBoardInfo($scope.offset).then(function (data) {
+                var data = data.data;
+                console.log(JSON.stringify(data));
+            });
+        }
     });

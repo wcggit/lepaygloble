@@ -46,6 +46,17 @@ angular.module('lepayglobleApp')
                     deferred.resolve(response);
                 });
                 return deferred.promise;
+            },
+            opraBoardList: function (offset) {
+                var deferred = $q.defer();
+                $http.get('/api/order/orderList/'+offset, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).success(function (response) {
+                    deferred.resolve(response);
+                });
+                return deferred.promise;
             }
         }
     });

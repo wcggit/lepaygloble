@@ -46,4 +46,18 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
 
     Merchant findByMerchantSid(String sid);
 
+    /***
+     * 根据门店查询数据
+     */
+    @Query(value="select * from (" +
+        "        SELECT o.order_sid,o.complete_date,lepay_code,true_pay,true_score,o.rebate_way,0 order_type,1 merchant_name FROM off_line_order o where o.state=1 and  o.merchant_id=?1" +
+        "        UNION " +
+        "        SELECT p.order_sid,p.complete_date,null,true_pay,true_score,p.rebate_way,1 order_type,1 merchant_name FROM pos_order p where  p.state=1 and p.merchant_id =?1" +
+        "    ) r order by r.complete_date desc limit ?2,10",nativeQuery = true)
+    List<Object[]> findOrderListByMerchant(Long merchantId,Long offSet);
+
+
+
+
+
 }

@@ -75,84 +75,54 @@
     </div>
     <div class="list-out-div">
         <div class="container-fluid clearfix dd-list">
-            <div class="list pull-right">
-                <div class="list-detail pull-right">
-                    <div class="list-info1 clearfix">订单编号：32233324455255（确认码：12355888585858）<span class="pull-right hydd-font">会员订单</span></div>
+
+            <div class="list pull-right" ng-repeat="arr in orderList">
+                <!--扫码订单-->
+                <div class="list-detail pull-right"  ng-show="{{arr[6]==0}}">
+                    <div class="list-info1 clearfix">订单编号：{{arr[0]}}（确认码：{{arr[2]}}）<span class="pull-right hydd-font" ng-show="arr[5]==0">普通订单</span>
+                                                                                         <span class="pull-right dldd-font"  ng-show="arr[5]==1">导流订单</span>
+                                                                                         <span class="pull-right hydd-font" ng-show="arr[5]==2">会员订单</span>
+                                                                                         <span class="pull-right hydd-font" ng-show="arr[5]==3">会员订单</span>
+                                                                                         <span class="pull-right hydd-font" ng-show="arr[5]==4">扫码订单</span>
+                                                                                         <span class="pull-right hydd-font" ng-show="arr[5]==5">扫码订单</span>
+                                                                                         <span class="pull-right hydd-font" ng-show="arr[5]==6">会员订单</span>
+
+                    </div>
                     <div class="list-info2 clearfix">
                         <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
-                        <span class="pull-left nickname">夜空中最亮的星</span>
-                        <span class="pull-right pay-detail">付款:75.00元<span>（微信支付70元+5元红包）</span></span>
+                        <span class="pull-left nickname">{{arr[7]}}</span>
+                        <span class="pull-right pay-detail">付款:{{arr[3]/100.0+arr[4]/100.0}}元<span>（微信支付{{arr[3]/100.0}}元+{{arr[4]/100.0}}元红包）</span></span>
                     </div>
                     <div class="left-icon"></div>
                 </div>
-                <div class="ddIcon hyIcon"></div>
-                <div class="dd-time text-right">2016-11-20<br><span>16:16:16</span></div>
-            </div>
-            <div class="list pull-right">
-                <div class="list-detail pull-right">
-                    <div class="list-info1 clearfix">订单编号：32233324455255（确认码：12355888585858）<span class="pull-right dldd-font">导流订单</span></div>
+                <!--Pos订单-->
+                <div class="list-detail pull-right" ng-show="{{arr[6]==1}}">
+                    <div class="list-info1 clearfix">订单编号：{{arr[0]}}<span class="pull-right hydd-font" ng-show="arr[5]==0">普通订单</span>
+                                                                            <span class="pull-right dldd-font"  ng-show="arr[5]==1">导流订单</span>
+                                                                            <span class="pull-right hydd-font" ng-show="arr[5]==2">会员订单</span>
+                                                                            <span class="pull-right hydd-font" ng-show="arr[5]==3">会员订单</span>
+                                                                            <span class="pull-right hydd-font" ng-show="arr[5]==4">扫码订单</span>
+                                                                            <span class="pull-right hydd-font" ng-show="arr[5]==5">扫码订单</span>
+                                                                            <span class="pull-right hydd-font" ng-show="arr[5]==6">会员订单</span>
+                    </div>
                     <div class="list-info2 clearfix">
                         <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
-                        <span class="pull-left nickname">夜空中最亮的星</span>
-                        <span class="pull-right pay-detail">付款:75.00元<span>（微信支付70元+5元红包）</span></span>
+                        <span class="pull-left nickname">{{arr[7]}}</span>
+                        <span class="pull-right pay-detail">付款:{{arr[3]/100.0+arr[4]/100.0}}元<span>（微信支付{{arr[3]/100.0}}元+{{arr[4]/100.0}}元红包）</span></span>
                     </div>
                     <div class="left-icon"></div>
                 </div>
-                <div class="ddIcon dlIcon"></div>
+
+                <div class="ddIcon hyIcon"  ng-show="{{arr[6]==1}}"></div>
+                <div class="ddIcon dlIcon"  ng-show="{{arr[6]==0}}"></div>
                 <div class="dd-time text-right">2016-11-20<br><span>16:16:16</span></div>
             </div>
-            <div class="list pull-right">
-                <div class="list-detail pull-right">
-                    <div class="list-info1 clearfix">订单编号：32233324455255（确认码：12355888585858）<span class="pull-right ptdd-font">普通订单</span></div>
-                    <div class="list-info2 clearfix">
-                        <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
-                        <span class="pull-left nickname">夜空中最亮的星</span>
-                        <span class="pull-right pay-detail">付款:75.00元<span>（微信支付70元+5元红包）</span></span>
-                    </div>
-                    <div class="left-icon"></div>
-                </div>
-                <div class="ddIcon hyIcon"></div>
-                <div class="dd-time text-right">2016-11-20<br><span>16:16:16</span></div>
-            </div>
-            <div class="list pull-right">
-                <div class="list-detail pull-right">
-                    <div class="list-info1 clearfix">订单编号：32233324455255（确认码：12355888585858）<span class="pull-right ptdd-font">普通订单</span></div>
-                    <div class="list-info2 clearfix">
-                        <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
-                        <span class="pull-left nickname">夜空中最亮的星</span>
-                        <span class="pull-right pay-detail">付款:75.00元<span>（微信支付70元+5元红包）</span></span>
-                    </div>
-                    <div class="left-icon"></div>
-                </div>
-                <div class="ddIcon hyIcon"></div>
-                <div class="dd-time text-right">2016-11-20<br><span>16:16:16</span></div>
-            </div>
-            <div class="list pull-right">
-                <div class="list-detail pull-right">
-                    <div class="list-info1 clearfix">订单编号：32233324455255（确认码：12355888585858）<span class="pull-right ptdd-font">普通订单</span></div>
-                    <div class="list-info2 clearfix">
-                        <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
-                        <span class="pull-left nickname">夜空中最亮的星</span>
-                        <span class="pull-right pay-detail">付款:75.00元<span>（微信支付70元+5元红包）</span></span>
-                    </div>
-                    <div class="left-icon"></div>
-                </div>
-                <div class="ddIcon hyIcon"></div>
-                <div class="dd-time text-right">2016-11-20<br><span>16:16:16</span></div>
-            </div>
-            <div class="list pull-right">
-                <div class="list-detail pull-right">
-                    <div class="list-info1 clearfix">订单编号：32233324455255（确认码：12355888585858）<span class="pull-right ptdd-font">普通订单</span></div>
-                    <div class="list-info2 clearfix">
-                        <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
-                        <span class="pull-left nickname">夜空中最亮的星</span>
-                        <span class="pull-right pay-detail">付款:75.00元<span>（微信支付70元+5元红包）</span></span>
-                    </div>
-                    <div class="left-icon"></div>
-                </div>
-                <div class="ddIcon hyIcon"></div>
-                <div class="dd-time text-right">2016-11-20<br><span>16:16:16</span></div>
-            </div>
+            <!---->
+            <!--<div class="list pull-right">-->
+                <!---->
+                <!--<div class="ddIcon dlIcon"></div>-->
+                <!--<div class="dd-time text-right">2016-11-20<br><span>16:16:16</span></div>-->
+            <!--</div>-->
         </div>
         <input type="button" class="btn btn-warning look-more" value="查看更多">
     </div>
