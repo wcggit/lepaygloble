@@ -1,6 +1,5 @@
 package com.jifenke.lepluslive.order.service;
 
-import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.order.domain.criteria.FinancialCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OLOrderCriteria;
@@ -8,7 +7,6 @@ import com.jifenke.lepluslive.order.domain.criteria.OrderShareCriteria;
 import com.jifenke.lepluslive.order.domain.entities.FinancialStatistic;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrderShare;
-import com.jifenke.lepluslive.order.domain.entities.PayWay;
 import com.jifenke.lepluslive.order.repository.FinancialStatisticRepository;
 import com.jifenke.lepluslive.order.repository.OffLineOrderRepository;
 import com.jifenke.lepluslive.order.repository.OffLineOrderShareRepository;
@@ -30,7 +28,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -187,13 +184,82 @@ public class OffLineOrderService {
         return map;
     }
 
+    /**
+     *  计算会员消费次数,总金额和红包 (全部)
+     * @param
+     * @return
+     */
+    public Map<String,Long> countMemberOrdersDetail(List<Merchant> merchants) {
+        Map<String,Long> map = new HashMap<>();
+        Long totalCount = 0L;       // 次数
+        Long totalSales = 0L;       // 总金额
+        Long totalRebate = 0L;      // 共收到红包
+        for (Merchant merchant : merchants) {
+            List<Object[]> details = offLineOrderRepository.countMemberOrderDetail(merchant.getId());
+            Long count = new Long(details.get(0)[0] ==null ?"0" : details.get(0)[0].toString());
+            Long sales = new Long(details.get(0)[1] == null ? "0" : details.get(0)[1].toString());
+            Long rebate = new Long(details.get(0)[2] == null ? "0" : details.get(0)[2].toString());
+            totalCount+=(count==null?0L:count);
+            totalSales+=(sales==null?0L:sales);
+            totalRebate+=(rebate==null?0L:rebate);
+        }
+        map.put("totalCount",totalCount);
+        map.put("totalSales",totalSales);
+        map.put("totalRebate",totalRebate);
+        return map;
+    }
+
+
+    /**
+     *  计算会员消费次数,总金额和红包  (每日)
+     * @param
+     * @return
+     */
+    public Map<String,Long> countMemberDailyOrdersDetail(List<Merchant> merchants) {
+        Map<String,Long> map = new HashMap<>();
+        Long dailyCount = 0L;       // 次数
+        Long dailySales = 0L;       // 总金额
+        Long dailyRebate = 0L;      // 共收到红包
+        for (Merchant merchant : merchants) {
+            List<Object[]> details = offLineOrderRepository.countMemberDailyOrderDetail(merchant.getId());
+            Long count = new Long(details.get(0)[0] ==null ?"0" : details.get(0)[0].toString());
+            Long sales = new Long(details.get(0)[1] == null ? "0" : details.get(0)[1].toString());
+            Long rebate = new Long(details.get(0)[2] == null ? "0" : details.get(0)[2].toString());
+            dailyCount+=(count==null?0L:count);
+            dailySales+=(sales==null?0L:sales);
+            dailyRebate+=(rebate==null?0L:rebate);
+        }
+        map.put("dailyCount",dailyCount);
+        map.put("dailySales",dailySales);
+        map.put("dailyRebate",dailyRebate);
+        return map;
+    }
+
+
+    /**
+     * 多门店-今日交易金额：
+     * @param merchants
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public Long countDailyTransfering(List<Merchant> merchants) {
+        Long totalTransfering = 0L;
+        for(Merchant merchant:merchants) {
+            Long transfering = offLineOrderRepository.countDailyTransferMoney(merchant.getId());
+            if(transfering!=null) {
+                totalTransfering += (transfering==null?0L:transfering);
+            }
+        }
+        return totalTransfering;
+    }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Map countOrderDetail(Merchant merchant) {
         List<Object[]>
             details =
             offLineOrderRepository.countOrderDetail(merchant.getId());
         Map map = new HashMap<>();
-        map.put("count", details.get(0)[0].toString());
+        map.put("count", details.get(0)[0] == null ? 0 : details.get(0)[0]);
         map.put("sales", details.get(0)[1] == null ? 0 : details.get(0)[1]);
         map.put("commission", details.get(0)[2] == null ? 0 : details.get(0)[2]);
         map.put("trueSales", details.get(0)[3] == null ? 0 : details.get(0)[3]);
@@ -330,4 +396,19 @@ public class OffLineOrderService {
         map.put("commission", details.get(0)[1] == null ? 0 : details.get(0)[1]);
         return map;
     }
+
+    /**
+     *  查看门店每日订单总额(线下)
+     */
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public Long countOffLineOrder(List<Merchant> merchants) {
+        Long offLineDailyCount = 0L;
+        for (Merchant merchant : merchants) {
+            Long totalPrice = offLineOrderRepository.countTotalPrice(merchant.getId());
+            offLineDailyCount += totalPrice==null?0L:totalPrice;
+        }
+        return offLineDailyCount;
+    }
+
 }
+

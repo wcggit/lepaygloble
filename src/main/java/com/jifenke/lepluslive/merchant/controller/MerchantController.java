@@ -7,8 +7,10 @@ import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.controller.dto.MerchantDto;
 import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.service.MerchantRebatePolicyService;
+import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.order.service.FinanicalStatisticService;
+import com.jifenke.lepluslive.order.service.OffLineOrderService;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
@@ -29,6 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -61,6 +64,12 @@ public class MerchantController {
     @Inject
     private MerchantRebatePolicyService merchantRebatePolicyService;
 
+    @Inject
+    private MerchantUserResourceService merchantUserResourceService;
+
+    @Inject
+    private OffLineOrderService offLineOrderService;
+    //  旧版本 - 我的乐付
     @RequestMapping(value = "/merchant/getCommission", method = RequestMethod.GET)
     public LejiaResult getAvaliableCommission() {
         Merchant
@@ -70,12 +79,33 @@ public class MerchantController {
         MerchantWallet
             merchantWallet =
             merchantService.findMerchantWalletByMerchant(merchant);
-        Long transfering = finanicalStatisticService.countTransfering(merchant);
+        Long transfering = finanicalStatisticService.countDailyTransfering(merchant);
 
         return LejiaResult.ok(new MerchantDto(transfering, merchantWallet.getTotalTransferMoney(),
                                               merchantWallet.getAvailableBalance(),
                                               merchantWallet.getTotalMoney()));
     }
+
+    /**
+     * 首页 - 商户数据
+     *  a.今日入账
+     *  b.累计入账
+     *  c.消费金额/次数
+     *  d.接受红包总额
+     * @return
+     */
+    @RequestMapping(value="/merchant/homePage/merchantData",method = RequestMethod.GET)
+    public LejiaResult getHomePageMerchantData() {
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        Long transfering = offLineOrderService.countDailyTransfering(merchants);                            //  今日转账金额
+        Long totalTransfering = finanicalStatisticService.countTotalTransfering(merchants);                 //  转账总金额
+        Map<String, Long> detail = offLineOrderService.countMemberOrdersDetail(merchants);
+        detail.put("transfering",transfering);
+        detail.put("totalTransfering",totalTransfering);
+        return LejiaResult.ok(detail);
+    }
+
 
     @RequestMapping(value = "/merchant", method = RequestMethod.GET)
     public LejiaResult getMerchant() {
