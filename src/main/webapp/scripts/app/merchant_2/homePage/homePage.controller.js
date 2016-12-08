@@ -7,6 +7,8 @@
 angular.module('lepayglobleApp')
     .controller('homePageController', function ($scope, $state, $rootScope, $location,Principal,Auth,$http,Commission,HomePage) {
         $("[data-toggle='tooltip']").tooltip();
+
+
         //强制保留两位小数
         $scope.toDecimal = function (x) {
             var f = parseFloat(x);
@@ -63,31 +65,66 @@ angular.module('lepayglobleApp')
             };
         });
 
-        //  首页 - 交易看板 - 当前门店
-        HomePage.opraBoardInfo().then(function(data) {
-           var data = data.data;
-            $scope.obinfo = {
-                firNum: data.offLineDailyCount/100.0,
-                secNum: data.posDailyCount/100.0,
-                thirNum: data.dailySales/100.0,
-                fouNum: data.dailyCount
-            };
-        });
-
-        // 首页 - 交易看板 - 订单提示
-        HomePage.opraBoardList(0).then(function (data) {
-            var data = data.data;
-            $scope.offset=0;
-            $scope.orderList = data;
-            console.log(JSON.stringify(data));
-        });
-
-        // 按钮绑定事件
-        $scope.findAll = function(){
-            $scope.offset=($scope.offset+1);
-            HomePage.opraBoardInfo($scope.offset).then(function (data) {
+        //  首页 - 交易看板 (全部门店)
+        $scope.findAll = function(p) {
+            // 交易看板 - 订单提示
+            HomePage.opraBoardList(p).then(function (data) {
                 var data = data.data;
-                console.log(JSON.stringify(data));
+                $scope.offset=p;
+                $scope.orderList = data;
+            });
+            //  交易看板 - 交易信息
+            HomePage.opraBoardInfo().then(function(data) {
+                var data = data.data;
+                $scope.obinfo = {
+                    firNum: data.offLineDailyCount/100.0,
+                    secNum: data.posDailyCount/100.0,
+                    thirNum: data.dailySales/100.0,
+                    fouNum: data.dailyCount
+                };
             });
         }
+        $scope.findAll(0);
+
+        // 按钮绑定事件 - 查看更多
+        $scope.findMore = function(){
+            $scope.offset=$scope.offset+1;
+            var p = $scope.offset;
+            var selMerchant = $("#selMerchant").val();
+            if(selMerchant==''||selMerchant==null) {
+                $scope.findAll(p);                                               // 所有门店
+            }else {
+                HomePage.siglOpraBoardList(selMerchant,p).then(function (data) {  // 指定门店
+                    var data = data.data;
+                    $scope.orderList = data;
+                });
+            }
+        }
+
+
+        // 首页 - 切换门店时进行查询
+        $scope.changeStore = function(id) {
+            $scope.offset=0;
+            // 查询所有
+            if(id==""||id==null) {
+                $scope.findAll(0);
+                return;
+            }
+            // 门店交易信息
+            HomePage.siglOpraBoardInfo(id).then(function(data) {
+                var data = data.data;
+                $scope.obinfo = {
+                    firNum: data.offLineDailyCount/100.0,
+                    secNum: data.posDailyCount/100.0,
+                    thirNum: data.dailySales/100.0,
+                    fouNum: data.dailyCount
+                };
+            });
+            // 门店订单列表
+            HomePage.siglOpraBoardList(id,$scope.offset).then(function (data) {
+                var data = data.data;
+                $scope.orderList = data;
+            });
+        }
+
     });

@@ -315,4 +315,25 @@ public class OrderController {
         }
         return LejiaResult.ok(allOrderList);
     }
+
+    /**
+     * 每日订单列表 (指定门店)
+     */
+    @RequestMapping(value = "/order/orderList/merchant/{param}", method = RequestMethod.GET)
+    public LejiaResult getOrderListByMerchant(@PathVariable String param) {
+        String[] split = param.split("-");
+        Long id = new Long(split[0]);
+        Long offset = new Long(split[1]);
+        if(offset==null) {
+            offset = 0L;
+        }
+        List<Merchant> merchants = new ArrayList<>();
+        Merchant merchant = merchantService.findMerchantById(id);
+        merchants.add(merchant);
+        List<Object[]> orderList = merchantService.findOrderList(merchant,offset);
+        for (Object[] objects : orderList) {
+            objects[7] = merchant.getName();
+        }
+        return LejiaResult.ok(orderList);
+    }
 }

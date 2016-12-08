@@ -64,9 +64,9 @@
         <div class="panel-body clearfix">
             <div class="pull-left">
                 当前门店
-                <select name="" id="" class="current-store">
-                    <option value="">-- 请选择 -- </option>
-                    <option value="m.sid" ng-repeat="m in merchants">{{m.name}}</option>
+                <select name="" id="selMerchant" class="current-store" ng-change="changeStore(x)" ng-model="x">
+                    <option value="">全部</option>
+                    <option value="{{m.sid}}" ng-repeat="m in merchants">{{m.name}}</option>
                 </select>
                 <span>门店今日流水￥{{obinfo.firNum+obinfo.secNum}}，扫码流水￥{{obinfo.firNum}}，POS机流水￥{{obinfo.secNum}}，乐加会员消费￥{{obinfo.thirNum}}/{{obinfo.fouNum}}次</span>
             </div>
@@ -115,7 +115,7 @@
 
                 <div class="ddIcon hyIcon"  ng-show="{{arr[6]==1}}"></div>
                 <div class="ddIcon dlIcon"  ng-show="{{arr[6]==0}}"></div>
-                <div class="dd-time text-right">2016-11-20<br><span>16:16:16</span></div>
+                <div class="dd-time text-right">{{arr[1]|date:'yyyy-MM-dd'}}<br><span>{{arr[1]|date:'HH:mm:ss'}}</span></div>
             </div>
             <!---->
             <!--<div class="list pull-right">-->
@@ -124,7 +124,7 @@
                 <!--<div class="dd-time text-right">2016-11-20<br><span>16:16:16</span></div>-->
             <!--</div>-->
         </div>
-        <input type="button" class="btn btn-warning look-more" value="查看更多">
+        <input type="button" class="btn btn-warning look-more" value="查看更多" ng-click="findMore()">
     </div>
 
 </div>
