@@ -4,22 +4,22 @@
         <div class="form-group col-md-4">
             <label>门店名称</label>
             <div class="input-group col-md-6">
-                <select class="form-control">
-                    <option value="-1">某店</option>
-                    <option value="0">某某店</option>
+                <select name="" id="selMerchant" class="current-store" ng-change="changeStore(x)" ng-model="x">
+                    <option value="">请选择</option>
+                    <option value="{{m.sid}}" ng-repeat="m in merchants">{{m.name}}</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
         </div>
         <div class="form-group col-md-6">
             <label>交易完成时间</label>
-            <date-choice class="input-group timePicker col-md-9"></date-choice>
+            <input type="text" name="completeTime" id="timePicker1" class="input-group timePicker col-md-9" />
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-5">
             <label></label>
-            <button type="button" class="btn btn-warning btn-check2">查询</button>
+            <button type="button" class="btn btn-warning btn-check2" ng-click="findByDate()">查询</button>
         </div>
     </div>
 </form>

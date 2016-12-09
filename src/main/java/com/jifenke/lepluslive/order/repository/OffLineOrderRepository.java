@@ -51,4 +51,27 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
      */
     @Query(value = "select sum(total_price) from off_line_order where merchant_id = ?1 and to_days(complete_date) = to_days(now())",nativeQuery = true)
     Long countTotalPrice(Long merchantId);
+
+
+    /**
+     *  指定商户扫码订单最近七天入账总金额
+     */
+    @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),sum(transfer_money) from off_line_order " +
+                " where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
+    List<Object[]> countWeekOfflineOrder(Long merchantId,Date startDate);
+
+    /**
+     *  扫码牌微信最近七天入账
+     */
+    @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),IFNULL(sum(transfer_money_from_true_pay),0) from off_line_order " +
+          " where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
+    List<Object[]> countWeekOfflineWx(Long merchantId,Date startDate);
+
+    /**
+     * 指定商户线下订单红包支付入账
+     */
+    @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),IFNULL(sum(transfer_money-transfer_money_from_true_pay),0) from off_line_order " +
+        "where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) " +
+        "group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
+    List<Object[]> countWeekOffScore(Long merchantId,Date completeDate);
 }

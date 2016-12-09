@@ -6,6 +6,25 @@
 
 angular.module('lepayglobleApp')
     .controller('merchant_2Controller', function ($scope, $state, $rootScope, $location,Principal,Auth,$http) {
+        // INFO
+        Principal.identity().then(function (account) {
+            $scope.account = account;
+            $scope.isAuthenticated = Principal.isAuthenticated;
+        });
+        $rootScope.personal=false;
+        $scope.personalClick=function () {
+            $rootScope.personal =!$rootScope.personal;
+            $rootScope.personal=$rootScope.personal;
+        };
+        $http.get('api/merchant').success(function (response) {
+            $scope.shopName = response.data.name;
+        });
+        //  LOGOUT
+        $scope.logout = function () {
+            Auth.logout();
+            $state.go('home')
+        }
+        //  MENU
         $scope.menuList=[
             {
                 contentState:"1",
@@ -118,4 +137,5 @@ angular.module('lepayglobleApp')
         $scope.isActiveTab=function (tab) {
             return tab==$scope.currentTab;
         }
+
     })
