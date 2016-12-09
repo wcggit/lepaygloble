@@ -11,21 +11,6 @@
     font-size: 14px;
     color: #666;
 }
-.homePage .merchant-data .col-md-3 .out-div{
-    width: 210px;
-    border: solid 1px #e4e4e4;
-    margin: 0 auto;
-    padding: 10px 0;
-}
-.homePage .merchant-data .col-md-3 .out-div p:first-child{
-    color: #666;
-    font-size: 14px;
-    line-height: 35px;
-}
-.homePage .merchant-data .col-md-3 .out-div p:last-child{
-    color: #444;
-    font-size: 28px;
-}
 .homePage .form-control{
     width: auto;
     display: inline-block;

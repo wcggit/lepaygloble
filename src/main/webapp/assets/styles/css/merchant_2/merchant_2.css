@@ -107,4 +107,5 @@
 .content .right-content{
     width: 1000px;
     border-left: solid 1px #e7e8eb;
+    padding-bottom: 40px;
 }
