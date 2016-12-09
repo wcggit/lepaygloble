@@ -281,16 +281,59 @@ public class OrderController {
     /**
      * 每日订单数据 (指定门店)
      */
-    @RequestMapping(value = "/order/dailyOrder/merchant/{sid}", method = RequestMethod.GET)
-    public LejiaResult getDailyOrderData(@PathVariable String sid) {
-        Merchant merchant = merchantService.findmerchantBySid(sid);
+    @RequestMapping(value = "/order/dailyOrder/merchant/{id}", method = RequestMethod.GET)
+    public LejiaResult getDailyOrderData(@PathVariable Long id) {
+        Merchant merchant = merchantService.findMerchantById(id);
         List<Merchant> merchants = new ArrayList<>();
         merchants.add(merchant);
         Long offLineDailyCount = offLineOrderService.countOffLineOrder(merchants);          //  线下订单
         Long posDailyCount = posOrderSerivce.countPosOrder(merchants);                      //  pos 订单
         Map<String, Long> map = offLineOrderService.countMemberDailyOrdersDetail(merchants);     //  会员消费
-        map.put("offLineDailyCount", offLineDailyCount==null?0L:offLineDailyCount);
-        map.put("posDailyCount", posDailyCount==null?0L:posDailyCount);
+        map.put("offLineDailyCount", offLineDailyCount == null ? 0L : offLineDailyCount);
+        map.put("posDailyCount", posDailyCount == null ? 0L : posDailyCount);
         return LejiaResult.ok(map);
+    }
+
+    /**
+     * 每日订单列表 (所有门店)
+     */
+    @RequestMapping(value = "/order/orderList/{offset}", method = RequestMethod.GET)
+    public LejiaResult getOrderList(@PathVariable Long offset) {
+        if(offset==null) {
+            offset = 0L;
+        }
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        List<Object[]> allOrderList = new ArrayList<>();
+        for (Merchant merchant : merchants) {
+            List<Object[]> orderList = merchantService.findOrderList(merchant,offset);
+            for (Object[] objects : orderList) {
+                objects[7] = merchant.getName();
+            }
+            allOrderList.addAll(orderList);
+            // TO-DO   设置门店名称
+        }
+        return LejiaResult.ok(allOrderList);
+    }
+
+    /**
+     * 每日订单列表 (指定门店)
+     */
+    @RequestMapping(value = "/order/orderList/merchant/{param}", method = RequestMethod.GET)
+    public LejiaResult getOrderListByMerchant(@PathVariable String param) {
+        String[] split = param.split("-");
+        Long id = new Long(split[0]);
+        Long offset = new Long(split[1]);
+        if(offset==null) {
+            offset = 0L;
+        }
+        List<Merchant> merchants = new ArrayList<>();
+        Merchant merchant = merchantService.findMerchantById(id);
+        merchants.add(merchant);
+        List<Object[]> orderList = merchantService.findOrderList(merchant,offset);
+        for (Object[] objects : orderList) {
+            objects[7] = merchant.getName();
+        }
+        return LejiaResult.ok(orderList);
     }
 }

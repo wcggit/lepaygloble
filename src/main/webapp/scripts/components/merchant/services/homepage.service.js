@@ -36,9 +36,42 @@ angular.module('lepayglobleApp')
                 });
                 return deferred.promise;
             },
-            opraBoardInfo: function () {
+            opraBoardInfo: function () {                                   // 所有门店
                 var deferred = $q.defer();
                 $http.get('/api/order/dailyOrder', {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).success(function (response) {
+                    deferred.resolve(response);
+                });
+                return deferred.promise;
+            },
+            siglOpraBoardInfo: function (id) {                              // 单个门店
+                var deferred = $q.defer();
+                $http.get('/api/order/dailyOrder/merchant/'+id, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).success(function (response) {
+                    deferred.resolve(response);
+                });
+                return deferred.promise;
+            },
+            opraBoardList: function (offset) {                             // 所有门店
+                var deferred = $q.defer();
+                $http.get('/api/order/orderList/'+offset, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).success(function (response) {
+                    deferred.resolve(response);
+                });
+                return deferred.promise;
+            },
+            siglOpraBoardList: function (id,offset) {                        // 单个门店
+                var deferred = $q.defer();
+                $http.get('/api/order/orderList/merchant/'+id+'-'+offset, {
                     headers: {
                         'Content-Type': 'application/json'
                     }

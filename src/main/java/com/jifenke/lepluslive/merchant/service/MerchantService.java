@@ -318,4 +318,15 @@ public class MerchantService {
         return map;
     }
 
+
+    /**
+     *  分页获取门店的扫码订单和POS订单数据
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public List<Object[]> findOrderList(Merchant merchant,Long limit) {
+        Long offset = limit*10;
+        return merchantRepository.findOrderListByMerchant(merchant.getId(),offset);
+    }
+
 }
