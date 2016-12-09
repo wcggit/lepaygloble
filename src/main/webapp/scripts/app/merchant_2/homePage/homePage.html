@@ -11,7 +11,7 @@
                 <div class="face-img">
                     <img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt="">
                 </div>
-                <h5 class="text-center">汪峰煲仔饭</h5>
+                <h5 class="text-center">{{shopName+'&nbsp;(&nbsp;'+account.login+'&nbsp;)&nbsp;'}}</h5>
             </div>
             <div class="col-md-8 ttl-top">
                 <p class="money-ttl">
@@ -19,7 +19,7 @@
                     <span class="tooltip-problem" data-toggle="tooltip" data-placement="right" title="您店铺锁定的会员在乐加体系下的任何消费，都会给您带来佣金">?</span>
                 </p>
                 <p class="money-content clearfix">
-                    <span class="pull-left">￥100.22</span>
+                    <span class="pull-left">¥{{available}}</span>
                     <input type="button" class="btn btn-warning pull-left tx" data-target="#tx-success" data-toggle="modal" value="提现">
                     <a class="pull-left" ui-sref="withdrawRecord" ui-sref-opts="{reload: true}">查看提现详情</a>
                 </p>
@@ -30,13 +30,13 @@
             <div class="col-md-3">
                 <div class="out-div">
                     <p class="text-center">商户今日入账</p>
-                    <p class="text-center">￥1200.00</p>
+                    <p class="text-center" ng-bind="'¥'+srgl.firNum"></p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="out-div">
                     <p class="text-center">商户累计入账</p>
-                    <p class="text-center">￥1200.00</p>
+                    <p class="text-center" ng-bind="'¥'+srgl.secNum"></p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -45,16 +45,16 @@
                         会员消费金额/次数
                         <span class="tooltip-problem" data-toggle="tooltip" data-placement="top" title="乐加会员到您店铺消费的交易额和消费次数">?</span>
                     </p>
-                    <p class="text-center">￥1200.00</p>
+                    <p class="text-center" ng-bind="'¥'+srgl.thirNum+' / '+srgl.fouNum">></p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="out-div">
                     <p class="text-center">
-                        接受红包总额
+                        接收红包总额
                         <span class="tooltip-problem" data-toggle="tooltip" data-placement="top" title="乐加会员到店使用的红包总额。消费者使用的红包扣除相应手续费后，按1红包等于1元结算给商户">?</span>
                     </p>
-                    <p class="text-center">￥1200.00</p>
+                    <p class="text-center" ng-bind="'¥'+srgl.fifNum"></p>
                 </div>
             </div>
         </div>
@@ -65,9 +65,10 @@
             <div class="pull-left">
                 当前门店
                 <select name="" id="" class="current-store">
-                    <option value="">棉花糖KTV一拼江南</option>
+                    <option value="">-- 请选择 -- </option>
+                    <option value="m.sid" ng-repeat="m in merchants">{{m.name}}</option>
                 </select>
-                <span>门店今日流水￥356，扫码流水￥200，POS机流水￥156，乐加会员消费￥50/2次</span>
+                <span>门店今日流水￥{{obinfo.firNum+obinfo.secNum}}，扫码流水￥{{obinfo.firNum}}，POS机流水￥{{obinfo.secNum}}，乐加会员消费￥{{obinfo.thirNum}}/{{obinfo.fouNum}}次</span>
             </div>
             <span class="pull-right">语音提醒 <i class="iconfont icon-2wodezhangdan18x20"></i></span>
         </div>

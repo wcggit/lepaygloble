@@ -89,11 +89,26 @@ public class MerchantService {
         return merchantRepository.findOne(id);
     }
 
-
+    // 旧版本
     public MerchantWallet findMerchantWalletByMerchant(Merchant merchant) {
         return merchantWalletRepository.findByMerchant(merchant);
     }
 
+    // 新版本
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public Map findCommissionByMerchants(List<Merchant> merchants) {
+        Map map = new HashMap();
+        Long available = 0L;
+        Long totalCommission = 0L;
+        for (Merchant merchant : merchants) {
+            MerchantWallet merchantWallet = merchantWalletRepository.findByMerchant(merchant);
+            available += merchantWallet.getAvailableBalance()==null ? 0L:merchantWallet.getAvailableBalance();
+            totalCommission += merchantWallet.getTotalMoney()==null ? 0L:merchantWallet.getTotalMoney();
+        }
+        map.put("available",available);
+        map.put("totalCommission",totalCommission);
+        return map;
+    }
 
     public MerchantUser findMerchantUserByName(String name) {
         return merchantUserRepository.findByName(name).get();

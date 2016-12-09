@@ -26,4 +26,29 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
 
     @Query(value = "select count(*),sum(total_price),sum(lj_commission),sum(transfer_money) from off_line_order where merchant_id =?1", nativeQuery = true)
     List<Object[]> countOrderDetail(Long id);
+
+    /**
+     *  门店下:  会员消费次数 / 消费总金额 / 红包总额  (全部)
+     */
+    @Query(value = "select count(*),sum(total_price),sum(rebate) from off_line_order where merchant_id =?1 and rebate_way = 1", nativeQuery = true)
+    List<Object[]> countMemberOrderDetail(Long merchantId);
+
+    /**
+     *  门店下:  会员消费次数 / 消费总金额 / 红包总额  (今日)
+     */
+    @Query(value = "select count(*),sum(total_price),sum(rebate) from off_line_order where merchant_id =?1 and rebate_way = 1 and to_days(complete_date) = to_days(now())", nativeQuery = true)
+    List<Object[]> countMemberDailyOrderDetail(Long merchantId);
+
+
+    /**
+     *  门店下:  今日转账总金额
+     */
+    @Query(value = "select sum(transfer_money) from off_line_order where merchant_id =?1  and to_days(complete_date) = to_days(now())", nativeQuery = true)
+    Long countDailyTransferMoney(Long merchantId);
+
+    /**
+     *  门店下:  今日订单流水(线下)
+     */
+    @Query(value = "select sum(total_price) from off_line_order where merchant_id = ?1 and to_days(complete_date) = to_days(now())",nativeQuery = true)
+    Long countTotalPrice(Long merchantId);
 }

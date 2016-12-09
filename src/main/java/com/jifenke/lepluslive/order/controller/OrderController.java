@@ -7,10 +7,12 @@ import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.order.controller.view.OrderViewExcel;
 import com.jifenke.lepluslive.order.domain.criteria.OLOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OrderShareCriteria;
 import com.jifenke.lepluslive.order.service.OffLineOrderService;
+import com.jifenke.lepluslive.order.service.PosOrderSerivce;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
 import org.springframework.data.domain.Page;
@@ -24,10 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.inject.Inject;
 
@@ -54,6 +53,11 @@ public class OrderController {
     @Inject
     SimpMessageSendingOperations messagingTemplate;
 
+    @Inject
+    private MerchantUserResourceService merchantUserResourceService;
+
+    @Inject
+    private PosOrderSerivce posOrderSerivce;
 
     @RequestMapping(value = "/order/todayOrderDetail", method = RequestMethod.GET)
     public LejiaResult getTodayOrderDetail() {
@@ -259,4 +263,34 @@ public class OrderController {
         messagingTemplate.convertAndSendToUser("wcg", "/reply", activityDTO);
     }
 
+    /**
+     * 每日订单数据 (所有门店)
+     */
+    @RequestMapping(value = "/order/dailyOrder", method = RequestMethod.GET)
+    public LejiaResult getDailyOrderData() {
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        Long offLineDailyCount = offLineOrderService.countOffLineOrder(merchants);          //  线下订单
+        Long posDailyCount = posOrderSerivce.countPosOrder(merchants);                      //  pos 订单
+        Map<String, Long> map = offLineOrderService.countMemberDailyOrdersDetail(merchants);     //  会员消费
+        map.put("offLineDailyCount", offLineDailyCount);
+        map.put("posDailyCount", posDailyCount);
+        return LejiaResult.ok(map);
+    }
+
+    /**
+     * 每日订单数据 (指定门店)
+     */
+    @RequestMapping(value = "/order/dailyOrder/merchant/{sid}", method = RequestMethod.GET)
+    public LejiaResult getDailyOrderData(@PathVariable String sid) {
+        Merchant merchant = merchantService.findmerchantBySid(sid);
+        List<Merchant> merchants = new ArrayList<>();
+        merchants.add(merchant);
+        Long offLineDailyCount = offLineOrderService.countOffLineOrder(merchants);          //  线下订单
+        Long posDailyCount = posOrderSerivce.countPosOrder(merchants);                      //  pos 订单
+        Map<String, Long> map = offLineOrderService.countMemberDailyOrdersDetail(merchants);     //  会员消费
+        map.put("offLineDailyCount", offLineDailyCount==null?0L:offLineDailyCount);
+        map.put("posDailyCount", posDailyCount==null?0L:posDailyCount);
+        return LejiaResult.ok(map);
+    }
 }
