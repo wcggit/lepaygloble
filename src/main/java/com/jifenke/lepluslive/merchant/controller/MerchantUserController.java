@@ -1,16 +1,17 @@
 package com.jifenke.lepluslive.merchant.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.security.SecurityUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,31 @@ public class MerchantUserController {
         MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         return LejiaResult.ok(merchants);
+    }
+
+
+
+    @RequestMapping(value = "/merchantUser/merchantsInfo",method = RequestMethod.GET)
+    @ResponseBody
+    public LejiaResult getMerchantsInfo(){
+        List<Object>  merchantList = merchantUserResourceService.findMerchantsByMerchantUserSql(SecurityUtils.getCurrentUserLogin());
+        return LejiaResult.ok(merchantList);
+    }
+
+    /**
+     *  查询商户下所有门店的pos机信息
+     */
+    @RequestMapping(value="/merchantUser/findByMerchantPosUser",method=RequestMethod.GET)
+    public LejiaResult findByMerchantPosUser() {
+        return LejiaResult.ok(merchantUserResourceService.findByMerchantPosUser(SecurityUtils.getCurrentUserLogin()));
+    }
+
+    @RequestMapping(value = "/merchantUser/posOrderByMerchantUser")
+    @ResponseBody
+    public LejiaResult findPosOrderByMerchantUser(@RequestBody PosOrderCriteria posOrderCriteria){
+        posOrderCriteria.setState(1);
+        PosOrderCriteria result = merchantUserResourceService.findPosOrderByMerchantUser(posOrderCriteria);
+        return LejiaResult.ok(result);
     }
 
 }

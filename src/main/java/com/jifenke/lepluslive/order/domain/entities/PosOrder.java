@@ -38,7 +38,7 @@ public class PosOrder {
 
   private Long ljCommission = 0L; //乐加佣金
 
-  private Long trueScore = 0L; //实际使用红包
+  private Long trueScore = 0L; //实际使用红包 （订单总金额-实际支付）
 
   private Long wxCommission = 0L; //三方手续费
 
@@ -51,9 +51,9 @@ public class PosOrder {
   private Long transferMoney; //每笔应该转给商户的金额  (商户实际到账 = 第三方渠道到账 + 乐加支付)
   private Long transferByBank; //第三方支付转给商户的金额
 
-  private Long totalPrice;
+  private Long totalPrice;   //订单总金额
 
-  private Long truePay = 0L; //实际支付
+  private Long truePay = 0L; //实际支付 (订单总金额-实际使用红包)
 
   private Integer tradeFlag; //0支付宝、3POS刷卡、4微信、5纯积分（会员登录后不能用现金交易） 6现金支付
 
