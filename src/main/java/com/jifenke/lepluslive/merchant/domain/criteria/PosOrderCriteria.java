@@ -1,5 +1,6 @@
 package com.jifenke.lepluslive.merchant.domain.criteria;
 
+import com.jifenke.lepluslive.order.domain.entities.MerchantPos;
 import com.jifenke.lepluslive.order.domain.entities.PosOrder;
 import org.springframework.data.domain.Page;
 
@@ -14,6 +15,11 @@ public class PosOrderCriteria {
      * 订单数据
      */
     private Page<PosOrder> page;
+
+    /**
+     * pos机信息数据分页
+     */
+    private Page<MerchantPos> posPage;
 
     /**
      * 门店ID
@@ -105,6 +111,14 @@ public class PosOrderCriteria {
 
     public String getOrderSid() {
         return orderSid;
+    }
+
+    public Page<MerchantPos> getPosPage() {
+        return posPage;
+    }
+
+    public void setPosPage(Page<MerchantPos> posPage) {
+        this.posPage = posPage;
     }
 
     public void setOrderSid(String orderSid) {

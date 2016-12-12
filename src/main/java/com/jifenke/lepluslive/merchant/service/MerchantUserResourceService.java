@@ -3,11 +3,12 @@ package com.jifenke.lepluslive.merchant.service;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserResource;
+import com.jifenke.lepluslive.merchant.repository.MerchantPosRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository;
+import com.jifenke.lepluslive.order.domain.entities.MerchantPos;
 import com.jifenke.lepluslive.order.domain.entities.PosOrder;
 import com.jifenke.lepluslive.order.repository.PosOrderRepository;
-import net.sf.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -40,6 +41,8 @@ public class MerchantUserResourceService {
     private PosOrderRepository posOrderRepository;
     @Inject
     private EntityManager em;
+    @Inject
+    private MerchantPosRepository merchantPosRepository;
 
     /***
      *  根据商户找旗下的门店
@@ -192,4 +195,31 @@ public class MerchantUserResourceService {
         public  List<Object> findByMerchantPosUser(String merchantName){
             return merchantUserResourceRepository.findByMerchantPosUser(merchantName);
         }
+
+    /**
+     * 根据商户信息查询商户旗下门店所有pos机信息
+     * @param posOrderCriteria
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public PosOrderCriteria findPosInfoByMerchantUser(PosOrderCriteria posOrderCriteria){
+        int pageSize = 10;
+        Sort.Order order =  new Sort.Order(Sort.Direction.DESC,"createdDate");
+        Sort sort =  new Sort(order);
+        PageRequest pagerequest = new PageRequest(posOrderCriteria.getCurrentPage()-1, pageSize,sort);
+        Specification<MerchantPos> specification = new Specification<MerchantPos>(){
+
+            @Override
+            public Predicate toPredicate(Root<MerchantPos> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Predicate predicate = cb.conjunction();
+                if(posOrderCriteria.getMerchantPosId()!=null){
+                    predicate.getExpressions().add(cb.equal(root.get("id"),posOrderCriteria.getMerchantPosId()));
+                }
+                return predicate;
+            }
+        };
+        Page<MerchantPos> page = merchantPosRepository.findAll(specification,pagerequest);
+        posOrderCriteria.setPosPage(page);
+        return posOrderCriteria;
+    }
 }

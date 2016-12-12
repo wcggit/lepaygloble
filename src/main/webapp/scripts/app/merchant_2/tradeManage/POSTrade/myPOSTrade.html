@@ -4,9 +4,9 @@
         <div class="form-group col-md-4">
             <label>POS设备尾号</label>
             <div class="input-group col-md-6">
-                <select class="form-control">
-                    <option value="-1">某号</option>
-                    <option value="0">某某号</option>
+                <select class="form-control" ng-model="merchantPosId">
+                    <option value="">请选择</option>
+                    <option ng-repeat="x in merchantPosIds" value="{{x[0]}}">{{x[1] |limitTo:-4}}</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
@@ -15,7 +15,7 @@
     <div class="row">
         <div class="form-group col-md-5">
             <label></label>
-            <button type="button" class="btn btn-warning btn-check2">查询</button>
+            <button type="button" class="btn btn-warning btn-check2" ng-click="searchByPosCriteria()">查询</button>
         </div>
     </div>
 </form>
@@ -34,35 +34,32 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="tr-empty"><td class="text-center" colspan="8">暂无数据！</td></tr>
-        <tr class="tr-noEmpty">
+        <tr class="tr-empty" id="notData" hidden="true"><td class="text-center" colspan="8">暂无数据！</td></tr>
+        <tr class="tr-noEmpty" ng-repeat="x in posContent">
             <td>
-                <p>WP6366</p>
-                <p>152698</p>
+                <p>{{x.posId}}</p>
             </td>
             <td>
-                <p>棉花糖啦啦啦</p>
-                <p>(朝阳店)</p>
+                <p>{{x.merchant.name}}</p>
             </td>
             <td class="td-date">
-                <p>2016-05-05 </p>
-                <p>11:30</p>
+                <p>{{x.createdDate | date:'yyyy-MM-dd hh:mm:ss'}}</p>
             </td>
             <td>
-                <p>普通费率(0.6% 26元封顶)</p>
-                <p>佣金费率(10%)</p>
+                <p>普通费率({{x.debitCardCommission}}% {{x.ceil}}元封顶)</p>
+                <p>佣金费率({{x.ljCommission}}%)</p>
             </td>
             <td>
-                <p>普通费率(0.6%)</p>
-                <p>佣金费率(10%)</p>
+                <p>普通费率({{x.creditCardCommission}}%)</p>
+                <p>佣金费率({{x.ljCommission}}%)</p>
             </td>
             <td>
-                <p>普通费率(0.6%)</p>
-                <p>佣金费率(10%)</p>
+                <p>普通费率({{x.wxCommission}}%)</p>
+                <p>佣金费率({{x.wxUserCommission}}%)</p>
             </td>
             <td>
-                <p>普通费率(0.6%)</p>
-                <p>佣金费率(10%)</p>
+                <p>普通费率({{x.aliCommission}}%)</p>
+                <p>佣金费率({{x.aliUserCommission}}%)</p>
             </td>
         </tr>
         </tbody>

@@ -10,7 +10,6 @@ angular.module('lepayglobleApp')
             if(response.status == 200){
                 var data = response.data;
                 $scope.merchantPosIds = data;
-                console.log(data);
             }
         });
         var array = new Array();
