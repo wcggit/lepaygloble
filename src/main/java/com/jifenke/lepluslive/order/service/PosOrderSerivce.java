@@ -30,6 +30,5 @@ public class PosOrderSerivce {
         }
         return posDailyCount;
     }
-
 }
 

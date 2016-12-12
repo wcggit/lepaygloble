@@ -7,6 +7,8 @@ import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.security.SecurityUtils;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -85,6 +87,19 @@ public class MerchantUserController {
     public LejiaResult findPosOrderByMerchantUser(@RequestBody PosOrderCriteria posOrderCriteria){
         posOrderCriteria.setState(1);
         PosOrderCriteria result = merchantUserResourceService.findPosOrderByMerchantUser(posOrderCriteria);
+        return LejiaResult.ok(result);
+    }
+
+
+    /**
+     * 根据商户信息查询商户旗下门店所有pos机信息
+     * @param posOrderCriteria
+     * @return
+     */
+    @RequestMapping(value = "/merchantUser/findPosInfoByMerchantUser")
+    @ResponseBody
+    public LejiaResult findPosInfoByMerchantUser(@RequestBody PosOrderCriteria posOrderCriteria){
+        PosOrderCriteria result = merchantUserResourceService.findPosInfoByMerchantUser(posOrderCriteria);
         return LejiaResult.ok(result);
     }
 
