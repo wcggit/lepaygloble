@@ -1,3 +1,30 @@
+<div class="row merchant-data">
+    <div class="col-md-3">
+        <div class="out-div">
+            <p class="text-center">商户昨日入账</p>
+            <p class="text-center">￥1200.00</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="out-div">
+            <p class="text-center">商户累计入账</p>
+            <p class="text-center">￥1200.00</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="out-div">
+            <p class="text-center">会员消费金额/次数</p>
+            <p class="text-center">￥1200.00/12</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="out-div">
+            <p class="text-center">接受红包总额</p>
+            <p class="text-center">￥1200.00</p>
+        </div>
+    </div>
+</div>
+<hr>
 <!--查询表单-->
 <form class="form-inline list-check">
     <div class="row">
@@ -17,49 +44,36 @@
         </div>
     </div>
     <div class="row">
-        <div class="form-group col-md-5">
+        <div class="form-group col-md-4">
             <label></label>
-            <button type="button" class="btn btn-warning btn-check2" ng-click="clickFun()">查询</button>
+            <button type="button" class="btn btn-warning btn-check2">查询</button>
         </div>
     </div>
 </form>
-<div class="panel-body rjysr-panel-body">
-    <div style="height: 400px" id="dailyBillingEchart"></div>
-</div>
-<!--表格信息总结-->
-<p class="ttl-add table-title clearfix">
-    详细数据<span class="pull-right"><i class="iconfont icon-2wodezhangdan18x20"></i>下载表格</span>
-</p>
+
 <!--表格-->
 <div class="panel panel-default">
     <table class="table ol-tab">
         <thead class="active">
         <tr>
-            <td>交易完成时间</td>
-            <td>入账总金额</td>
-            <td>扫码微信入账</td>
-            <td>POS刷卡入账</td>
-            <td>POS移动支付入账</td>
-            <td>红包支付入账</td>
-            <td>操作</td>
+            <td>微信信息</td>
+            <td>锁定时间</td>
+            <td>锁定门店</td>
+            <td>注册获得红包</td>
+            <td>注册获得积分</td>
         </tr>
         </thead>
         <tbody>
-        <tr class="tr-empty"><td class="text-center" colspan="8">暂无数据！</td></tr>
+        <tr class="tr-empty"><td class="text-center" colspan="6">暂无数据！</td></tr>
         <tr class="tr-noEmpty">
-            <td>2016-05-05</td>
-            <td>￥81550.12</td>
-            <td>￥81550.12</td>
-            <td>￥81550.12</td>
-            <td>
-                <p>￥81550.12</p>
-                <p>(微信￥100.00+支付包￥1200.23)</p>
+            <td><span class="wx-faceImg"><img src="../../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span><span>嘿嘿嘿</span></td>
+            <td class="td-date">
+                <p>2016-05-05 </p>
+                <p>11:30</p>
             </td>
-            <td>
-                <p>￥81550.12</p>
-                <p>(扫码￥100.00+POS￥1200.23)</p>
-            </td>
-            <td><a>下载表格</a></td>
+            <td>一品江南</td>
+            <td>￥80.55</td>
+            <td>￥80.55</td>
         </tr>
         </tbody>
     </table>

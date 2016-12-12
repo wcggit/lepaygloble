@@ -80,7 +80,7 @@ angular.module('lepayglobleApp')
                 contentState:"1",
                 clickState:"1",
                 name:"会员邀请码",
-                state:"InvitationCode",
+                state:"invitationCode",
                 icon:""
             },
             {
