@@ -210,4 +210,12 @@ public class OffLineOrder {
     public void setState(Integer state) {
         this.state = state;
     }
+
+    public Long getTransferMoneyFromTruePay() {
+        return transferMoneyFromTruePay;
+    }
+
+    public void setTransferMoneyFromTruePay(Long transferMoneyFromTruePay) {
+        this.transferMoneyFromTruePay = transferMoneyFromTruePay;
+    }
 }

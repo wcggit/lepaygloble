@@ -6,11 +6,18 @@ angular.module('lepayglobleApp')
         return {
             getMerchantData: function(id) {
                 var deferred = $q.defer();
-                $http.get('/api//merchantData', {
+                $http.get('/api/homePage/merchantData', {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 }).success(function (response) {
+                    deferred.resolve(response);
+                });
+                return deferred.promise;
+            },
+            findWeekBillByMerchant: function (dailyOrderCriteria) {
+                var deferred = $q.defer();
+                $http.post('/api/lejiaOrder/daily',dailyOrderCriteria).success(function (response) {
                     deferred.resolve(response);
                 });
                 return deferred.promise;
