@@ -48,9 +48,8 @@ public class PosOrder {
 
   private Integer state = 0; //支付状态
 
-  private Long transferMoney; //每笔应该转给商户的金额
-
-  private Long transferByBank; //中慧转给商户的金额
+  private Long transferMoney; //每笔应该转给商户的金额  (商户实际到账 = 第三方渠道到账 + 乐加支付)
+  private Long transferByBank; //第三方支付转给商户的金额
 
   private Long totalPrice;   //订单总金额
 

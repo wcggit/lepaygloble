@@ -8,9 +8,12 @@ import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
+import com.jifenke.lepluslive.order.controller.view.LejiaOrderDTO;
 import com.jifenke.lepluslive.order.controller.view.OrderViewExcel;
+import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OLOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OrderShareCriteria;
+import com.jifenke.lepluslive.order.service.LejiaOrderService;
 import com.jifenke.lepluslive.order.service.OffLineOrderService;
 import com.jifenke.lepluslive.order.service.PosOrderSerivce;
 import com.jifenke.lepluslive.security.SecurityUtils;
@@ -58,6 +61,9 @@ public class OrderController {
 
     @Inject
     private PosOrderSerivce posOrderSerivce;
+
+    @Inject
+    private LejiaOrderService lejiaOrderService;
 
     @RequestMapping(value = "/order/todayOrderDetail", method = RequestMethod.GET)
     public LejiaResult getTodayOrderDetail() {
@@ -335,5 +341,14 @@ public class OrderController {
             objects[7] = merchant.getName();
         }
         return LejiaResult.ok(orderList);
+    }
+
+    /**
+     * 乐加账单 - 每日账单
+     */
+    @RequestMapping(value="/lejiaOrder/daily",method = RequestMethod.GET)
+    public LejiaResult getDailyOrderDataByCriteria(@RequestBody DailyOrderCriteria dailyOrderCriteria) {
+        List<LejiaOrderDTO> orderDTOs = lejiaOrderService.findDailyOrderByMerchant(dailyOrderCriteria);
+        return LejiaResult.ok(orderDTOs);
     }
 }
