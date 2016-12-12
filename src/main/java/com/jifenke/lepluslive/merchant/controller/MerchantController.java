@@ -248,15 +248,16 @@ public class MerchantController {
             int result = merchant.getLjCommission().intValue() * 5;
             merchantRebatePolicy.setImportScoreBScale(new BigDecimal(result));
             merchantRebatePolicy.setUserScoreBScaleB(new BigDecimal(result));
+            merchantRebatePolicy.setUserScoreBScale(new BigDecimal(0));
             merchantRebatePolicy.setUserScoreAScale(new BigDecimal(0));
             merchantRebatePolicy.setRebateFlag(1);      // 全额发放
         }
         // 发放策略
         merchantRebatePolicy.setMerchantId(merchant.getId());
-        merchantRebatePolicy.setStageOne(10);
-        merchantRebatePolicy.setStageTwo(80);
-        merchantRebatePolicy.setStageThree(6);
-        merchantRebatePolicy.setStageFour(3);
+        merchantRebatePolicy.setStageOne(0);
+        merchantRebatePolicy.setStageTwo(0);
+        merchantRebatePolicy.setStageThree(0);
+        merchantRebatePolicy.setStageFour(0);
         merchantRebatePolicyService.saveMerchantRebatePolicy(merchantRebatePolicy);
         return LejiaResult.ok("添加商户成功");
     }
