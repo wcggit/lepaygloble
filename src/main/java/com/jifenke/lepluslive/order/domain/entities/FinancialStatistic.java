@@ -34,7 +34,7 @@ public class FinancialStatistic {
 
   private Long transferPrice;
 
-  private Integer state = 0;
+  private Integer state = 0; //状态2 表示挂帐
 
   public Integer getState() {
     return state;

@@ -1,0 +1,45 @@
+<div class="myPOSEmpty">
+    <div class="icon-empty"></div>
+    <p class="text-center color666">太遗憾了，您还没有一台积分客智能POS机</p>
+    <input type="button" class="btn btn-warning margin-center" value="立即进件" data-toggle="modal" data-target="#intoPieceWarning">
+</div>
+<!--进件提示框-->
+<div class="modal fade" id="intoPieceWarning">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">申请POS机</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="inputPassword1" class="col-sm-3 col-sm-offset-1 control-label">申请商户</label>
+                        <div class="col-sm-4">
+                            <span class="ts">香格里拉大酒店</span>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">申请台数</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">备注信息</label>
+                        <div class="col-sm-6">
+                            <textarea name="" id="" cols="60" rows="3" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="withDraw()">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

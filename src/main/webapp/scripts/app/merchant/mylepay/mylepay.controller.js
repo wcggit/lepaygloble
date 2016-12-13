@@ -110,26 +110,23 @@ angular.module("lepayglobleApp").controller("MyLePayController",
         };
 
         //$scope.legend = ['日交易收入'];
-        $q.all([MyLePay.getDayTrade(),
-                MyLePay.getTodayOrderDetail()]).then(function (results) {
+        $q.all([MyLePay.getDayTrade(), MyLePay.getTodayOrderDetail()]).then(function (results) {
             var financials = results[0].data;
             var item = [];
             var data = [];
             var day = results[1].data.trueSales;
 
-            angular.forEach(financials,
-                            function (financial, index,
-                                      array) {
-                                var date = moment(financial.balanceDate);
-                                item.push(date.format("MM/DD"));
-                                data.push(financial.transferPrice
-                                          / 100);
-                            });
+            angular.forEach(financials, function (financial, index, array) {
+                var date = moment(financial.balanceDate);
+                item.push(date.format("MM/DD"));
+                data.push(financial.transferPrice / 100);
+            });
             item.push(moment().format("MM/DD"));
             data.push(day / 100);
             $scope.item = item;
             $scope.data = data;
-
+            console.log(JSON.stringify("ITEM："+item));
+            console.log(JSON.stringify("DATA："+data));
         });
 
         $http.get('api/merchant').success(function (response) {

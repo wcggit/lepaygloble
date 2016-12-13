@@ -1,0 +1,55 @@
+/*乐加账单*/
+.lePlusBilling table tr td:nth-of-type(5),.lePlusBilling table tr td:nth-of-type(6)  {
+    width: 20%;
+}
+/*POS交易*/
+.POSTrade table tr td:nth-of-type(6){
+    width: 15%;
+}
+.POSTrade .icon-empty{
+    width: 146px;
+    height: 161px;
+    margin: 0px auto 50px;
+    background: url("../../images/merchant_2/tradeManage/myPOSEmpty.png") no-repeat;
+    background-size: 100% 100%;
+}
+.POSTrade .myPOSEmpty{
+    padding: 100px 0;
+}
+/*扫码交易*/
+.codeTrade .haibao{
+    width: 162px;
+    height: 228px;
+    background: url("../../images/merchant_2/tradeManage/haibao.png") no-repeat;
+    background-size: 100% 100%;
+    border:solid 1px #e8e8ec;
+    margin: 10px auto;
+    position: relative;
+}
+.codeTrade .haibao .rvCode{
+    width: 60px;
+    height: 60px;
+    margin: 82px auto 2px;
+}
+.codeTrade .haibao .rvCode img{
+    width: 100%;
+    height: 100%;
+}
+.codeTrade .haibao .download-code{
+    width: 100%;
+    height: 36px;
+    line-height: 36px;
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    left:0;
+    bottom: 0;
+    display: none;
+    color: #fff;
+    cursor: pointer;
+}
+.codeTrade .haibao:hover .download-code{
+    display: block;
+}
+.codeTrade .myCode .col-md-3{
+    margin-top: 20px;
+}
