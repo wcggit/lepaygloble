@@ -346,9 +346,9 @@ public class OrderController {
     /**
      * 乐加账单 - 每日账单
      */
-    @RequestMapping(value="/lejiaOrder/daily",method = RequestMethod.GET)
+    @RequestMapping(value="/lejiaOrder/daily",method = RequestMethod.POST)
     public LejiaResult getDailyOrderDataByCriteria(@RequestBody DailyOrderCriteria dailyOrderCriteria) {
-        List<LejiaOrderDTO> orderDTOs = lejiaOrderService.findDailyOrderByMerchant(dailyOrderCriteria);
-        return LejiaResult.ok(orderDTOs);
+        LejiaOrderDTO orderDTO = lejiaOrderService.findDailyOrderByMerchant(dailyOrderCriteria);
+        return LejiaResult.ok(orderDTO);
     }
 }

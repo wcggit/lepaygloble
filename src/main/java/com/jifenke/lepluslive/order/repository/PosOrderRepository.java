@@ -35,12 +35,21 @@ public interface PosOrderRepository extends JpaRepository<PosOrder, Long>, JpaSp
     List<Object[]> countWeekPosCard(Long merchantId, Date completeDate);
 
     /**
-     * 指定商户pos订单最近七天 Pos 移动支付入账 （微信，支付宝等）
+     * 指定商户pos订单最近七天 Pos 移动支付入账 （支付宝）
      */
     @Query(value = "select DATE_FORMAT(complete_date,'%Y-%m-%d'),IFNULL(sum(transfer_money),0) from pos_order " +
-        "where merchant_id = ?1 AND (trade_flag=0 or trade_flag=5) AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) " +
+        "where merchant_id = ?1 AND trade_flag=0  AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) " +
         "group by DATE_FORMAT(complete_date,'%Y-%m-%d')", nativeQuery = true)
-    List<Object[]> countWeekPosMobile(Long merchantId, Date completeDate);
+    List<Object[]> countWeekPosAli(Long merchantId, Date completeDate);
+
+    /**
+     * 指定商户pos订单最近七天 Pos 移动支付入账 （微信）
+     */
+    @Query(value = "select DATE_FORMAT(complete_date,'%Y-%m-%d'),IFNULL(sum(transfer_money),0) from pos_order " +
+        "where merchant_id = ?1 AND trade_flag=4  AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) " +
+        "group by DATE_FORMAT(complete_date,'%Y-%m-%d')", nativeQuery = true)
+    List<Object[]> countWeekPosWx(Long merchantId, Date completeDate);
+
 
     /**
      * 指定商户pos订单红包支付入账

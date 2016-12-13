@@ -25,65 +25,7 @@
 </form>
 <div class="panel-body rjysr-panel-body">
     <div my-chart style="height: 400px">
-        <div my-chart ui-options='{
-                    <!--tooltip: {show: true},-->
-                    <!--legend: {-->
-                        <!--data: ["日交易收入"]-->
-                    <!--},-->
-                    <!--xAxis: [{-->
-                        <!--nameTextStyle:{-->
-                            <!--color:"#FB991A"-->
-                        <!--},-->
-                        <!--name: "时间",-->
-                        <!--type: "category",-->
-                        <!--splitLine:{-->
-                            <!--show:false-->
-                        <!--},-->
-                        <!--splitArea:{-->
-                            <!--show:false-->
-                        <!--},-->
-                        <!--axisLine:{-->
-                            <!--lineStyle:{-->
-                                <!--color:["#6b6b6b"],-->
-                                <!--width:"1"-->
-                            <!--}-->
-                        <!--},-->
-                        <!--data: {{item}}-->
-                    <!--}],-->
-                    <!--yAxis: [{-->
-                        <!--nameTextStyle:{-->
-                            <!--color:"#FB991A"-->
-                        <!--},-->
-                        <!--type: "value",-->
-                        <!--name: "金额",-->
-                        <!--splitLine:{-->
-                            <!--show:false-->
-                        <!--},-->
-                        <!--splitArea:{-->
-                            <!--show:false-->
-                        <!--},-->
-                        <!--axisLine:{-->
-                            <!--lineStyle:{-->
-                                <!--color:["#6b6b6b"],-->
-                                <!--width:"1"-->
-                            <!--}-->
-                        <!--}-->
-                    <!--}],-->
-                    <!--series: [{-->
-                        <!--name: "日交易收入",-->
-                        <!--type: "line",-->
-                        <!--itemStyle:{-->
-                            <!--normal:{-->
-                                <!--color:"#FB991A",-->
-                                <!--lineStyle:{-->
-                                    <!--color:"#FB991A",-->
-                                    <!--borderColor:"#FB991A"-->
-                                <!--}-->
-                            <!--}-->
-                        <!--},-->
-                        <!--data: {{data}}-->
-                    <!--}]-->
-                }' style="height: 400px;width: 100%;"></div>
+        <div id="dailyBillingEchart"  my-chart ui-options='' style="height: 400px;width: 100%;"></div>
     </div>
 </div>
 <!--表格信息总结-->
@@ -105,48 +47,21 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="tr-empty"><td class="text-center" colspan="8">暂无数据！</td></tr>
-        <tr class="tr-noEmpty">
-            <td>2016-05-05</td>
-            <td>￥81550.12</td>
-            <td>￥81550.12</td>
-            <td>￥81550.12</td>
+        <tr ng-repeat="x in dates">
+            <td>{{x}}</td>
+            <td>￥{{totalTransfer[$index]}}</td>
+            <td>￥{{wxTransfer[$index]}}</td>
+            <td>￥{{posCardTransfer[$index]}}</td>
             <td>
-                <p>￥81550.12</p>
-                <p>(微信￥100.00+支付包￥1200.23)</p>
+                <p>￥{{posMobileTransfer[$index]}}</p>
+                <p>(微信￥{{wxMobileTransfer[$index]}}+支付宝￥{{aliMobileTransfer[$index]}})</p>
             </td>
             <td>
-                <p>￥81550.12</p>
-                <p>(扫码￥100.00+POS￥1200.23)</p>
+                <p>￥{{scoreTransfer[$index]}}</p>
+                <p>(扫码￥{{offScores[$index]}}+POS￥{{posScores[$index]}})</p>
             </td>
             <td><a>下载表格</a></td>
         </tr>
         </tbody>
     </table>
-</div>
-<!--分页-->
-<div class=" clearfix">
-    <nav class="pull-right">
-        <ul class="pagination">
-            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
-            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
-                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
-            </li>
-            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
-            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
-            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
-            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
-                1}}</a>
-            </li>
-            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
-                2}}</a>
-            </li>
-            <li ng-class="{disabled: page==totalPages||totalPages==0}"
-                ng-click="loadPage(page+1)"><a aria-label="Next">
-                <span aria-hidden="true">›</span>
-            </a></li>
-            <li ng-class="{disabled: page==totalPages||totalPages==0}"
-                ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
-        </ul>
-    </nav>
 </div>

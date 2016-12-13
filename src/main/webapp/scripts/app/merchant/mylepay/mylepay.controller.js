@@ -125,7 +125,8 @@ angular.module("lepayglobleApp").controller("MyLePayController",
             data.push(day / 100);
             $scope.item = item;
             $scope.data = data;
-
+            console.log(JSON.stringify("ITEM："+item));
+            console.log(JSON.stringify("DATA："+data));
         });
 
         $http.get('api/merchant').success(function (response) {
