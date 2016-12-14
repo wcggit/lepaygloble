@@ -267,4 +267,3 @@ Date.prototype.format = function (fmt) {
     }
     return fmt;
 }
-

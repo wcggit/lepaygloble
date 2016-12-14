@@ -1,0 +1,49 @@
+/*------------数据概览开始------------*/
+.dataOverview .sjgl1{border: solid 1px #dddddd;padding: 20px 0}
+.dataOverview .sjgl1>.sjgl1-left{
+    border-right: solid 1px #dddddd;
+    padding: 10px 0;
+}
+.dataOverview .sjgl1>.sjgl1-left .col-md-5 p:first-child{
+    font-size: 28px;
+    color: #444;
+}
+.dataOverview .btn-tx{
+    margin-right: 20px;
+}
+.dataOverview .commission-balance{
+    position: relative;
+}
+.dataOverview .balance-operating{
+    position: absolute;
+    left:130px;
+    display: inline-block;
+    width: 200px;
+}
+.dataOverview .col-md-1{
+    font-size: 20px;
+    color: #646464;
+    padding-top: 16px;
+}
+.dataOverview .col-md-1 span{
+    font-size: 32px;
+}
+.dataOverview .progress{
+    margin-bottom: 0px;
+}
+.dataOverview .lockStoreState{
+    border: solid 1px #dddddd;
+    padding: 40px 0;
+}
+.dataOverview .lockStoreState .col-md-8:first-child{
+    margin-bottom: 20px;
+}
+.dataOverview .lockMemberNum{
+    font-size: 20px;
+    color: #646464;
+    padding-top: 16px;
+}
+.dataOverview .lockMemberNum span{
+    font-size: 32px;
+}
+/*------------数据概览结束------------*/

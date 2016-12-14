@@ -1,0 +1,91 @@
+<div class="homePage">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">
+            锁定会员
+        </div>
+    </div>
+    <div class="container-fluid">
+        <!--查询表单-->
+        <form class="form-inline list-check">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>门店名称</label>
+                    <div class="input-group col-md-6">
+                        <select class="form-control">
+                            <option value="-1">某店</option>
+                            <option value="0">某某店</option>
+                        </select>
+                        <span class="select-jiao"></span>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>交易完成时间</label>
+                    <date-choice class="input-group timePicker col-md-9"></date-choice>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label></label>
+                    <button type="button" class="btn btn-warning btn-check2">查询</button>
+                </div>
+            </div>
+        </form>
+        <!--表格信息总结-->
+        <p class="ttl-add table-title">
+            筛选条件下共有<span class="font-yellow">65</span>个会员，给您带来<span class="font-yellow">￥36.23</span>佣金收入
+        </p>
+        <!--表格-->
+        <div class="panel panel-default">
+            <table class="table ol-tab">
+                <thead class="active">
+                <tr>
+                    <td>微信信息</td>
+                    <td>锁定时间</td>
+                    <td>锁定门店</td>
+                    <td>手机号</td>
+                    <td>佣金贡献</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="tr-empty"><td class="text-center" colspan="5">暂无数据！</td></tr>
+                <tr class="tr-noEmpty">
+                    <td><span class="wx-faceImg"><img src="../../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span><span>嘿嘿嘿</span></td>
+                    <td class="td-date">
+                        <p>2016-05-05 </p>
+                        <p>11:30</p>
+                    </td>
+                    <td>一品江南</td>
+                    <td>19283746376</td>
+                    <td>￥80.55</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

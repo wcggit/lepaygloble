@@ -47,6 +47,10 @@
     color: #fff;
     cursor: pointer;
 }
+.codeTrade .haibao .download-code span{
+    color: #fff;
+    margin-right: 5px;
+}
 .codeTrade .haibao:hover .download-code{
     display: block;
 }

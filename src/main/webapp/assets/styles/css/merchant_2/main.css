@@ -3,7 +3,7 @@
 :focus {
     outline:none;
 }
-html,body{height:100%;position: relative;background-color: #e7e8eb}
+html,body{position: relative;background-color: #e7e8eb}
 input::-webkit-input-placeholder {
     color: #888;
 }
@@ -31,7 +31,7 @@ input:-ms-input-placeholder {
     height: 0;
     display: block;
 }
-hr{margin-top: 10px;margin-bottom: 10px}
+hr{margin-top: 6px;margin-bottom: 6px}
 ul,li{list-style: none}
 .btn{padding: 5px 24px}
 .btn-default:hover {
@@ -94,9 +94,13 @@ label{
     margin: 0;
 }
 thead>tr>td,tbody>tr>td,thead>tr>td>p,tbody>tr>td>p{font-size: 14px;}
+.progress,.progress-bar{border-radius: 10px}
 /*自定义属性*/
 .page-top{border: none;border-bottom: solid 1px #e7e8eb;border-radius: 0px}
 .page-bottom{border: none;border-bottom: solid 1px #e7e8eb;border-top: solid 1px #e7e8eb;border-radius: 0px}
+.page-top > div{
+    line-height: 32px;
+}
 .ttl{border-left: solid 2px #fb991a;height: 20px;line-height: 20px;padding-left: 10px;margin: 24px 0 20px}
 .tooltip-problem{
     display: inline-block;
@@ -120,6 +124,37 @@ thead>tr>td,tbody>tr>td,thead>tr>td>p,tbody>tr>td>p{font-size: 14px;}
 .fontSize12{font-size: 12px}
 .fontSize14{font-size: 14px}
 .fontSize16{font-size: 16px}
+.merchant-data .col-md-3 .out-div{
+    width: 210px;
+    border: solid 1px #e4e4e4;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+.merchant-data .col-md-3 .out-div p:first-child{
+    color: #666;
+    font-size: 14px;
+    line-height: 35px;
+}
+.merchant-data .col-md-3 .out-div p:last-child{
+    color: #444;
+    font-size: 28px;
+}
+.row-margin{
+    margin-left: 0;
+    margin-right: 0;
+}
+.wx-faceImg{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+.wx-faceImg img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
 /*头部*/
 .nav-style>li{
     float: left;

@@ -84,22 +84,22 @@ angular.module('lepayglobleApp')
             {
                 contentState:"1",
                 clickState:"1",
-                name:"佣金输入",
-                state:"CommissionIncome",
+                name:"锁定会员",
+                state:"lockMembers",
                 icon:""
             },
             {
                 contentState:"1",
                 clickState:"1",
-                name:"我的会员",
-                state:"myMembers",
+                name:"佣金明细",
+                state:"commissionDetails",
                 icon:""
             },
             {
                 contentState:"1",
                 clickState:"1",
                 name:"会员邀请码",
-                state:"InvitationCode",
+                state:"invitationCode",
                 icon:""
             },
             {
