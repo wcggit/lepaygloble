@@ -48,29 +48,3 @@
         </tbody>
     </table>
 </div>
-<!--分页-->
-<div class=" clearfix">
-    <nav class="pull-right">
-        <ul class="pagination">
-            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
-            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
-                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
-            </li>
-            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
-            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
-            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
-            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
-                1}}</a>
-            </li>
-            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
-                2}}</a>
-            </li>
-            <li ng-class="{disabled: page==totalPages||totalPages==0}"
-                ng-click="loadPage(page+1)"><a aria-label="Next">
-                <span aria-hidden="true">›</span>
-            </a></li>
-            <li ng-class="{disabled: page==totalPages||totalPages==0}"
-                ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
-        </ul>
-    </nav>
-</div>

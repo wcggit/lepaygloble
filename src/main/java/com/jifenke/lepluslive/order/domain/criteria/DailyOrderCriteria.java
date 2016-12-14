@@ -9,6 +9,8 @@ public class DailyOrderCriteria {
 
     private String startDate;
 
+    private String endDate;
+
     private Merchant merchant;
 
     public String getStartDate() {
@@ -27,4 +29,11 @@ public class DailyOrderCriteria {
         this.merchant = merchant;
     }
 
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
 }

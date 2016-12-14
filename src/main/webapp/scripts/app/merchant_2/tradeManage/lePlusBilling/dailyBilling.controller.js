@@ -16,7 +16,7 @@ angular.module('lepayglobleApp')
 
         // Echart 报表
         var myChart = echarts.init(document.getElementById('dailyBillingEchart'));
-        $scope.item=['12-01','12-02','12-03','12-04','12-05','12-06']
+        $scope.item=[]
         // 显示标题，图例和空的坐标轴
         myChart.setOption({
             tooltip: {show: true},
@@ -76,7 +76,7 @@ angular.module('lepayglobleApp')
                             }
                         }
                     },
-                    data:[6,2,3,4,5,4]
+                    data:[]
                 },
                 {
                     name: "扫码牌微信入账",
@@ -90,7 +90,7 @@ angular.module('lepayglobleApp')
                             }
                         }
                     },
-                    data:[4,3,2,5,6,7]
+                    data:[]
                 },
                 {
                     name: "POS刷卡入账",
@@ -104,7 +104,7 @@ angular.module('lepayglobleApp')
                             }
                         }
                     },
-                    data:[4,3,5,6,8,7]
+                    data:[]
                 },
                 {
                     name: "POS移动支付入账",
@@ -118,7 +118,7 @@ angular.module('lepayglobleApp')
                             }
                         }
                     },
-                    data:[4,5,9,7,8,2]
+                    data:[]
                 },
                 {
                     name: "红包支付入账",
@@ -132,7 +132,7 @@ angular.module('lepayglobleApp')
                             }
                         }
                     },
-                    data:[5,2,10,8,9,3]
+                    data:[]
                 }
             ]
         });
