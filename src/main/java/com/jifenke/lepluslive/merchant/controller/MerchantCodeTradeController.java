@@ -76,7 +76,7 @@ public class MerchantCodeTradeController {
             MyCodeCriteria myCodeCriteria = new MyCodeCriteria();
             myCodeCriteria.setMerchantId(m.getId());
             myCodeCriteria.setMerchantName(m.getName());
-            myCodeCriteria.setSid(m.getSid());
+            myCodeCriteria.setSid(m.getMerchantSid());
             myCodeCriteria.setQrCodePicture(m.getQrCodePicture());
             List<Object[]> listo = offLineOrderService.findMyCodePriceByMerchantid(m.getId());
             myCodeCriteria.setTruePay(Double.valueOf(listo.get(0)[1] == null ? "0.0" : listo.get(0)[1].toString()));

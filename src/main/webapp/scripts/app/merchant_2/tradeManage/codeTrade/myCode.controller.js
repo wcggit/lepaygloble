@@ -24,6 +24,6 @@ angular.module('lepayglobleApp')
 
                     $scope.downloadMyCode = function(sid){
                         //alert("merchantId: " + sid);
-                        //location.href = "/api/merchant/downLoadQrCode?sid=" + sid;
+                        location.href = "/api/merchant/downLoadQrCode?sid=" + sid;
                     }
     })

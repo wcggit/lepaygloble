@@ -32,9 +32,9 @@ public class MyCodeCriteria {
      */
     private Double totalPrice;
     /**
-     * 门店sid
+     * 门店: merchant_sid
      */
-    private Integer sid;
+    private String sid;
 
 
 
@@ -78,11 +78,11 @@ public class MyCodeCriteria {
         this.truePay = truePay;
     }
 
-    public Integer getSid() {
+    public String getSid() {
         return sid;
     }
 
-    public void setSid(Integer sid) {
+    public void setSid(String sid) {
         this.sid = sid;
     }
 }
