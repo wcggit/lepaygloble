@@ -74,4 +74,10 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
         "where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) " +
         "group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
     List<Object[]> countWeekOffScore(Long merchantId,Date completeDate);
+
+    /**
+     * 指定商户线下订单红包支付入账
+     */
+    @Query(value = "select merchant_id,sum(true_pay),sum(total_price) from off_line_order where state = 1 and merchant_id = ?1 ", nativeQuery = true)
+    List<Object[]> findMyCodePriceByMerchantid(Long merchantId);
 }
