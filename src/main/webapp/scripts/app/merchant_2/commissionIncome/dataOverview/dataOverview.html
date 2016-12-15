@@ -9,11 +9,11 @@
         <div class="row sjgl1 row-margin">
             <div class="col-md-6 clearfix sjgl1-left">
                 <div class="pull-left col-md-6">
-                    <p class="text-center">¥100.00</p>
+                    <p class="text-center">{{available | currency:'￥'}}</p>
                     <p class="text-center commission-balance">佣金余额 <span class="balance-operating"></span></p>
                 </div>
                 <div class="pull-right col-md-6">
-                    <p class="text-center">¥100.00</p>
+                    <p class="text-center">{{totalCommission | currency:'￥'}}</p>
                     <p class="text-center">累计佣金收入</p>
                 </div>
             </div>
