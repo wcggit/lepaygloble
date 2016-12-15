@@ -92,4 +92,10 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
      */
     @Query(value="select IFNULL(sum(transfer_money-transfer_money_from_true_pay),0) from off_line_order where merchant_id =?1 and complete_date between  '?2' and '?3'",nativeQuery = true)
     Long countMerchantOffScore(Long id,String startDate,String endDate);
+
+    /**
+     * 指定商户线下订单红包支付入账
+     */
+    @Query(value = "select merchant_id,sum(true_pay),sum(total_price) from off_line_order where state = 1 and merchant_id = ?1 ", nativeQuery = true)
+    List<Object[]> findMyCodePriceByMerchantid(Long merchantId);
 }

@@ -513,5 +513,16 @@ public class OffLineOrderService {
         return codeOrderCriteria;
     }
 
+
+    /**
+     * 根据门店ID查询二维码收款金额
+     * @param merchantId
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List<Object[]> findMyCodePriceByMerchantid(Long merchantId) {
+        return offLineOrderRepository.findMyCodePriceByMerchantid(merchantId);
+    }
+
 }
 
