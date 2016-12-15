@@ -86,27 +86,27 @@ public class LejiaOrderService {
             //  总入账金额 =  Pos总金额 +  扫码总金额
             for(Object[] offOrder:offOrders) {
                 if(startTime.equals(offOrder[0].toString())) {
-                    totalTransfer.set(i,(totalTransfer.get(i)+new Long(offOrder[1].toString())));
+                    totalTransfer.set(i,(totalTransfer.get(i)+new Double(offOrder[1].toString())*0.01));
                     break;
                 }
             }
             for(Object[] posOrder:posOrders) {
                 if(startTime.equals(posOrder[0].toString())) {
-                    totalTransfer.set(i,(totalTransfer.get(i)+new Long(posOrder[1].toString())));
+                    totalTransfer.set(i,(totalTransfer.get(i)+new Double(posOrder[1].toString())*0.01));
                     break;
                 }
             }
             // 扫码牌微信入账
             for(Object[] wxOrder:wxOrders) {
                 if(startTime.equals(wxOrder[0].toString())) {
-                    wxTransfer.set(i,wxTransfer.get(i)+new Long(wxOrder[1].toString()));
+                    wxTransfer.set(i,wxTransfer.get(i)+new Double(wxOrder[1].toString())*0.01);
                     break;
                 }
             }
             //  pos 刷卡
             for(Object[] posCard:posCards) {
                 if(startTime.equals(posCard[0].toString())) {
-                    posCardTransfer.set(i,posCardTransfer.get(i)+new Long(posCard[1].toString()));
+                    posCardTransfer.set(i,posCardTransfer.get(i)+new Double(posCard[1].toString())*0.01);
                     break;
                 }
             }
@@ -114,15 +114,15 @@ public class LejiaOrderService {
             for(Object[] aliMob:posAliMobile) {
                 if(startTime.equals(aliMob[0].toString())) {
                     Long aliCount = new Long(aliMob[1].toString());
-                    posMobileTransfer.set(i,posMobileTransfer.get(i)+aliCount);
-                    aliMobileTransfer.set(i,aliMobileTransfer.get(i)+aliCount);
+                    posMobileTransfer.set(i,posMobileTransfer.get(i)+aliCount*0.01);
+                    aliMobileTransfer.set(i,aliMobileTransfer.get(i)+aliCount*0.01);
                     break;
                 }
             }
             for(Object[] wxMob:posWxMobile) {
                 if(startTime.equals(wxMob[0].toString())) {
-                    posMobileTransfer.set(i,posMobileTransfer.get(i)+new Long(wxMob[1].toString()));
-                    wxMobileTransfer.set(i,wxMobileTransfer.get(i)+new Long(wxMob[1].toString()));
+                    posMobileTransfer.set(i,posMobileTransfer.get(i)+new Double(wxMob[1].toString())*0.01);
+                    wxMobileTransfer.set(i,wxMobileTransfer.get(i)+new Double(wxMob[1].toString())*0.01);
                     break;
                 }
             }
@@ -130,15 +130,15 @@ public class LejiaOrderService {
             //  红包 =  pos 红包 + 扫码红包
             for(Object[] posScore:posScores) {
                 if(startTime.equals(posScore[0].toString())) {
-                    scoreTransfer.set(i,scoreTransfer.get(i)+new Long(posScore[1].toString()));
-                    posScoreb.set(i,posScoreb.get(i)+new Long(posScore[1].toString()));
+                    scoreTransfer.set(i,scoreTransfer.get(i)+new Double(posScore[1].toString())*0.01);
+                    posScoreb.set(i,posScoreb.get(i)+new Double(posScore[1].toString())*0.01);
                     break;
                 }
             }
             for(Object[] offScore:offScores) {
                 if(startTime.equals(offScore[0].toString())) {
-                    scoreTransfer.set(i,scoreTransfer.get(i)+new Long(offScore[1].toString()));
-                    offScoreb.set(i,offScoreb.get(i)+new Long(offScore[1].toString()));
+                    scoreTransfer.set(i,scoreTransfer.get(i)+new Double(offScore[1].toString())*0.01);
+                    offScoreb.set(i,offScoreb.get(i)+new Double(offScore[1].toString())*0.01);
                     break;
                 }
             }

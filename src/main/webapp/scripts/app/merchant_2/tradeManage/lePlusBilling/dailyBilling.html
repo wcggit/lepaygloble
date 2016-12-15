@@ -49,16 +49,16 @@
         <tbody>
         <tr ng-repeat="x in dates">
             <td>{{x}}</td>
-            <td>￥{{totalTransfer[$index]}}</td>
-            <td>￥{{wxTransfer[$index]}}</td>
-            <td>￥{{posCardTransfer[$index]}}</td>
+            <td>￥{{totalTransfer[$index]| number:2}}</td>
+            <td>￥{{wxTransfer[$index]| number:2}}</td>
+            <td>￥{{posCardTransfer[$index]| number:2}}</td>
             <td>
-                <p>￥{{posMobileTransfer[$index]}}</p>
-                <p>(微信￥{{wxMobileTransfer[$index]}}+支付宝￥{{aliMobileTransfer[$index]}})</p>
+                <p>￥{{posMobileTransfer[$index]| number:2}}</p>
+                <p>(微信￥{{wxMobileTransfer[$index]}}+支付宝￥{{aliMobileTransfer[$index]| number:2}})</p>
             </td>
             <td>
-                <p>￥{{scoreTransfer[$index]}}</p>
-                <p>(扫码￥{{offScores[$index]}}+POS￥{{posScores[$index]}})</p>
+                <p>￥{{scoreTransfer[$index]| number:2}}</p>
+                <p>(扫码￥{{offScores[$index]| number:2}}+POS￥{{posScores[$index]| number:2}})</p>
             </td>
             <td><a>下载表格</a></td>
         </tr>
