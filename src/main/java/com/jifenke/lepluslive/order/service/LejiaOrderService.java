@@ -1,6 +1,9 @@
 package com.jifenke.lepluslive.order.service;
 
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantScroll;
 import com.jifenke.lepluslive.order.controller.view.LejiaOrderDTO;
+import com.jifenke.lepluslive.order.controller.view.MerchantOrderDto;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.repository.OffLineOrderRepository;
 import com.jifenke.lepluslive.order.repository.PosOrderRepository;
@@ -27,6 +30,9 @@ public class LejiaOrderService {
     @Inject
     private OffLineOrderRepository offLineOrderRepository;
 
+    /**
+     * 每日账单
+     */
     @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
     public LejiaOrderDTO findDailyOrderByMerchant(DailyOrderCriteria dailyOrderCriteria) {
         String start = dailyOrderCriteria.getStartDate();
@@ -148,5 +154,40 @@ public class LejiaOrderService {
         lejiaOrderDTO.setOffScores(offScoreb);
         lejiaOrderDTO.setPosScores(posScoreb);
         return lejiaOrderDTO;
+    }
+
+
+    /**
+     *  门店账单
+     */
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public List<MerchantOrderDto> findMerchantOrderData(DailyOrderCriteria dailyOrderCriteria,List<Merchant> merchants) {
+        List<MerchantOrderDto> merchantOrderDtos = new ArrayList<>();
+        for (Merchant merchant : merchants) {
+            Long offTotal = offLineOrderRepository.countMerchantTotal(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            Long posTotal = posOrderRepository.countMerchantPosTotal(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            Double totalTransfer = (offTotal+posTotal) * 0.01;                      // 总入账
+            Long wxTransfer = offLineOrderRepository.countMerchantWxTransfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());            // 微信扫码总入账
+            Long posCardTransfer = posOrderRepository.countMerchantPosCardTransfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());      // pos 刷卡
+            Long wxMobileTransfer = posOrderRepository.countWxMobileTranfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());             // pos 移动 - 微信
+            Long aliMobileTransfer = posOrderRepository.countAliMobileTranfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());           // pos 移动 - 阿里
+            Double mobileTransfer = (wxMobileTransfer+aliMobileTransfer)*0.01;
+            Long offScore = offLineOrderRepository.countMerchantOffScore(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            Long posScore = posOrderRepository.countAliMobileTranfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            Double totalScore = (offScore+posScore) * 0.01;
+            MerchantOrderDto merchantOrderDto = new MerchantOrderDto();
+            merchantOrderDto.setTotalTransfer(totalTransfer);
+            merchantOrderDto.setMobileTransfer(mobileTransfer);
+            merchantOrderDto.setTotalScore(totalScore);
+            merchantOrderDto.setOffTransferFromTruePay(wxTransfer*0.01);
+            merchantOrderDto.setPosCardTransfer(posCardTransfer*0.01);
+            merchantOrderDto.setMobileWxTransfer(wxMobileTransfer*0.01);
+            merchantOrderDto.setMobileAliTransfer(aliMobileTransfer*0.01);
+            merchantOrderDto.setOffScore(offScore*0.01);
+            merchantOrderDto.setPosScore(posScore*0.01);
+            merchantOrderDto.setMerchantName(merchant.getName());
+            merchantOrderDtos.add(merchantOrderDto);
+        }
+        return merchantOrderDtos;
     }
 }

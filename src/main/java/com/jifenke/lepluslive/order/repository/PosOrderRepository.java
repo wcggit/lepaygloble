@@ -58,4 +58,33 @@ public interface PosOrderRepository extends JpaRepository<PosOrder, Long>, JpaSp
         "where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date)" +
         "group by DATE_FORMAT(complete_date,'%Y-%m-%d')", nativeQuery = true)
     List<Object[]> countWeekPosScore(Long merchantId, Date completeDate);
+
+    /**
+     * 查询指定门店 时间段内总入账 (Pos订单)
+     */
+    @Query(value="select IFNULL(sum(transfer_money),0) from  pos_order where merchant_id = ?1 and complete_date between '?2' and '?3'",nativeQuery =true)
+    Long countMerchantPosTotal(Long merchantId,String startDate,String endDate);
+
+    /**
+     *  查询指定门店 pos 刷卡入账
+     */
+    @Query(value="select IFNULL(sum(transfer_money),0) from  pos_order where merchant_id = ?1 and trade_flag=3 and complete_date between '?2' and '?3'",nativeQuery=true)
+    Long countMerchantPosCardTransfer(Long id,String startDate,String endDate);
+
+    /**
+     *  查询指定门店 pos移动- 微信入账
+     */
+    @Query(value="select IFNULL(sum(transfer_money),0) from  pos_order where merchant_id =?1 and trade_flag=3 and complete_date between  '?2' and '?3'",nativeQuery = true)
+    Long countWxMobileTranfer(Long id,String startDate,String endDate);
+    /**
+     *  查询指定门店 pos移动- 支付宝入账
+     */
+    @Query(value="select IFNULL(sum(transfer_money),0) from  pos_order where merchant_id =?1 and trade_flag=0 and complete_date between  '?2' and '?3'",nativeQuery = true)
+    Long countAliMobileTranfer(Long id,String startDate,String endDate);
+
+    /**
+     * 查询指定门店 红包入账(Pos)
+     */
+    @Query(value="select IFNULL(sum(transfer_money-transfer_by_bank),0) from  pos_order where merchant_id =?1 and complete_date between  '?2' and '?3'",nativeQuery = true)
+    Long countMobilePosScore(Long id,String startDate,String endDate);
 }

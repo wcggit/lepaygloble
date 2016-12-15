@@ -9,6 +9,7 @@ import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.order.controller.view.LejiaOrderDTO;
+import com.jifenke.lepluslive.order.controller.view.MerchantOrderDto;
 import com.jifenke.lepluslive.order.controller.view.OrderViewExcel;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OLOrderCriteria;
@@ -355,8 +356,11 @@ public class OrderController {
     /***
      *  乐加账单 - 门店账单
      */
-    @RequestMapping(value="",method = RequestMethod.POST)
+    @RequestMapping(value="/lejiaOrder/merchant",method = RequestMethod.POST)
     public LejiaResult getMerchantOrderDataByCriteria(@RequestBody DailyOrderCriteria dailyOrderCriteria) {
-        return null;
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        List<MerchantOrderDto> orderDatas = lejiaOrderService.findMerchantOrderData(dailyOrderCriteria,merchants);
+        return LejiaResult.ok(orderDatas);
     }
 }
