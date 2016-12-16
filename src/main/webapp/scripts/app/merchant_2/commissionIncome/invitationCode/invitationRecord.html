@@ -2,25 +2,25 @@
     <div class="col-md-3">
         <div class="out-div">
             <p class="text-center">商户昨日入账</p>
-            <p class="text-center">￥1200.00</p>
+            <p class="text-center">￥{{srgl.firNum}}</p>
         </div>
     </div>
     <div class="col-md-3">
         <div class="out-div">
             <p class="text-center">商户累计入账</p>
-            <p class="text-center">￥1200.00</p>
+            <p class="text-center">￥{{srgl.secNum}}</p>
         </div>
     </div>
     <div class="col-md-3">
         <div class="out-div">
             <p class="text-center">会员消费金额/次数</p>
-            <p class="text-center">￥1200.00/12</p>
+            <p class="text-center">￥{{srgl.thirNum}}/{{srgl.fouNum}}</p>
         </div>
     </div>
     <div class="col-md-3">
         <div class="out-div">
             <p class="text-center">接受红包总额</p>
-            <p class="text-center">￥1200.00</p>
+            <p class="text-center">￥{{srgl.fifNum}}</p>
         </div>
     </div>
 </div>
@@ -31,16 +31,16 @@
         <div class="form-group col-md-4">
             <label>门店名称</label>
             <div class="input-group col-md-6">
-                <select class="form-control">
-                    <option value="-1">某店</option>
-                    <option value="0">某某店</option>
+                <select class="form-control" id="selMerchant">
+                    <option value="">全部</option>
+                    <option value="{{m.sid}}" ng-repeat="m in merchants">{{m.name}}</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
         </div>
         <div class="form-group col-md-6">
-            <label>交易完成时间</label>
-            <date-choice class="input-group timePicker col-md-9"></date-choice>
+            <label>邀请时间</label>
+            <input type="text" name="reservation" id="completeDate" class="form-control"/>
         </div>
     </div>
     <div class="row">

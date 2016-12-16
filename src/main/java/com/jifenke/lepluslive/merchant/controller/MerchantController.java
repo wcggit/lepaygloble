@@ -225,6 +225,11 @@ public class MerchantController {
         return LejiaResult.ok(leJiaUserService.getTotalPages(leJiaUserCriteria));
     }
 
+    /**
+     *   新版本: 查询指定门店所有绑定用户,如果没有指定门店,则查询当前商户下所有门店绑定用户
+     */
+
+
 
     @RequestMapping(value = "/merchant/open", method = RequestMethod.GET)
     public void openRequest() {
