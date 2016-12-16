@@ -58,7 +58,6 @@ angular.module('lepayglobleApp')
                 }else{
                     alert('加载pos订单数据错误...');
                 }
-               console.log(response);
             });
         };
         $('#completeDate')
@@ -101,5 +100,4 @@ angular.module('lepayglobleApp')
             currentPage = 1;
             $scope.loadPosOrderInfo();
         };
-
     })

@@ -55,7 +55,7 @@ angular.module('lepayglobleApp')
                                 }
 
                             }else{
-                                alert('加载pos订单数据错误...');
+                                alert('加载扫码订单数据错误...');
                             }
                             console.log(response);
                         });

@@ -1,5 +1,6 @@
 package com.jifenke.lepluslive.order.repository;
 
+import com.jifenke.lepluslive.merchant.domain.criteria.DataOverviewCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrderShare;
@@ -25,4 +26,21 @@ public interface OffLineOrderShareRepository extends JpaRepository<OffLineOrderS
     Long countByLockMerchant(Merchant merchant);
 
     Page findAll(Specification<OffLineOrderShare> orderShareClause, Pageable pageRequest);
+
+    /**
+     * 查询今日 佣金收入、今日佣金单数
+     * @param obj
+     * @return
+     */
+    @Query(value = "SELECT ifnull(sum(a.to_lock_merchant)*0.01,0) as offTodayToalCommission , count(a.id) as offTodayToalNumber from off_line_order_share a WHERE a.lock_merchant_id in (?1) and TO_DAYS(create_date) =TO_DAYS(NOW())",nativeQuery = true)
+    List<Object []> findTodayCommissionAndTodayNumber(List<Object> obj);
+
+    /**
+     * 查询人均佣金收入、累计佣金单数
+     * @param totalMember
+     * @param obj
+     * @return
+     */
+    @Query(value = "SELECT count(a.id) as offTotalNumber,ifnull(sum(a.to_lock_merchant)/?1*0.01,0) as offPerCapita from off_line_order_share a where a.lock_merchant_id in (?2)" ,nativeQuery = true)
+    List<Object []> findPerCapitaAndTotalNumber(Integer totalMember, List<Object> obj);
 }

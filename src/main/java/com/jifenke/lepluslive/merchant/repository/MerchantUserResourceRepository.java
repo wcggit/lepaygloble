@@ -33,7 +33,7 @@ public interface MerchantUserResourceRepository extends JpaRepository<MerchantUs
         "(SELECT a.resource_id from le_jia_resource a where a.id in " +
         "(SELECT b.le_jia_resource_id from merchant_user_resource b where b.merchant_user_id=" +
         "(SELECT d.id from merchant_user d WHERE d.name=?1)))",nativeQuery = true)
-    List<Object> findByMerchantInfoUser(String merchantName);
+    List<Object []> findByMerchantInfoUser(String merchantName);
 
     /**
      * 根据商户ID查询商户旗下所有门店的所有pos机
