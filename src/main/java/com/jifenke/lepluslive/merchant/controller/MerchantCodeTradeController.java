@@ -1,7 +1,9 @@
 package com.jifenke.lepluslive.merchant.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
+import com.jifenke.lepluslive.merchant.domain.criteria.LockMemberCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.MyCodeCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
@@ -35,6 +37,8 @@ public class MerchantCodeTradeController {
     private MerchantUserResourceService merchantUserResourceService;
     @Inject
     private OffLineOrderService offLineOrderService;
+    @Inject
+    private LeJiaUserService leJiaUserService;
 
     /**
      *  查询商户下所有的门店
@@ -54,7 +58,7 @@ public class MerchantCodeTradeController {
      */
     @RequestMapping(value = "/codeTrade/codeOrderByMerchantUser")
     @ResponseBody
-    public LejiaResult findPosOrderByMerchantUser(@RequestBody CodeOrderCriteria codeOrderCriteria){
+    public LejiaResult findCodeOrderByMerchantUser(@RequestBody CodeOrderCriteria codeOrderCriteria){
         codeOrderCriteria.setState(1);
         CodeOrderCriteria result = offLineOrderService.findCodeOrderByMerchantUser(codeOrderCriteria);
         return LejiaResult.ok(result);
@@ -86,6 +90,32 @@ public class MerchantCodeTradeController {
 
 //        return LejiaResult.ok(merchants);
         return LejiaResult.ok(listMycode);
+    }
+
+    /**
+     * 查询 绑定会员
+     * @param lockMemberCriteria
+     * @return
+     */
+    @RequestMapping(value = "/lockMenber/lockMenberByMerchantUser")
+    @ResponseBody
+    public LejiaResult findLockMenberByMerchantUser(@RequestBody LockMemberCriteria lockMemberCriteria){
+
+        List<Object[]> listMembers = leJiaUserService.getMerchantLockMemberList(lockMemberCriteria);
+        lockMemberCriteria.setLockMembers(listMembers);
+
+        List<Object[]> listCount = leJiaUserService.getMerchantLockMemberCount(lockMemberCriteria);
+        Integer lockMemberCount = Integer.valueOf(listCount.get(0)[0] == null ? "0" : listCount.get(0)[0].toString());
+        Integer pageSize = lockMemberCriteria.getPageSize();
+        lockMemberCriteria.setLockMemberCount(lockMemberCount);
+        lockMemberCriteria.setCommissionIncome(Double.valueOf(listCount.get(0)[1] == null ? "0.0" : listCount.get(0)[1].toString()));
+        if (lockMemberCount <= pageSize){
+            lockMemberCriteria.setTotalPages(1);
+        }else {
+            lockMemberCriteria.setTotalPages(lockMemberCount % pageSize == 0 ? lockMemberCount / pageSize : (lockMemberCount / pageSize) + 1);
+        }
+
+        return LejiaResult.ok(lockMemberCriteria);
     }
 
 }
