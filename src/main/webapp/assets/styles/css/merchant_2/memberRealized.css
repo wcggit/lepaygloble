@@ -4,22 +4,12 @@
     border-right: solid 1px #dddddd;
     padding: 10px 0;
 }
-.dataOverview .sjgl1>.sjgl1-left .col-md-5 p:first-child{
+.dataOverview .sjgl1>.sjgl1-left .col-md-6 p:first-child{
     font-size: 28px;
     color: #444;
+    line-height: 53px;
 }
-.dataOverview .btn-tx{
-    margin-right: 20px;
-}
-.dataOverview .commission-balance{
-    position: relative;
-}
-.dataOverview .balance-operating{
-    position: absolute;
-    left:130px;
-    display: inline-block;
-    width: 200px;
-}
+.dataOverview .sjgl1>.sjgl1-left .col-md-6 p{line-height: 30px}
 .dataOverview .col-md-1{
     font-size: 20px;
     color: #646464;
@@ -34,6 +24,8 @@
 .dataOverview .lockStoreState{
     border: solid 1px #dddddd;
     padding: 40px 0;
+    height: 600px;
+    overflow-y: scroll;
 }
 .dataOverview .lockStoreState .col-md-8:first-child{
     margin-bottom: 20px;
@@ -45,5 +37,9 @@
 }
 .dataOverview .lockMemberNum span{
     font-size: 32px;
+}
+.dataOverview .look-more{
+    margin: 40px auto 0;
+    display: block;
 }
 /*------------数据概览结束------------*/

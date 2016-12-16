@@ -70,7 +70,7 @@ public class MerchantUserController {
     @RequestMapping(value = "/merchantUser/merchantsInfo",method = RequestMethod.GET)
     @ResponseBody
     public LejiaResult getMerchantsInfo(){
-        List<Object>  merchantList = merchantUserResourceService.findMerchantsByMerchantUserSql(SecurityUtils.getCurrentUserLogin());
+        List<Object []>  merchantList = merchantUserResourceService.findMerchantsByMerchantUserSql(SecurityUtils.getCurrentUserLogin());
         return LejiaResult.ok(merchantList);
     }
 

@@ -203,7 +203,7 @@ public class MerchantUserResourceService {
      * 万俊
      */
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<Object> findMerchantsByMerchantUserSql(String merchantName) {
+    public List<Object []> findMerchantsByMerchantUserSql(String merchantName) {
         return merchantUserResourceRepository.findByMerchantInfoUser(merchantName);
     }
 
