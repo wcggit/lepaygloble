@@ -21,6 +21,13 @@ angular.module('lepayglobleApp')
                     deferred.resolve(response);
                 });
                 return deferred.promise;
+            },
+            findMerchantBill: function (dailyOrderCriteria) {
+                var deferred = $q.defer();
+                $http.post('/api/lejiaOrder/merchant',dailyOrderCriteria).success(function (response) {
+                    deferred.resolve(response);
+                });
+                return deferred.promise;
             }
         }
     });
