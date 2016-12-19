@@ -235,9 +235,7 @@ public class MerchantUserResourceService {
             @Override
             public Predicate toPredicate(Root<MerchantPos> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if (posOrderCriteria.getMerchantPosId() != null) {
-                    predicate.getExpressions().add(cb.equal(root.get("id"), posOrderCriteria.getMerchantPosId()));
-                }
+                predicate.getExpressions().add(root.get("id").in(posOrderCriteria.getMerchantPosIds()));
                 return predicate;
             }
         };
