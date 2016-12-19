@@ -6,18 +6,27 @@
 
 angular.module('lepayglobleApp')
     .controller('myPOSTradeController', function ($scope, $state, $rootScope, $location,Principal,Auth,$http) {
-        $scope.merchantPosId = null;
+        $scope.merchantPosIds = null;
+        $scope.xuanz = new Array();
         $http.get("/api/merchantUser/findByMerchantPosUser").success(function (response) {
             if(response.status == 200){
                 var data = response.data;
-                $scope.merchantPosIds = data;
+                $scope.merchantPosId = data;
+                angular.forEach($scope.merchantPosId,function (data,index) {
+                    $scope.xuanz[index] = data[0];
+                })
+                $scope.loadPosInfo();
             }
         });
         var currentPage = 1;
         $scope.loadPosInfo = function (){
             var posCriteria = {};
             posCriteria.currentPage = currentPage;
-            posCriteria.merchantPosId = $scope.merchantPosId;
+            if($scope.merchantPosIds == null || $scope.merchantPosIds == ""){
+                posCriteria.merchantPosIds = $scope.xuanz;
+            }else{
+                posCriteria.merchantPosIds = new Array($scope.merchantPosIds);
+            }
             $http.post("/api/merchantUser/findPosInfoByMerchantUser",posCriteria).success(function (response) {
                 if(response.status == 200){
                     $scope.data = response.data;
@@ -34,7 +43,6 @@ angular.module('lepayglobleApp')
                 }
             })
         }
-        $scope.loadPosInfo();
         $scope.searchByPosCriteria = function () {
             currentPage = 1;
             $scope.loadPosInfo();
