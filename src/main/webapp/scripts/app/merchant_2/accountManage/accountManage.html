@@ -1,0 +1,241 @@
+<div class="accountManage">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">账户管理</div>
+    </div>
+    <div class="container-fluid">
+        <p class="ttl">基本信息</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-2">商户名称</div>
+                    <div class="col-md-4">棉花糖KTV(公主岭市范家屯店)</div>
+                    <div class="col-md-2">商户联系人</div>
+                    <div class="col-md-4">孙漂亮(11111111111)</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">登陆账号</div>
+                    <div class="col-md-4">sunpiaoliang(管理员)</div>
+                    <div class="col-md-2">登陆密码</div>
+                    <div class="col-md-4" >**********<a class="changePassword a-btn" data-target="#changePassword" ng-click="changePassword()">修改</a></div>
+                </div>
+            </div>
+        </div>
+        <p class="ttl">结算信息</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p class="ttl2">佣金结算账户</p>
+                <div class="row">
+                    <div class="col-md-2">银行账号</div>
+                    <div class="col-md-4">xxxxxxxxxxxxxxxxx2323</div>
+                    <div class="col-md-2">结算周期</div>
+                    <div class="col-md-4"> T+2(提现申请后两个工作日内到账)</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">开户支行</div>
+                    <div class="col-md-4">北京朝阳支行</div>
+                    <div class="col-md-2">收款人</div>
+                    <div class="col-md-4" >孙漂亮</div>
+                </div>
+                <hr>
+                <p class="ttl2">门店结算账户
+                    <span class="select-style">
+                        <select class="form-control select-inline-block">
+                            <option value="">门店类别</option>
+                            <option value="">一品江南</option>
+                        </select>
+                    </span>
+                </p>
+                <div class="row">
+                    <div class="col-md-2">银行账号</div>
+                    <div class="col-md-4">xxxxxxxxxxxxxxxxx2323</div>
+                    <div class="col-md-2">结算周期</div>
+                    <div class="col-md-4"> T+2(提现申请后两个工作日内到账)</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">开户支行</div>
+                    <div class="col-md-4">北京朝阳支行</div>
+                    <div class="col-md-2">收款人</div>
+                    <div class="col-md-4" >孙漂亮</div>
+                </div>
+            </div>
+        </div>
+        <p class="ttl clearfix">账号信息<button class="btn btn-warning pull-right" data-target="#createAccount" data-toggle="modal">新建账号</button></p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <ul id="myTab" class="nav nav-pills">
+                    <li ng-class="{'active':accountInfoState0}" ng-click="accountInfoFun0()"><a data-toggle="tab">账号</a></li>
+                    <li ng-class="{'active':accountInfoState1}" ng-click="accountInfoFun1()"><a data-toggle="tab">收银微信号</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div ng-class="{'active':accountInfoState0}" class="tab-pane fade in" id="home">
+                        <!--表格-->
+                        <div class="panel panel-default">
+                            <table class="table ol-tab">
+                                <thead class="active">
+                                <tr>
+                                    <td>账号类型</td>
+                                    <td>用户名</td>
+                                    <td>密码</td>
+                                    <td>操作</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="tr-empty"><td class="text-center" colspan="4">暂无数据！</td></tr>
+                                <tr class="tr-noEmpty">
+                                    <td>管理员</td>
+                                    <td>积分客朝阳合伙人</td>
+                                    <td>******</td>
+                                    <td><a class="a-btn">修改密码</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--分页-->
+                        <div class=" clearfix">
+                            <nav class="pull-right">
+                                <ul class="pagination">
+                                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                                    </li>
+                                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                                        1}}</a>
+                                    </li>
+                                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                                        2}}</a>
+                                    </li>
+                                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                                        <span aria-hidden="true">›</span>
+                                    </a></li>
+                                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div ng-class="{'active':accountInfoState1}" class="tab-pane fade in" id="ios">
+                        <!--表格-->
+                        <div class="panel panel-default">
+                            <table class="table ol-tab">
+                                <thead class="active">
+                                <tr>
+                                    <td>账号类型</td>
+                                    <td>微信信息</td>
+                                    <td>操作</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="tr-empty"><td class="text-center" colspan="3">暂无数据！</td></tr>
+                                <tr class="tr-noEmpty">
+                                    <td>管理员</td>
+                                    <td><span class="wx-faceImg"><img src="../../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span><span>嘿嘿嘿</span></td>
+                                    <td><a class="a-btn">接触绑定</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--分页-->
+                        <div class=" clearfix">
+                            <nav class="pull-right">
+                                <ul class="pagination">
+                                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                                    </li>
+                                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                                        1}}</a>
+                                    </li>
+                                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                                        2}}</a>
+                                    </li>
+                                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                                        <span aria-hidden="true">›</span>
+                                    </a></li>
+                                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--新建账户提示框-->
+<div class="modal fade" id="createAccount">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">新建账号</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">账户名称</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" placeholder="请输入金额">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">账户密码</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" placeholder="请输入金额">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">再次确认密码</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" placeholder="请输入金额">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">管理员登陆密码</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" placeholder="请输入金额">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
+                        <div class="col-sm-7">
+                            <p class="text-muted" class="form-control">xxxxxxxxxxxxxxxxxxx{{bank}}</p>
+                            <p class="text-muted" class="form-control">农行</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="withDraw()">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--提现成功提示框-->
+<div class="modal fade" id="tx-success">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="icon-success"></div>
+                <p class="text-center">提现申请成功</p>
+                <p class="text-center">佣金将会在1个工作日内后抵达您的结算账户</p>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
