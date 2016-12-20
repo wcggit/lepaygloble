@@ -155,6 +155,48 @@ thead>tr>td,tbody>tr>td,thead>tr>td>p,tbody>tr>td>p{font-size: 14px;}
     height: 100%;
     border-radius: 50%;
 }
+/*a-btn样式*/
+.a-btn{cursor: pointer}
+
+/* 去掉默认样式，设置新的样式 */
+.select-style{
+    position: relative;
+    display: inline-block;
+}
+.select-style select{
+    box-sizing:border-box;
+    background:none;
+    outline:none;
+    -webkit-appearance:none;
+    padding:0 25px 0 5px;
+    line-height:inherit;
+    color:inherit;
+    cursor:pointer;
+    font-size:14px;
+    position:relative;
+    z-index:3;
+    width: 100%;
+    color: #999;
+}
+.select-style:after{
+    display: block;
+    width: 10px;
+    height: 26px;
+    content: url("../../images/merchant_2/homePage/select_sanjiao.png");
+    color: #636363;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    right: 10px;
+    margin: auto;
+}
+.select-style select option{
+    color:#222;
+    font-size: 14px;
+}
+select::-ms-expand { display: none; }
+select.select-inline-block{display: inline-block;width: auto;}
+
 /*头部*/
 .nav-style>li{
     float: left;
