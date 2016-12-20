@@ -46,7 +46,7 @@
     <div class="row">
         <div class="form-group col-md-4">
             <label></label>
-            <button type="button" class="btn btn-warning btn-check2">查询</button>
+            <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
         </div>
     </div>
 </form>
@@ -64,16 +64,16 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="tr-empty"><td class="text-center" colspan="6">暂无数据！</td></tr>
-        <tr class="tr-noEmpty">
-            <td><span class="wx-faceImg"><img src="../../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span><span>嘿嘿嘿</span></td>
+        <tr class="tr-empty" ng-show="lockMembers==null || lockMembers==''"><td class="text-center" colspan="6">暂无数据！</td></tr>
+        <tr class="tr-noEmpty" ng-repeat="m in lockMembers">
+            <td><span class="wx-faceImg"><img src="{{m[4]}}" alt=""></span><span>{{m[3]}}</span></td>
             <td class="td-date">
-                <p>2016-05-05 </p>
-                <p>11:30</p>
+                <p>{{m[1]|date:"yyyy-MM-dd"}}</p>
+                <p>{{m[1]|date:"HH:mm"}}</p>
             </td>
-            <td>一品江南</td>
-            <td>￥80.55</td>
-            <td>￥80.55</td>
+            <td>{{m[5]}}</td>
+            <td>{{scoreas[$index]/100.0|currency:" ￥ "}}</td>
+            <td>{{scorebs[$index]|number:1}}</td>
         </tr>
         </tbody>
     </table>

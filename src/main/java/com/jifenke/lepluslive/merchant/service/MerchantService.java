@@ -94,7 +94,7 @@ public class MerchantService {
         return merchantWalletRepository.findByMerchant(merchant);
     }
 
-    // 新版本
+    // 新版本 商户平台 2.0
     @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
     public Map findCommissionByMerchants(List<Merchant> merchants) {
         Map map = new HashMap();

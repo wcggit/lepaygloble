@@ -6,7 +6,18 @@ angular.module('lepayglobleApp')
         return {
             getMerchantBindUserList: function (criteria) {
                 var deferred = $q.defer();
-                $http.post('/api/merchant/bindUsers', criteria, {
+                $http.post('/api/merchantUser/bindUsers', criteria, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).success(function (response) {
+                    deferred.resolve(response);
+                });
+                return deferred.promise;
+            },
+            countMerchantBindUserTotalPages:function(criteria) {
+                var deferred = $q.defer();
+                $http.post('/api/merchantUser/bindUsers/count', criteria, {
                     headers: {
                         'Content-Type': 'application/json'
                     }

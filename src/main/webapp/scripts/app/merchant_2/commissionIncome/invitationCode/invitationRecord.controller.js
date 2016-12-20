@@ -42,19 +42,12 @@ angular.module('lepayglobleApp')
 
         });
 
+
         //  查询条件
         var currentPage = 1;
-        var criteria = {};
-        criteria.offset = 1;
-        getTotalPage();
-        function loadContent(){
-            bindUser.getMerchantBindUserList(criteria).then(function (response) {
-                var data = response.data;
-                $scope.page = currentPage;
-                $scope.pulls =data;
-            });
-        }
-
+        var lockMembersCriteria = {};
+        lockMembersCriteria.currentPage = 1;
+        // 翻页
         $scope.loadPage = function (page) {
             if (page == 0) {
                 return;
@@ -69,30 +62,45 @@ angular.module('lepayglobleApp')
                 return;
             }
             currentPage = page;
-            criteria.offset = page;
-            loadContent();
+            $scope.loadLockMembers();
+        };
+
+        $scope.searchByCriteria = function () {
+            currentPage = 1;
+            $scope.page = currentPage;
+            var completeDate = $("#completeDate").val().split("-");
+            lockMembersCriteria.startDate = completeDate[0];
+            lockMembersCriteria.endDate = completeDate[1];
+            var merchantId = $("#selMerchant").val();
+            if(merchantId!=null && merchantId!='') {
+                lockMembersCriteria.storeIds = [merchantId];
+            }else {
+                lockMembersCriteria.storeIds = null;
+            }
+            $scope.loadLockMembers();
+            getTotalPage();
         };
 
 
-        function  getTotalPage(){
-            bindUser.getMerchantBindUserTotalPages(criteria).then(function (response) {
-                $scope.totalPages = response.data;
-                loadContent();
+        $scope.loadLockMembers = function() {
+            $scope.page = currentPage;
+            lockMembersCriteria.currentPage = currentPage;
+            bindUser.getMerchantBindUserList(lockMembersCriteria).then(function (response) {
+                var data = response.data;
+                $scope.lockMembers = data.lockMembers;
+                $scope.scoreas = data.scoreas;
+                $scope.scorebs = data.scorebs;
             });
         }
 
-        $scope.searchByCriteria = function () {
-            var dateStr = $("#completeDate").val();
-            if (dateStr == "" || dateStr == null) {
-                alert("请输入时间");
-                return;
-            }
-            var startDate = dateStr.split("-")[0].trim();
-            var endDate = dateStr.split("-")[1].trim();
-            criteria.startDate = startDate;
-            criteria.endDate = endDate;
-            criteria.offset = 1;
-            currentPage = 1;
-            getTotalPage()
+        //  计算总页数
+        function  getTotalPage(){
+            bindUser.countMerchantBindUserTotalPages(lockMembersCriteria).then(function (response) {
+                $scope.totalPages = response.data;
+            });
         }
+
+        //  默认查询全部
+        $scope.loadLockMembers();
+        getTotalPage();
     })

@@ -387,7 +387,7 @@ public class LeJiaUserService {
      * 根据商户门店分页查询锁定会员
      */
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List getMerchantLockMemberByPage(LockMemberCriteria lockMemberCriteria) {
+    public List<Object[]> getMerchantLockMemberByPage(LockMemberCriteria lockMemberCriteria) {
         int start = lockMemberCriteria.getPageSize() * (lockMemberCriteria.getCurrentPage() - 1);
         StringBuffer sql = new StringBuffer();
         sql.append("select  lju2.lju_id, lju2.bind_date, lju2.phone, lju2.nickname, lju2.image, merchant.name, merchant.id from "
@@ -416,6 +416,41 @@ public class LeJiaUserService {
         Query query = em.createNativeQuery(sql.toString());
         List<Object[]> details = query.getResultList();
         return details;
+    }
+    /**
+     *  统计锁定会员数量
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Long countMerchantLockMember(LockMemberCriteria lockMemberCriteria) {
+        int start = lockMemberCriteria.getPageSize() * (lockMemberCriteria.getCurrentPage() - 1);
+        StringBuffer sql = new StringBuffer();
+        sql.append("select count(1)  from (");
+        sql.append("select  lju2.lju_id, lju2.bind_date, lju2.phone, lju2.nickname, lju2.image from "
+            + " (select lju1.id lju_id, lju1.bind_merchant_date bind_date, lju1.phone_number phone, wxu1.nickname nickname, wxu1.head_image_url image, lju1.bind_merchant_id bind_merchant_id from le_jia_user lju1,wei_xin_user wxu1 where ");
+        if (lockMemberCriteria.getStoreIds() != null) {
+            sql.append(" lju1.bind_merchant_id in ( ");
+            for(int i =0;i<lockMemberCriteria.getStoreIds().length;i++){
+                sql.append(lockMemberCriteria.getStoreIds()[i]+",");
+            }
+            sql.deleteCharAt(sql.length()-1);
+            sql.append(") and ");
+        }
+        if (lockMemberCriteria.getStartDate() != null && lockMemberCriteria.getStartDate() != "") {
+            sql.append(" lju1.bind_merchant_date between '");
+            sql.append(lockMemberCriteria.getStartDate());
+            sql.append("' and '");
+            sql.append(lockMemberCriteria.getEndDate());
+            sql.append("' and ");
+        }
+        sql.append(" lju1.id = wxu1.le_jia_user_id order by lju1.bind_merchant_date desc ");
+        sql.append(" ) as lju2 ) total");
+        Query query = em.createNativeQuery(sql.toString());
+        List details = query.getResultList();
+        Long result = 0L;
+        if(details!=null) {
+            result = new Long(details.get(0).toString());
+        }
+        return result;
     }
 
 
