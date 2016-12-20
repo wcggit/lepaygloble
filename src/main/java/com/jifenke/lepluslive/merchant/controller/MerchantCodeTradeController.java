@@ -3,6 +3,7 @@ package com.jifenke.lepluslive.merchant.controller;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
+import com.jifenke.lepluslive.merchant.domain.criteria.CommissionDetailsCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.LockMemberCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.MyCodeCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
@@ -10,6 +11,7 @@ import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.order.service.OffLineOrderService;
+import com.jifenke.lepluslive.order.service.OnLineOrderService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +41,8 @@ public class MerchantCodeTradeController {
     private OffLineOrderService offLineOrderService;
     @Inject
     private LeJiaUserService leJiaUserService;
+    @Inject
+    private OnLineOrderService onLineOrderService;
 
     /**
      *  查询商户下所有的门店
@@ -93,7 +97,7 @@ public class MerchantCodeTradeController {
     }
 
     /**
-     * 查询 绑定会员
+     * 查询 绑定会员信息
      * @param lockMemberCriteria
      * @return
      */
@@ -116,6 +120,57 @@ public class MerchantCodeTradeController {
         }
 
         return LejiaResult.ok(lockMemberCriteria);
+    }
+
+    /**
+     * 查询 订单 佣金明细
+     * @param commissionDetailsCriteria
+     * @return
+     */
+    @RequestMapping(value = "/commissionDetails/commissionDetailsByMerchantUser")
+    @ResponseBody
+    public LejiaResult findCommissionDetailsByMerchantUser(@RequestBody CommissionDetailsCriteria commissionDetailsCriteria){
+
+//        //测试
+//        Object[] o = {1,3,9};
+//        commissionDetailsCriteria.setStoreIds(o);
+
+        Integer consumeType = commissionDetailsCriteria.getConsumeType();
+        if (consumeType != null && consumeType == 1){//线下消费
+            List<Object[]> off_line = offLineOrderService.getCommissionDetailsList_off_line(commissionDetailsCriteria);
+            commissionDetailsCriteria.setCommissionDetails(off_line);
+
+            //分页
+            List<Object[]> listCount = offLineOrderService.getCommissionDetails_off_line_count(commissionDetailsCriteria);
+            Integer cdCount = Integer.valueOf(listCount.get(0)[0] == null ? "0" : listCount.get(0)[0].toString());
+            Integer pageSize = commissionDetailsCriteria.getPageSize();
+            commissionDetailsCriteria.setCommissionDetailsCount(cdCount);
+            commissionDetailsCriteria.setCommissionIncome(Double.valueOf(listCount.get(0)[1] == null ? "0.0" : listCount.get(0)[1].toString()));
+            if (cdCount <= pageSize){
+                commissionDetailsCriteria.setTotalPages(1);
+            }else {
+                commissionDetailsCriteria.setTotalPages(cdCount % pageSize == 0 ? cdCount / pageSize : (cdCount / pageSize) + 1);
+            }
+
+        }
+        if (consumeType != null && consumeType == 2){//线上消费
+            List<Object[]> on_line = onLineOrderService.getCommissionDetailsList_on_line(commissionDetailsCriteria);
+            commissionDetailsCriteria.setCommissionDetails(on_line);
+
+            //分页
+            List<Object[]> listCount = onLineOrderService.getCommissionDetails_on_line_count(commissionDetailsCriteria);
+            Integer cdCount = Integer.valueOf(listCount.get(0)[0] == null ? "0" : listCount.get(0)[0].toString());
+            Integer pageSize = commissionDetailsCriteria.getPageSize();
+            commissionDetailsCriteria.setCommissionDetailsCount(cdCount);
+            commissionDetailsCriteria.setCommissionIncome(Double.valueOf(listCount.get(0)[1] == null ? "0.0" : listCount.get(0)[1].toString()));
+            if (cdCount <= pageSize){
+                commissionDetailsCriteria.setTotalPages(1);
+            }else {
+                commissionDetailsCriteria.setTotalPages(cdCount % pageSize == 0 ? cdCount / pageSize : (cdCount / pageSize) + 1);
+            }
+        }
+
+        return LejiaResult.ok(commissionDetailsCriteria);
     }
 
 }
