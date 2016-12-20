@@ -40,6 +40,10 @@ public class PosOrderCriteria {
      * 商户pos机ID
      */
     private Long merchantPosId;
+    /**
+     * 商户pos机IDs
+     */
+    private Long [] merchantPosIds;
 
     /**
      * pos订单编号
@@ -211,5 +215,13 @@ public class PosOrderCriteria {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public Long[] getMerchantPosIds() {
+        return merchantPosIds;
+    }
+
+    public void setMerchantPosIds(Long[] merchantPosIds) {
+        this.merchantPosIds = merchantPosIds;
     }
 }

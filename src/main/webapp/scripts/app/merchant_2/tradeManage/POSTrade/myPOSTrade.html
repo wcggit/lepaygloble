@@ -4,9 +4,9 @@
         <div class="form-group col-md-4">
             <label>POS设备尾号</label>
             <div class="input-group col-md-6">
-                <select class="form-control" ng-model="merchantPosId">
+                <select class="form-control" ng-model="merchantPosIds">
                     <option value="">请选择</option>
-                    <option ng-repeat="x in merchantPosIds" value="{{x[0]}}">{{x[1] |limitTo:-4}}</option>
+                    <option ng-repeat="x in merchantPosId" value="{{x[0]}}">{{x[1] |limitTo:-4}}</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
