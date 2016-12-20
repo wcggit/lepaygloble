@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="telephone=yes"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <title>海报下载</title>
+    <link rel="stylesheet" href="../../../../assets/styles/css/reset.css">
+    <script src="../../../../bower_components/jquery/dist/jquery.min.js"></script>
+</head>
+<style>
+    .ewm {
+        margin-top: 20px;
+    }
+    .ewm > div{
+        width: 72%;
+        margin: 0 auto;
+    }
+    .ewm img {
+        width: 100%;
+    }
+    .text {
+        text-align: center;
+        color:#333;
+        font-size: 18px;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+</style>
+<body>
+<script>
+    $(function(){
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var param = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (param != null)
+               // $("#hbImg").src="/partner/downloadPoster?sid="+param;     //  将图片路径指向后台
+               alert(param);                                                //  测试是否能拿到url路径中的参数
+    });
+</script>
+<section class="ewm">
+    <div>
+        <img id="hbImg" src="">
+    </div>
+</section>
+<section class="text">
+    <p>请长按上图海报，将海报保存到本地</p>
+</section>
+</body>
+</html>

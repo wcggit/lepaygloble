@@ -23,53 +23,59 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 public class OrderViewExcel extends AbstractExcelView {
 
-  @Override
-  protected void buildExcelDocument(Map<String, Object> map, HSSFWorkbook hssfWorkbook,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response) throws Exception {
-    HSSFSheet sheet = hssfWorkbook.createSheet("list");
-    setExcelHeader(sheet);
+    @Override
+    protected void buildExcelDocument(Map<String, Object> map, HSSFWorkbook hssfWorkbook,
+                                      HttpServletRequest request,
+                                      HttpServletResponse response) throws Exception {
+        HSSFSheet sheet = hssfWorkbook.createSheet("list");
+        setExcelHeader(sheet);
 
-    List<OffLineOrder> orderList = (List<OffLineOrder>) map.get("orderList");
-    setExcelRows(sheet, orderList);
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    String filename =sdf.format(new Date())+".xls";//设置下载时客户端Excel的名称
-    response.setContentType("application/vnd.ms-excel");
-    response.setHeader("Content-disposition", "attachment;filename=" + filename);
+        List<OffLineOrder> orderList = (List<OffLineOrder>) map.get("orderList");
+        setExcelRows(sheet, orderList);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String filename = sdf.format(new Date()) + ".xls";//设置下载时客户端Excel的名称
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-disposition", "attachment;filename=" + filename);
 
-    OutputStream ouputStream = response.getOutputStream();
-    hssfWorkbook.write(ouputStream);
-    ouputStream.flush();
-    ouputStream.close();
+        OutputStream ouputStream = response.getOutputStream();
+        hssfWorkbook.write(ouputStream);
+        ouputStream.flush();
+        ouputStream.close();
 
-  }
-
-  public void setExcelHeader(HSSFSheet excelSheet) {
-    HSSFRow excelHeader = excelSheet.createRow(0);
-    excelHeader.createCell(0).setCellValue("交易完成时间");
-      excelHeader.createCell(1).setCellValue("交易单号");
-      excelHeader.createCell(2).setCellValue("消费者");
-    excelHeader.createCell(3).setCellValue("金额");
-      excelHeader.createCell(4).setCellValue("支付方式");
-      excelHeader.createCell(5).setCellValue("手续费");
-      excelHeader.createCell(6).setCellValue("到账收入");
-  }
-
-  public void setExcelRows(HSSFSheet excelSheet, List<OffLineOrder> orderList) {
-    int record = 1;
-    for (OffLineOrder order : orderList) {
-      HSSFRow excelRow = excelSheet.createRow(record++);
-      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-      excelRow.createCell(0).setCellValue(order.getCompleteDate() == null ? "未完成的订单"
-                                                                          : sdf
-                                              .format(order.getCompleteDate()));
-        excelRow.createCell(1).setCellValue(order.getOrderSid());
-      excelRow.createCell(2).setCellValue(order.getRebateWay()==0?"非会员":"会员");
-        excelRow.createCell(3).setCellValue(order.getTotalPrice() / 100.0);
-        excelRow.createCell(4).setCellValue(order.getPayWay().getPayWay());
-      excelRow.createCell(5).setCellValue(order.getLjCommission() / 100.0);
-      excelRow.createCell(6)
-          .setCellValue(order.getTransferMoney()/100.0);
     }
-  }
+
+    public void setExcelHeader(HSSFSheet excelSheet) {
+        HSSFRow excelHeader = excelSheet.createRow(0);
+        excelHeader.createCell(0).setCellValue("交易完成时间");
+        excelHeader.createCell(1).setCellValue("交易单号");
+        excelHeader.createCell(2).setCellValue("订单类型");
+        excelHeader.createCell(3).setCellValue("金额");
+        excelHeader.createCell(4).setCellValue("支付方式");
+        excelHeader.createCell(5).setCellValue("手续费(会员折扣费)");
+        excelHeader.createCell(6).setCellValue("到账收入");
+    }
+
+    public void setExcelRows(HSSFSheet excelSheet, List<OffLineOrder> orderList) {
+        int record = 1;
+        for (OffLineOrder order : orderList) {
+            HSSFRow excelRow = excelSheet.createRow(record++);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            excelRow.createCell(0).setCellValue(order.getCompleteDate() == null ? "未完成的订单"
+                                                                                : sdf
+                                                    .format(order.getCompleteDate()));
+            excelRow.createCell(1).setCellValue(order.getOrderSid());
+            if (order.getRebateWay() == 1) {
+                excelRow.createCell(2).setCellValue("导流订单");
+            } else if (order.getRebateWay() == 3) {
+                excelRow.createCell(2).setCellValue("会员订单");
+            } else {
+                excelRow.createCell(2).setCellValue("普通订单");
+            }
+            excelRow.createCell(3).setCellValue(order.getTotalPrice() / 100.0);
+            excelRow.createCell(4).setCellValue(order.getPayWay().getPayWay());
+            excelRow.createCell(5).setCellValue(order.getLjCommission() / 100.0);
+            excelRow.createCell(6)
+                .setCellValue(order.getTransferMoney() / 100.0);
+        }
+    }
 }

@@ -12,12 +12,14 @@
 .banner6{background: url(/assets/styles/images/shouye/7.jpg) no-repeat center center;height: 1070px;}
 .banner7{background: url(/assets/styles/images/shouye/8.jpg) no-repeat center center;height: 682px;}
 .shouye-container{padding: 0;}
-.panel-footer{margin-top: 20px;background: #fff;border-top: none;padding-bottom: 20px}
+.panel-footer{
+    margin-top: 20px;background: #fff;border-top: none;padding-bottom: 20px;
+}
 .panel-footer p span.logo{
     display: inline-block;
     width: 84px;
     height: 27px;
     background: url("/assets/images/head/logo.png") no-repeat;
     background-size: 100% 100%;
-    margin: 32px 0 14px;
+    margin: 20px 0 3px;
 }

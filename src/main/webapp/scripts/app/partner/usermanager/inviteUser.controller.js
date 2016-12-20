@@ -1,39 +1,69 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('inviteUserController', function ($scope, Commission) {
+    .controller('inviteUserController', function ($scope, InviteUser, $http) {
                     $('body').css({background: '#fff'});
                     $('.main-content').css({height: 'auto'});
-                    $('#timePicker1')
-                        // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' +
-                        // moment().format('YYYY/MM/DD HH:mm:59'))
-                        .daterangepicker({
-                                             timePicker: true, //是否显示小时和分钟
-                                             timePickerIncrement: 1, //时间的增量，单位为分钟
-                                             opens: 'right', //日期选择框的弹出位置
-                                             startDate: moment().format('YYYY/MM/DD HH:mm:00'),
-                                             endDate: moment().format('YYYY/MM/DD HH:mm:59'),
-                                             format: 'YYYY/MM/DD HH:mm:ss', //控件中from和to 显示的日期格式
-                                             ranges: {
-                                                 '最近1小时': [moment().subtract('hours', 1), moment()],
-                                                 '今日': [moment().startOf('day'), moment()],
-                                                 '昨日': [moment().subtract('days', 1).startOf('day'),
-                                                        moment().subtract('days', 1).endOf('day')],
-                                                 '最近7日': [moment().subtract('days', 6), moment()],
-                                                 '最近30日': [moment().subtract('days', 29), moment()]
-                                             }
-                                         }, function (start, end, label) {
-                                         });
-                    $("#timePicker1").val("");
+                    $http.get('api/partner').success(function (response) {
+                        $scope.partnerSid = response.data.partnerSid;
+                    });
                     var currentPage = 1;
                     var criteria = {};
                     criteria.offset = 1;
-                    getTotalPage();
+                    loadContent();
                     function loadContent() {
-                        Commission.getUsersByBindPartner(criteria).then(function (response) {
+                        InviteUser.getTotalCount().then(function (response) {
                             var data = response.data;
+                            $scope.inviteM = data.inviteM;
+                            $scope.totalA = data.totalA / 100.0;
+                            $scope.totalB = data.totalB;
                             $scope.page = currentPage;
-                            $scope.pulls = data;
+                        });
+                        InviteUser.getPartnerMerchantInfo(criteria).then(function (response) {
+                            var data = response.data;
+                            var page = data.page;
+                            $scope.totalPages = page.totalPages;
+                            $scope.totalElements = page.totalElements;
+                            $scope.pulls = page.content;
+                            $scope.wxScoreas = data.wxScoreas;
+                            $scope.wxScorebs = data.wxScorebs;
+                        });
+                        InviteUser.getPartnerInfo().then(function (response) {
+                            //  QrCode
+                            $("#qrCodeImg").attr("src", response.hbQrCodeUrl);
+                            $scope.inviteLimit = response.inviteLimit;
+                            //  Gift
+                            if (response.scoreAType == 0) {
+                                $("#stableSaRio").attr("checked", true);
+                                $("#stableSaRio").next().next().removeAttr("disabled");
+                                $("#stableSaRio").next().next().next().next().removeAttr("disabled");
+                                $("#stableSaNum").val(response.maxScoreA / 100.0);
+                                $("#txtScoreA").text(response.maxScoreA / 100.0);
+                            }
+                            if (response.scoreAType == 1) {
+                                $("#randSaRio").attr("checked", true);
+                                $("#randSaRio").next().next().removeAttr("disabled");
+                                $("#randSaRio").next().next().next().next().removeAttr("disabled");
+                                $("#randSaMaxNum").val(response.maxScoreA / 100.0);
+                                $("#randSaMinNum").val(response.minScoreA / 100.0);
+                                $("#txtScoreA").text(response.minScoreA / 100.0 + '-'
+                                                     + response.maxScoreA / 100.0);
+                            }
+                            if (response.scoreBType == 0) {
+                                $("#stableSbRio").attr("checked", true);
+                                $("#stableSbRio").next().next().removeAttr("disabled");
+                                $("#stableSbRio").next().next().next().next().removeAttr("disabled");
+                                $("#stableSbNum").val(response.maxScoreB);
+                                $("#txtScoreB").text(response.maxScoreB);
+                            }
+                            if (response.scoreBType == 1) {
+                                $("#randSbRio").attr("checked", true);
+                                $("#randSbRio").next().next().removeAttr("disabled");
+                                $("#randSbRio").next().next().next().next().removeAttr("disabled");
+                                $("#randSbMaxNum").val(response.maxScoreB);
+                                $("#randSbMinNum").val(response.minScoreB);
+                                $("#txtScoreB").text(response.minScoreB + '-' + response.maxScoreB);
+                            }
                         });
                     }
 
@@ -54,14 +84,61 @@ angular.module('lepayglobleApp')
                         criteria.offset = page;
                         loadContent();
                     };
-
-                    function getTotalPage() {
-                        Commission.getTotalPagesByBindPartner(criteria).then(function (response) {
-                            $scope.totalPages = response.data;
-                            loadContent();
+                    $scope.submitPartnerInfo = function () {
+                        var partnerInfo = {};
+                        if ($("#stableSaRio").is(":checked")) {
+                            partnerInfo.scoreAType = 0;
+                            partnerInfo.maxScoreA = $("#stableSaNum").val();
+                            partnerInfo.minScoreA = $("#stableSaNum").val();
+                        }
+                        if ($("#randSaRio").is(":checked")) {
+                            partnerInfo.scoreAType = 1;
+                            partnerInfo.maxScoreA = $("#randSaMaxNum").val();
+                            partnerInfo.minScoreA = $("#randSaMinNum").val();
+                        }
+                        if ($("#stableSbRio").is(":checked")) {
+                            partnerInfo.scoreBType = 0;
+                            partnerInfo.maxScoreB = $("#stableSbNum").val();
+                            partnerInfo.minScoreB = $("#stableSbNum").val();
+                        }
+                        if ($("#randSbRio").is(":checked")) {
+                            partnerInfo.scoreBType = 1;
+                            partnerInfo.maxScoreB = $("#randSbMaxNum").val();
+                            partnerInfo.minScoreB = $("#randSbMinNum").val();
+                        }
+                        if ($("#noScoreRio").is(":checked")) {
+                            partnerInfo.scoreBType = 0;
+                            partnerInfo.maxScoreB = 0;
+                            partnerInfo.minScoreB = 0;
+                        }
+                        InviteUser.savePartnerInfo(partnerInfo).then(function (response) {
+                            if (response.status == 200) {
+                                alert("新设置已成功保存 !");
+                                location.reload();
+                            }
                         });
                     }
-
+                    $scope.showBindWin = function () {
+                        $("#bindWeixin").modal();
+                    }
+                    $scope.clearRandA = function () {
+                        $("#randSaMinNum").val('');
+                        $("#randSaMaxNum").val('');
+                    }
+                    $scope.clearStableA = function () {
+                        $("#stableSaNum").val('');
+                    }
+                    $scope.clearRandB = function () {
+                        $("#randSbMinNum").val('');
+                        $("#randSbMaxNum").val('');
+                    }
+                    $scope.clearStableB = function () {
+                        $("#stableSbNum").val('');
+                    }
+                    $scope.clearAllB = function () {
+                        $scope.clearRandB();
+                        $scope.clearStableB();
+                    }
                     $scope.searchByCriteria = function () {
                         var dateStr = $("#timePicker1").val();
                         var phone = $("#phone").val();
@@ -76,29 +153,17 @@ angular.module('lepayglobleApp')
                         criteria.merchantName = merchantName;
                         criteria.phone = phone;
                         currentPage = 1;
-                        getTotalPage()
                     }
-
-                    // 复选框
-                    $('#checkbox-1').click(function () {
-                        if($('#checkbox-1').prop('checked')==true){
-                            $(this).next('label').removeClass('chbx-init').addClass('chbx-focus');
-                            $('.checkbox-2').next('label').removeClass('chbx-init').addClass('chbx-focus');
-
-                        }else {
-                            $(this).next('label').removeClass('chbx-focus').addClass('chbx-init');
-                            $('.checkbox-2').next('label').removeClass('chbx-focus').addClass('chbx-init');
-                        }
+                    $("input[type=number]").attr("disabled", "disabled");
+                    $("input[type=radio]").click(function () {
+                        var name = $(this).attr("name");
+                        $("input[name=" + name + "]").next().next().attr("disabled", "disabled");
+                        $("input[name=" + name + "]").next().next().next().next().attr("disabled",
+                                                                                       "disabled");
+                        $(this).next().next().removeAttr("disabled");
+                        $(this).next().next().next().next().removeAttr("disabled");
                     });
-
-                    $scope.checkClick=function(id){
-                        var idName=document.getElementById(id);
-                        if($(idName).prop('checked')==true){
-                            $(idName).next('label').removeClass('chbx-init').addClass('chbx-focus');
-                        }else {
-                            $(idName).next('label').removeClass('chbx-focus').addClass('chbx-init');
-                        }
-                    }
-
                 });
+
+
 

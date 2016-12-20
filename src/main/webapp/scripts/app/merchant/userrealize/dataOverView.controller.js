@@ -51,8 +51,14 @@ angular.module('lepayglobleApp')
 
                     $scope.tx = function () {
                         $("#tx").modal("toggle");
-                    }
-
+                                }
+                    Commission.getOnLineCommissionIncome().then(function (response) {
+                        var data = response.data;
+                        $scope.dOneDaySum = data.dOneDaySum;
+                        $scope.onLinePer = data.onLinePer;
+                        $scope.oneDayCount = data.oneDayCount;
+                        $scope.totalCount = data.totalCount;
+                    });
                 });
 
 

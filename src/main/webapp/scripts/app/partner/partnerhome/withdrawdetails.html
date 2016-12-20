@@ -25,9 +25,16 @@
             <div class="row">
                 <div class="form-group col-md-4">
                     <label>提现状态</label>
-                    <input type="text" class="form-control">
+                    <select style="width: 50%;padding-left: 10px;" class="form-control" id="state">
+                        <option value="-1">全部</option>
+                        <option value="0">待处理</option>
+                        <option value="1">已完成</option>
+                        <option value="2">已驳回</option>
+                    </select>
                 </div>
-                <div class="form-group col-md-4">
+            </div>
+            <div class="row">
+                <div style="margin-left: 102px" class="form-group col-md-4">
                     <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
                 </div>
             </div>
@@ -42,18 +49,23 @@
                     <tbody>
                         <tr ng-repeat="x in pulls">
                             <td>
-                                <p ng-bind="x[3]|date:'yyyy-MM-dd'"></p>
-                                <p ng-bind="x[3]|date:'HH:mm:ss'"></p>
+                                <p ng-bind="x.createdDate|date:'yyyy-MM-dd'"></p>
+                                <p ng-bind="x.createdDate|date:'HH:mm:ss'"></p>
                             </td>
-                            <td>已完成</td>
-                            <td  ng-bind="'¥'+x[6]/100.0"></td>
-                            <td>
-                                <p ng-bind="x[3]|date:'yyyy-MM-dd'"></p>
-                                <p ng-bind="x[3]|date:'HH:mm:ss'"></p>
+                            <td ng-show="x.state==0">审核中</td>
+                            <td ng-show="x.state==1">已完成</td>
+                            <td ng-show="x.state==2">未通过</td>
+                            <td  ng-bind="'¥'+x.totalPrice/100.0"></td>
+                            <td ng-show="x.completeDate!=null">
+                                <p ng-bind="x.completeDate|date:'yyyy-MM-dd'"></p>
+                                <p ng-bind="x.completeDate|date:'HH:mm:ss'"></p>
                             </td>
-                            <td>银行卡</td>
-                            <td>*******************123</td>
-                            <td>银行卡不对</td>
+                            <td ng-show="x.completeDate==null">
+                                未确定
+                            </td>
+                            <td ng-bind="x.bankName"></td>
+                            <td><span ng-bind="x.bankNumber|limitTo:4"></span>***************<span ng-bind="x.bankNumber|limitTo:-5"></span></td>
+                            <td ng-bind="x.note"></td>
                         </tr>
                     </tbody>
                 </table>

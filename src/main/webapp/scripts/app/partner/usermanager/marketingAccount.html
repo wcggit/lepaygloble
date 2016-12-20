@@ -1,5 +1,198 @@
 <div class="container-fluid content main-content user-manager">
     <div class="container-fluid">
-        <p class="ttl">营销账户</p>
+        <div class="w-title">
+            <div class="ttl tc">营销账户</div>
+            <div class="btn-set">
+                <button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#pffl-recharge">立即充值</button>
+            </div>
+        </div>
+        <!--显示信息-->
+        <div class="form-inline line">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <p class="w-makeMargin">{{availableScoreA}}<span>元</span></p>
+                    <p class="w-makeMargin">红包账户余额</p><span class="w-ffhb" style="color:#f54339;">已发放：{{(totalScorea-availableScoreA)|number : 2}}元</span>
+                </div>
+                <div class="form-group col-md-6">
+                    <p class="w-makeMargin">{{availableScoreB}}<span>积分</span></p>
+                    <p class="w-makeMargin">积分账户余额</p><span class="w-ffhb" style="color:#fb991a;">已发放：{{totalScoreb-availableScoreB}}积分</span>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid content main-content partner-home">
+            <div class="clearfix">
+                <p class="ttl">营销记录</p>
+                <ul class="nav nav-pills">
+                    <li role="presentation" class="active"><a ng-click="loadAll()">全部</a></li>
+                    <li role="presentation" ng-click="loadIncrease()"><a>增值记录</a></li>
+                    <li role="presentation" ng-class="{active:currentTab2}" ng-click="loadDecrease()"><a>减扣记录</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active">
+                        <div class="panel panel-default">
+                          <table class="table ol-tab">
+                                <thead class="active">
+                                <tr>
+                                    <td>变更账户</td>
+                                    <td>变更值</td>
+                                    <td>变更项目</td>
+                                    <td>变更时间</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="x in homeTab">
+                                    <td ng-show="x.type==0">积分变更</td>
+                                    <td ng-show="x.type==1">红包变更</td>
+                                    <td ng-show="x.type==0">
+                                        <span ng-bind="x.number"></span>
+                                    </td>
+                                    <td ng-show="x.type==1 && x.number<0"><span ng-bind="'- ¥'+(-x.number)/100"></span></td>
+                                    <td ng-show="x.type==1 && x.number>=0"><span ng-bind="'¥ '+x.number/100"></span></td>
+                                    <td >{{x.description}}</td>
+                                    <td ng-bind="x.createDate|date:'yyyy/MM/dd HH:mm:ss'"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane">
+                        <div class="panel panel-default">
+                            <table class="table ol-tab">
+                                <thead class="active">
+                                <tr>
+                                    <td>变更账户</td>
+                                    <td>变更值</td>
+                                    <td>变更项目</td>
+                                    <td>变更时间</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="x in homeTab">
+                                    <td ng-show="x.type==0">积分变更</td>
+                                    <td ng-show="x.type==1">红包变更</td>
+                                    <td ng-show="x.type==0">
+                                        <span ng-bind="x.number"></span>
+                                    </td>
+                                    <td ng-show="x.type==1 && x.number<0"><span ng-bind="'- ¥'+(-x.number)/100"></span></td>
+                                    <td ng-show="x.type==1 && x.number>=0"><span ng-bind="'¥ '+x.number/100"></span></td>
+                                    <td >{{x.description}}</td>
+                                    <td ng-bind="x.createDate|date:'yyyy/MM/dd HH:mm:ss'"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane">
+                        <div class="panel panel-default">
+                            <table class="table ol-tab">
+                                <thead class="active">
+                                <tr>
+                                    <td>变更账户</td>
+                                    <td>变更值</td>
+                                    <td>变更项目</td>
+                                    <td>变更时间</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="x in homeTab">
+                                    <td ng-show="x.type==0">积分变更</td>
+                                    <td ng-show="x.type==1">红包变更</td>
+                                    <td ng-show="x.type==0">
+                                        <span ng-bind="x.number"></span>
+                                    </td>
+                                    <td ng-show="x.type==1 && x.number<0"><span ng-bind="'- ¥'+(-x.number)/100"></span></td>
+                                    <td ng-show="x.type==1 && x.number>=0"><span ng-bind="'¥ '+x.number/100"></span></td>
+                                    <td >{{x.description}}</td>
+                                    <td ng-bind="x.createDate|date:'yyyy/MM/dd HH:mm:ss'"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--分页-->
+            <div class=" clearfix">
+                <nav class="pull-right">
+                    <ul class="pagination">
+                        <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                        <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                            <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                        </li>
+                        <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                        <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                        <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                        <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                            1}}</a>
+                        </li>
+                        <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                            2}}</a>
+                        </li>
+                        <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                            ng-click="loadPage(page+1)"><a aria-label="Next">
+                            <span aria-hidden="true">›</span>
+                        </a></li>
+                        <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                            ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--设置充值提示框-->
+<div class="modal fade w-maketing" id="pffl-recharge">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <p class="w-flTitle">立即充值</p>
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <div class="logo-img"></div>
+            </div>
+            <div class="modal-body rechargeStyle">
+                <div class="re">
+                    <div>充值红包<input type="number" class="form-control" id="inScorea" placeholder="请输入充值红包金额" /><span>红包余额：￥{{availableScoreA}}元</span></div>
+                    <div>充值积分<input type="number" class="form-control" id="inScoreb" placeholder="请输入充值积分金额" /><span>积分余额：{{availableScoreB}}积分</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div text-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="pushRecharge()" id="btnConfirm">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--设置充值提示框-->
+<div class="modal fade" id="pffl-chargeSuccess">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <p class="w-flTitle">充值成功</p>
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <div class="logo-img"></div>
+            </div>
+            <div class="modal-body rechargeStyle">
+                <div class="success">
+                    <div>
+                        <div><img width="60" height="60" src="../../assets/styles/images/yxzh/success.png" alt=""/></div>
+                        <div>您的充值申请已提交！</div>
+                    </div>
+                    <p>乐加客服将尽快和你取得联系，客服电话：400-0412-800</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div text-center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#pffl-rechargeSuccess">知道了</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

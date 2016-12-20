@@ -1,5 +1,190 @@
-<div class="container-fluid content main-content user-manager">
+<div class="container-fluid content main-content user-manager invite">
     <div class="container-fluid">
-        <p class="ttl">邀请会员</p>
+        <div class="w-title">
+            <div class="ttl tc">邀请会员</div>
+            <div>
+                <button type="button" class="btn btn-warning" data-toggle="modal"
+                        data-target="#pffl-set" ng-show="inviteLimit==1">设置邀请礼包
+                </button>
+            </div>
+        </div>
+        <!--显示信息-->
+        <div class="form-inline line">
+            <div class="row">
+                <div class="form-group col-md-7">
+                    <div class="mg">
+                        <div class="col-md-4">
+                            <p><span>{{inviteM}}</span> 人</p>
+
+                            <p>累计邀请会员</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><span style="color:#f54339;">{{totalA}}</span> 元</p>
+
+                            <p>邀请发红包</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><span style="color:#fb991a;">{{totalB}}</span> 积分</p>
+
+                            <p>邀请发积分</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 0 !important;margin-top: 10px;" ng-show="inviteLimit==1"><span
+                        style="color:#f54339;font-size: 16px;">※</span> 您邀请的会员可得<span id="txtScoreA"
+                                                                                      style="color:#f54339;font-size: 16px;"></span>元红包，<span
+                        id="txtScoreB" style="color:#f54339;font-size: 16px;"></span>积分的礼包</p>
+                </div>
+                <div class="form-group col-md-5 w-download">
+                    <div>
+                        <img id="qrCodeImg" width="120" height="120" src="" alt=""/>
+                    </div>
+                    <div>
+                        <img style="width: 100%;" src="../../assets/styles/images/yqhy/jian.png"
+                             alt=""/>
+                    </div>
+                    <div>
+                        <div>扫码将海报下载到手机</div>
+                        <div>或 <a
+                            href="/poster/partner/downloadPoster?sid={{partnerSid}}">点击下载到本地</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <!--表格信息总结-->
+            <p class="ttl">邀请记录</p>
+            <!--表格-->
+            <div class="panel panel-default">
+                <table class="table ol-tab w-invite">
+                    <thead class="active">
+                    <tr>
+                        <td class="clearfix"><span>邀请会员信息</span></td>
+                        <td>邀请时间</td>
+                        <td>邀请获得礼包</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in pulls">
+                        <td class="clearfix">
+                            <span class="touxiang"><img ng-src="{{x.headImageUrl}}" alt=""></span>
+                            <span ng-bind="x.nickname"></span>
+                        </td>
+                        <td>
+                            <p ng-bind="x.subDate|date:'yyyy-MM-dd'"></p>
+
+                            <p ng-bind="x.subDate|date:'HH:mm:ss'"></p>
+                        </td>
+                        <td><span>￥{{wxScoreas[$index]/100.0}} 红包 &nbsp; {{wxScorebs[$index]/1.0}} 积分</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a
+                        aria-label="Previous">
+                        <span aria-hidden="true">‹</span>
+                    </a></li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
+
+
+<!--设置邀请礼包提示框-->
+<div class="modal fade" id="pffl-set" ng-controller="inviteUserController">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <p class="w-flTitle">设置邀请礼包</p>
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <div class="logo-img"></div>
+            </div>
+            <div class="modal-body setStyle">
+                <p>请设置您邀请的会员单人能获得的礼包</p>
+
+                <div class="hb">
+                    <div>红包奖励</div>
+                    <div>
+                        <div>
+                            <input type="radio" name="hb" id="stableSaRio" ng-click="clearRandA()"/>
+
+                            <p> 固定数值 </p><input type="number" id="stableSaNum" class="form-control"
+                                                placeholder="输入发放红包金额"/>
+                        </div>
+                        <div>
+                            <input type="radio" name="hb" id="randSaRio" ng-click="clearStableA()"/>
+
+                            <p> 随机数值 </p><input type="number" id="randSaMinNum" class="form-control"
+                                                placeholder="输入红包金额下限"/>
+
+                            <p class="w-z"> 至 </p><input type="number" id="randSaMaxNum"
+                                                         class="form-control"
+                                                         placeholder="输入红包金额上限"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="jf">
+                    <div>积分奖励</div>
+                    <div>
+                        <div>
+                            <input type="radio" name="jf" id="stableSbRio" ng-click="clearRandB()"/>
+
+                            <p> 固定数值 </p><input type="number" id="stableSbNum" class="form-control"
+                                                placeholder="输入发放积分值"/>
+                        </div>
+                        <div>
+                            <input type="radio" name="jf" id="randSbRio" ng-click="clearStableB()"/>
+
+                            <p> 随机数值 </p><input type="number" id="randSbMinNum" class="form-control"
+                                                placeholder="输入积分值下限"/>
+
+                            <p class="w-z"> 至 </p><input type="number" id="randSbMaxNum"
+                                                         class="form-control"
+                                                         placeholder="输入积分值上限"/>
+                        </div>
+                        <div>
+                            <input type="radio" name="jf" id="noScoreRio" ng-click="clearAllB()"/>
+
+                            <p>没有奖励</p><span
+                            style="color:#999;font-size: 14px"> （别那么小气，多少给点吧）</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div text-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"
+                            ng-click="submitPartnerInfo()">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

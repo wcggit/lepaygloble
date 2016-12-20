@@ -1,24 +1,30 @@
 package com.jifenke.lepluslive.partner.service;
 
 import com.jifenke.lepluslive.global.util.MD5Util;
+import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.partner.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerInfo;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerWelfareLog;
 import com.jifenke.lepluslive.partner.repository.PartnerInfoRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerWalletRepository;
+import com.jifenke.lepluslive.partner.repository.PartnerWelfareLogRepository;
 
+import org.hibernate.LockMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -43,6 +49,9 @@ public class PartnerService {
 
     @Inject
     private PartnerInfoRepository partnerInfoRepository;
+
+    @Inject
+    private PartnerWelfareLogRepository partnerWelfareLogRepository;
 
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -152,7 +161,7 @@ public class PartnerService {
             sql.append(" and merchant.partnership =");
             sql.append(merchantCriteria.getPartnerShip());
         }
-
+        sql.append(" and merchant.partnership !=2");
         if (merchantCriteria.getUserBindState() != null) {
             if (merchantCriteria.getUserBindState() == 0) {
                 sql.append(
@@ -223,6 +232,54 @@ public class PartnerService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Long getMerchantListCount(MerchantCriteria merchantCriteria) {
+        int start = 10 * (merchantCriteria.getOffset() - 1);
+        StringBuffer sql = new StringBuffer();
+        sql.append(
+            "select count(*)from merchant where partner_id =");
+        sql.append(merchantCriteria.getPartner().getId());
+        if (merchantCriteria.getStartDate() != null && merchantCriteria.getStartDate() != "") {
+            sql.append(" and merchant.create_date  between '");
+            sql.append(merchantCriteria.getStartDate());
+            sql.append("' and '");
+            sql.append(merchantCriteria.getEndDate());
+            sql.append("'");
+        }
+        if (merchantCriteria.getMerchantName() != null
+            && merchantCriteria.getMerchantName() != "") {
+            sql.append(" and merchant.name like '%");
+            sql.append(merchantCriteria.getMerchantName());
+            sql.append("%'");
+        }
+        if (merchantCriteria.getPartnerShip() != null) {
+            sql.append(" and merchant.partnership =");
+            sql.append(merchantCriteria.getPartnerShip());
+        }
+
+        if (merchantCriteria.getUserBindState() != null) {
+            if (merchantCriteria.getUserBindState() == 0) {
+                sql.append(
+                    "  and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )=0");
+            }
+            if (merchantCriteria.getUserBindState() == 1) {
+                sql.append(
+                    " and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )>=0.85 and  (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )<1");
+            }
+            if (merchantCriteria.getUserBindState() == 2) {
+                sql.append(
+                    "  and (case when (merchant.user_limit=0 ) then 0 else  (select count(*) from le_jia_user where bind_merchant_id = merchant.id)/merchant.user_limit end )=1");
+            }
+        }
+        sql.append(" order by merchant.create_date desc limit ");
+        sql.append(start);
+        sql.append(",10");
+        Query nativeQuery = em.createNativeQuery(sql.toString());
+        List<BigInteger> details = nativeQuery.getResultList();
+        return (long) Math.ceil(details.get(0).intValue());
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Long countPartnerBindFullMerchant(Partner partner) {
         StringBuffer sql = new StringBuffer();
         sql.append(
@@ -260,7 +317,116 @@ public class PartnerService {
         return partnerRepository.findOne(id);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public PartnerInfo findPartnerInfoByPartnerSid(String currentUserLogin) {
         return partnerInfoRepository.findByPartner(findByPartnerSid(currentUserLogin));
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void unbindWeiXinUser(Partner partner) {
+        partner.setWeiXinUser(null);
+        partnerRepository.save(partner);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void insertPartnerWelfareLog(PartnerWelfareLog partnerWelfareLog) {
+        partnerWelfareLogRepository.save(partnerWelfareLog);
+    }
+
+    /**
+     * 发福利给用户
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void sendWelfareToUser(String[] userSids, AtomicLong count,
+                                  PartnerWelfareLog partnerWelfareLog) {
+        for (String userSid : userSids) {
+            StringBuffer sql = new StringBuffer();
+            sql.append(
+                "select id from scorea where scorea.le_jia_user_id = (select id from le_jia_user where le_jia_user.user_sid = ");
+            sql.append(userSid);
+            sql.append(")");
+            Query nativeQuery = em.createNativeQuery(sql.toString());
+            int aid = nativeQuery.getFirstResult();
+            sql.setLength(0);
+            sql.append("update scorea set score = score+");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(",total_score=total_score+");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(" ,last_update_date=now() where id = ");
+            sql.append(aid);
+            em.createNativeQuery(sql.toString());
+            sql.setLength(0);
+            sql.append(
+                "insert into  scorea_detail (date_created,number,operate,scorea_id,order_sid,origin) values (now(),");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(",");
+            sql.append("'合伙人发福利',");
+            sql.append(aid);
+            sql.append(",");
+            sql.append(partnerWelfareLog.getSid());
+            sql.append(",");
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void welfareToUser(Serializable userId,
+                              PartnerWelfareLog partnerWelfareLog) {
+
+        if (partnerWelfareLog.getScoreA() > 0) {
+            StringBuffer sql = new StringBuffer();
+            sql.append("select id from scorea where scorea.le_jia_user_id = ");
+            sql.append(userId);
+            sql.append("  for update ;");
+            em.createNativeQuery(sql.toString()).getResultList();
+            sql.setLength(0);
+            sql.append("update scorea set score = score+");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(",total_score=total_score+");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(" ,last_update_date=now() where scorea.le_jia_user_id =  ");
+            sql.append(userId);
+            em.createNativeQuery(sql.toString()).executeUpdate();
+            sql.setLength(0);
+            sql.append(
+                "insert into  scorea_detail (date_created,number,operate,scorea_id,order_sid,origin) values (now(),");
+            sql.append(partnerWelfareLog.getScoreA());
+            sql.append(",");
+            sql.append("'合伙人发福利',");
+            sql.append("(select id from scorea where scorea.le_jia_user_id = ");
+            sql.append(userId);
+            sql.append("),");
+            sql.append(partnerWelfareLog.getSid());
+            sql.append(",");
+            sql.append("10)");
+            em.createNativeQuery(sql.toString()).executeUpdate();
+        }
+        if (partnerWelfareLog.getScoreB() > 0) {
+            StringBuffer sql = new StringBuffer();
+            sql.append("select id from scoreb where scoreb.le_jia_user_id = ");
+            sql.append(userId);
+            sql.append("  for update ;");
+            em.createNativeQuery(sql.toString()).getResultList();
+            sql.setLength(0);
+            sql.append("update scoreb set score = score+");
+            sql.append(partnerWelfareLog.getScoreB());
+            sql.append(",total_score=total_score+");
+            sql.append(partnerWelfareLog.getScoreB());
+            sql.append(" ,last_update_date=now() where scoreb.le_jia_user_id =  ");
+            sql.append(userId);
+            em.createNativeQuery(sql.toString()).executeUpdate();
+            sql.setLength(0);
+            sql.append(
+                "insert into  scoreb_detail (date_created,number,operate,scoreb_id,order_sid,origin) values (now(),");
+            sql.append(partnerWelfareLog.getScoreB());
+            sql.append(",");
+            sql.append("'合伙人发福利',");
+            sql.append("(select id from scoreb where scoreb.le_jia_user_id = ");
+            sql.append(userId);
+            sql.append("),");
+            sql.append(partnerWelfareLog.getSid());
+            sql.append(",");
+            sql.append("10)");
+            em.createNativeQuery(sql.toString()).executeUpdate();
+        }
     }
 }

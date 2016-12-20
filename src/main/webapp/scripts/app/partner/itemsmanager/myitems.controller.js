@@ -49,6 +49,7 @@ angular.module('lepayglobleApp')
             $scope.fullMerchant = data;
         });
         getTotalPage();
+        getTotalCount();
         function loadContent() {
             Partner.getPartnerBindMerchantList(criteria).then(function (response) {
                 var data = response.data;
@@ -82,6 +83,13 @@ angular.module('lepayglobleApp')
             });
         }
 
+        function getTotalCount() {
+            Partner.getPartnerBindMerchantListCount(criteria).then(function (response) {
+                $scope.totalCount = response.data;
+                loadContent();
+            });
+        }
+
         $scope.searchByCriteria = function () {
             var dateStr = $("#timePicker1").val();
             var merchantName = $("#merchantName").val().trim();
@@ -107,6 +115,7 @@ angular.module('lepayglobleApp')
             criteria.merchantName = merchantName;
             currentPage = 1;
             getTotalPage()
+            getTotalCount()
         }
 
         $scope.showFullMerchant = function (page) {
@@ -121,6 +130,7 @@ angular.module('lepayglobleApp')
             criteria.startDate = null;
             criteria.endDate = null;
             getTotalPage()
+            getTotalCount()
         };
         $scope.goLePayCode = function (id) {
             $state.go("lefuma", {id: id})

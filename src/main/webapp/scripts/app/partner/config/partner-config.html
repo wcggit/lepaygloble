@@ -1,6 +1,7 @@
 <div class="container zhsz  main-content">
-    <div class="container-fluid content" >
+    <div class="container-fluid content">
         <p class="ttl">账户设置</p>
+
         <div class="panel panel-default">
             <div class="panel-heading">基本信息</div>
             <div class="panel-body">
@@ -17,9 +18,21 @@
                 <div class="row">
                     <div class="col-md-6 bdwx">
                         <div class="col-md-3 text-right">绑定微信号：</div>
-                        <div class="col-md-9 clearfix" >
-                            <span class="pull-left"><img src="../../../../assets/images/hipster.png" alt=""></span><span class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;微信昵称</span>
-                            <a class="changePassword pull-left" data-toggle="modal" data-target="#removeBind">解除绑定</a>
+                        <div class="col-md-9 clearfix w-ybd">
+                            <span class="pull-left" id="wx-HeadImage"><img
+                                src="{{partner.weiXinUser.headImageUrl}}" alt=""></span>
+                            <span class="pull-left" id="no-HeadImage"><img
+                                style="width: 40px;height: 40px;border-radius: 50%;overflow: hidden;display: inline-block;margin-top: -10px;"
+                                src="../../../../assets/images/hipster.png" alt=""></span>
+                            <span class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;微信昵称: </span>
+                            <span class="pull-left" ng-bind="partner.weiXinUser.nickname"></span>
+                            <a class="changePassword pull-left" data-toggle="modal"
+                               data-target="#removeBind">解除绑定</a>
+                        </div>
+                        <div class="col-md-9 clearfix w-wbd">
+                            <!--ng-click="showBindWin()"ng-show="{{flag==null}}"-->
+                            <a class="changePassword pull-left" data-toggle="modal"
+                               data-target="#bindWeixin">立即绑定</a>
                         </div>
                     </div>
                 </div>
@@ -56,7 +69,9 @@
                     </div>
                     <div class="col-md-6">
                         <div class="col-md-3 text-right">密码：</div>
-                        <div class="col-md-9" >**********<a class="changePassword" data-target="#changePassword" ng-click="changePassword()">修改</a></div>
+                        <div class="col-md-9">**********<a class="changePassword"
+                                                           data-target="#changePassword"
+                                                           ng-click="changePassword()">修改</a></div>
                     </div>
                 </div>
             </div>
@@ -69,35 +84,45 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-warning">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">修改密码</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
                         <label for="inputPassword1" class="col-sm-2 col-sm-offset-1 control-label">当前密码</label>
+
                         <div class="col-sm-7">
                             <input type="password" class="form-control" id="inputPassword1">
-                            <p class="text-muted small" style="visibility: hidden;color: #ff0000">密码不正确</p>
+
+                            <p class="text-muted small" style="visibility: hidden;color: #ff0000">
+                                密码不正确</p>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputPassword2" class="col-sm-2 col-sm-offset-1 control-label">新密码</label>
+
                         <div class="col-sm-7">
                             <input type="password" class="form-control" id="inputPassword2">
+
                             <p class="text-muted small tishi">密码由数字和字母组合，不少于6位，不能包含特殊符号</p>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputPassword3" class="col-sm-2 col-sm-offset-1 control-label">确认新密码</label>
+
                         <div class="col-sm-7">
                             <input type="password" class="form-control" id="inputPassword3">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 col-sm-offset-1 control-label label-last"></label>
+
                         <div class="col-sm-7">
-                            <button type="button" class="btn btn-warning" ng-click="confirmEditPwd()">确认修改</button>
+                            <button type="button" class="btn btn-warning"
+                                    ng-click="confirmEditPwd()">确认修改
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -116,14 +141,40 @@
             </div>
             <div class="modal-body">
                 <div class="weixinFace">
-                    <img src="../../../../assets/images/jygl/rvCode.png" alt="">
+                    <img src="{{partner.weiXinUser.headImageUrl}}" alt="">
                 </div>
-                <p class="text-center">微信昵称</p>
+                <p class="text-center">{{partner.weiXinUser.nickname}}</p>
             </div>
             <div class="modal-footer">
                 <div class="btn-div">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-warning" data-dismiss="modal">确定</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"
+                            ng-click="unbindWx()">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--绑定微信提示框-->
+<div class="modal fade" id="bindWeixin">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span
+                    aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">绑定微信号</h4>
+            </div>
+            <div class="modal-body">
+                <div class="rvCode">
+                    <img src="{{qrCodeUrl}}" alt="">
+                </div>
+                <p class="text-center">请使用微信扫描二维码绑定微信号</p>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-div">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
                 </div>
             </div>
         </div>

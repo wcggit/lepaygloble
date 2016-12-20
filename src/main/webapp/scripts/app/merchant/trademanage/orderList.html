@@ -25,6 +25,7 @@
                         <option value="0">全部类型</option>
                         <option value="1">导流订单</option>
                         <option value="2">普通订单</option>
+                        <option value="3">会员订单</option>
                     </select>
                 </div>
 
@@ -51,6 +52,7 @@
                 <tr>
                     <td>交易完成时间</td>
                     <td>交易单号</td>
+                    <td>乐付码</td>
                     <td>订单类型</td>
                     <td>金额</td>
                     <td>手续费</td>
@@ -64,8 +66,10 @@
                         <p ng-bind="x.completeDate|date:'HH:mm:ss'"></p>
                     </td>
                     <td ng-bind="x.orderSid"></td>
+                    <td ng-bind="x.lepayCode"></td>
                     <td ng-show="x.rebateWay==1">导流订单</td>
-                    <td ng-show="x.rebateWay!=1">普通订单</td>
+                    <td ng-show="x.rebateWay!=1&&x.rebateWay!=3">普通订单</td>
+                    <td ng-show="x.rebateWay==3">会员订单</td>
                     <td ng-bind="'¥'+x.totalPrice/100.0"></td>
                     <td ng-bind="'¥'+x.ljCommission/100.0"></td>
                     <td ng-bind="'¥'+x.transferMoney/100.0"></td>

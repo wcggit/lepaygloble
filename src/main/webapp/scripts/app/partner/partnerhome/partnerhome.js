@@ -15,7 +15,13 @@ angular.module('lepayglobleApp')
                         controller: 'partnerHomeController'
                     }
                 },
-                resolve: {}
+                resolve: {
+                    tracker: ['Tracker',
+                              function (Tracker) {
+                                  Tracker.connect();
+                              }
+                    ]
+                }
             })
             .state('withdrawdetails', {
                 parent: 'partner',
@@ -29,6 +35,7 @@ angular.module('lepayglobleApp')
                         controller: 'withdrawDetailsController'
                     }
                 },
-                resolve: {}
+                resolve: {
+                }
             });
     });

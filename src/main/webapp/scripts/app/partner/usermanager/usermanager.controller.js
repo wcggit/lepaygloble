@@ -4,36 +4,33 @@ angular.module('lepayglobleApp')
     .controller('userManagerController', function ($scope, $state, $location) {
         $scope.lefts = [
             {
-                pic: 'left-menu-icon iconfont icon-2wodezhangdan18x20',
+                pic: 'left-menu-icon iconfont icon-myUser',
                 name: "我的会员",
                 state: "myUser"
             },
             {
-                pic: "left-menu-icon iconfont icon-jiaoyijilu",
+                pic: "left-menu-icon iconfont icon-addUser",
                 name: "邀请会员",
                 state: "inviteUser"
             },
+            //{
+            //    pic: "left-menu-icon iconfont icon-erweima01",
+            //    name: "抢福利活动",
+            //    state: "robWelfare"
+            //},
             {
-                pic: "left-menu-icon iconfont icon-erweima01",
-                name: "抢福利活动",
-                state: "robWelfare"
-            },
-            {
-                pic: "left-menu-icon iconfont icon-erweima01",
+                pic: "left-menu-icon iconfont icon-yxzh",
                 name: "营销账户",
                 state: "marketingAccount"
             }
         ];
-        if ($location.url() == "/merchant/trade") {
-            $scope.currentTab = "tradeList";
-        } else if ($location.url().indexOf("orderList") != -1) {
-            $scope.currentTab = "orderList";
-        } else if ($location.url().indexOf("withdrawList") != -1) {
-            $scope.currentTab = "withdrawList";
-        } else if ($location.url().indexOf("qrCode") != -1) {
-            $scope.currentTab = "qrCode";
+        if ($location.url().indexOf("inviteUser") != -1) {
+            $scope.currentTab = "inviteUser";
+        } else if ($location.url().indexOf("marketingAccount") != -1) {
+            $scope.currentTab = "marketingAccount";
+        } else {
+            $scope.currentTab = "myUser";
         }
-        $scope.currentTab = "myUser";
         $scope.onClickTab = function (tab) {
             $scope.currentTab = tab.state;
             $state.go(tab.state);

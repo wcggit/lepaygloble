@@ -257,6 +257,11 @@
             <version>2.1</version>
         </dependency>
         <dependency>
+            <groupId>net.sourceforge.nekohtml</groupId>
+            <artifactId>nekohtml</artifactId>
+            <version>1.9.22</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>3.6</version>
@@ -672,7 +677,7 @@
             </activation>
             <properties>
                 <!-- log configuration -->
-                <logback.loglevel>DEBUG</logback.loglevel>
+                <logback.loglevel>WARN</logback.loglevel>
             </properties>
             <dependencies>
                 <dependency>

@@ -73,7 +73,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/swagger-ui/index.html")
             .antMatchers("/test/**")
             .antMatchers("/api/partnerAuthentication")
-            .antMatchers("/api/offLineOrder/message/**");
+            .antMatchers("/api/offLineOrder/message/**")
+            .antMatchers("/poster/**");
     }
 
     @Bean

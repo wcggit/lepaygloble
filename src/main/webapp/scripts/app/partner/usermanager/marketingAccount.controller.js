@@ -1,42 +1,34 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('marketingAccountController', function ($scope, Commission) {
+    .controller('marketingAccountController', function ($scope, marketingAccount,Partner) {
                     $('body').css({background: '#fff'});
                     $('.main-content').css({height: 'auto'});
-                    $('#timePicker1')
-                        // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' +
-                        // moment().format('YYYY/MM/DD HH:mm:59'))
-                        .daterangepicker({
-                                             timePicker: true, //是否显示小时和分钟
-                                             timePickerIncrement: 1, //时间的增量，单位为分钟
-                                             opens: 'right', //日期选择框的弹出位置
-                                             startDate: moment().format('YYYY/MM/DD HH:mm:00'),
-                                             endDate: moment().format('YYYY/MM/DD HH:mm:59'),
-                                             format: 'YYYY/MM/DD HH:mm:ss', //控件中from和to 显示的日期格式
-                                             ranges: {
-                                                 '最近1小时': [moment().subtract('hours', 1), moment()],
-                                                 '今日': [moment().startOf('day'), moment()],
-                                                 '昨日': [moment().subtract('days', 1).startOf('day'),
-                                                        moment().subtract('days', 1).endOf('day')],
-                                                 '最近7日': [moment().subtract('days', 6), moment()],
-                                                 '最近30日': [moment().subtract('days', 29), moment()]
-                                             }
-                                         }, function (start, end, label) {
-                                         });
-                    $("#timePicker1").val("");
                     var currentPage = 1;
-                    var criteria = {};
-                    criteria.offset = 1;
-                    getTotalPage();
+                    var scoreLogCriteria = {};
+                    scoreLogCriteria.offset = 1;
+                    // *  Loading ...
+                    loadContent();
                     function loadContent() {
-                        Commission.getUsersByBindPartner(criteria).then(function (response) {
+                        marketingAccount.getPartnerScoreLog(scoreLogCriteria).then(function (response) {
                             var data = response.data;
                             $scope.page = currentPage;
-                            $scope.pulls = data;
+                            $scope.homeTab = data.content;
+                            $scope.totalPages = data.totalPages;
                         });
                     }
-
+                    $scope.loadAll = function() {
+                        delete scoreLogCriteria['numberType'];
+                        loadContent();
+                    }
+                    $scope.loadIncrease = function() {
+                        scoreLogCriteria.numberType = 1;
+                        loadContent();
+                    }
+                    $scope.loadDecrease = function () {
+                        scoreLogCriteria.numberType = -1;
+                        loadContent();
+                    }
                     $scope.loadPage = function (page) {
                         if (page == 0) {
                             return;
@@ -51,54 +43,57 @@ angular.module('lepayglobleApp')
                             return;
                         }
                         currentPage = page;
-                        criteria.offset = page;
+                        scoreLogCriteria.offset = page;
                         loadContent();
                     };
-
-                    function getTotalPage() {
-                        Commission.getTotalPagesByBindPartner(criteria).then(function (response) {
-                            $scope.totalPages = response.data;
-                            loadContent();
+                    Partner.getPartnerHomePageData().then(function (result) {
+                        $scope.availableScoreA = result['availableScoreA'];
+                        $scope.availableScoreB = result['availableScoreB'];
+                        $scope.bindMerchant = result['bindMerchant'];
+                        $scope.bindLeJiaUser = result['bindLeJiaUser'];
+                    });
+                    marketingAccount.getPartnerTotalScore().then(function (result) {
+                        $scope.totalScorea = result['totalScorea'];
+                        $scope.totalScoreb = result['totalScoreb'];
+                    });
+                    // * Recharge
+                    $scope.pushRecharge = function() {
+                        if($("#inScorea").val()=='' && $("#inScoreb").val()=='') {
+                            alert("请输入有效的充值金额 !");
+                            $("#inScorea").val('');
+                            $("#inScoreb").val('');
+                            return;
+                        }
+                        if($("#inScorea").val()<0 || $("#inScoreb").val()<0) {
+                            alert("请输入有效的充值金额 !");
+                            $("#inScorea").val('');
+                            $("#inScoreb").val('');
+                            return;
+                        }
+                        var partnerRecharge = {}
+                        partnerRecharge.scorea = $("#inScorea").val();
+                        partnerRecharge.scoreb = $("#inScoreb").val();
+                        marketingAccount.requestRecharge(partnerRecharge).then(function (result) {
+                            if(result.status==200) {
+                                $("#pffl-chargeSuccess").modal();
+                                $("#inScorea").val('');
+                                $("#inScoreb").val('');
+                            }
                         });
                     }
-
-                    $scope.searchByCriteria = function () {
-                        var dateStr = $("#timePicker1").val();
-                        var phone = $("#phone").val();
-                        var merchantName = $("#merchantName").val();
-                        if (dateStr != null && dateStr != "") {
-                            var startDate = dateStr.split("-")[0].trim();
-                            var endDate = dateStr.split("-")[1].trim();
-                            criteria.partnerStartDate = startDate;
-                            criteria.partnerEndDate = endDate;
-                        }
-                        criteria.offset = 1;
-                        criteria.merchantName = merchantName;
-                        criteria.phone = phone;
-                        currentPage = 1;
-                        getTotalPage()
-                    }
-
-                    // 复选框
-                    $('#checkbox-1').click(function () {
-                        if($('#checkbox-1').prop('checked')==true){
-                            $(this).next('label').removeClass('chbx-init').addClass('chbx-focus');
-                            $('.checkbox-2').next('label').removeClass('chbx-init').addClass('chbx-focus');
-
-                        }else {
-                            $(this).next('label').removeClass('chbx-focus').addClass('chbx-init');
-                            $('.checkbox-2').next('label').removeClass('chbx-focus').addClass('chbx-init');
-                        }
-                    });
-
-                    $scope.checkClick=function(id){
-                        var idName=document.getElementById(id);
-                        if($(idName).prop('checked')==true){
-                            $(idName).next('label').removeClass('chbx-init').addClass('chbx-focus');
-                        }else {
-                            $(idName).next('label').removeClass('chbx-focus').addClass('chbx-init');
-                        }
-                    }
-
+                    // TOP5
+                    var navBtn = $('.partner-home .nav-pills li');
+                    var navDiv = $('.partner-home .tab-content .tab-pane');
+                    navBtn.each(function (i) {
+                        navBtn.eq(i).click(function () {
+                            for (var t = 0; t < 3; t++) {
+                                navBtn.eq(t).removeClass('active');
+                                navDiv.eq(t).removeClass('active')
+                            }
+                            var index = $(this).index();
+                            navBtn.eq(index).addClass('active');
+                            navDiv.eq(index).addClass('active')
+                        })
+                    })
                 });
 

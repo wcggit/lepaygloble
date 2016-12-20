@@ -22,11 +22,11 @@ angular.module('lepayglobleApp')
                         {
                             ttl: "扫码支付",
                             state: "trade"
-                        },
-                        {
-                            ttl: "我的POS",
-                            state: "myPOS"
-                        },
+                        },  //{
+                        //    ttl: "我的POS",
+                        //    state: "myPOS"
+                        //},
+
                         {
                             ttl: "导流服务",
                             state: "import"

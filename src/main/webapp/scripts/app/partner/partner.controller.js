@@ -38,8 +38,8 @@ angular.module('lepayglobleApp')
                     if ($location.url().indexOf("myitems") != -1) {
                         $scope.currentTab = "myitems";
                     }
-                    if ($location.url().indexOf("/usermanager") != -1) {
-                        $scope.currentTab = "usermanager";
+                    if ($location.url().indexOf("/myUser") != -1) {
+                        $scope.currentTab = "userManager";
                         $('body').css({background: '#f3f3f3'});
                     }
                     $scope.onClickTab = function (tab) {

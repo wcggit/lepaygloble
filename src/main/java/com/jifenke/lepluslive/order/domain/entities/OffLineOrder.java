@@ -41,13 +41,13 @@ public class OffLineOrder {
     @ManyToOne
     private PayWay payWay;
 
-    private Long totalPrice = 0L;
+    private Long totalPrice = 0L;   // 总金额 (实际支付+红包)
 
-    private Long truePay = 0L;
+    private Long truePay = 0L;      // 实际支付(微信等)
 
-    private Long ljCommission = 0L; //乐加佣金
+    private Long ljCommission = 0L; // 乐加佣金
 
-    private Long trueScore = 0L;
+    private Long trueScore = 0L;    // 支付红包
 
     private Long wxCommission = 0L; //微信手续费
 
@@ -57,9 +57,12 @@ public class OffLineOrder {
 
     private Integer state = 0;
 
-    private Long transferMoney; //每笔应该转给商户的金额
+    private Long transferMoney; //每笔应该转给商户的金额  (商户实际到账 = 微信入账 + 乐加转账)
 
-    private Integer rebateWay; //返利方式,如果为0 代表非会员订单或者会员在非签约商家消费 则只返b积分 如果为1 代表会员订单
+    private Long transferMoneyFromTruePay; //每笔订单中现金支付转给商户的金额 (微信入账)
+
+    private Integer rebateWay; //返利方式,如果为0 代表非会员普通订单 则只返b积分 如果为1 导流订单 2 会员普通订单 3会员订单 4 非会员扫纯支付码 5 会员扫纯支付码 6会员订单（普通费率）
+
 
     private String lepayCode = MvUtil.getLePayCode();
 
@@ -206,5 +209,13 @@ public class OffLineOrder {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public Long getTransferMoneyFromTruePay() {
+        return transferMoneyFromTruePay;
+    }
+
+    public void setTransferMoneyFromTruePay(Long transferMoneyFromTruePay) {
+        this.transferMoneyFromTruePay = transferMoneyFromTruePay;
     }
 }

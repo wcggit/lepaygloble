@@ -7,14 +7,14 @@ import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
+import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
 import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
 import com.jifenke.lepluslive.withdraw.service.WithdrawService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -95,6 +95,26 @@ public class WithdrawController {
             return LejiaResult.build(400, msg);
         }
 
+    }
+
+    /**
+     * 分页查询提现详情
+     * @param withdrawCriteria
+     * @return
+     */
+    @RequestMapping(value = "/partner_withdraw/findAll", method = RequestMethod.POST)
+    @ResponseBody
+    public LejiaResult partnerFindByCriteria(@RequestBody WithdrawCriteria withdrawCriteria) {
+        // 获取当前登录合伙人
+        Partner partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        withdrawCriteria.setPartner(partner);
+        withdrawCriteria.setBillType(1);
+        if(withdrawCriteria.getOffset()==null) {
+            withdrawCriteria.setOffset(1);
+        }
+        // 查询数据
+        Page page  = withdrawService.findPartnerWithDrawByCriteria(withdrawCriteria,10);
+        return  new LejiaResult(page);
     }
 
 }

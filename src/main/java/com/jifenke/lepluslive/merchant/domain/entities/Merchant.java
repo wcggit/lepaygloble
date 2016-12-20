@@ -56,7 +56,7 @@ public class Merchant {
 
     private String phoneNumber; //服务电话
 
-    private Integer partnership; //合作关系
+    private Integer partnership; //合作关系 0普通商户  1 联盟商户 2 虚拟商户 未天使合伙人创建默认自带商户
 
     private Double lng = 0.0;
 
@@ -72,7 +72,7 @@ public class Merchant {
 
     private String pureQrCode; //纯支付码
 
-    private Long userLimit; //会员绑定上线
+    private Long userLimit; //会员绑定上限
 
     private BigDecimal ljCommission; //乐加佣金 单位百分比
 
@@ -369,4 +369,14 @@ public class Merchant {
     }
 
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private MerchantInfo merchantInfo;   //商家详情介绍
+
+    public MerchantInfo getMerchantInfo() {
+        return merchantInfo;
+    }
+
+    public void setMerchantInfo(MerchantInfo merchantInfo) {
+        this.merchantInfo = merchantInfo;
+    }
 }

@@ -1,6 +1,8 @@
 package com.jifenke.lepluslive.order.service;
 
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
+import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.order.domain.entities.FinancialStatistic;
 import com.jifenke.lepluslive.order.repository.FinancialStatisticRepository;
@@ -8,6 +10,7 @@ import com.jifenke.lepluslive.order.repository.FinancialStatisticRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import sun.util.resources.cldr.guz.LocaleNames_guz;
 
 import java.util.Date;
 import java.util.List;
@@ -27,6 +30,9 @@ public class FinanicalStatisticService {
   @Inject
   private FinancialStatisticRepository financialStatisticRepository;
 
+  @Inject
+  private MerchantWalletRepository merchantWalletRepository;
+
   @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
   public void createFinancialstatistic(Object[] object,Date date) {
     Merchant merchant = merchantService.findMerchantById(Long.parseLong(object[0].toString()));
@@ -39,8 +45,23 @@ public class FinanicalStatisticService {
     }
   }
 
-    public Long countTransfering(Merchant merchant) {
+    //  旧版本 - 昨日交易金额
+    public Long countDailyTransfering(Merchant merchant) {
        return financialStatisticRepository.countTransfering(merchant.getId());
+    }
+
+    /**
+     *  多门店 - 总入账金额
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public Long countTotalTransfering(List<Merchant> merchants) {
+        Long totalTransfering = 0L;
+        for (Merchant merchant : merchants) {
+            MerchantWallet wallet = merchantWalletRepository.findByMerchant(merchant);
+            totalTransfering += (wallet==null||wallet.getTotalTransferMoney()==null)?0L:wallet.getTotalTransferMoney();
+        }
+        return totalTransfering;
     }
 
     public List<FinancialStatistic> findByMerchantAndBalanceDate(Merchant merchant, Date start,

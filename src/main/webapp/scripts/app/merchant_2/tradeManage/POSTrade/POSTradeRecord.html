@@ -4,25 +4,32 @@
         <div class="form-group col-md-4">
             <label>门店名称</label>
             <div class="input-group col-md-6">
-                <select class="form-control">
-                    <option value="-1">某店</option>
-                    <option value="0">某某店</option>
+                <select id="selectStore" class="form-control">
+                    <option value="">请选择</option>
+                    <option ng-repeat="x in myStore" value="{{x[0]}}">{{x[1]}}</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
         </div>
         <div class="form-group col-md-6">
             <label>交易完成时间</label>
-            <date-choice class="input-group timePicker col-md-9"></date-choice>
+            <div class="input-group timePicker col-md-9">
+                <input type="text" name="reservation" id="completeDate"
+                       class="form-control"/>
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-4">
             <label>订单类型</label>
             <div class="input-group col-md-6">
-                <select class="form-control">
-                    <option value="-1">某类型</option>
-                    <option value="0">某某类型</option>
+                <select class="form-control" id="rebateWay">
+                    <option value="">请选择</option>
+                    <option value="1">非会员订单</option>
+                    <option value="2">会员订单</option>
+                    <option value="3">导流订单</option>
+                    <option value="4">会员普通订单</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
@@ -30,9 +37,13 @@
         <div class="form-group col-md-4">
             <label>支付方式</label>
             <div class="input-group col-md-6">
-                <select class="form-control">
-                    <option value="-1">某方式</option>
-                    <option value="0">某某方式</option>
+                <select class="form-control" id="tradeFlag">
+                    <option value="">请选择</option>
+                    <option value="0">支付宝</option>
+                    <option value="3">POS刷卡</option>
+                    <option value="4">微信</option>
+                    <option value="5">积分</option>
+                    <option value="6">现金</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
@@ -42,31 +53,32 @@
         <div class="form-group col-md-4">
             <label>POS设备尾号</label>
             <div class="input-group col-md-6">
-                <select class="form-control">
-                    <option value="-1">某号</option>
-                    <option value="0">某某号</option>
+                <select class="form-control" id="merchantPosId">
+                    <option value="">请选择</option>
+                    <option ng-repeat="x in merchantPosIds" value="{{x[0]}}">{{x[1] |limitTo:-4}}</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
         </div>
         <div class="form-group col-md-4">
             <label>订单号</label>
-            <input type="text" class="form-control">
+            <input type="text" class="form-control" id="orderSid">
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-5">
             <label></label>
-            <button type="button" class="btn btn-warning btn-check2">查询</button>
+            <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
         </div>
     </div>
 </form>
 <!--表格信息总结-->
 <p class="ttl-add table-title">
-    所选条件下，共有<span class="font-yellow">258</span>条交易记录，订单总金额
-    <span class="font-yellow">￥8520.56</span>，使用红包<span class="font-yellow">￥20</span>，
-    刷卡实付<span class="font-yellow">￥8988</span>，微信实付<span class="font-yellow">￥8500</span>，
-    实际入账<span class="font-yellow">￥23233+￥12</span>红包
+    所选条件下，共有<span class="font-yellow">{{merchantPosPage.totalElements}}</span>条交易记录，订单总金额
+    <span class="font-yellow">{{merchantCount.totalPrice/100 | currency:'￥'}}</span>，使用红包<span class="font-yellow">{{merchantCount.trueScore/100 | currency:'￥'}}</span>，
+    刷卡实付<span class="font-yellow">{{merchantCount.shuaka/100 | currency:'￥'}}</span>，微信实付<span class="font-yellow">{{merchantCount.weixin/100 | currency:'￥'}}</span>，
+    支付宝实付<span class="font-yellow">{{merchantCount.zhifubao/100 | currency:'￥'}}</span>，
+    实际入账<span class="font-yellow">{{merchantCount.transferByBank/100 | currency:'￥'}}+{{merchantCount.transferByHB/100 | currency:'￥'}}</span>红包
 </p>
 <!--表格-->
 <div class="panel panel-default">
@@ -79,30 +91,48 @@
             <td>设备尾号</td>
             <td>支付方式</td>
             <td>订单金额</td>
-            <td>交易类型(费率)</td>
+            <td>订单类型</td>
             <td>实际入账</td>
         </tr>
         </thead>
         <tbody>
-        <tr class="tr-empty"><td class="text-center" colspan="8">暂无数据！</td></tr>
-        <tr class="tr-noEmpty">
+        <tr class="tr-empty" id="notData" hidden="true"><td class="text-center" colspan="8" >暂无数据！</td></tr>
+        <tr class="tr-noEmpty" ng-repeat="x in posOrderCriteria" id="HaveData">
             <td class="td-date">
-                <p>2016-05-05 </p>
-                <p>11:30</p>
+                <p>{{x.completeDate | date:'yyyy-MM-dd hh:mm:ss'}}</p>
             </td>
-            <td>一拼江南</td>
+            <td >{{x.merchant.name}}</td>
             <td>
-                <p>363636366</p>
-                <p>15269845</p>
+                <p>{{x.orderSid}}</p>
             </td>
-            <td>1512</td>
-            <td>刷卡+红包</td>
+            <td>{{x.merchantPos.posId |limitTo:-4}}</td>
+            <td><p ng-show="{{x.tradeFlag==0}}">支付宝</p>
+                <p ng-show="{{x.tradeFlag==3}}">刷卡</p>
+                <p ng-show="{{x.tradeFlag==4}}">微信</p>
+                <p ng-show="{{x.tradeFlag==5}}">积分</p>
+                <p ng-show="{{x.tradeFlag==6}}">现金</p>
+                <p ng-show="{{x.paidType==3}}">+红包</p>
+            </td>
             <td>
-                <p>￥81550.12</p>
-                <p>(微信￥100.00+红包￥1200.23)</p>
+                <p>{{x.totalPrice/100 | currency:'￥'}}</p>
+                <p ng-show="{{x.paidType==3}}">
+                    <p ng-show="{{x.tradeFlag==0}}">(支付宝{{x.truePay/100 | currency:'￥'}}+红包{{x.trueScore/100 | currency:'￥'}})<p>
+                    <p ng-show="{{x.tradeFlag==3}}">(刷卡{{x.truePay/100 | currency:'￥'}}+红包{{x.trueScore/100 | currency:'￥'}})<p>
+                    <p ng-show="{{x.tradeFlag==4}}">(微信{{x.truePay/100 | currency:'￥'}}+红包{{x.trueScore/100 | currency:'￥'}})<p>
+                    <p ng-show="{{x.tradeFlag==5}}">(积分{{x.truePay/100 | currency:'￥'}}+红包{{x.trueScore/100 | currency:'￥'}})<p>
+                    <p ng-show="{{x.tradeFlag==6}}">(现金{{x.truePay/100 | currency:'￥'}}+红包{{x.trueScore/100 | currency:'￥'}})<p>
+                </p>
             </td>
-            <td>普通订单(0.82)</td>
-            <td>￥80.55+￥55.20红包</td>
+            <td>
+                <p ng-show="{{x.rebateWay==1}}">非会员订单</p>
+                <p ng-show="{{x.rebateWay==2}}">会员订单</p>
+                <p ng-show="{{x.rebateWay==3}}">导流订单</p>
+                <p ng-show="{{x.rebateWay==4}}">会员普通订单</p>
+            </td>
+            <td>
+                <p>{{x.transferByBank/100 | currency:'￥'}}</p>
+                <p ng-show="{{x.paidType==3}}">+{{(x.transferMoney-x.transferByBank)/100 | currency:'￥'}}红包</p>
+            </td>
         </tr>
         </tbody>
     </table>

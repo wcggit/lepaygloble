@@ -7,6 +7,25 @@ angular.module('lepayglobleApp')
                     // $('.main-content').css({height: '100vh'});
                     $http.get('api/partner').success(function (response) {
                         $scope.partner = response.data;
+                        if($scope.partner.weiXinUser!=null) {
+                            $(".w-wbd").hide();
+                            $(".w-ybd").show();
+                            if($scope.partner.weiXinUser.headImageUrl!=null&&$scope.partner.weiXinUser.headImageUrl!='') {
+                                $("#wx-HeadImage").show();
+                                $("#no-HeadImage").hide();
+                            }else {
+                                $("#wx-HeadImage").hide();
+                                $("#no-HeadImage").show();
+                            }
+                        }
+                        if($scope.partner.weiXinUser==null) {
+                            $(".w-ybd").hide();
+                            $(".w-wbd").show();
+                        }
+                        console.log(JSON.stringify($scope.partner));
+                    });
+                    $http.get('api/partner/info').success(function (response) {
+                        $scope.qrCodeUrl = response.data.qrCodeUrl;
                     });
                     $scope.changePassword = function () {
                         $("#changePassword").modal("toggle");
@@ -59,6 +78,19 @@ angular.module('lepayglobleApp')
                             }
                         })
                     };
+                    //  解除绑定
+                    $scope.unbindWx = function() {
+                            if($scope.partner.weiXinUser!=null && $scope.partner.weiXinUser!='') {
+                                $http.get('api/partner/unbind_wx_user').success(function (response) {
+                                    if(response.status==200) {
+                                        alert("解除绑定成功 !");
+                                        window.location.reload();
+                                    }
+                                });
+                            }else {
+                                        alert("尚未绑定微信账号 !");
+                            }
+                    }
 
                 });
 

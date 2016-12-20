@@ -1,23 +1,3 @@
-1.0.3
-==
-
- * Use `https` module for xhr requests in node when url uses https - #254
-
-1.0.2
-==
-
- * Fix iframe info receiver url
- * Move iframe.contentWindow check inside setTimeout - #246
-
-1.0.1
-==
-
- * Use proper base url for iframe-based info receiver - #249
- * Don't register unload event in chrome packaged app - #223
- * Allow custom session ids - #250
- * Remove version property from bower.json - #247
- * Update example CDN url - #244
-
 1.0.0
 ===
 
