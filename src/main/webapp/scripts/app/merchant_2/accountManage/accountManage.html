@@ -16,7 +16,7 @@
                     <div class="col-md-2">登陆账号</div>
                     <div class="col-md-4">sunpiaoliang(管理员)</div>
                     <div class="col-md-2">登陆密码</div>
-                    <div class="col-md-4" >**********<a class="changePassword a-btn" data-target="#changePassword" ng-click="changePassword()">修改</a></div>
+                    <div class="col-md-4" >**********<a class="changePassword a-btn" data-toggle="modal" data-target="#changePassword" ng-click="changePassword()">修改</a></div>
                 </div>
             </div>
         </div>
@@ -85,7 +85,7 @@
                                     <td>管理员</td>
                                     <td>积分客朝阳合伙人</td>
                                     <td>******</td>
-                                    <td><a class="a-btn">修改密码</a></td>
+                                    <td><a class="a-btn" data-toggle="modal" data-target="#changePassword2">修改密码</a></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -133,7 +133,7 @@
                                 <tr class="tr-noEmpty">
                                     <td>管理员</td>
                                     <td><span class="wx-faceImg"><img src="../../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span><span>嘿嘿嘿</span></td>
-                                    <td><a class="a-btn">接触绑定</a></td>
+                                    <td><a class="a-btn" data-toggle="modal" data-target="#unbind">解除绑定</a></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -169,73 +169,193 @@
             </div>
         </div>
     </div>
-</div>
-<!--新建账户提示框-->
-<div class="modal fade" id="createAccount">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-warning">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">新建账号</h4>
+
+    <!--新建账户提示框-->
+    <div class="modal fade" id="createAccount">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">新建账号</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group radio-style">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">合约类型</label>
+                            <div class="col-sm-7">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios1" value="option1">联盟商户
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios1" value="option2">普通商户
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group radio-style">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">合约类型</label>
+                            <div class="col-sm-7">
+                                <div class="panel panel-default">
+                                    <div class="radio-inline">
+                                        <label>
+                                            <input type="radio" name="optionsRadios2" value="option0">全部门店
+                                        </label>
+                                    </div>
+                                    <br>
+                                    <div class="radio-inline radio-left">
+                                        <label>
+                                            <input type="radio" name="optionsRadios2" value="option1">棉花糖KTV1
+                                        </label>
+                                    </div>
+                                    <div class="radio-inline">
+                                        <label>
+                                            <input type="radio" name="optionsRadios2" value="option2">棉花糖KTV2
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">账户名称</label>
+                            <div class="col-sm-4">
+                                <input type="password" class="form-control" placeholder="请输入金额">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">账户密码</label>
+                            <div class="col-sm-4">
+                                <input type="password" class="form-control" placeholder="请输入金额">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">再次确认密码</label>
+                            <div class="col-sm-4">
+                                <input type="password" class="form-control" placeholder="请输入金额">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">管理员登录密码</label>
+                            <div class="col-sm-4">
+                                <input type="password" class="form-control" placeholder="请输入金额">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="clearfix btn-div text-center">
+                        <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="withDraw()">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-3 col-sm-offset-1 control-label">账户名称</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control" placeholder="请输入金额">
+        </div>
+    </div>
+    <!--修改密码提示框-->
+    <div class="modal fade" id="changePassword">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="inputPassword1" class="col-sm-2 col-sm-offset-1 control-label">当前密码</label>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" id="inputPassword1">
+                                <p class="text-muted small" style="visibility: hidden;color: #ff0000">密码不正确</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 col-sm-offset-1 control-label">账户密码</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control" placeholder="请输入金额">
+                        <div class="form-group">
+                            <label for="inputPassword2" class="col-sm-2 col-sm-offset-1 control-label">新密码</label>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" id="inputPassword2">
+                                <p class="text-muted small tishi">密码由数字和字母组合，不少于6位，不能包含特殊符号</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 col-sm-offset-1 control-label">再次确认密码</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control" placeholder="请输入金额">
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-sm-offset-1 control-label">确认新密码</label>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" id="inputPassword3">
+                            </div>
                         </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="clearfix btn-div text-center">
+                        <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="withDraw()">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 col-sm-offset-1 control-label">管理员登陆密码</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control" placeholder="请输入金额">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label  class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
-                        <div class="col-sm-7">
-                            <p class="text-muted" class="form-control">xxxxxxxxxxxxxxxxxxx{{bank}}</p>
-                            <p class="text-muted" class="form-control">农行</p>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
-            <div class="modal-footer">
-                <div class="clearfix btn-div text-center">
-                    <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="withDraw()">确认</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        </div>
+    </div>
+    <!--修改密码提示框2-->
+    <div class="modal fade" id="changePassword2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-8 col-sm-offset-2 control-label">新密码</label><br>
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <input type="password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-8 col-sm-offset-2 control-label">确认密码</label><br>
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <input type="password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-8 col-sm-offset-2 control-label">管理员密码(输入管理员登录密码确认操作)</label><br>
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <input type="password" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="clearfix btn-div text-center">
+                        <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="withDraw()">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--解除绑定-->
+    <div class="modal fade" id="unbind">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">解除绑定</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">确认要将该微信号解除绑定吗？</p>
+                    <div>
+                        <span class="icon-success wx-faceImg"><img src="../../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
+                    </div>
+                    <p class="text-center wx-nickname fontSize14">夜空中最亮的那颗星星</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="clearfix btn-div text-center">
+                        <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="withDraw()">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!--提现成功提示框-->
-<div class="modal fade" id="tx-success">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="icon-success"></div>
-                <p class="text-center">提现申请成功</p>
-                <p class="text-center">佣金将会在1个工作日内后抵达您的结算账户</p>
-            </div>
-            <div class="modal-footer">
-                <div class="clearfix btn-div text-center">
-                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
