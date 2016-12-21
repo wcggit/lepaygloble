@@ -39,7 +39,8 @@
                     <td>{{financial.balanceDate|date:'yyyy-MM-dd'}}</td>
                     <td ng-if="financial.state==1">已到账</td>
                     <td ng-if="financial.state==0">转账中</td>
-                    <td>{{'￥'+financial.transferPrice/100}}</td>
+                    <td ng-if="financial.state==2">已挂账</td>
+                    <td>{{'￥'+(financial.transferPrice+financial.posTransfer+financial.appTransfer)/100}}</td>
                     <td>{{financial.merchant.merchantBank.bankName}}</td>
                     <td class="bank">{{financial.merchant.merchantBank.bankNumber}}</td>
                     <td><a ng-click="showDetail(financial.balanceDate)">查看详情</a></td>

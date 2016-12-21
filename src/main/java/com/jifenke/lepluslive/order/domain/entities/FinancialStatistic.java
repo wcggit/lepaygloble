@@ -5,12 +5,7 @@ import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by wcg on 16/5/5.
@@ -19,76 +14,138 @@ import javax.persistence.Table;
 @Table(name = "FINANCIAL_STATISTIC")
 public class FinancialStatistic {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  private String statisticId = MvUtil.getOrderNumber();
+    private String statisticId = MvUtil.getOrderNumber();
 
-  private Date balanceDate; //结算日期
+    private Date balanceDate; //结算日期
 
-  private Date transferDate; //转账日期
+    private Date transferDate; //转账日期
 
-  @ManyToOne
-  private Merchant merchant;
+    @ManyToOne
+    private Merchant merchant;
 
-  private Long transferPrice;
+    private Long transferPrice;
 
-  private Integer state = 0;
+    private Integer state = 0; //状态2 表示挂帐
 
-  public Integer getState() {
-    return state;
-  }
 
-  public void setState(Integer state) {
-    this.state = state;
-  }
+    private Long transferFromTruePay; //扫码支付转账金额
 
-  public Merchant getMerchant() {
-    return merchant;
-  }
+    public Long getTransferFromTruePay() {
+        return transferFromTruePay;
+    }
 
-  public void setMerchant(Merchant merchant) {
-    this.merchant = merchant;
-  }
+    public void setTransferFromTruePay(Long transferFromTruePay) {
+        this.transferFromTruePay = transferFromTruePay;
+    }
 
-  public Long getTransferPrice() {
-    return transferPrice;
-  }
+    private Long appTransfer;//app总转账
 
-  public void setTransferPrice(Long transferPrice) {
-    this.transferPrice = transferPrice;
-  }
+    private Long appTransFromTruePay;//app微信转账 金额
 
-  public Date getTransferDate() {
-    return transferDate;
-  }
+    private Long posTransfer; //pos 转账金额
 
-  public void setTransferDate(Date transferDate) {
-    this.transferDate = transferDate;
-  }
+    private Long posTransFromTruePay;//pos银行转账
 
-  public Long getId() {
-    return id;
-  }
+    @Version
+    private Long version = 0L;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Integer getState() {
+        return state;
+    }
 
-  public String getStatisticId() {
-    return statisticId;
-  }
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
-  public void setStatisticId(String statisticId) {
-    this.statisticId = statisticId;
-  }
+    public Merchant getMerchant() {
+        return merchant;
+    }
 
-  public Date getBalanceDate() {
-    return balanceDate;
-  }
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
 
-  public void setBalanceDate(Date balanceDate) {
-    this.balanceDate = balanceDate;
-  }
+    public Long getTransferPrice() {
+        return transferPrice;
+    }
+
+    public void setTransferPrice(Long transferPrice) {
+        this.transferPrice = transferPrice;
+    }
+
+    public Date getTransferDate() {
+        return transferDate;
+    }
+
+    public void setTransferDate(Date transferDate) {
+        this.transferDate = transferDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getStatisticId() {
+        return statisticId;
+    }
+
+    public void setStatisticId(String statisticId) {
+        this.statisticId = statisticId;
+    }
+
+    public Date getBalanceDate() {
+        return balanceDate;
+    }
+
+    public void setBalanceDate(Date balanceDate) {
+        this.balanceDate = balanceDate;
+    }
+
+    public Long getAppTransfer() {
+        return appTransfer;
+    }
+
+    public void setAppTransfer(Long appTransfer) {
+        this.appTransfer = appTransfer;
+    }
+
+    public Long getAppTransFromTruePay() {
+        return appTransFromTruePay;
+    }
+
+    public void setAppTransFromTruePay(Long appTransFromTruePay) {
+        this.appTransFromTruePay = appTransFromTruePay;
+    }
+
+    public Long getPosTransfer() {
+        return posTransfer;
+    }
+
+    public void setPosTransfer(Long posTransfer) {
+        this.posTransfer = posTransfer;
+    }
+
+    public Long getPosTransFromTruePay() {
+        return posTransFromTruePay;
+    }
+
+    public void setPosTransFromTruePay(Long posTransFromTruePay) {
+        this.posTransFromTruePay = posTransFromTruePay;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
 }
