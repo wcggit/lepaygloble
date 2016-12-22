@@ -12,6 +12,6 @@ angular.module('lepayglobleApp')
         });
         //  下载二维码
         $scope.downLoad =  function (imgUrl) {
-            
+            location.href= "/invitationCode/downLoadInvitationCode?qrCodeUrl="+imgUrl;
         }
     })
