@@ -7,11 +7,10 @@ import com.jifenke.lepluslive.order.domain.criteria.FinancialCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OLOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OrderShareCriteria;
 import com.jifenke.lepluslive.order.domain.entities.FinancialStatistic;
+import com.jifenke.lepluslive.order.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrderShare;
-import com.jifenke.lepluslive.order.repository.FinancialStatisticRepository;
-import com.jifenke.lepluslive.order.repository.OffLineOrderRepository;
-import com.jifenke.lepluslive.order.repository.OffLineOrderShareRepository;
+import com.jifenke.lepluslive.order.repository.*;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,6 +54,12 @@ public class OffLineOrderService {
 
     @Inject
     private FinancialStatisticRepository financialStatisticRepository;
+
+    @Inject
+    private MerchantScanPayWayRepository merchantScanPayWayRepository;
+
+    @Inject
+    private ScanCodeOrderRepository scanCodeOrderRepository;
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Page findOrderByPage(OLOrderCriteria orderCriteria, Integer limit) {
@@ -198,7 +203,13 @@ public class OffLineOrderService {
         Long totalSales = 0L;       // 总金额
         Long totalRebate = 0L;      // 共收到红包
         for (Merchant merchant : merchants) {
-            List<Object[]> details = offLineOrderRepository.countMemberOrderDetail(merchant.getId());
+            MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
+            List<Object[]> details = null;
+            if (payway==null) {
+                details = offLineOrderRepository.countMemberOrderDetail(merchant.getId());
+            }else {
+                details = scanCodeOrderRepository.countScanOrderDetail(merchant.getId());
+            }
             Long count = new Long(details.get(0)[0] ==null ?"0" : details.get(0)[0].toString());
             Long sales = new Long(details.get(0)[1] == null ? "0" : details.get(0)[1].toString());
             Long rebate = new Long(details.get(0)[2] == null ? "0" : details.get(0)[2].toString());
@@ -248,10 +259,16 @@ public class OffLineOrderService {
     public Long countDailyTransfering(List<Merchant> merchants) {
         Long totalTransfering = 0L;
         for(Merchant merchant:merchants) {
-            Long transfering = offLineOrderRepository.countDailyTransferMoney(merchant.getId());
-            if(transfering!=null) {
-                totalTransfering += (transfering==null?0L:transfering);
-            }
+            Long transfering = null;
+            MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
+             if (payway==null) {
+                 transfering = offLineOrderRepository.countDailyTransferMoney(merchant.getId());
+             }else {
+                 transfering = scanCodeOrderRepository.countDailyScanTransferMoney(merchant.getId());
+             }
+             if(transfering!=null) {
+                 totalTransfering += (transfering==null?0L:transfering);
+             }
         }
         return totalTransfering;
     }

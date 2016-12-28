@@ -11,6 +11,8 @@ import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.lejiauser.repository.RegisterOriginRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.repository.*;
+import com.jifenke.lepluslive.order.domain.entities.MerchantScanPayWay;
+import com.jifenke.lepluslive.order.repository.MerchantScanPayWayRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.weixin.repository.WeiXinUserRepository;
@@ -80,6 +82,9 @@ public class MerchantService {
 
     @Inject
     private MerchantInfoRepository merchantInfoRepository;
+
+    @Inject
+    private MerchantScanPayWayRepository merchantScanPayWayRepository;
 
     /**
      * 获取商家详情
@@ -326,7 +331,13 @@ public class MerchantService {
     @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
     public List<Object[]> findOrderList(Merchant merchant,Long limit) {
         Long offset = limit*10;
-        return merchantRepository.findOrderListByMerchant(merchant.getId(),offset);
+        MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
+        if(payway==null) {        // 返回 Pos 订单和乐加扫码订单
+            return merchantRepository.findOrderListByMerchant(merchant.getId(),offset);
+        }else {                  // 返回 Pos 订单和掌富扫码订单
+            return merchantRepository.findScanOrderListByMerchant(merchant.getId(),offset);
+        }
+
     }
 
 }
