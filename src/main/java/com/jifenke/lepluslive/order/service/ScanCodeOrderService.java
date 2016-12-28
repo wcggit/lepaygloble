@@ -35,7 +35,7 @@ public class ScanCodeOrderService {
 
         StringBuffer sql = new StringBuffer();
         sql.append("select olo.order_sid,  m.name,  olo.payment,  olo.le_pay_code,  olo.complete_date,  olo.total_price,  olo.true_score,  c.type, "
-                   + " olo.transfer_money_from_true_pay,  olo.transfer_money_from_score,  ifnull(m.lj_commission,0),  olo.commission  "
+                   + " olo.transfer_money_from_true_pay,  olo.transfer_money_from_score,  ifnull(m.lj_commission,0),  olo.commission,  111  "
                    + " from scan_code_order olo INNER JOIN merchant m ON olo.merchant_id = m.id INNER JOIN category c ON olo.order_type_id = c.id  where  ");
         if (codeOrderCriteria.getStoreIds() != null) {
             sql.append(" olo.merchant_id in (");
@@ -68,6 +68,7 @@ public class ScanCodeOrderService {
             sql.append(codeOrderCriteria.getStartDate());
             sql.append("' and '");
             sql.append(codeOrderCriteria.getEndDate());
+            sql.append("'");
         }
         sql.append(" order by olo.complete_date desc limit ");
         sql.append(start);

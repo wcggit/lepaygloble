@@ -524,6 +524,11 @@ public class OffLineOrderService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public CodeOrderCriteria findCodeOrderByMerchantUser222(CodeOrderCriteria codeOrderCriteria) {
 
+        if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 0) {
+            codeOrderCriteria.setPayWay(1);//微信
+        }else if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 1){
+            codeOrderCriteria.setPayWay(2);//红包
+        }
         /**
          * 查询条件后的统计数据
          */
@@ -531,7 +536,7 @@ public class OffLineOrderService {
 
         StringBuffer sql = new StringBuffer();
         sql.append("select olo.order_sid,  m.name,  olo.pay_way_id,  olo.lepay_code,  olo.complete_date,  olo.total_price,  olo.true_score,  olo.rebate_way, "
-                   + " olo.transfer_money_from_true_pay,  (olo.transfer_money - olo.transfer_money_from_true_pay),  ifnull(m.lj_commission,0),  olo.lj_commission  "
+                   + " olo.transfer_money_from_true_pay,  (olo.transfer_money - olo.transfer_money_from_true_pay),  ifnull(m.lj_commission,0),  olo.lj_commission, 222  "
                    + " from off_line_order olo INNER JOIN merchant m ON olo.merchant_id = m.id  where  ");
         if (codeOrderCriteria.getStoreIds() != null) {
             sql.append(" olo.merchant_id in (");
@@ -564,6 +569,7 @@ public class OffLineOrderService {
             sql.append(codeOrderCriteria.getStartDate());
             sql.append("' and '");
             sql.append(codeOrderCriteria.getEndDate());
+            sql.append("'");
         }
         sql.append(" order by olo.complete_date desc limit ");
         sql.append(start);
