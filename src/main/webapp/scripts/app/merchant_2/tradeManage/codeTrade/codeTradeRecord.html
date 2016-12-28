@@ -5,7 +5,7 @@
             <label>门店名称</label>
             <div class="input-group col-md-6">
                 <select id="selectStore" class="form-control">
-                    <option value="">请选择</option>
+                    <!--<option value="">请选择</option>-->
                     <option ng-repeat="x in myStore" value="{{x[0]}}">{{x[1]}}</option>
                 </select>
                 <span class="select-jiao"></span>
@@ -26,10 +26,9 @@
             <div class="input-group col-md-6">
                 <select class="form-control" id="rebateWay">
                     <option value="">请选择</option>
-                    <option value="1">非会员订单</option>
-                    <option value="2">会员订单</option>
-                    <option value="3">导流订单</option>
-                    <option value="4">会员普通订单</option>
+                    <option value="(1)">导流订单</option>
+                    <option value="(3,6)">会员订单</option>
+                    <option value="(0,2,4,5)">普通订单</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
@@ -39,8 +38,9 @@
             <div class="input-group col-md-6">
                 <select class="form-control" id="payWay">
                     <option value="">请选择</option>
-                    <option value="1">微信</option>
-                    <option value="2">红包</option>
+                    <option value="0">微信</option>
+                    <option value="1">红包</option>
+                    <option value="2">微信+红包</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
@@ -64,7 +64,7 @@
     <!--微信实付<span class="font-yellow">￥8500</span>，-->
     <!--实际入账<span class="font-yellow">￥23233+￥12</span>红包-->
 
-    所选条件下，共有<span class="font-yellow">{{merchantCodePage.totalElements}}</span>条交易记录，
+    所选条件下，共有<span class="font-yellow">{{merchantCount.totalCount}}</span>条交易记录，
     订单总金额<span class="font-yellow">{{merchantCount.totalPrice / 100.0 | currency:'￥'}}</span>，
     使用红包<span class="font-yellow">{{merchantCount.trueScore / 100.0 | currency:'￥'}}</span>，
     微信实付<span class="font-yellow">{{merchantCount.truePay / 100.0 | currency:'￥'}}</span>，
@@ -75,36 +75,45 @@
     <table class="table ol-tab">
         <thead class="active">
         <tr>
-            <td>交易完成时间</td>
-            <td>交易门店</td>
             <td>订单号</td>
+            <td>交易门店</td>
             <td>支付方式</td>
+            <td>确认码</td>
+            <td>交易完成时间</td>
             <td>订单金额</td>
-            <td>交易类型(费率)</td>
+            <td>使用红包</td>
+            <td>订单类型(费率)</td>
             <td>实际入账</td>
         </tr>
         </thead>
         <tbody>
         <tr class="tr-empty" id="notData" hidden="true"><td class="text-center" colspan="8" >暂无数据！</td></tr>
         <tr class="tr-noEmpty" ng-repeat="x in codeOrderCriteria" id="HaveData">
+            <td>
+                {{x[0]}}</td>
+            <td>
+                {{x[1]}}</td>
+            <td>
+                <p ng-show="{{x[2]==0}}">微信</p>
+                <p ng-show="{{x[2]==1}}">纯红包</p>
+                <p ng-show="{{x[2]==2}}">微信+红包</p>
+                <p ng-show="{{x[2]==null}}">---</p></td>
+            <td>
+                {{x[3]}}</td>
             <td class="td-date">
-                <p>{{x.completeDate | date:'yyyy-MM-dd hh:mm:ss'}}</p></td>
+                <p>{{x[4] | date:'yyyy-MM-dd hh:mm:ss'}}</p></td>
             <td>
-                {{x.merchant.name}}</td>
+                {{x[5] / 100.0 | currency:'￥'}}</td>
             <td>
-                {{x.orderSid}}</td>
+                {{x[6] / 100.0 | currency:'￥'}}</td>
             <td>
-                <p ng-show="{{x.payWay.id==1}}">微信</p>
-                <p ng-show="{{x.payWay.id==2}}">红包</p></td>
+                <p ng-show="{{x[7]==1}}">导流订单({{(100-x[10]) / 10.0}}折)</p>
+                <p ng-show="{{x[7]==3 || x[7]==6}}">会员订单
+                    <span ng-show="{{x[7]==3}}">({{(100-x[10]) / 10.0}}折)</span>
+                    <span ng-show="{{x[7]==6}}">({{x[11] / 100.0 | currency:'￥'}})</span></p>
+                <p ng-show="{{x[7]!=1 && x[7]!=3 && x[7]!=6}}">普通订单({{x[11] / 100.0 | currency:'￥'}})</p></td>
             <td>
-                <p>{{x.totalPrice / 100.0 | currency:'￥'}}</p></td>
-            <td>
-                <p ng-show="{{x.rebateWay==1}}">非会员订单</p>
-                <p ng-show="{{x.rebateWay==2}}">会员订单</p>
-                <p ng-show="{{x.rebateWay==3}}">导流订单</p>
-                <p ng-show="{{x.rebateWay==4}}">会员普通订单</p></td>
-            <td>
-                <p>{{x.transferMoney / 100.0 | currency:'￥'}}</p></td>
+                <p>{{x[8] / 100.0 | currency:'￥'}}+{{x[9] / 100.0 | currency:'￥'}}红包</p></td>
         </tr>
         </tbody>
     </table>
