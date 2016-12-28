@@ -67,7 +67,6 @@ public class ScanCodeOrder {
   @NotNull
   @ManyToOne
   private Category orderType;//订单类型
-
   @NotNull
   private Long totalPrice = 0L;
 

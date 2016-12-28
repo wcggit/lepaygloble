@@ -3,8 +3,10 @@ package com.jifenke.lepluslive.merchant.controller;
 import com.jifenke.lepluslive.global.util.ImageLoad;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
+import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.controller.dto.MerchantDto;
+import com.jifenke.lepluslive.merchant.domain.criteria.LockMemberCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.service.MerchantRebatePolicyService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
@@ -30,6 +32,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +73,10 @@ public class MerchantController {
 
     @Inject
     private OffLineOrderService offLineOrderService;
+
+    @Inject
+    private LeJiaUserRepository leJiaUserRepository;
+
     //  旧版本 - 我的乐付
     @RequestMapping(value = "/merchant/getCommission", method = RequestMethod.GET)
     public LejiaResult getAvaliableCommission() {
@@ -82,27 +90,28 @@ public class MerchantController {
         Long transfering = finanicalStatisticService.countDailyTransfering(merchant);
 
         return LejiaResult.ok(new MerchantDto(transfering, merchantWallet.getTotalTransferMoney(),
-                                              merchantWallet.getAvailableBalance(),
-                                              merchantWallet.getTotalMoney()));
+            merchantWallet.getAvailableBalance(),
+            merchantWallet.getTotalMoney()));
     }
 
     /**
      * 首页 - 商户数据
-     *  a.今日入账
-     *  b.累计入账
-     *  c.消费金额/次数
-     *  d.接受红包总额
+     * a.今日入账
+     * b.累计入账
+     * c.消费金额/次数
+     * d.接受红包总额
+     *
      * @return
      */
-    @RequestMapping(value="/merchant/homePage/merchantData",method = RequestMethod.GET)
+    @RequestMapping(value = "/merchant/homePage/merchantData", method = RequestMethod.GET)
     public LejiaResult getHomePageMerchantData() {
         MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         Long transfering = offLineOrderService.countDailyTransfering(merchants);                            //  今日转账金额
         Long totalTransfering = finanicalStatisticService.countTotalTransfering(merchants);                 //  转账总金额
         Map<String, Long> detail = offLineOrderService.countMemberOrdersDetail(merchants);
-        detail.put("transfering",transfering);
-        detail.put("totalTransfering",totalTransfering);
+        detail.put("transfering", transfering);
+        detail.put("totalTransfering", totalTransfering);
         return LejiaResult.ok(detail);
     }
 
@@ -174,8 +183,8 @@ public class MerchantController {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setFont(new Font("微软雅黑", Font.PLAIN, 88)); //字体、字型、字号
             g.drawString(merchant.getName(),
-                         (image.getWidth() - g.getFontMetrics().stringWidth(merchant.getName()))
-                         / 2, 1700); //画文字
+                (image.getWidth() - g.getFontMetrics().stringWidth(merchant.getName()))
+                    / 2, 1700); //画文字
 
             g.dispose();
 
@@ -225,7 +234,6 @@ public class MerchantController {
         return LejiaResult.ok(leJiaUserService.getTotalPages(leJiaUserCriteria));
     }
 
-
     @RequestMapping(value = "/merchant/open", method = RequestMethod.GET)
     public void openRequest() {
         Merchant
@@ -267,14 +275,14 @@ public class MerchantController {
         merchant.setPartner(partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin()));
         merchantService.createMerchant(merchant);
         MerchantRebatePolicy merchantRebatePolicy = new MerchantRebatePolicy();
-        if(merchant.getPartnership()==0) {
+        if (merchant.getPartnership() == 0) {
             merchantRebatePolicy.setImportScoreBScale(new BigDecimal(0));
             merchantRebatePolicy.setUserScoreBScaleB(new BigDecimal(0));
             merchantRebatePolicy.setUserScoreBScale(new BigDecimal(0));
             merchantRebatePolicy.setUserScoreAScale(new BigDecimal(0));
             merchantRebatePolicy.setRebateFlag(2);     // 不发放
         }
-        if(merchant.getPartnership()==1) {
+        if (merchant.getPartnership() == 1) {
             int result = merchant.getLjCommission().intValue() * 5;
             merchantRebatePolicy.setImportScoreBScale(new BigDecimal(result));
             merchantRebatePolicy.setUserScoreBScaleB(new BigDecimal(result));
@@ -300,4 +308,77 @@ public class MerchantController {
         return LejiaResult.ok("修改商户成功");
     }
 
+    /**
+     * 新版本: 查询指定门店所有绑定用户,如果没有指定门店,则查询当前商户下所有门店绑定用户
+     */
+    @RequestMapping(value = "/merchantUser/bindUsers", method = RequestMethod.POST)
+    public LejiaResult findBindUsersByCriteria(@RequestBody LockMemberCriteria lockMemberCriteria) {
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        //  设置查询条件:  如果没有指定 id , 则查询所有门店
+        setCriteriaMerchantIds(merchantUser,lockMemberCriteria);
+        //  数据封装
+        List<Object[]> lockMembers = leJiaUserService.getMerchantLockMemberByPage(lockMemberCriteria);
+        List<Long> scoreas = new ArrayList<>();             //   首次关注红包
+        List<Long> scorebs = new ArrayList<>();             //   首次关注积分
+        for (Object[] lockMember : lockMembers) {
+            Long ljUserId = new Long(lockMember[0].toString());
+            Long scorea = leJiaUserRepository.findTotalScorea(ljUserId);
+            Long scoreb = leJiaUserRepository.findTotalScoreb(ljUserId);
+            scoreas.add(scorea);
+            scorebs.add(scoreb);
+        }
+        Map map = new HashMap();
+        map.put("lockMembers", lockMembers);
+        map.put("scoreas", scoreas);
+        map.put("scorebs", scorebs);
+        return LejiaResult.ok(map);
+    }
+
+    @RequestMapping(value = "/merchantUser/bindUsers/count", method = RequestMethod.POST)
+    public LejiaResult countBindUsersByCriteria(@RequestBody LockMemberCriteria lockMemberCriteria) {
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        setCriteriaMerchantIds(merchantUser,lockMemberCriteria);
+        Long totalCount = leJiaUserService.countMerchantLockMember(lockMemberCriteria);
+        Long totalPages = Math.round(new Double(totalCount * 1.0 / 10.0));
+        return LejiaResult.ok(totalPages);
+    }
+
+    //  设置查询条件:  如果没有指定 id , 则查询所有门店
+    public void setCriteriaMerchantIds(MerchantUser merchantUser,LockMemberCriteria lockMemberCriteria) {
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        if (lockMemberCriteria.getStoreIds() == null && merchants != null) {
+            Object[] storeIds = new Object[merchants.size()];
+            for (int i = 0; i < storeIds.length; i++) {
+                storeIds[i] = merchants.get(i).getId();
+            }
+            lockMemberCriteria.setStoreIds(storeIds);
+        }
+    }
+
+    /**
+     *  2.0 版本 - 获取商户门店名称和邀请码
+     */
+    @RequestMapping(value="/merchantUser/inviteCodes")
+    public LejiaResult getMerchantsInviteCodes() {
+        String codeUrl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=";
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        //  封装数据
+        Map map = new HashMap();
+        List<String> merchantNames = new ArrayList<>();
+        List<String> merchantCodes = new ArrayList<>();
+        for (Merchant merchant : merchants) {
+            MerchantInfo info = merchant.getMerchantInfo();
+            if(info!=null) {
+                // 判断商户是否有 二维码
+                if(info.getTicket()!=null) {
+                    merchantNames.add(merchant.getName());
+                    merchantCodes.add(codeUrl+info.getTicket());
+                }
+            }
+        }
+        map.put("merchantNames",merchantNames);
+        map.put("merchantCodes",merchantCodes);
+        return LejiaResult.ok(map);
+    }
 }
