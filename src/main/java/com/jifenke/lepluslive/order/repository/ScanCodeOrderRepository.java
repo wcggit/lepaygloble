@@ -47,4 +47,22 @@ public interface ScanCodeOrderRepository extends JpaRepository<ScanCodeOrder,Str
         "group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
     List<Object[]> countWeekScanCodeScore(Long merchantId,Date completeDate);
 
+    /**
+     * 查询指定门店 时间段内总入账 (扫码订单)
+     */
+    @Query(value="select IFNULL(sum(transfer_money),0) from scan_code_order where merchant_id = ?1 and complete_date between ?2  and ?3",nativeQuery = true)
+    Long countMerchantTotal(Long id,String startDate,String endDate);
+
+    /**
+     * 查询指定门店 微信总入账
+     */
+    @Query(value="select IFNULL(sum(transfer_money_from_true_pay),0) from scan_code_order where merchant_id = ?1 and complete_date between ?2 and ?3",nativeQuery = true)
+    Long countMerchantWxTransfer(Long id,String startDate,String endDate);
+
+    /**
+     * 查询指定门店 红包入账(扫码)
+     */
+    @Query(value="select IFNULL(sum(transfer_money-transfer_money_from_true_pay),0) from scan_code_order where merchant_id =?1 and complete_date between  ?2 and ?3",nativeQuery = true)
+    Long countMerchantOffScore(Long id,String startDate,String endDate);
+
 }
