@@ -29,7 +29,7 @@ angular.module('lepayglobleApp')
                     $scope.loadCodeOrderInfo = function (){
                         var codeOrderCriteria = {};
                         var a =$("#selectStore").val();
-                        if(a!=""){
+                        if(a!=null && a!=""){
                             codeOrderCriteria.storeIds = $.makeArray(a);
                         }else{
                             codeOrderCriteria.storeIds = array;
@@ -43,11 +43,10 @@ angular.module('lepayglobleApp')
                         codeOrderCriteria.currentPage = currentPage;
                         $http.post("/api/codeTrade/codeOrderByMerchantUser",codeOrderCriteria).success(function (response) {
                             if(response.status == 200){
-                                $scope.codeOrderCriteria = response.data.page.content;
-                                $scope.merchantCodePage = response.data.page;
-                                $scope.totalPages = $scope.merchantCodePage.totalPages;
-                                $scope.page = currentPage;
+                                $scope.codeOrderCriteria = response.data.listCodeOrder;
                                 $scope.merchantCount = response.data;
+                                $scope.totalPages = $scope.merchantCount.totalPages;
+                                $scope.page = currentPage;
                                 if($scope.codeOrderCriteria.length>0){
                                     $("#notData").hide();
                                 }else{

@@ -2,8 +2,8 @@ package com.jifenke.lepluslive.order.domain.entities;
 
 import com.jifenke.lepluslive.global.util.MvUtil;
 
-import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.weixin.domain.entities.Category;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -66,8 +66,7 @@ public class ScanCodeOrder {
 
   @NotNull
   @ManyToOne
-  private Category orderType;   //订单类型
-
+  private Category orderType;//订单类型
   @NotNull
   private Long totalPrice = 0L;
 

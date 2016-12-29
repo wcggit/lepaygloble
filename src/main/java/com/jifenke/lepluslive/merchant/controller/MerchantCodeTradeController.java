@@ -10,8 +10,10 @@ import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
+import com.jifenke.lepluslive.order.service.MerchantScanPayWayService;
 import com.jifenke.lepluslive.order.service.OffLineOrderService;
 import com.jifenke.lepluslive.order.service.OnLineOrderService;
+import com.jifenke.lepluslive.order.service.ScanCodeOrderService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +45,10 @@ public class MerchantCodeTradeController {
     private LeJiaUserService leJiaUserService;
     @Inject
     private OnLineOrderService onLineOrderService;
+    @Inject
+    private MerchantScanPayWayService merchantScanPayWayService;
+    @Inject
+    private ScanCodeOrderService scanCodeOrderService;
 
     /**
      *  查询商户下所有的门店
@@ -63,8 +69,23 @@ public class MerchantCodeTradeController {
     @RequestMapping(value = "/codeTrade/codeOrderByMerchantUser")
     @ResponseBody
     public LejiaResult findCodeOrderByMerchantUser(@RequestBody CodeOrderCriteria codeOrderCriteria){
-        codeOrderCriteria.setState(1);
-        CodeOrderCriteria result = offLineOrderService.findCodeOrderByMerchantUser(codeOrderCriteria);
+        codeOrderCriteria.setState(1);//支付状态  0=未支付|1=已支付|2=已退款
+        Object [] storeIds = codeOrderCriteria.getStoreIds();//门店id
+
+        CodeOrderCriteria result = new CodeOrderCriteria();
+        if(storeIds.length > 0){
+            List<Object[]> objectlist = merchantScanPayWayService.findMerchantScanPayWayByMerchantId(storeIds[0].toString());
+            if (objectlist.size()==1){
+                Object[] object = objectlist.get(0);
+                if(object.length > 1 && object[2] != null && Integer.valueOf(object[2].toString()) == 0){//type=0 富友结算
+                    result = scanCodeOrderService.getScanCodeOrderList(codeOrderCriteria);
+                }else {//乐嘉结算
+                    result = offLineOrderService.findCodeOrderByMerchantUser222(codeOrderCriteria);
+                }
+            }else {//乐嘉结算
+                result = offLineOrderService.findCodeOrderByMerchantUser222(codeOrderCriteria);
+            }
+        }
         return LejiaResult.ok(result);
     }
 
@@ -104,6 +125,10 @@ public class MerchantCodeTradeController {
     @RequestMapping(value = "/lockMenber/lockMenberByMerchantUser")
     @ResponseBody
     public LejiaResult findLockMenberByMerchantUser(@RequestBody LockMemberCriteria lockMemberCriteria){
+
+//        //测试
+//        Object[] o = {1,3,9};
+//        lockMemberCriteria.setStoreIds(o);
 
         List<Object[]> listMembers = leJiaUserService.getMerchantLockMemberList(lockMemberCriteria);
         lockMemberCriteria.setLockMembers(listMembers);

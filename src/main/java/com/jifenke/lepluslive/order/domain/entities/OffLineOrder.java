@@ -55,16 +55,16 @@ public class OffLineOrder {
 
     private Long scoreB = 0L; //发放积分
 
-    private Integer state = 0;
+    private Integer state = 0;//支付状态  0=未支付|1=已支付|2=已退款
 
     private Long transferMoney; //每笔应该转给商户的金额  (商户实际到账 = 微信入账 + 乐加转账)
 
     private Long transferMoneyFromTruePay; //每笔订单中现金支付转给商户的金额 (微信入账)
 
-    private Integer rebateWay; //返利方式,如果为0 代表非会员普通订单 则只返b积分 如果为1 导流订单 2 会员普通订单 3会员订单 4 非会员扫纯支付码 5 会员扫纯支付码 6会员订单（普通费率）
+    private Integer rebateWay; //返利方式,如果为0 代表非会员普通订单 则只返b积分 如果为1 导流订单(佣金费率) 2 普通订单(会员消费) 3会员订单(佣金费率) 4 非会员扫纯支付码 5 会员扫纯支付码 6会员订单（普通费率）
 
 
-    private String lepayCode = MvUtil.getLePayCode();
+    private String lepayCode = MvUtil.getLePayCode(); // 乐付码
 
 
     public String getLepayCode() {
