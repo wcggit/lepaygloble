@@ -2,13 +2,10 @@ package com.jifenke.lepluslive.merchant.repository;
 
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
 
 /**
@@ -17,7 +14,6 @@ import java.util.List;
 public interface MerchantRepository extends JpaRepository<Merchant, Long> {
 
     Page<Merchant> findAll(Pageable pageable);
-
     /**
      * 查询合伙人虚拟商户
      *
@@ -64,10 +60,9 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
      * @param offSet
      * @return
      */
-    @Query(value = "SELECT b.`name`,count(a.id) number,b.user_limit " +
-        "from le_jia_user a LEFT JOIN merchant b on a.bind_merchant_id = b.id " +
-        "where a.bind_merchant_id in (?1) GROUP BY " +
-        "a.bind_merchant_id ORDER BY number DESC LIMIT ?2,6", nativeQuery = true)
+    @Query(value = "SELECT a.`name`,count(b.id) number, a.user_limit from merchant a " +
+        "LEFT JOIN le_jia_user b on a.id = b.bind_merchant_id " +
+        "where a.id in (?1) GROUP BY a.id ORDER BY number DESC LIMIT ?2,6", nativeQuery = true)
     List<Object[]> findPageMerchantMemberLockNumber(List<Object> obj, Integer offSet);
 
     /**

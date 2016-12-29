@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.merchant.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.merchant.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
@@ -101,6 +102,12 @@ public class MerchantUserController {
     public LejiaResult findPosInfoByMerchantUser(@RequestBody PosOrderCriteria posOrderCriteria){
         PosOrderCriteria result = merchantUserResourceService.findPosInfoByMerchantUser(posOrderCriteria);
         return LejiaResult.ok(result);
+    }
+
+    @RequestMapping(value = "/merchantUser/pageFindMerchantInfoByMerchantUser")
+    @ResponseBody
+    public LejiaResult pageFindMerchantInfoByMerchantUser(@RequestBody MerchantCriteria merchantCriteria){
+        return LejiaResult.ok(merchantUserResourceService.pageFindMerchantInfoByMerchantUser(merchantCriteria));
     }
 
 }
