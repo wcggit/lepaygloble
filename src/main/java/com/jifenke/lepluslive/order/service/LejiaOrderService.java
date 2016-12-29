@@ -5,8 +5,11 @@ import com.jifenke.lepluslive.merchant.domain.entities.MerchantScroll;
 import com.jifenke.lepluslive.order.controller.view.LejiaOrderDTO;
 import com.jifenke.lepluslive.order.controller.view.MerchantOrderDto;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
+import com.jifenke.lepluslive.order.domain.entities.MerchantScanPayWay;
+import com.jifenke.lepluslive.order.repository.MerchantScanPayWayRepository;
 import com.jifenke.lepluslive.order.repository.OffLineOrderRepository;
 import com.jifenke.lepluslive.order.repository.PosOrderRepository;
+import com.jifenke.lepluslive.order.repository.ScanCodeOrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,10 @@ public class LejiaOrderService {
     private PosOrderRepository posOrderRepository;
     @Inject
     private OffLineOrderRepository offLineOrderRepository;
+    @Inject
+    private MerchantScanPayWayRepository merchantScanPayWayRepository;
+    @Inject
+    private ScanCodeOrderRepository scanCodeOrderRepository;
 
     /**
      * 每日账单
@@ -41,10 +48,21 @@ public class LejiaOrderService {
         Long merchantId = dailyOrderCriteria.getMerchant().getId(); // 门店id
 
         //  统计出订单数据
-        List<Object[]> offOrders = offLineOrderRepository.countWeekOfflineOrder(merchantId, startDate);
+        List<Object[]> offOrders = null;
+        List<Object[]> wxOrders = null;
+        List<Object[]> offScores = null;
+        //  判断当前门店是否接入了新通道
+        MerchantScanPayWay payWay = merchantScanPayWayRepository.findByMerchantId(dailyOrderCriteria.getMerchant().getId());
+        if(payWay==null) {
+            offOrders = offLineOrderRepository.countWeekOfflineOrder(merchantId, startDate);
+            wxOrders = offLineOrderRepository.countWeekOfflineWx(merchantId, startDate);
+            offScores = offLineOrderRepository.countWeekOffScore(merchantId, startDate);
+        }else {
+            offOrders = scanCodeOrderRepository.countWeekScanCodeOrder(merchantId,startDate);
+            wxOrders = scanCodeOrderRepository.countWeekScanCodeWx(merchantId, startDate);
+            offScores = scanCodeOrderRepository.countWeekScanCodeScore(merchantId, startDate);
+        }
         List<Object[]> posOrders = posOrderRepository.countWeekPosOrder(merchantId, startDate);
-        List<Object[]> wxOrders = offLineOrderRepository.countWeekOfflineWx(merchantId, startDate);
-        List<Object[]> offScores = offLineOrderRepository.countWeekOffScore(merchantId, startDate);
         List<Object[]> posCards = posOrderRepository.countWeekPosCard(merchantId, startDate);
         List<Object[]> posWxMobile = posOrderRepository.countWeekPosWx(merchantId, startDate);
         List<Object[]> posAliMobile = posOrderRepository.countWeekPosAli(merchantId, startDate);

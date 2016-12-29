@@ -4,10 +4,12 @@ import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by xf on 16-12-28.
+ * 掌富通道线下订单数据
  */
 public interface ScanCodeOrderRepository extends JpaRepository<ScanCodeOrder,String> {
     /**
@@ -21,5 +23,28 @@ public interface ScanCodeOrderRepository extends JpaRepository<ScanCodeOrder,Str
      */
     @Query(value = "select count(*),sum(total_price),sum(commission),sum(transfer_money) from scan_code_order where merchant_id =?1", nativeQuery = true)
     List<Object[]> countScanOrderDetail(Long id);
+
+
+    /**
+     *   门店下:  一周内扫码订单数据
+     */
+    @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),sum(transfer_money) from scan_code_order " +
+        " where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
+    List<Object[]> countWeekScanCodeOrder(Long merchantId,Date startDate);
+
+    /**
+     *  门店下: 扫码牌微信最近七天入账
+     */
+    @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),IFNULL(sum(transfer_money_from_true_pay),0) from scan_code_order " +
+        " where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
+    List<Object[]> countWeekScanCodeWx(Long merchantId,Date startDate);
+
+    /**
+     *  门店下线下订单红包支付入账
+     */
+    @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),IFNULL(sum(transfer_money-transfer_money_from_true_pay),0) from scan_code_order " +
+        "where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) " +
+        "group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
+    List<Object[]> countWeekScanCodeScore(Long merchantId,Date completeDate);
 
 }

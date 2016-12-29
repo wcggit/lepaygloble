@@ -334,7 +334,7 @@ public class MerchantService {
         MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
         if(payway==null) {        // 返回 Pos 订单和乐加扫码订单
             return merchantRepository.findOrderListByMerchant(merchant.getId(),offset);
-        }else {                  // 返回 Pos 订单和掌富扫码订单
+        }else {                   // 返回 Pos 订单和掌富扫码订单
             return merchantRepository.findScanOrderListByMerchant(merchant.getId(),offset);
         }
 
