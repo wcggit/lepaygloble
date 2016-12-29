@@ -65,7 +65,7 @@
             <div class="pull-left">
                 当前门店
                 <select name="" id="selMerchant" class="current-store" ng-change="changeStore(x)" ng-model="x">
-                    <option value="">全部</option>
+                    <option value="">请选择</option>
                     <option value="{{m.sid}}" ng-repeat="m in merchants">{{m.name}}</option>
                 </select>
                 <span>门店今日流水￥{{obinfo.firNum+obinfo.secNum}}，扫码流水￥{{obinfo.firNum}}，POS机流水￥{{obinfo.secNum}}，乐加会员消费￥{{obinfo.thirNum}}/{{obinfo.fouNum}}次</span>

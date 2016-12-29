@@ -39,6 +39,11 @@ angular.module('lepayglobleApp')
         HomePage.getMerchantsInfo().then(function(response) {
             var data = response.data;
             $scope.merchants = data;
+            // 默认门店
+            var firstSid = data[0].sid;
+            $scope.firstSid = firstSid;
+            // 查询
+            $scope.findAll(0);
         });
 
         //  基本信息
@@ -65,26 +70,11 @@ angular.module('lepayglobleApp')
             };
         });
 
-        //  首页 - 交易看板 (全部门店)
+        //  首页 - 交易看板 (默认门店)
         $scope.findAll = function(p) {
-            // 交易看板 - 订单提示
-            HomePage.opraBoardList(p).then(function (data) {
-                var data = data.data;
-                $scope.offset=p;
-                $scope.orderList = data;
-            });
-            //  交易看板 - 交易信息
-            HomePage.opraBoardInfo().then(function(data) {
-                var data = data.data;
-                $scope.obinfo = {
-                    firNum: data.offLineDailyCount/100.0,
-                    secNum: data.posDailyCount/100.0,
-                    thirNum: data.dailySales/100.0,
-                    fouNum: data.dailyCount
-                };
-            });
+            // 交易看板
+            $scope.changeStore($scope.firstSid);
         }
-        $scope.findAll(0);
 
         // 按钮绑定事件 - 查看更多
         $scope.findMore = function(){
@@ -92,7 +82,8 @@ angular.module('lepayglobleApp')
             var p = $scope.offset;
             var selMerchant = $("#selMerchant").val();
             if(selMerchant==''||selMerchant==null) {
-                $scope.findAll(p);                                               // 所有门店
+                   $("#selMerchant").val($scope.firstSid);
+                   return;
             }else {
                 HomePage.siglOpraBoardList(selMerchant,p).then(function (data) {  // 指定门店
                     var data = data.data;
@@ -107,7 +98,6 @@ angular.module('lepayglobleApp')
             $scope.offset=0;
             // 查询所有
             if(id==""||id==null) {
-                $scope.findAll(0);
                 return;
             }
             // 门店交易信息

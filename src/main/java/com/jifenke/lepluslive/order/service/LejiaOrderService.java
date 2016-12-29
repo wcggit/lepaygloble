@@ -5,8 +5,11 @@ import com.jifenke.lepluslive.merchant.domain.entities.MerchantScroll;
 import com.jifenke.lepluslive.order.controller.view.LejiaOrderDTO;
 import com.jifenke.lepluslive.order.controller.view.MerchantOrderDto;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
+import com.jifenke.lepluslive.order.domain.entities.MerchantScanPayWay;
+import com.jifenke.lepluslive.order.repository.MerchantScanPayWayRepository;
 import com.jifenke.lepluslive.order.repository.OffLineOrderRepository;
 import com.jifenke.lepluslive.order.repository.PosOrderRepository;
+import com.jifenke.lepluslive.order.repository.ScanCodeOrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,10 @@ public class LejiaOrderService {
     private PosOrderRepository posOrderRepository;
     @Inject
     private OffLineOrderRepository offLineOrderRepository;
+    @Inject
+    private MerchantScanPayWayRepository merchantScanPayWayRepository;
+    @Inject
+    private ScanCodeOrderRepository scanCodeOrderRepository;
 
     /**
      * 每日账单
@@ -41,10 +48,21 @@ public class LejiaOrderService {
         Long merchantId = dailyOrderCriteria.getMerchant().getId(); // 门店id
 
         //  统计出订单数据
-        List<Object[]> offOrders = offLineOrderRepository.countWeekOfflineOrder(merchantId, startDate);
+        List<Object[]> offOrders = null;
+        List<Object[]> wxOrders = null;
+        List<Object[]> offScores = null;
+        //  判断当前门店是否接入了新通道
+        MerchantScanPayWay payWay = merchantScanPayWayRepository.findByMerchantId(dailyOrderCriteria.getMerchant().getId());
+        if(payWay==null) {
+            offOrders = offLineOrderRepository.countWeekOfflineOrder(merchantId, startDate);
+            wxOrders = offLineOrderRepository.countWeekOfflineWx(merchantId, startDate);
+            offScores = offLineOrderRepository.countWeekOffScore(merchantId, startDate);
+        }else {
+            offOrders = scanCodeOrderRepository.countWeekScanCodeOrder(merchantId,startDate);
+            wxOrders = scanCodeOrderRepository.countWeekScanCodeWx(merchantId, startDate);
+            offScores = scanCodeOrderRepository.countWeekScanCodeScore(merchantId, startDate);
+        }
         List<Object[]> posOrders = posOrderRepository.countWeekPosOrder(merchantId, startDate);
-        List<Object[]> wxOrders = offLineOrderRepository.countWeekOfflineWx(merchantId, startDate);
-        List<Object[]> offScores = offLineOrderRepository.countWeekOffScore(merchantId, startDate);
         List<Object[]> posCards = posOrderRepository.countWeekPosCard(merchantId, startDate);
         List<Object[]> posWxMobile = posOrderRepository.countWeekPosWx(merchantId, startDate);
         List<Object[]> posAliMobile = posOrderRepository.countWeekPosAli(merchantId, startDate);
@@ -164,15 +182,25 @@ public class LejiaOrderService {
     public List<MerchantOrderDto> findMerchantOrderData(DailyOrderCriteria dailyOrderCriteria,List<Merchant> merchants) {
         List<MerchantOrderDto> merchantOrderDtos = new ArrayList<>();
         for (Merchant merchant : merchants) {
-            Long offTotal = offLineOrderRepository.countMerchantTotal(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            MerchantScanPayWay payWay = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
+            Long offTotal = null;
+            Long wxTransfer = null;
+            Long offScore = null;
+            if(payWay==null) {
+                offTotal = offLineOrderRepository.countMerchantTotal(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+                wxTransfer = offLineOrderRepository.countMerchantWxTransfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());            // 微信扫码总入账
+                offScore = offLineOrderRepository.countMerchantOffScore(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            }else {
+                offTotal = scanCodeOrderRepository.countMerchantTotal(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+                wxTransfer = scanCodeOrderRepository.countMerchantWxTransfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+                offScore =  scanCodeOrderRepository.countMerchantOffScore(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            }
             Long posTotal = posOrderRepository.countMerchantPosTotal(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
             Double totalTransfer = (offTotal+posTotal) * 0.01;                      // 总入账
-            Long wxTransfer = offLineOrderRepository.countMerchantWxTransfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());            // 微信扫码总入账
             Long posCardTransfer = posOrderRepository.countMerchantPosCardTransfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());      // pos 刷卡
             Long wxMobileTransfer = posOrderRepository.countWxMobileTranfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());             // pos 移动 - 微信
             Long aliMobileTransfer = posOrderRepository.countAliMobileTranfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());           // pos 移动 - 阿里
             Double mobileTransfer = (wxMobileTransfer+aliMobileTransfer)*0.01;
-            Long offScore = offLineOrderRepository.countMerchantOffScore(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
             Long posScore = posOrderRepository.countAliMobileTranfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
             Double totalScore = (offScore+posScore) * 0.01;
             MerchantOrderDto merchantOrderDto = new MerchantOrderDto();

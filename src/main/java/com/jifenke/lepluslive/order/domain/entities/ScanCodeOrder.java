@@ -61,10 +61,8 @@ public class ScanCodeOrder {
   private String merchantRate;  //商户号当时的佣金费率
 
   @NotNull
-
   @ManyToOne
   private Category orderType;//订单类型
-
   @NotNull
   private Long totalPrice = 0L;
 

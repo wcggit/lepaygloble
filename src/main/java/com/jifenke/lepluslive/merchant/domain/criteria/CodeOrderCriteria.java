@@ -4,6 +4,8 @@ import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 /**
  * 扫码支付
  * Created by tqy on 16/12/12.
@@ -13,7 +15,16 @@ public class CodeOrderCriteria {
     /**
      * 订单数据
      */
-    private Page<OffLineOrder> page;
+    private Page<OffLineOrder> page;//此字段不用了
+
+    private List<Object[]> listCodeOrder;//订单数据
+
+    public List<Object[]> getListCodeOrder() {
+        return listCodeOrder;
+    }
+    public void setListCodeOrder(List<Object[]> listCodeOrder) {
+        this.listCodeOrder = listCodeOrder;
+    }
 
     /**
      * 门店ID
@@ -23,7 +34,7 @@ public class CodeOrderCriteria {
     /**
      * 订单类型
      */
-    private Integer rebateWay; //1 代表非会员消费 2 代表会员订单 3 导流订单 4 会员普通订单
+    private String rebateWay; //1 代表非会员消费 2 代表会员订单 3 导流订单 4 会员普通订单
 
     /**
      * 支付方式
@@ -52,13 +63,28 @@ public class CodeOrderCriteria {
     private Double transferMoneyHB;
 
     private Integer state = 0; //支付状态
-    /**
-     * 当前第几页
-     */
-    private Integer currentPage;
-    private Integer pageSize = 10;
+
+    private Integer currentPage;//当前第几页
+    private Integer pageSize = 10;//每页size
+    private Integer totalPages;//总页数
+    private Integer totalCount;//总记录数
 
 
+    public Integer getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(Integer totalCount) {
+        this.totalCount = totalCount;
+    }
+
+    public Integer getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(Integer totalPages) {
+        this.totalPages = totalPages;
+    }
 
     public Integer getCurrentPage() {
         return currentPage;
@@ -108,11 +134,11 @@ public class CodeOrderCriteria {
         this.payWay = payWay;
     }
 
-    public Integer getRebateWay() {
+    public String getRebateWay() {
         return rebateWay;
     }
 
-    public void setRebateWay(Integer rebateWay) {
+    public void setRebateWay(String rebateWay) {
         this.rebateWay = rebateWay;
     }
 
