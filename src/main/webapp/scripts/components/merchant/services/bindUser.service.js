@@ -25,6 +25,13 @@ angular.module('lepayglobleApp')
                     deferred.resolve(response);
                 });
                 return deferred.promise;
+            },
+            countMerchantBindUsers:function() {
+                var deferred = $q.defer();
+                $http.get('/api/merchantUser/findLockerInfoByMerchantUser').success(function (response) {
+                    deferred.resolve(response);
+                });
+                return deferred.promise;
             }
         }
 });

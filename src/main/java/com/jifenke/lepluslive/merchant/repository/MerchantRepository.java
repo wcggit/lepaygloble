@@ -82,10 +82,22 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
 
     /**
      * 查询商户旗下所有的会员锁定总数
-     *
      * @param obj
      * @return
      */
     @Query(value = "SELECT count(a.id) from le_jia_user a where a.bind_merchant_id in (?1)", nativeQuery = true)
     Integer findMerchantTotalMember(List<Object> obj);
+
+    /**
+     * 查询商户旗下门店今日锁定总数
+     */
+    @Query(value="SELECT count(id) from le_jia_user  where bind_merchant_id in (?1) and to_days(bind_merchant_date) = to_days(now())", nativeQuery = true)
+    Integer findMerchantDailyMember(List<Object> obj);
+
+
+    /**
+     *  查询商户旗下锁定会员ID
+     */
+    @Query(value = "SELECT id from le_jia_user a where a.bind_merchant_id in (?1)",nativeQuery = true)
+    List findMerchantMemberIds(List<Object> obj);
 }

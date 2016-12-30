@@ -6,21 +6,20 @@
 
 angular.module('lepayglobleApp')
     .controller('invitationRecordController', function ($scope, $state, $rootScope, $location,Principal,Auth,$http,HomePage,bindUser) {
-        // 商户数据信息
-        HomePage.getMerchantData().then(function(data){
-            var data = data.data;
-            $scope.srgl = {
-                firNum:  data.transfering / 100.0,                      // 今日入账
-                secNum:  data.totalTransfering / 100.0,                 // 总共入账
-                thirNum: data.totalSales / 100.0,                       // 会员消费
-                fouNum: data.totalCount,                                // 会员消费次数
-                fifNum:  data.totalRebate / 100.0                       // 红包总额
-            };
-        });
         // 门店列表
         HomePage.getMerchantsInfo().then(function(response) {
             var data = response.data;
             $scope.merchants = data;
+        });
+        // 商户数据信息
+        bindUser.countMerchantBindUsers().then(function(data){
+            var data = data.data;
+            $scope.lockCount = {
+                firNum:  data.dailyCount,                      // 今日邀请会员
+                secNum:  data.totalCount,                      // 累计邀请会员
+                thirNum: data.totalScorea / 100.0,                     // 注册获得红包
+                fouNum: data.totalScoreb                               // 注册获得积分
+            };
         });
         // 日期选择
         $('#completeDate').daterangepicker({
