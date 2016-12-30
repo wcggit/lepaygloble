@@ -2,25 +2,25 @@
     <div class="col-md-3">
         <div class="out-div">
             <p class="text-center">今日邀请会员</p>
-            <p class="text-center">34</p>
+            <p class="text-center">{{lockCount.firNum}}</p>
         </div>
     </div>
     <div class="col-md-3">
         <div class="out-div">
             <p class="text-center">累计邀请会员</p>
-            <p class="text-center">125</p>
+            <p class="text-center">{{lockCount.secNum}}</p>
         </div>
     </div>
     <div class="col-md-3">
         <div class="out-div">
             <p class="text-center">注册获得红包</p>
-            <p class="text-center">￥1200.00</p>
+            <p class="text-center">￥{{lockCount.thirNum}}</p>
         </div>
     </div>
     <div class="col-md-3">
         <div class="out-div">
             <p class="text-center">注册获得积分</p>
-            <p class="text-center">1200</p>
+            <p class="text-center">{{lockCount.fouNum}}</p>
         </div>
     </div>
 </div>
@@ -31,9 +31,9 @@
         <div class="form-group col-md-4">
             <label>门店名称</label>
             <div class="input-group col-md-6 select-style">
-                <select class="form-control">
-                    <option value="-1">某店</option>
-                    <option value="0">某某店</option>
+                <select class="form-control" id="selMerchant">
+                    <option value="">请选择</option>
+                    <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>

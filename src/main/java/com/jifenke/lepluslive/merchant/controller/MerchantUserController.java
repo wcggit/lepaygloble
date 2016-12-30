@@ -5,8 +5,10 @@ import com.jifenke.lepluslive.merchant.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
+import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
+import com.jifenke.lepluslive.merchant.service.MerchantUserService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ public class MerchantUserController {
     private MerchantService merchantService;
     @Inject
     private MerchantUserResourceService merchantUserResourceService;
+    @Inject
+    private MerchantUserService merchantUserService;
 
     /**
      *  获取当前登录用户信息
@@ -109,5 +113,18 @@ public class MerchantUserController {
     public LejiaResult pageFindMerchantInfoByMerchantUser(@RequestBody MerchantCriteria merchantCriteria){
         return LejiaResult.ok(merchantUserResourceService.pageFindMerchantInfoByMerchantUser(merchantCriteria));
     }
-
+    /**
+     * 获取当前商户下 :
+     *      1.今日邀请会员;
+     *      2.累计邀请会员;
+     *      3.注册邀请红包;
+     *      4.注册获得积分.
+     */
+    @RequestMapping(value = "/merchantUser/findLockerInfoByMerchantUser",method = RequestMethod.GET)
+    @ResponseBody
+    public LejiaResult findLockerInfoByMerchantUser() {
+        String merchantName = SecurityUtils.getCurrentUserLogin();
+        Map map = merchantUserService.getLockerInfoByMerchant(merchantName);
+        return LejiaResult.ok(map);
+    }
 }
