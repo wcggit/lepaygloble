@@ -21,19 +21,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="tr-empty"><td class="text-center" colspan="8">暂无数据！</td></tr>
-                <tr class="tr-noEmpty">
-                    <td>一拼江南棉花糖KTV</td>
-                    <td>北京市朝阳区朝阳路锐城国际0917室</td>
+                <tr class="tr-empty" id="notData"><td class="text-center" colspan="8">暂无数据！</td></tr>
+                <tr class="tr-noEmpty" ng-repeat="x in merchantData">
+                    <td>{{x[0]}}</td>
+                    <td>{{x[1]}}</td>
                     <td>
-                        <p>孙天奇</p>
-                        <p>15227162563</p>
+                        <p>{{x[2]}}</p>
+                        <p>{{x[3]}}</p>
                     </td>
-                    <td>010-234567899</td>
-                    <td>已开通</td>
-                    <td>已开启</td>
-                    <td>500</td>
-                    <td>￥200.22</td>
+                    <td>{{x[4]}}</td>
+                    <td>{{x[5]==0?'未开通':'已开通'}}</td>
+                    <td>{{x[6]==0?'未开启':'已开启'}}</td>
+                    <td>{{x[7]}}</td>
+                    <td>{{x[8]/100 | currency:'￥'}}</td>
                 </tr>
                 </tbody>
             </table>

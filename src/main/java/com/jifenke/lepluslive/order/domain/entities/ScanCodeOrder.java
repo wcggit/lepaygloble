@@ -1,15 +1,11 @@
 package com.jifenke.lepluslive.order.domain.entities;
 
 import com.jifenke.lepluslive.global.util.MvUtil;
-
-import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.weixin.domain.entities.Category;
-
 import org.hibernate.annotations.GenericGenerator;
-
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.merchant.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.merchant.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
@@ -107,6 +108,11 @@ public class MerchantUserController {
         return LejiaResult.ok(result);
     }
 
+    @RequestMapping(value = "/merchantUser/pageFindMerchantInfoByMerchantUser")
+    @ResponseBody
+    public LejiaResult pageFindMerchantInfoByMerchantUser(@RequestBody MerchantCriteria merchantCriteria){
+        return LejiaResult.ok(merchantUserResourceService.pageFindMerchantInfoByMerchantUser(merchantCriteria));
+    }
     /**
      * 获取当前商户下 :
      *      1.今日邀请会员;

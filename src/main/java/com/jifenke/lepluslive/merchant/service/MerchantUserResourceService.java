@@ -1,5 +1,7 @@
 package com.jifenke.lepluslive.merchant.service;
 
+import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
+import com.jifenke.lepluslive.merchant.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserResource;
@@ -9,6 +11,7 @@ import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository
 import com.jifenke.lepluslive.order.domain.entities.MerchantPos;
 import com.jifenke.lepluslive.order.domain.entities.PosOrder;
 import com.jifenke.lepluslive.order.repository.PosOrderRepository;
+import com.jifenke.lepluslive.security.SecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,12 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -242,5 +243,18 @@ public class MerchantUserResourceService {
         Page<MerchantPos> page = merchantPosRepository.findAll(specification, pagerequest);
         posOrderCriteria.setPosPage(page);
         return posOrderCriteria;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public MerchantCriteria pageFindMerchantInfoByMerchantUser(MerchantCriteria merchantCriteria){
+        List<Object []> list = findMerchantsByMerchantUserSql(SecurityUtils.getCurrentUserLogin());
+        List<Object> mlist = new ArrayList<Object>();
+        for (int i =0;i<list.size();i++){
+            mlist.add(list.get(i)[0]);
+        }
+        List<Object []> aa = merchantUserResourceRepository.pageFindMerchantInfoByMerchantUser(mlist,(merchantCriteria.getCurrentPage()-1)*10);
+        merchantCriteria.setmList(aa);
+        merchantCriteria.setTotalPages(mlist.size()/10);
+        return merchantCriteria;
     }
 }

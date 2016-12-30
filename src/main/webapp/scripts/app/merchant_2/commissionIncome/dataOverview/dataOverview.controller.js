@@ -31,7 +31,6 @@ angular.module('lepayglobleApp')
                         angular.forEach(response.data.merchants,function(data){
                             $scope.merchants.push(data);
                         });
-                        console.log($scope.merchants);
                         dataOverviewCriteria.merchants = $scope.merchants;
                         dataOverviewCriteria.offset = dataOverviewCriteria.offset+1;
                     }

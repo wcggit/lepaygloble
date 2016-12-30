@@ -39,28 +39,30 @@ public class MerchantInvitationCodeController {
             BufferedImage backImage = ImageIO.read(back);
             Graphics2D g = backImage.createGraphics();
 //            new Thread(() -> {
-                InputStream qrCode = ImageLoad.returnStream(qrCodeUrl);
-                try {
-                    BufferedImage qrCodeImage = ImageIO.read(qrCode);
-                    int qrWidth = 770 ,qrHeight = 770;
-                    int
-                        x1 =
-                        new Long(Math.round((backImage.getWidth() - qrWidth) * 0.49)).intValue();
-                    int
-                        y1 =
-                        new Long(Math.round((backImage.getHeight() - qrHeight) * 0.59)).intValue();
+            InputStream qrCode = ImageLoad.returnStream(qrCodeUrl);
+            try {
+                BufferedImage qrCodeImage = ImageIO.read(qrCode);
+                int qrWidth = 770, qrHeight = 770;
+                int
+                    x1 =
+                    new Long(Math.round((backImage.getWidth() - qrWidth) * 0.49)).intValue();
+                int
+                    y1 =
+                    new Long(Math.round((backImage.getHeight() - qrHeight) * 0.59)).intValue();
 //                    lock.lock();
-                    g.drawImage(qrCodeImage, x1, y1, qrWidth, qrHeight, null);
-                    g.drawRoundRect(x1, y1, qrWidth, qrHeight, 20, 20);
-                    g.setStroke(new BasicStroke(1.0f));
-                    g.setColor(Color.white);
-                    g.drawRect(x1, y1, qrWidth, qrHeight);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }finally {
+                g.drawImage(qrCodeImage, x1, y1, qrWidth, qrHeight, null);
+                g.drawRoundRect(x1, y1, qrWidth, qrHeight, 20, 20);
+                g.setStroke(new BasicStroke(1.0f));
+                g.setColor(Color.white);
+                g.drawRect(x1, y1, qrWidth, qrHeight);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+
 //                    lock.unlock();
 //                    end.countDown();
-                }
+            }
 //            }).start();
             g.dispose();
             int len = 0;
