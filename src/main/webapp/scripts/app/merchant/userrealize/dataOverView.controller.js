@@ -79,12 +79,9 @@ angular.module('lepayglobleApp')
                             }else{
                                 alert("提现申请成功 !");
                                 $("#inputPassword1").val('');
+                                $scope.tx();
                             }
                         })
-                    };
-
-                    $scope.tx=function () {
-                        $("#tx").modal("toggle");
                     };
                 });
 
