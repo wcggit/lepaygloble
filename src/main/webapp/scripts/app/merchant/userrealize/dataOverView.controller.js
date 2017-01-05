@@ -51,7 +51,7 @@ angular.module('lepayglobleApp')
 
                     $scope.tx = function () {
                         $("#tx").modal("toggle");
-                                }
+                    }
                     Commission.getOnLineCommissionIncome().then(function (response) {
                         var data = response.data;
                         $scope.dOneDaySum = data.dOneDaySum;
@@ -59,6 +59,33 @@ angular.module('lepayglobleApp')
                         $scope.oneDayCount = data.oneDayCount;
                         $scope.totalCount = data.totalCount;
                     });
+
+
+                    //  提现功能
+                    $scope.withDraw=function() {
+                        var amount = $("#inputPassword1").val();
+                        if(amount<200) {
+                            return;
+                        }
+                        var data = 'amount='
+                            + encodeURIComponent($("#inputPassword1").val().trim());
+                        $http.post('/withdraw/merchant_withdraw', data, {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        }).success(function (response) {
+                            if(response.status==400){
+                                alert("服务繁忙,请稍后尝试!");
+                            }else{
+                                alert("提现申请成功 !");
+                                $("#inputPassword1").val('');
+                            }
+                        })
+                    };
+
+                    $scope.tx=function () {
+                        $("#tx").modal("toggle");
+                    };
                 });
 
 
