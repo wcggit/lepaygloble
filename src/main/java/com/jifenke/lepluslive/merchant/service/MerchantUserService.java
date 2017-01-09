@@ -68,4 +68,18 @@ public class MerchantUserService {
         map.put("totalScoreb",totalScoreb);
         return map;
     }
- }
+
+    /**
+     *  获取商户下的店主账号
+     */
+    public List<MerchantUser> findOwerAccount(Long merchnatUserId) {
+        return merchantUserRepository.findOwerAccount(merchnatUserId);
+    }
+
+    /**
+     *  获取商户下的收银员账号
+     */
+    public List<MerchantUser> findCashierAccount(Long merchantUserId) {
+        return merchantUserRepository.findCashierAccount(merchantUserId);
+    }
+}

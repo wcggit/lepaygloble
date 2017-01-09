@@ -1,11 +1,6 @@
 package com.jifenke.lepluslive.merchant.domain.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -26,7 +21,7 @@ public class MerchantUser {
     @ManyToOne
     private Merchant merchant;
 
-    private Integer type; //0收营员 1 店主 一个商户只有一个店主
+    private Integer type; // 9-系统管理员  8-管理员(商户)  2-子账号  【之前：0收营员 1 店主 一个商户只有一个店主】
 
     public Integer getType() {
         return type;
@@ -76,6 +71,11 @@ public class MerchantUser {
     private String bankName;            // 开户行
     private Long lockLimit;             // 锁定上限
     private Date createdDate;            // 创建时间
+
+    @OneToOne
+    private MerchantBank merchantBank;  //  银行卡号及名称
+
+    private String payee; //收款人
 
     @ManyToOne
     private City city;                  // 所在城市
@@ -144,4 +144,29 @@ public class MerchantUser {
         this.merchantName = merchantName;
     }
 
+    private Long createUserId;                                                                  // 所属商户（管理员） ID
+
+    public Long getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public MerchantBank getMerchantBank() {
+        return merchantBank;
+    }
+
+    public void setMerchantBank(MerchantBank merchantBank) {
+        this.merchantBank = merchantBank;
+    }
+
+    public String getPayee() {
+        return payee;
+    }
+
+    public void setPayee(String payee) {
+        this.payee = payee;
+    }
 }

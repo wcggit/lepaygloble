@@ -25,4 +25,16 @@ public interface MerchantUserRepository extends JpaRepository<MerchantUser, Long
      */
     @Query(value = "SELECT a.lock_limit from merchant_user a where a.`name`=?1",nativeQuery = true)
     Integer findLockLimitByName(String userName);
+
+    /**
+     * 查询收银员账号
+     */
+    @Query(value="SELECT * FROM merchant_user WHERE type = 0 and create_user_id = ?1 ",nativeQuery = true)
+    List<MerchantUser> findCashierAccount(Long merchantUserId);
+    /**
+     *  查询店主账号
+     */
+    @Query(value="SELECT * FROM merchant_user WHERE type = 1 and create_user_id = ?1 ",nativeQuery = true)
+    List<MerchantUser> findOwerAccount(Long merchantUserId);
+
 }

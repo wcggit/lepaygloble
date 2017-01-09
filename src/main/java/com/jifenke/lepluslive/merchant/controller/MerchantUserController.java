@@ -127,4 +127,33 @@ public class MerchantUserController {
         Map map = merchantUserService.getLockerInfoByMerchant(merchantName);
         return LejiaResult.ok(map);
     }
+
+    /**
+     *  获取当前商户下的店主账号
+     */
+    @RequestMapping(value="/merchantUser/owerAccount")
+    public LejiaResult getOwerAccount() {
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        List<MerchantUser> owerAccount = merchantUserService.findOwerAccount(merchantUser.getId());
+        return LejiaResult.ok(owerAccount);
+    }
+
+    /**
+     *  获取当前商户下的收银员账号
+     */
+    @RequestMapping(value="/merchantUser/cashierAccount")
+    public LejiaResult getCashierAccount() {
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        List<MerchantUser> cashierAccount = merchantUserService.findCashierAccount(merchantUser.getId());
+        return LejiaResult.ok(cashierAccount);
+    }
+
+    /**
+     *  根据门店获取银行信息
+     */
+    @RequestMapping(value="/merchantUser/merchantBankInfo")
+    public LejiaResult getMerchantBankInfo(Long id) {
+        Merchant merchant = merchantService.findMerchantById(id);
+        return LejiaResult.ok(merchant);
+    }
 }

@@ -381,4 +381,20 @@ public class MerchantController {
         map.put("merchantCodes",merchantCodes);
         return LejiaResult.ok(map);
     }
+
+    /**
+     *  查看当前登录账号的基本信息
+     */
+    @RequestMapping(value="/merchantUser/merchantInfo")
+    public LejiaResult getMerchantInfo() {
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser dto = new MerchantUser();
+        dto.setId(merchantUser.getId());
+        dto.setMerchantName(dto.getMerchantName());
+        dto.setName(merchantUser.getName());
+        dto.setType(merchantUser.getType());
+        dto.setMerchantBank(merchantUser.getMerchantBank());
+        return LejiaResult.ok(dto);
+    }
+
 }
