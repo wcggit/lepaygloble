@@ -17,7 +17,7 @@
                 <p class="money-ttl">账户佣金余额</p>
 
                 <p class="money-content clearfix">
-                    <span class="pull-left">￥{{available}}</span>
+                    <span class="pull-left">￥{{availableResult}}</span>
                     <input type="button" class="btn btn-warning btn-sm pull-left tx" ng-click="tx()"
                            value="提现">
                     <a class="pull-left" ui-sref="withdrawdetails" ui-sref-opts="{reload: true}" href="/withdrawdetails">查看提现详情</a>
@@ -220,7 +220,7 @@
             <div class="modal-header bg-warning">
                 <button type="button" class="close" data-dismiss="modal"><span
                     aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">提现余额 <span>佣金余额：<font color="#fb991a">{{available}}</font>元</span>
+                <h4 class="modal-title">提现余额 <span>佣金余额：<font color="#fb991a">{{availableResult}}</font>元</span>
                 </h4>
             </div>
             <div class="modal-body">
