@@ -13,6 +13,8 @@ import com.jifenke.lepluslive.partner.domain.entities.PartnerWelfareLog;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
+import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
+import com.jifenke.lepluslive.withdraw.service.WithdrawService;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,6 +54,9 @@ public class PartnerController {
 
     @Inject
     SimpMessageSendingOperations messagingTemplate;
+
+    @Inject
+    WithdrawService withdrawService;
 
     @RequestMapping(value = "/partner", method = RequestMethod.GET)
     public
@@ -122,6 +128,12 @@ public class PartnerController {
         PartnerWallet partnerWallet = partnerService.findPartnerWalletByPartner(partner);
         Long bindLeJiaUser = leJiaUserService.countPartnerBindLeJiaUser(partner);
 
+        List<WithdrawBill> withdrawBillList=withdrawService.findByPartnerId(partner.getId());
+        Long withdrawTotalPrice=0l;
+        for(WithdrawBill withdrawBill:withdrawBillList){
+            withdrawTotalPrice=withdrawTotalPrice+withdrawBill.getTotalPrice();
+        }
+        result.put("withdrawTotalPrice", withdrawTotalPrice/100.0);
         result.put("available", partnerWallet.getAvailableBalance() / 100.0);
         result.put("total", partnerWallet.getTotalMoney() / 100.0);
         result.put("userLimit", partner.getUserLimit());

@@ -18,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by xf on 2016/9/18.
@@ -28,6 +29,19 @@ public class WithdrawService {
 
     @Inject
     private WithdrawRepository withdrawRepository;
+
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public List<WithdrawBill> findByMerchantId(Long id) {
+        return   withdrawRepository.findByMerchantId(id);
+    }
+
+
+
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public List<WithdrawBill> findByPartnerId(Long id) {
+        return   withdrawRepository.findByPartnerId(id);
+    }
+
 
     @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
     public void saveWithdrawBill(WithdrawBill withdrawBill) {

@@ -38,16 +38,36 @@ angular.module('lepayglobleApp')
                         $scope.perCommission = result['perCommission'];
                         $scope.bindMerchant = result['bindMerchant'];
                         $scope.bindLeJiaUser = result['bindLeJiaUser'];
-                        $scope.available = result['available'];
+                        $scope.available = toDecimal(result['available']);
+                        $scope.withdrawTotalPrice = toDecimal(result['withdrawTotalPrice']);
                         $scope.total = result['total'];
                         $scope.dayCommission = result['dayCommission'];
                         $scope.dayBindLeJiaUser = result['dayBindLeJiaUser'];
                         $scope.availableScoreA = result['availableScoreA'];
                         $scope.availableScoreB = result['availableScoreB'];
+                        $scope.availableResult = toDecimal($scope.available-$scope.withdrawTotalPrice);
                         var progressWidth1 = $scope.bindMerchant / $scope.merchantLimit * 100;
                         var progressWidth2 = $scope.bindLeJiaUser / $scope.userLimit * 100;
                         $('.progress-bar1').css('width', progressWidth1 + '%');
                         $('.progress-bar2').css('width', progressWidth2 + '%');
+
+                        function toDecimal(x) {
+                            var f = parseFloat(x);
+                            if (isNaN(f)) {
+                                return false;
+                            }
+                            var f = Math.round(x*100)/100;
+                            var s = f.toString();
+                            var rs = s.indexOf('.');
+                            if (rs < 0) {
+                                rs = s.length;
+                                s += '.';
+                            }
+                            while (s.length <= rs + 2) {
+                                s += '0';
+                            }
+                            return s;
+                        }
                     });
 
                     Partner.getMerchantTop5(0).then(function (result) {
@@ -62,8 +82,12 @@ angular.module('lepayglobleApp')
                     };
 
                     $scope.tx = function () {
-                        $("#tx").modal("toggle");
-                    };
+                        var withdrawTotalPrice=$scope.withdrawTotalPrice;
+                        var available= $scope.available;
+                        if(available-withdrawTotalPrice>=200){
+                            $("#tx").modal("toggle");
+                        }
+                    }
 
                     // 提现功能
                     $scope.withDraw = function () {
@@ -84,6 +108,43 @@ angular.module('lepayglobleApp')
                                 alert("提现申请成功 !");
                                 $("#inputPassword1").val('');
                                 $scope.tx();
+                                Partner.getPartnerHomePageData().then(function (result) {
+                                    $scope.userLimit = result['userLimit'];
+                                    $scope.merchantLimit = result['merchantLimit'];
+                                    $scope.perCommission = result['perCommission'];
+                                    $scope.bindMerchant = result['bindMerchant'];
+                                    $scope.bindLeJiaUser = result['bindLeJiaUser'];
+                                    $scope.available = toDecimal(result['available']);
+                                    $scope.withdrawTotalPrice = toDecimal(result['withdrawTotalPrice']);
+                                    $scope.total = result['total'];
+                                    $scope.dayCommission = result['dayCommission'];
+                                    $scope.dayBindLeJiaUser = result['dayBindLeJiaUser'];
+                                    $scope.availableScoreA = result['availableScoreA'];
+                                    $scope.availableScoreB = result['availableScoreB'];
+                                    $scope.availableResult = toDecimal($scope.available-$scope.withdrawTotalPrice);
+                                    var progressWidth1 = $scope.bindMerchant / $scope.merchantLimit * 100;
+                                    var progressWidth2 = $scope.bindLeJiaUser / $scope.userLimit * 100;
+                                    $('.progress-bar1').css('width', progressWidth1 + '%');
+                                    $('.progress-bar2').css('width', progressWidth2 + '%');
+
+                                    function toDecimal(x) {
+                                        var f = parseFloat(x);
+                                        if (isNaN(f)) {
+                                            return false;
+                                        }
+                                        var f = Math.round(x*100)/100;
+                                        var s = f.toString();
+                                        var rs = s.indexOf('.');
+                                        if (rs < 0) {
+                                            rs = s.length;
+                                            s += '.';
+                                        }
+                                        while (s.length <= rs + 2) {
+                                            s += '0';
+                                        }
+                                        return s;
+                                    }
+                                });
                             }
                         })
                     };

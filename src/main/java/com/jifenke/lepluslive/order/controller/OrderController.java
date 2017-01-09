@@ -13,6 +13,8 @@ import com.jifenke.lepluslive.order.domain.criteria.OrderShareCriteria;
 import com.jifenke.lepluslive.order.service.OffLineOrderService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
+import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
+import com.jifenke.lepluslive.withdraw.service.WithdrawService;
 import org.springframework.data.domain.Page;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,10 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.inject.Inject;
 
@@ -54,6 +53,8 @@ public class OrderController {
     @Inject
     SimpMessageSendingOperations messagingTemplate;
 
+    @Inject
+    WithdrawService withdrawService;
 
     @RequestMapping(value = "/order/todayOrderDetail", method = RequestMethod.GET)
     public LejiaResult getTodayOrderDetail() {
@@ -189,7 +190,12 @@ public class OrderController {
         Long currentBind = leJiaUserService.countBindMerchant(merchant);
 
         Map map = new HashMap<>();
-
+        List<WithdrawBill> withdrawBillList=withdrawService.findByMerchantId(merchant.getId());
+        Long withdrawTotalPrice=0l;
+        for(WithdrawBill withdrawBill:withdrawBillList){
+            withdrawTotalPrice=withdrawTotalPrice+withdrawBill.getTotalPrice();
+        }
+        map.put("withdrawTotalPrice", withdrawTotalPrice);
         map.put("available", merchantWallet.getAvailableBalance());
         map.put("totalCommission", merchantWallet.getTotalMoney());
         map.put("userLimit", merchant.getUserLimit());
