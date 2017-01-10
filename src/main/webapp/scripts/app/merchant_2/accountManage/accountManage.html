@@ -86,7 +86,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 col-sm-offset-1 control-label">账户名称</label>
                         <div class="col-sm-4">
-                            <input type="name" class="form-control" id="username" placeholder="请输入账户名称">
+                            <input type="name"  class="form-control" id="username" placeholder="请输入账户名称" ng-blur="checkNameRepeat()">
                         </div>
                     </div>
                     <div class="form-group">
@@ -111,7 +111,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 col-sm-offset-1 control-label">管理员登陆密码</label>
                         <div class="col-sm-4">
-                            <input type="password" class="form-control" placeholder="请输入您当前账号密码">
+                            <input type="password" class="form-control" id="thisPwd"placeholder="请输入您当前账号密码" ng-blur="checkInfo()">
                         </div>
                     </div>
                     <div class="form-group">

@@ -1,9 +1,11 @@
 package com.jifenke.lepluslive.merchant.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.merchant.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantBank;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
@@ -18,6 +20,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -155,5 +158,53 @@ public class MerchantUserController {
     public LejiaResult getMerchantBankInfo(Long id) {
         Merchant merchant = merchantService.findMerchantById(id);
         return LejiaResult.ok(merchant);
+    }
+
+    /**
+     *  校验账号密码
+     */
+    @RequestMapping(value = "/merchantUser/checkInfo",method = RequestMethod.POST)
+    public LejiaResult checkUserInfo(@RequestBody String passwd) {
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        String md5Pwd = MD5Util.MD5Encode(passwd,null);
+        if(merchantUser.getPassword().equals(md5Pwd)) {
+            return LejiaResult.ok();
+        }else {
+            return LejiaResult.build(400,"密码错误");
+        }
+    }
+
+    /**
+     *  创建账号
+     */
+    @RequestMapping(value="/merchantUser/createAccount",method = RequestMethod.POST)
+    public LejiaResult createAccount(@RequestBody MerchantUser merchantUser) {
+        try{
+            MerchantUser user = merchantUserService.findByName(merchantUser.getName());
+            if(user!=null) {
+                return LejiaResult.build(400,"保存失败 ！");
+            }
+            MerchantUser currentUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+            merchantUser.setCreateUserId(currentUser.getId());
+            merchantUser.setCreatedDate(new Date());
+            merchantService.saveUserAccount(merchantUser);
+            return LejiaResult.ok();
+        }catch (Exception e) {
+            e.printStackTrace();
+            return LejiaResult.build(400,"保存失败 ！");
+        }
+    }
+
+    /**
+     * 校验用户名是否重复
+     */
+    @RequestMapping(value = "/merchantUser/checkRepeat",method = RequestMethod.POST)
+    public LejiaResult checkUserRepeat(@RequestBody String username) {
+        MerchantUser user = merchantUserService.findByName(username);
+        if(user==null) {
+            return LejiaResult.ok();
+        }else {
+            return LejiaResult.build(400,"用户名已存在");
+        }
     }
 }

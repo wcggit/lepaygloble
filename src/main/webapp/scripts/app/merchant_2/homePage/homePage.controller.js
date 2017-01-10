@@ -117,4 +117,13 @@ angular.module('lepayglobleApp')
             });
         }
 
+        //  获取当前账户信息
+        $scope.getCurrentLogin = function () {
+            $http.get("/api/merchantUser/merchantInfo").success(function (response) {
+                var data = response.data;
+                $scope.loginInfo = data;
+            });
+        }
+        $scope.getCurrentLogin();
+
     });

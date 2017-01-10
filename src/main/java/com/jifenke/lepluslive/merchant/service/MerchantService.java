@@ -86,6 +86,9 @@ public class MerchantService {
     @Inject
     private MerchantScanPayWayRepository merchantScanPayWayRepository;
 
+    @Inject
+    private MerchantBankRepository merchantBankRepository;
+
     /**
      * 获取商家详情
      */
@@ -338,6 +341,18 @@ public class MerchantService {
             return merchantRepository.findScanOrderListByMerchant(merchant.getId(),offset);
         }
 
+    }
+
+    /**
+     *  商户（管理员） 创建子账号
+     */
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
+    public void saveUserAccount(MerchantUser merchantUser) {
+        MerchantBank merchantBank = merchantUser.getMerchantBank();
+        merchantBankRepository.save(merchantBank);
+        merchantUser.setPassword(MD5Util.MD5Encode(merchantUser.getPassword(),null));
+        merchantUser.setMerchantBank(merchantBank);
+        merchantUserRepository.save(merchantUser);
     }
 
 }

@@ -12,10 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by wcg on 16/6/27.
@@ -72,6 +69,7 @@ public class MerchantUserService {
     /**
      *  获取商户下的店主账号
      */
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
     public List<MerchantUser> findOwerAccount(Long merchnatUserId) {
         return merchantUserRepository.findOwerAccount(merchnatUserId);
     }
@@ -79,7 +77,16 @@ public class MerchantUserService {
     /**
      *  获取商户下的收银员账号
      */
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
     public List<MerchantUser> findCashierAccount(Long merchantUserId) {
         return merchantUserRepository.findCashierAccount(merchantUserId);
+    }
+
+    /**
+     *  根据用户名查询商户
+     */
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public MerchantUser findByName(String username) {
+        return merchantUserRepository.findByUserName(username);
     }
 }

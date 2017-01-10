@@ -20,7 +20,7 @@
                 </p>
                 <p class="money-content clearfix">
                     <span class="pull-left">¥{{available}}</span>
-                    <input type="button" class="btn btn-warning pull-left tx" data-target="#tx-success" data-toggle="modal" value="提现">
+                    <input type="button" class="btn btn-warning pull-left tx" data-target="#tx" data-toggle="modal" value="提现">
                     <a class="pull-left" ui-sref="withdrawRecord" ui-sref-opts="{reload: true}">查看提现详情</a>
                 </p>
             </div>
@@ -133,23 +133,22 @@
         <div class="modal-content">
             <div class="modal-header bg-warning">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">提现 <span>佣金余额：<font color="#fb991a">100.22</font>元</span></h4>
+                <h4 class="modal-title">提现 <span>佣金余额：<font color="#fb991a">¥{{available}}</font>元</span></h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
                         <label for="inputPassword1" class="col-sm-3 col-sm-offset-1 control-label">提现金额（元）</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="inputPassword1" placeholder="请输入金额">
-
+                            <input type="number" class="form-control" id="inputPassword1" placeholder="请输入金额"  value="0"/>
                         </div>
                         <div class="col-sm-3"><span class="ts">至少提现200元</span></div>
                     </div>
                     <div class="form-group">
                         <label  class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
                         <div class="col-sm-7">
-                            <p class="text-muted" class="form-control">xxxxxxxxxxxxxxxxxxx{{bank}}</p>
-                            <p class="text-muted" class="form-control">农行</p>
+                            <p class="text-muted" class="form-control">****** ******** {{loginInfo.merchantBank.bankNumber| limitTo:-4 }}</p>
+                            <p class="text-muted" class="form-control">{{loginInfo.merchantBank.bankName}}</p>
                         </div>
 
                     </div>

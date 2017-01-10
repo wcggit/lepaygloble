@@ -152,8 +152,13 @@ angular.module('lepayglobleApp')
                 alert("请输入密码");
                 return;
             }
+            if(passwd.length<6) {
+                alert("密码长度不小于 6 位");
+                return;
+            }
             if(repasswd!=passwd) {
                 alert("两次输入的密码不一致");
+                return;
             }
             if(bankName!=null && bankName!='') {
                 merchantBank.bankName = bankName;
@@ -167,6 +172,56 @@ angular.module('lepayglobleApp')
                 alert("请输入银行卡号");
                 return;
             }
+            if(!$scope.checkInfo()) {
+                return;
+            }
+            if(!$scope.checkNameRepeat()) {
+                return;
+            }
             merchantUser.merchantBank = merchantBank;
+            $http.post('api/merchantUser/createAccount', merchantUser).success(function (response) {
+                console.log(JSON.stringify(response));
+                if(response.status==200){
+                    alert("账号保存成功！");
+                    window.location.reload();
+                }else {
+                    alert("账号创建失败 ！");
+                }
+            })
+        }
+
+        // 校验当前用户
+        $scope.checkInfo = function () {
+            var data = $("#thisPwd").val();
+            var flag = true;
+            $http.post('api/merchantUser/checkInfo', data).success(function (response) {
+                if(response.status==400){
+                    alert("当前账号密码不正确,请重新输入！");
+                    $("#thisPwd").val('');
+                    flag =false;
+                }
+            })
+            return flag;
+        }
+
+        $scope.checkNameRepeat = function () {
+            var username = $("#username").val();
+            var flag = true;
+            $http.post('api/merchantUser/checkRepeat', username).success(function (response) {
+                if(response.status==400){
+                    alert("用户名已存在,换个试试吧");
+                    $("#username").val('');
+                    flag =false;
+                }
+            })
+            return flag;
+        }
+        $scope.resetAll = function () {
+            $("#username").val('');
+            $("#passwd").val('');
+            $("#repasswd").val('');
+            $("#bankName").val('');
+            $("#bankNum").val('');
+            $("#selBankName").val('');
         }
     })
