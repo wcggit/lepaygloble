@@ -18,22 +18,17 @@ import com.jifenke.lepluslive.order.service.LejiaOrderService;
 import com.jifenke.lepluslive.order.service.OffLineOrderService;
 import com.jifenke.lepluslive.order.service.PosOrderSerivce;
 import com.jifenke.lepluslive.security.SecurityUtils;
-
 import org.springframework.data.domain.Page;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.inject.Inject;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import javax.inject.Inject;
 
 /**
  * Created by wcg on 16/6/29.
@@ -360,6 +355,39 @@ public class OrderController {
     @RequestMapping(value="/lejiaOrder/merchant",method = RequestMethod.POST)
     public LejiaResult getMerchantOrderDataByCriteria(@RequestBody DailyOrderCriteria dailyOrderCriteria) {
         // 设置默认时间 - 最近七天
+        setDefaultDailyCriteria(dailyOrderCriteria);
+        //  根据条件查询账单
+        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        List<MerchantOrderDto> orderDatas = lejiaOrderService.findMerchantOrderData(dailyOrderCriteria,merchants);
+        return LejiaResult.ok(orderDatas);
+    }
+
+    /**
+     *  导出指定门店订单数据 Excel
+     */
+    @RequestMapping(value="/lejiaOrder/merchant/export",method = RequestMethod.POST)
+    public void exportOrderExcel(@RequestBody DailyOrderCriteria dailyOrderCriteria,HttpServletResponse response) {
+        String [] titles1 = {"订单编号","交易完成时间","订单状态","支付渠道","消费金额","使用红包","实际支付","订单类型","微信手续费","红包手续费","总入账金额","微信支付入账","红包支付入账","退款时间"};
+        String [] titles2 = {"退款单号","退款完成时间","订单编号","订单类型","订单完成时间","微信渠道退款","微信渠道退款","微信支付","红包支付少转账"};
+        String [] titles3 = {"微信支付","红包支付","微信退款","红包退款","微信支付入账","红包支付入账"};
+        // 设置默认时间 - 最近七天
+        setDefaultDailyCriteria(dailyOrderCriteria);
+        // 导出 Excel
+        String filename = "t";
+        response.setContentType("application/binary;charset=ISO8859_1");
+        response.setHeader("Content-disposition", "attachment; filename=" + filename + ".xls");
+        try {
+            ServletOutputStream outputStream = response.getOutputStream();
+            lejiaOrderService.exportOrderExcel(outputStream,titles1,titles2,titles3,dailyOrderCriteria);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public DailyOrderCriteria setDefaultDailyCriteria(DailyOrderCriteria dailyOrderCriteria) {
         if(dailyOrderCriteria.getStartDate()==null||dailyOrderCriteria.getEndDate()==null) {
             Date endDate = new Date();
             Date startDate = new Date();
@@ -368,10 +396,6 @@ public class OrderController {
             dailyOrderCriteria.setStartDate(simpleDateFormat.format(startDate));
             dailyOrderCriteria.setEndDate(simpleDateFormat.format(endDate));
         }
-        //  根据条件查询账单
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
-        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
-        List<MerchantOrderDto> orderDatas = lejiaOrderService.findMerchantOrderData(dailyOrderCriteria,merchants);
-        return LejiaResult.ok(orderDatas);
+        return dailyOrderCriteria;
     }
 }

@@ -98,4 +98,12 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
      */
     @Query(value = "select merchant_id,sum(true_pay),sum(total_price) from off_line_order where state = 1 and merchant_id = ?1 ", nativeQuery = true)
     List<Object[]> findMyCodePriceByMerchantid(Long merchantId);
+
+
+    /**
+     *  查询指定门店的订单记录 （指定时间段）
+     */
+    @Query(value=" select * from off_line_order where merchant_id = ?1 and complete_date between ?2 and ?3 and (state = 1 or  state = 2) ",nativeQuery = true)
+    List<OffLineOrder> findByMerchantAndDate(Long merchantId,String startTime,String endTime);
 }
+

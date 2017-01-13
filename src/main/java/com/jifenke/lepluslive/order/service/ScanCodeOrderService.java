@@ -1,17 +1,14 @@
 package com.jifenke.lepluslive.order.service;
 
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
-import com.jifenke.lepluslive.merchant.domain.criteria.CommissionDetailsCriteria;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.List;
 
 /**
  * Created by tqy on 2016/12/27.
@@ -143,6 +140,5 @@ public class ScanCodeOrderService {
 
         return codeOrderCriteria;
     }
-
 
 }
