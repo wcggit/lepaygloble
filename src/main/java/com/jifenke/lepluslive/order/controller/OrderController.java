@@ -369,7 +369,7 @@ public class OrderController {
     @RequestMapping(value="/lejiaOrder/merchant/export",method = RequestMethod.POST)
     public void exportOrderExcel(@RequestBody DailyOrderCriteria dailyOrderCriteria,HttpServletResponse response) {
         String [] titles1 = {"订单编号","交易完成时间","订单状态","支付渠道","消费金额","使用红包","实际支付","订单类型","微信手续费","红包手续费","总入账金额","微信支付入账","红包支付入账","退款时间"};
-        String [] titles2 = {"退款单号","退款完成时间","订单编号","订单类型","订单完成时间","微信渠道退款","微信渠道退款","微信支付","红包支付少转账"};
+        String [] titles2 = {"退款单号","退款完成时间","订单编号","订单类型","订单完成时间","微信渠道退款","微信渠道退款","微信支付少转账","红包支付少转账"};
         String [] titles3 = {"微信支付","红包支付","微信退款","红包退款","微信支付入账","红包支付入账"};
         // 设置默认时间 - 最近七天
         setDefaultDailyCriteria(dailyOrderCriteria);

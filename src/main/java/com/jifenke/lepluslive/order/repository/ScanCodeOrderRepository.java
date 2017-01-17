@@ -66,9 +66,22 @@ public interface ScanCodeOrderRepository extends JpaRepository<ScanCodeOrder,Str
     Long countMerchantOffScore(Long id,String startDate,String endDate);
 
     /**
+     * 查询指定门店 红包实际支付
+     */
+    @Query(value="select IFNULL(sum(true_score),0) from scan_code_order where merchant_id =?1 and complete_date between  ?2 and ?3",nativeQuery = true)
+    Long countMerchantCustScore(Long id,String startDate,String endDate);
+
+
+    /**
+     * 查询指定门店 微信实际支付
+     */
+    @Query(value="select IFNULL(sum(true_pay),0) from scan_code_order where merchant_id = ?1 and complete_date between ?2 and ?3",nativeQuery = true)
+    Long countMerchantWxCustTransfer(Long id,String startDate,String endDate);
+
+
+    /**
      *  查询指定门店 订单记录(指定时间段)
      */
     @Query(value="select * from scan_code_order where merchant_id =?1 and complete_date between  ?2 and ?3",nativeQuery = true)
     List<ScanCodeOrder> findByMerchantAndDate(Long merchantId,String startDate,String endDate);
-
 }

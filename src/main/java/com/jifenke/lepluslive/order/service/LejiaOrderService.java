@@ -8,10 +8,8 @@ import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
-import com.jifenke.lepluslive.order.repository.MerchantScanPayWayRepository;
-import com.jifenke.lepluslive.order.repository.OffLineOrderRepository;
-import com.jifenke.lepluslive.order.repository.PosOrderRepository;
-import com.jifenke.lepluslive.order.repository.ScanCodeOrderRepository;
+import com.jifenke.lepluslive.order.domain.entities.ScanCodeRefundOrder;
+import com.jifenke.lepluslive.order.repository.*;
 import org.apache.poi.hssf.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -41,6 +39,8 @@ public class LejiaOrderService {
     private MerchantScanPayWayRepository merchantScanPayWayRepository;
     @Inject
     private ScanCodeOrderRepository scanCodeOrderRepository;
+    @Inject
+    private ScanCodeRefundOrderRepository scanCodeRefundOrderRepository;
 
     /**
      * 每日账单
@@ -270,7 +270,7 @@ public class LejiaOrderService {
                     contentCell5.setCellValue(new Double(offLineOrder.getTrueScore() * 0.01));
                     // 实际支付
                     HSSFCell contentCell6 = contentRow.createCell(6);
-                    contentCell6.setCellValue(new Double((offLineOrder.getTransferMoneyFromTruePay())));
+                    contentCell6.setCellValue(new Double((offLineOrder.getTransferMoneyFromTruePay())*0.01));
                     // 订单类型
                     HSSFCell contentCell7 = contentRow.createCell(7);
                     if (offLineOrder.getRebateWay() == 0 || offLineOrder.getRebateWay() == 2) {
@@ -299,13 +299,13 @@ public class LejiaOrderService {
                     }
                     // 总入账金额
                     HSSFCell contentCell10 = contentRow.createCell(10);
-                    contentCell10.setCellValue(offLineOrder.getTransferMoney());
+                    contentCell10.setCellValue(offLineOrder.getTransferMoney()*0.01);
                     //  微信支付入账
                     HSSFCell contentCell11 = contentRow.createCell(11);
-                    contentCell11.setCellValue(offLineOrder.getTransferMoneyFromTruePay());
+                    contentCell11.setCellValue(offLineOrder.getTransferMoneyFromTruePay()*0.01);
                     //  红包支付入账
                     HSSFCell contentCell12 = contentRow.createCell(12);
-                    contentCell12.setCellValue(offLineOrder.getTransferMoney()-offLineOrder.getTransferMoneyFromTruePay());
+                    contentCell12.setCellValue((offLineOrder.getTransferMoney()-offLineOrder.getTransferMoneyFromTruePay()*0.01));
                     //  退款时间
                     HSSFCell contentCell13 = contentRow.createCell(13);
                     if(offLineOrder.getState()!=2) {
@@ -349,7 +349,7 @@ public class LejiaOrderService {
                 contentCell5.setCellValue(new Double(scanCodeOrder.getTrueScore() * 0.01));
                 // 实际支付
                 HSSFCell contentCell6 = contentRow.createCell(6);
-                contentCell6.setCellValue(new Double((scanCodeOrder.getTransferMoneyFromTruePay())));
+                contentCell6.setCellValue(new Double((scanCodeOrder.getTransferMoneyFromTruePay())*0.01));
                 // 订单类型
                 HSSFCell contentCell7 = contentRow.createCell(7);
                 contentCell7.setCellValue(scanCodeOrder.getOrderType().getValue());
@@ -370,13 +370,13 @@ public class LejiaOrderService {
                 }
                 // 总入账金额
                 HSSFCell contentCell10 = contentRow.createCell(10);
-                contentCell10.setCellValue(scanCodeOrder.getTransferMoney());
+                contentCell10.setCellValue(scanCodeOrder.getTransferMoney()*0.01);
                 //  微信支付入账
                 HSSFCell contentCell11 = contentRow.createCell(11);
-                contentCell11.setCellValue(scanCodeOrder.getTransferMoneyFromTruePay());
+                contentCell11.setCellValue(scanCodeOrder.getTransferMoneyFromTruePay()*0.01);
                 //  红包支付入账
                 HSSFCell contentCell12 = contentRow.createCell(12);
-                contentCell12.setCellValue(scanCodeOrder.getTransferMoney()-scanCodeOrder.getTransferMoneyFromTruePay());
+                contentCell12.setCellValue((scanCodeOrder.getTransferMoney()-scanCodeOrder.getTransferMoneyFromTruePay()*0.01));
                 //  退款时间
                 HSSFCell contentCell13 = contentRow.createCell(13);
                 if(scanCodeOrder.getState()!=2) {
@@ -402,7 +402,40 @@ public class LejiaOrderService {
             cell.setCellValue(titles2[i]);
         }
         if (payWay != null) {
-
+            List<ScanCodeRefundOrder> refoundOrder =  scanCodeRefundOrderRepository.findScanOrderByMerchant(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            if(refoundOrder!=null && refoundOrder.size()>0) {
+                for (ScanCodeRefundOrder scanCodeRefundOrder : refoundOrder) {
+                    HSSFRow contentRow = sheet.createRow(sheet.getLastRowNum() + 1);
+                    ScanCodeOrder scanCodeOrder = scanCodeRefundOrder.getScanCodeOrder();
+                    // 退款单号
+                    HSSFCell contentCell0 = contentRow.createCell(0);
+                    contentCell0.setCellValue(scanCodeRefundOrder.getRefundOrderSid());
+                    // 退款完成时间
+                    HSSFCell contentCell1 = contentRow.createCell(1);
+                    contentCell1.setCellValue(scanCodeRefundOrder.getCompleteDate());
+                    // 订单编号
+                    HSSFCell contentCell2 = contentRow.createCell(2);
+                    contentCell2.setCellValue(scanCodeOrder.getId());
+                    // 订单类型
+                    HSSFCell contentCell3 = contentRow.createCell(3);
+                    contentCell3.setCellValue(scanCodeOrder.getOrderType().getValue());
+                    // 订单完成时间
+                    HSSFCell contentCell4 = contentRow.createCell(4);
+                    contentCell4.setCellValue(scanCodeOrder.getCompleteDate());
+                    // 微信渠道退款
+                    HSSFCell contentCell5 = contentRow.createCell(5);
+                    contentCell5.setCellValue(scanCodeOrder.getTransferMoney()*0.01);
+                    // 红包渠道退款
+                    HSSFCell contentCell6 = contentRow.createCell(6);
+                    contentCell6.setCellValue(scanCodeOrder.getTrueScore()*0.01);
+                    // 微信支付
+                    HSSFCell contentCell7 = contentRow.createCell(7);
+                    contentCell7.setCellValue(scanCodeOrder.getTransferMoneyFromTruePay()*0.01);
+                    // 红包支付少转账
+                    HSSFCell contentCell8 = contentRow.createCell(8);
+                    contentCell8.setCellValue(scanCodeOrder.getTransferMoneyFromScore()*0.01);
+                }
+            }
         }
         //  创建第三个表头
         HSSFRow headRow3 = sheet.createRow(sheet.getLastRowNum() + 1);
@@ -414,7 +447,46 @@ public class LejiaOrderService {
             cell = headRow3Title.createCell(i);
             cell.setCellValue(titles3[i]);
         }
-
+        // 数据汇总
+        HSSFRow cotentSum = sheet.createRow(sheet.getLastRowNum() + 1);
+        HSSFCell sumCell0 =cotentSum.createCell(0);
+        HSSFCell sumCell1 =cotentSum.createCell(1);
+        HSSFCell sumCell2 =cotentSum.createCell(2);
+        HSSFCell sumCell3 =cotentSum.createCell(3);
+        HSSFCell sumCell4 =cotentSum.createCell(4);
+        HSSFCell sumCell5 =cotentSum.createCell(5);
+        if(payWay!=null) {
+            Long custScore = scanCodeOrderRepository.countMerchantCustScore(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            Long custPay = scanCodeOrderRepository.countMerchantWxCustTransfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            Long trueScore = scanCodeOrderRepository.countMerchantOffScore(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            Long truePay = scanCodeOrderRepository.countMerchantWxTransfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            List<Object[]> refound = scanCodeRefundOrderRepository.countRefundMoneyAndScore(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            sumCell0.setCellValue(custScore*0.01);
+            sumCell1.setCellValue(custPay*0.01);
+            if(refound!=null) {
+                Object [] obj = refound.get(0);
+                Long refundMoney = new Long(obj[0].toString());
+                Long refundScore = new Long(obj[1].toString());
+                sumCell2.setCellValue(refundMoney*0.01);
+                sumCell3.setCellValue(refundScore*0.01);
+            }else{
+                sumCell2.setCellValue(0L);
+                sumCell3.setCellValue(0L);
+            }
+            sumCell4.setCellValue(trueScore*0.01);
+            sumCell5.setCellValue(truePay*0.01);
+        }else {
+            Long offCustScore = offLineOrderRepository.findCustScoreByMerchantAndDate(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            Long offCustPay = offLineOrderRepository.findCustPayByMerchantAndDate(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            Long trueScore = offLineOrderRepository.countMerchantOffScore(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            Long truePay = offLineOrderRepository.countMerchantWxTransfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+            sumCell0.setCellValue(offCustScore*0.01);
+            sumCell1.setCellValue(offCustPay*0.01);
+            sumCell2.setCellValue(0L);
+            sumCell3.setCellValue(0L);
+            sumCell4.setCellValue(trueScore*0.01);
+            sumCell5.setCellValue(truePay*0.01);
+        }
 
     }
 }
