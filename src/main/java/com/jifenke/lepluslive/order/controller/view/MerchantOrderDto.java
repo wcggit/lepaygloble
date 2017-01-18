@@ -16,6 +16,8 @@ public class MerchantOrderDto {
     private Double offScore;           //   红包入账 - 扫码
     private Double posScore;           //   红包入账 - pos 支付
 
+    private Long merchantId;            //  商户 id
+
     public String getMerchantName() {
         return merchantName;
     }
@@ -94,5 +96,13 @@ public class MerchantOrderDto {
 
     public void setTotalScore(Double totalScore) {
         this.totalScore = totalScore;
+    }
+
+    public Long getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
     }
 }

@@ -10,6 +10,7 @@ import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.order.controller.view.LejiaOrderDTO;
 import com.jifenke.lepluslive.order.controller.view.MerchantOrderDto;
+import com.jifenke.lepluslive.order.controller.view.MerchantOrderExcel;
 import com.jifenke.lepluslive.order.controller.view.OrderViewExcel;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OLOrderCriteria;
@@ -19,6 +20,7 @@ import com.jifenke.lepluslive.order.service.OffLineOrderService;
 import com.jifenke.lepluslive.order.service.PosOrderSerivce;
 import com.jifenke.lepluslive.security.SecurityUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,6 +29,7 @@ import javax.inject.Inject;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -61,6 +64,9 @@ public class OrderController {
 
     @Inject
     private LejiaOrderService lejiaOrderService;
+
+    @Inject
+    private MerchantOrderExcel merchantOrderExcel;
 
     @RequestMapping(value = "/order/todayOrderDetail", method = RequestMethod.GET)
     public LejiaResult getTodayOrderDetail() {
@@ -366,25 +372,27 @@ public class OrderController {
     /**
      *  导出指定门店订单数据 Excel
      */
-    @RequestMapping(value="/lejiaOrder/merchant/export",method = RequestMethod.POST)
-    public void exportOrderExcel(@RequestBody DailyOrderCriteria dailyOrderCriteria,HttpServletResponse response) {
+    @RequestMapping(value="/lejiaOrder/merchant/export",method = RequestMethod.GET)
+    public ModelAndView exportOrderExcel(@RequestParam(required = false) String startDate,
+                                   @RequestParam(required = false) String endDate,
+                                   @RequestParam(required = true) Long merchantId) {
         String [] titles1 = {"订单编号","交易完成时间","订单状态","支付渠道","消费金额","使用红包","实际支付","订单类型","微信手续费","红包手续费","总入账金额","微信支付入账","红包支付入账","退款时间"};
         String [] titles2 = {"退款单号","退款完成时间","订单编号","订单类型","订单完成时间","微信渠道退款","微信渠道退款","微信支付少转账","红包支付少转账"};
         String [] titles3 = {"微信支付","红包支付","微信退款","红包退款","微信支付入账","红包支付入账"};
         // 设置默认时间 - 最近七天
+        DailyOrderCriteria dailyOrderCriteria = new DailyOrderCriteria();
+        dailyOrderCriteria.setStartDate(startDate);
+        dailyOrderCriteria.setEndDate(endDate);
+        Merchant merchant = merchantService.findMerchantById(merchantId);
+        dailyOrderCriteria.setMerchant(merchant);
         setDefaultDailyCriteria(dailyOrderCriteria);
         // 导出 Excel
-        String filename = "t";
-        response.setContentType("application/binary;charset=ISO8859_1");
-        response.setHeader("Content-disposition", "attachment; filename=" + filename + ".xls");
-        try {
-            ServletOutputStream outputStream = response.getOutputStream();
-            lejiaOrderService.exportOrderExcel(outputStream,titles1,titles2,titles3,dailyOrderCriteria);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        Map map = lejiaOrderService.findOrderExcelData(dailyOrderCriteria);
+        map.put("titles1",titles1);
+        map.put("titles2",titles2);
+        map.put("titles3",titles3);
+        map.put("dailyOrderCriteria",dailyOrderCriteria);
+        return new ModelAndView(merchantOrderExcel,map);
     }
 
     public DailyOrderCriteria setDefaultDailyCriteria(DailyOrderCriteria dailyOrderCriteria) {

@@ -52,6 +52,18 @@ angular.module('lepayglobleApp')
                 '最近30日': [moment().subtract('days', 29), moment()]
             }
         }, function (start, end, label) {});
+
+        // 导出 Excel
+        $scope.exportExcel = function(id) {
+            var data = "?";
+            var date = $("#date_picker").val();
+            var startDate = date.split('-')[0];
+            data += "&startDate="+startDate;
+            var endDate = date.split('-')[1];
+            data += "&endDate="+endDate;
+            data += "&merchantId="+id;
+            location.href = '/api/lejiaOrder/merchant/export'+data;
+        }
     })
 
 
