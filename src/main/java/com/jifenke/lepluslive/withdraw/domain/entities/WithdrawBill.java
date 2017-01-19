@@ -166,4 +166,14 @@ public class WithdrawBill {
         this.payee = payee;
     }
 
+    // 2.0 版本
+    private Long merchantUserId;
+
+    public Long getMerchantUserId() {
+        return merchantUserId;
+    }
+
+    public void setMerchantUserId(Long merchantUserId) {
+        this.merchantUserId = merchantUserId;
+    }
 }

@@ -126,4 +126,19 @@ angular.module('lepayglobleApp')
         }
         $scope.getCurrentLogin();
 
+        //  提现
+        $scope.withDraw = function () {
+            var amount = $("#withDrawInput").val();
+            var available = $scope.available;
+            if(amount > available) {
+                alert("余额不足！");
+                return;
+            }else if(amount<200) {
+                alert("提现金额不小于 200 元。");
+                return;
+            }
+            $http.post("/api/withdraw/merchant_user_withdraw",amount).success(function (response) {
+
+            });
+        }
     });

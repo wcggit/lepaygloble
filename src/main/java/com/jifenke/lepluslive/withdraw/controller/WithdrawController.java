@@ -3,7 +3,9 @@ package com.jifenke.lepluslive.withdraw.controller;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +39,8 @@ public class WithdrawController {
     private PartnerService partnerService;
     @Inject
     private WithdrawService withdrawService;
+    @Inject
+    private MerchantUserResourceService merchantUserResourceService;
 
     @RequestMapping(value = "/merchant_withdraw", method = RequestMethod.POST)
     public LejiaResult merchantWithDraw(HttpServletRequest request) {
@@ -117,4 +122,23 @@ public class WithdrawController {
         return  new LejiaResult(page);
     }
 
+    //  2.0 版本生成提现单
+    /**
+     *  生成提现单
+     */
+     @RequestMapping(value="/merchant_user_withdraw",method = RequestMethod.POST)
+     @ResponseBody
+     public LejiaResult merchantUserWithDraw(HttpServletRequest request) {
+         try {
+             Double amount = new Double(request.getParameter("amount"));
+             MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+             List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+             withdrawService.createWithDrawBill(merchants,merchantUser,amount);
+             return LejiaResult.ok();
+         } catch (Exception e) {
+             String msg = "提现订单生成失败:" + e.getMessage();
+             LOG.error(msg);
+             return LejiaResult.build(400, msg);
+         }
+     }
 }

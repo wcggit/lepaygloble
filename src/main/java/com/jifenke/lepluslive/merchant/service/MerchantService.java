@@ -15,9 +15,11 @@ import com.jifenke.lepluslive.order.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.repository.MerchantScanPayWayRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
+import com.jifenke.lepluslive.security.SecurityUtils;
 import com.jifenke.lepluslive.weixin.repository.WeiXinUserRepository;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,10 +110,15 @@ public class MerchantService {
         Map map = new HashMap();
         Long available = 0L;
         Long totalCommission = 0L;
-        for (Merchant merchant : merchants) {
+        for (Merchant merchant : merchants) {                                                                           // 门店钱包
             MerchantWallet merchantWallet = merchantWalletRepository.findByMerchant(merchant);
             available += merchantWallet.getAvailableBalance()==null ? 0L:merchantWallet.getAvailableBalance();
             totalCommission += merchantWallet.getTotalMoney()==null ? 0L:merchantWallet.getTotalMoney();
+        }
+        MerchantUser merchantUser = findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantWallet merchantUserWallet = merchantWalletRepository.findByMerchantUser(merchantUser.getId());          //  商户钱包
+        if(merchantUserWallet!=null) {
+            available+= merchantUserWallet.getAvailableBalance();
         }
         map.put("available",available);
         map.put("totalCommission",totalCommission);
