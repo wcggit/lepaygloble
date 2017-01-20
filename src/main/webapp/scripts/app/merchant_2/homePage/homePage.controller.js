@@ -126,6 +126,12 @@ angular.module('lepayglobleApp')
         }
         $scope.getCurrentLogin();
 
+
+        $scope.tx=function () {
+            $("#tx").modal("toggle");
+            $("#tx-success").modal("toggle");
+        };
+
         //  提现
         $scope.withDraw = function () {
             var amount = $("#withDrawInput").val();
@@ -137,8 +143,20 @@ angular.module('lepayglobleApp')
                 alert("提现金额不小于 200 元。");
                 return;
             }
-            $http.post("/api/withdraw/merchant_user_withdraw",amount).success(function (response) {
-
-            });
+            var data = 'amount='
+                + encodeURIComponent(amount.trim());
+            $http.post('/withdraw/merchant_user_withdraw', data, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).success(function (response) {
+                if(response.status==400){
+                    alert("服务繁忙,请稍后尝试!");
+                }else{
+                    alert("提现申请成功 !");
+                    $("#withDrawInput").val('');
+                    $scope.tx();
+                }
+            })
         }
     });
