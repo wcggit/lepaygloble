@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.merchant.service;
 
 import com.jifenke.lepluslive.merchant.domain.criteria.DataOverviewCriteria;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.repository.MerchantRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by wanjun on 2016/12/15.
@@ -41,14 +43,15 @@ public class DataOverviewService {
     public DataOverviewCriteria findCommissionAndLockNumber() {
         DataOverviewCriteria doc = new DataOverviewCriteria();
         //1.根据商户loginName查询旗下所有门店id
-        List<Object[]> list = merchantUserResourceRepository.findByMerchantInfoUser(SecurityUtils.getCurrentUserLogin());
+        MerchantUser user = merchantUserRepository.findMerchantUserByMerchantSid(SecurityUtils.getCurrentUserLogin()).get();
+        List<Object[]> list = merchantUserResourceRepository.findByMerchantInfoUser(user.getName());
         List<Object> mlist = new ArrayList<Object>();
         for (int i = 0; i < list.size(); i++) {
             mlist.add(list.get(i)[0]);
         }
         doc.setMerchantIds(mlist);
         //2.查询商户锁定会员上限
-        Integer merchantUserTotalLockLimit = merchantUserRepository.findLockLimitByName(SecurityUtils.getCurrentUserLogin());
+        Integer merchantUserTotalLockLimit = merchantUserRepository.findLockLimitByName(user.getName());
         doc.setMerchantUserTotalLockLimit(merchantUserTotalLockLimit);
         //3.查询商户旗下所有门店锁定会员的总数
         Integer merchantUserLockLimit = merchantRepository.findMerchantTotalMember(mlist);

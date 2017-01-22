@@ -59,7 +59,7 @@ public class FinancialController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         financialCriteria.setMerchant(merchantUserByName.getMerchant());
         Page page = offLineOrderService.findFinancialByCirterial(financialCriteria, 10);
         return LejiaResult.ok(page);
@@ -76,7 +76,7 @@ public class FinancialController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         financialCriteria.setMerchant(merchantUserByName.getMerchant());
         Page page = offLineOrderService.findFinancialByCirterial(financialCriteria, 10000);
         Map map = new HashMap();
@@ -119,7 +119,7 @@ public class FinancialController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<FinancialStatistic>
             financialStatistics =
             finanicalStatisticService

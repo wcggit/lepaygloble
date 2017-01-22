@@ -7,6 +7,7 @@ angular.module('lepayglobleApp')
                  var listener = $q.defer();
                  var connected = $q.defer();
                  var bindWx = $q.defer();
+                 var merchantVoice = $q.defer();
                  var alreadyConnectedOnce = false;
 
                  function sendActivity() {
@@ -30,15 +31,25 @@ angular.module('lepayglobleApp')
                              var headers = {};
                              headers['X-CSRF-TOKEN'] = $cookies[$http.defaults.xsrfCookieName];
                              stompClient.connect(headers, function (frame) {
-                                 //注册合伙人绑定微信号事件
                                  Principal.identity().then(function (account) {
                                      if (account != null && account.login != null) {
-                                         alreadyConnectedOnce = true;
-                                         subscriber =
-                                         stompClient.subscribe("/user/" + account.login + "/reply",
-                                                               function (data) {
-                                                                   bindWx.notify(1);
-                                                               });
+                                         if(account.authorities[0]=="partner") {
+                                             //注册合伙人绑定微信号事件
+                                             alreadyConnectedOnce = true;
+                                             subscriber =
+                                                 stompClient.subscribe("/user/" + account.login + "/reply",
+                                                     function (data) {
+                                                         bindWx.notify(1);
+                                                     });
+                                         }else if(account.authorities[0]=="merchant") {
+                                             // 产生订单时商户语音事件
+                                             alreadyConnectedOnce = true;
+                                             subscriber =
+                                                 stompClient.subscribe("/user/" + account.login + "/reply",
+                                                     function (data) {
+                                                         merchantVoice.notify('');
+                                                     });
+                                         }
                                      }
                                  });
                                  //if (!alreadyConnectedOnce) {

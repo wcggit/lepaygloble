@@ -43,7 +43,7 @@ public class MerchantUserController {
      * */
     @RequestMapping(value = "/merchantUser", method = RequestMethod.GET)
     public LejiaResult getMerchant() {
-        MerchantUser merchantUser =  merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser =  merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         MerchantUser merchantInfo = new MerchantUser();
         merchantInfo.setName(merchantUser.getName());
         merchantInfo.setMerchantName(merchantUser.getMerchantName());
@@ -57,7 +57,7 @@ public class MerchantUserController {
      */
     @RequestMapping(value="/merchantUser/comission",method = RequestMethod.GET)
     public LejiaResult getMerchantAvalibleCommission() {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         Map map = merchantService.findCommissionByMerchants(merchants);
         return LejiaResult.ok(map);
@@ -68,7 +68,7 @@ public class MerchantUserController {
      */
     @RequestMapping(value="/merchantUser/merchants",method=RequestMethod.GET)
     public LejiaResult getMerchants() {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         return LejiaResult.ok(merchants);
     }
@@ -78,7 +78,8 @@ public class MerchantUserController {
     @RequestMapping(value = "/merchantUser/merchantsInfo",method = RequestMethod.GET)
     @ResponseBody
     public LejiaResult getMerchantsInfo(){
-        List<Object []>  merchantList = merchantUserResourceService.findMerchantsByMerchantUserSql(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        List<Object []>  merchantList = merchantUserResourceService.findMerchantsByMerchantUserSql(merchantUser.getName());
         return LejiaResult.ok(merchantList);
     }
 
@@ -87,7 +88,8 @@ public class MerchantUserController {
      */
     @RequestMapping(value="/merchantUser/findByMerchantPosUser",method=RequestMethod.GET)
     public LejiaResult findByMerchantPosUser() {
-        return LejiaResult.ok(merchantUserResourceService.findByMerchantPosUser(SecurityUtils.getCurrentUserLogin()));
+        MerchantUser user = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        return LejiaResult.ok(merchantUserResourceService.findByMerchantPosUser(user.getName()));
     }
 
     @RequestMapping(value = "/merchantUser/posOrderByMerchantUser")
@@ -126,8 +128,9 @@ public class MerchantUserController {
     @RequestMapping(value = "/merchantUser/findLockerInfoByMerchantUser",method = RequestMethod.GET)
     @ResponseBody
     public LejiaResult findLockerInfoByMerchantUser() {
-        String merchantName = SecurityUtils.getCurrentUserLogin();
-        Map map = merchantUserService.getLockerInfoByMerchant(merchantName);
+        String merchantSid = SecurityUtils.getCurrentUserLogin();
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(merchantSid);
+        Map map = merchantUserService.getLockerInfoByMerchant(merchantUser.getName());
         return LejiaResult.ok(map);
     }
 
@@ -136,7 +139,7 @@ public class MerchantUserController {
      */
     @RequestMapping(value="/merchantUser/owerAccount")
     public LejiaResult getOwerAccount() {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<MerchantUser> owerAccount = merchantUserService.findOwerAccount(merchantUser.getId());
         return LejiaResult.ok(owerAccount);
     }
@@ -146,7 +149,7 @@ public class MerchantUserController {
      */
     @RequestMapping(value="/merchantUser/cashierAccount")
     public LejiaResult getCashierAccount() {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<MerchantUser> cashierAccount = merchantUserService.findCashierAccount(merchantUser.getId());
         return LejiaResult.ok(cashierAccount);
     }
@@ -165,7 +168,7 @@ public class MerchantUserController {
      */
     @RequestMapping(value = "/merchantUser/checkInfo",method = RequestMethod.POST)
     public LejiaResult checkUserInfo(@RequestBody String passwd) {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         String md5Pwd = MD5Util.MD5Encode(passwd,null);
         if(merchantUser.getPassword().equals(md5Pwd)) {
             return LejiaResult.ok();
@@ -184,7 +187,7 @@ public class MerchantUserController {
             if(user!=null) {
                 return LejiaResult.build(400,"保存失败 ！");
             }
-            MerchantUser currentUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+            MerchantUser currentUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
             merchantUser.setCreateUserId(currentUser.getId());
             merchantUser.setCreatedDate(new Date());
             merchantService.saveUserAccount(merchantUser);

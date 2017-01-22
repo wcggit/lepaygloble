@@ -19,7 +19,6 @@ import com.jifenke.lepluslive.security.SecurityUtils;
 import com.jifenke.lepluslive.weixin.repository.WeiXinUserRepository;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,7 +114,7 @@ public class MerchantService {
             available += merchantWallet.getAvailableBalance()==null ? 0L:merchantWallet.getAvailableBalance();
             totalCommission += merchantWallet.getTotalMoney()==null ? 0L:merchantWallet.getTotalMoney();
         }
-        MerchantUser merchantUser = findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         MerchantWallet merchantUserWallet = merchantWalletRepository.findByMerchantUser(merchantUser.getId());          //  商户钱包
         if(merchantUserWallet!=null) {
             available+= merchantUserWallet.getAvailableBalance();
@@ -125,8 +124,14 @@ public class MerchantService {
         return map;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public MerchantUser findMerchantUserByName(String name) {
         return merchantUserRepository.findByName(name).get();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public MerchantUser findMerchantUserBySid(String sid) {
+        return merchantUserRepository.findMerchantUserByMerchantSid(sid).get();
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -160,7 +165,7 @@ public class MerchantService {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Merchant findmerchantBySid(String sid) {
-        return merchantRepository.findByMerchantSid(sid);
+        return merchantRepository.findMerchantUserBySid(sid);
     }
 
     public List<MerchantUser> findMerchantUserByMerchant(Merchant merchant) {
@@ -178,7 +183,7 @@ public class MerchantService {
         }
         merchant.setSid((int) merchantRepository.count());
         String merchantSid = MvUtil.getMerchantSid();
-        while (merchantRepository.findByMerchantSid(merchantSid) != null) {
+        while (merchantRepository.findMerchantUserBySid(merchantSid) != null) {
             merchantSid = MvUtil.getMerchantSid();
         }
         merchant.setMerchantSid(merchantSid);

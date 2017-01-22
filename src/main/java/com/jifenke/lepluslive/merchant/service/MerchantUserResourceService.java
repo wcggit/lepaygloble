@@ -7,6 +7,7 @@ import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserResource;
 import com.jifenke.lepluslive.merchant.repository.MerchantPosRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantRepository;
+import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository;
 import com.jifenke.lepluslive.order.domain.entities.MerchantPos;
 import com.jifenke.lepluslive.order.domain.entities.PosOrder;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
+
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -45,6 +47,8 @@ public class MerchantUserResourceService {
     private EntityManager em;
     @Inject
     private MerchantPosRepository merchantPosRepository;
+    @Inject
+    private MerchantUserRepository merchantUserRepository;
 
     /***
      *  根据商户找旗下的门店
@@ -124,18 +128,19 @@ public class MerchantUserResourceService {
 
     /**
      * 统计所选条件下的订单总金额、使用红包、刷卡实付、微信实付、支付宝实付、实际入账、红包
+     *
      * @param posOrderCriteria
      */
-    public void findPosOrderSum(PosOrderCriteria posOrderCriteria){
+    public void findPosOrderSum(PosOrderCriteria posOrderCriteria) {
         /**
          * 查询条件后的统计数据
          */
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT sum(o.total_price) as totalPrice,sum(o.true_score) as trueScore, sum(o.transfer_by_bank) as transferByBank , (sum(o.transfer_money)-sum(o.transfer_by_bank)) as transferByHB ,\n" +
-            "(SELECT sum(a.true_pay) from pos_order a where a.trade_flag=0 and"+returnSqlFindCondition(posOrderCriteria,"a")+") as zhifubao,\n" +
-            "(SELECT sum(b.true_pay) from pos_order b where b.trade_flag=3 and"+returnSqlFindCondition(posOrderCriteria,"b")+") as shuaka,\n" +
-            "(SELECT sum(c.true_pay) from pos_order c where c.trade_flag=4 and"+returnSqlFindCondition(posOrderCriteria,"c")+") as weixin\n" +
-            "from pos_order as o where"+returnSqlFindCondition(posOrderCriteria,"o"));
+            "(SELECT sum(a.true_pay) from pos_order a where a.trade_flag=0 and" + returnSqlFindCondition(posOrderCriteria, "a") + ") as zhifubao,\n" +
+            "(SELECT sum(b.true_pay) from pos_order b where b.trade_flag=3 and" + returnSqlFindCondition(posOrderCriteria, "b") + ") as shuaka,\n" +
+            "(SELECT sum(c.true_pay) from pos_order c where c.trade_flag=4 and" + returnSqlFindCondition(posOrderCriteria, "c") + ") as weixin\n" +
+            "from pos_order as o where" + returnSqlFindCondition(posOrderCriteria, "o"));
         Query query = em.createNativeQuery(sql.toString());
         List<Object[]> details = query.getResultList();
         posOrderCriteria.setTotalPrice(Double.valueOf(details.get(0)[0] == null ? "0.00" : details.get(0)[0].toString()));
@@ -149,14 +154,15 @@ public class MerchantUserResourceService {
 
     /**
      * 根据传送进来的别名不同，生成不同的别名的查询条件
+     *
      * @param posOrderCriteria
-     * @param asType sql别名
+     * @param asType           sql别名
      * @return
      */
-    public String returnSqlFindCondition(PosOrderCriteria posOrderCriteria,String asType){
+    public String returnSqlFindCondition(PosOrderCriteria posOrderCriteria, String asType) {
         StringBuffer sb = new StringBuffer();
         if (posOrderCriteria.getStoreIds() != null) {
-            sb.append(" "+asType+".merchant_id in (");
+            sb.append(" " + asType + ".merchant_id in (");
             for (int i = 0; i < posOrderCriteria.getStoreIds().length; i++) {
                 sb.append(posOrderCriteria.getStoreIds()[i] + ",");
             }
@@ -164,31 +170,31 @@ public class MerchantUserResourceService {
             sb.append(")");
         }
         if (posOrderCriteria.getRebateWay() != null) {
-            sb.append(" and "+asType+".rebate_way = ");
+            sb.append(" and " + asType + ".rebate_way = ");
             sb.append(posOrderCriteria.getRebateWay());
         }
         if (posOrderCriteria.getTradeFlag() != null) {
-            sb.append(" and "+asType+".trade_flag = ");
+            sb.append(" and " + asType + ".trade_flag = ");
             sb.append(posOrderCriteria.getTradeFlag());
         }
         if (posOrderCriteria.getMerchantPosId() != null) {
-            sb.append(" and "+asType+".merchant_pos_id = ");
+            sb.append(" and " + asType + ".merchant_pos_id = ");
             sb.append(posOrderCriteria.getMerchantPosId());
         }
         if (posOrderCriteria.getOrderSid() != null && !"".equals(posOrderCriteria.getOrderSid())) {
-            sb.append(" and "+asType+".order_sid=");
+            sb.append(" and " + asType + ".order_sid=");
             sb.append(posOrderCriteria.getOrderSid());
         }
         if (posOrderCriteria.getStartDate() != null && !"".equals(posOrderCriteria.getStartDate())
             && posOrderCriteria.getEndDate() != null && !"".equals(posOrderCriteria.getEndDate())) {
-            sb.append(" and "+asType+".complete_date between '");
+            sb.append(" and " + asType + ".complete_date between '");
             sb.append(posOrderCriteria.getStartDate());
             sb.append("' and '");
             sb.append(posOrderCriteria.getEndDate());
             sb.append("'");
         }
         if (posOrderCriteria.getState() != null) {
-            sb.append(" and "+asType+".state=");
+            sb.append(" and " + asType + ".state=");
             sb.append(posOrderCriteria.getState());
         }
         return sb.toString();
@@ -204,7 +210,7 @@ public class MerchantUserResourceService {
      * 万俊
      */
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<Object []> findMerchantsByMerchantUserSql(String merchantName) {
+    public List<Object[]> findMerchantsByMerchantUserSql(String merchantName) {
         return merchantUserResourceRepository.findByMerchantInfoUser(merchantName);
     }
 
@@ -245,16 +251,17 @@ public class MerchantUserResourceService {
         return posOrderCriteria;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
-    public MerchantCriteria pageFindMerchantInfoByMerchantUser(MerchantCriteria merchantCriteria){
-        List<Object []> list = findMerchantsByMerchantUserSql(SecurityUtils.getCurrentUserLogin());
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public MerchantCriteria pageFindMerchantInfoByMerchantUser(MerchantCriteria merchantCriteria) {
+        MerchantUser merchantUser = merchantUserRepository.findMerchantUserByMerchantSid(SecurityUtils.getCurrentUserLogin()).get();
+        List<Object[]> list = findMerchantsByMerchantUserSql(merchantUser.getName());
         List<Object> mlist = new ArrayList<Object>();
-        for (int i =0;i<list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             mlist.add(list.get(i)[0]);
         }
-        List<Object []> aa = merchantUserResourceRepository.pageFindMerchantInfoByMerchantUser(mlist,(merchantCriteria.getCurrentPage()-1)*10);
+        List<Object[]> aa = merchantUserResourceRepository.pageFindMerchantInfoByMerchantUser(mlist, (merchantCriteria.getCurrentPage() - 1) * 10);
         merchantCriteria.setmList(aa);
-        merchantCriteria.setTotalPages(mlist.size()/10);
+        merchantCriteria.setTotalPages(mlist.size() / 10);
         return merchantCriteria;
     }
 }

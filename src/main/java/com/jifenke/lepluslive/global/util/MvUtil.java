@@ -80,6 +80,9 @@ public class MvUtil {
     public static String getMerchantSid() {
         return RandomStringUtils.random(7, "1234567890");
     }
+    public static String getMerchantUserSid() {
+        return RandomStringUtils.randomAlphanumeric(7);                 // 字母和数字的随机组合字符串 [7位]
+    }
 
 
     //某月的第一天

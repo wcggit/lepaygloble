@@ -82,7 +82,7 @@ public class MerchantController {
     public LejiaResult getAvaliableCommission() {
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
         MerchantWallet
             merchantWallet =
@@ -105,7 +105,7 @@ public class MerchantController {
      */
     @RequestMapping(value = "/merchant/homePage/merchantData", method = RequestMethod.GET)
     public LejiaResult getHomePageMerchantData() {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         Long transfering = offLineOrderService.countDailyTransfering(merchants);                            //  今日转账金额
         Long totalTransfering = finanicalStatisticService.countTotalTransfering(merchants);                 //  转账总金额
@@ -120,7 +120,7 @@ public class MerchantController {
     public LejiaResult getMerchant() {
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
 
         return LejiaResult.ok(merchant);
@@ -130,7 +130,7 @@ public class MerchantController {
     public LejiaResult getMerchantWallet() {
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
 
         return LejiaResult.ok(merchantService.findMerchantWalletByMerchant(merchant));
@@ -145,7 +145,7 @@ public class MerchantController {
         if (sid != null && sid != "") {
             merchant = merchantService.findmerchantBySid(sid);
         } else {
-            merchant = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchant = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
         }
 
@@ -214,7 +214,7 @@ public class MerchantController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         leJiaUserCriteria.setMerchant(merchantUserByName.getMerchant());
         return LejiaResult.ok(leJiaUserService.getMerchantBindUserList(leJiaUserCriteria));
     }
@@ -229,7 +229,7 @@ public class MerchantController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         leJiaUserCriteria.setMerchant(merchantUserByName.getMerchant());
         return LejiaResult.ok(leJiaUserService.getTotalPages(leJiaUserCriteria));
     }
@@ -238,7 +238,7 @@ public class MerchantController {
     public void openRequest() {
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
         merchantService.createOpenRequest(merchant);
 
@@ -259,7 +259,7 @@ public class MerchantController {
 
         MerchantUser
             merchantUser =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
 
         try {
             merchantService.resetPasswword(merchantUser, reset, password);
@@ -313,7 +313,7 @@ public class MerchantController {
      */
     @RequestMapping(value = "/merchantUser/bindUsers", method = RequestMethod.POST)
     public LejiaResult findBindUsersByCriteria(@RequestBody LockMemberCriteria lockMemberCriteria) {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         //  设置查询条件:  如果没有指定 id , 则查询所有门店
         setCriteriaMerchantIds(merchantUser,lockMemberCriteria);
         //  数据封装
@@ -336,7 +336,7 @@ public class MerchantController {
 
     @RequestMapping(value = "/merchantUser/bindUsers/count", method = RequestMethod.POST)
     public LejiaResult countBindUsersByCriteria(@RequestBody LockMemberCriteria lockMemberCriteria) {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         setCriteriaMerchantIds(merchantUser,lockMemberCriteria);
         Long totalCount = leJiaUserService.countMerchantLockMember(lockMemberCriteria);
         Long totalPages = Math.round(new Double(totalCount * 1.0 / 10.0));
@@ -361,7 +361,7 @@ public class MerchantController {
     @RequestMapping(value="/merchantUser/inviteCodes")
     public LejiaResult getMerchantsInviteCodes() {
         String codeUrl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=";
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         //  封装数据
         Map map = new HashMap();
@@ -387,7 +387,7 @@ public class MerchantController {
      */
     @RequestMapping(value="/merchantUser/merchantInfo")
     public LejiaResult getMerchantInfo() {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         MerchantUser dto = new MerchantUser();
         dto.setId(merchantUser.getId());
         dto.setMerchantName(dto.getMerchantName());

@@ -1,5 +1,7 @@
 package com.jifenke.lepluslive.merchant.domain.entities;
 
+import com.jifenke.lepluslive.global.util.MvUtil;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -168,5 +170,15 @@ public class MerchantUser {
 
     public void setPayee(String payee) {
         this.payee = payee;
+    }
+
+    private String merchantSid = MvUtil.getMerchantUserSid();
+
+    public String getMerchantSid() {
+        return merchantSid;
+    }
+
+    public void setMerchantSid(String merchantSid) {
+        this.merchantSid = merchantSid;
     }
 }

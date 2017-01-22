@@ -31,7 +31,7 @@ public class MerchantUserService {
     private LeJiaUserRepository lejiaUserRepository;
 
     public MerchantUser getUserWithAuthorities() {
-        return  merchantUserRepository.findByName(SecurityUtils.getCurrentUserLogin()).get();
+        return  merchantUserRepository.findMerchantUserByMerchantSid(SecurityUtils.getCurrentUserLogin()).get();
     }
 
 

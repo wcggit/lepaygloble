@@ -49,7 +49,7 @@ public class WithdrawController {
             //  获取 merchant 账户信息 , 生成随机订单号
             Merchant
                 merchant =
-                merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+                merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                     .getMerchant();
             String randomBillSid = MvUtil.getOrderNumber();
             //  生成订单实例
@@ -131,7 +131,7 @@ public class WithdrawController {
      public LejiaResult merchantUserWithDraw(HttpServletRequest request) {
          try {
              Double amount = new Double(request.getParameter("amount"));
-             MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+             MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
              List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
              withdrawService.createWithDrawBill(merchants,merchantUser,amount);
              return LejiaResult.ok();

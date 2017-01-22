@@ -34,6 +34,7 @@ angular.module('lepayglobleApp')
         });
         $http.get('api/merchantUser').success(function (response) {
             $scope.shopName = response.data.merchantName;
+            $scope.loginName = response.data.name;
         });
 
         HomePage.getMerchantsInfo().then(function(response) {

@@ -56,8 +56,9 @@ public class MerchantCodeTradeController {
     @RequestMapping(value = "/codeTrade/getMerchants", method = RequestMethod.GET)
     @ResponseBody
     public LejiaResult getMerchants() {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        System.out.println(SecurityUtils.getCurrentUserLogin());
         return LejiaResult.ok(merchants);
     }
 
@@ -95,7 +96,7 @@ public class MerchantCodeTradeController {
     @RequestMapping(value = "/codeTrade/getMyCodes", method = RequestMethod.GET)
     @ResponseBody
     public LejiaResult getMyCodes() {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
 //        Merchant merchant = merchantUser.getMerchant();
 //        merchants.add(merchant);

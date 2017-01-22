@@ -3,8 +3,11 @@ package com.jifenke.lepluslive.web;
 
 import com.jifenke.lepluslive.Application;
 import com.jifenke.lepluslive.global.config.Constants;
+import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.repository.MerchantRepository;
+import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.partner.domain.criteria.PartnerScoreLogCriteria;
 import com.jifenke.lepluslive.partner.domain.criteria.WeiXinUserInfoCriteria;
@@ -61,24 +64,32 @@ public class ttt {
     @Inject
     private PartnerService partnerService;
 
+    @Inject
+    private MerchantUserRepository merchantUserRepository;
 
     @Test
     public void tttt() {
-        PartnerWelfareLog partnerWelfareLog = new PartnerWelfareLog();
-        partnerWelfareLog.setScoreA(100L);
-        partnerWelfareLog.setScoreB(1L);
-        new Thread(() -> {
-            for(int i=0;i<100;i++){
-                partnerService.welfareToUser(50,partnerWelfareLog);
-            }
-        }).start();
-        new Thread(() -> {
-            for(int i=0;i<100;i++){
-                partnerService.welfareToUser(50,partnerWelfareLog);
-            }
-        }).start();
-        while (true) {
-
+//        PartnerWelfareLog partnerWelfareLog = new PartnerWelfareLog();
+//        partnerWelfareLog.setScoreA(100L);
+//        partnerWelfareLog.setScoreB(1L);
+//        new Thread(() -> {
+//            for(int i=0;i<100;i++){
+//                partnerService.welfareToUser(50,partnerWelfareLog);
+//            }
+//        }).start();
+//        new Thread(() -> {
+//            for(int i=0;i<100;i++){
+//                partnerService.welfareToUser(50,partnerWelfareLog);
+//            }
+//        }).start();
+//        while (true) {
+//
+//        }
+        List<MerchantUser> users = merchantUserRepository.findAll();
+        for (MerchantUser user : users) {
+//            user.setMerchantSid(MvUtil.getMerchantUserSid());
+//            merchantUserRepository.save(user);
+            System.out.println(user.getMerchantSid());
         }
 
     }

@@ -16,8 +16,9 @@ angular.module('lepayglobleApp')
             $rootScope.personal =!$rootScope.personal;
             $rootScope.personal=$rootScope.personal;
         };
-        $http.get('api/merchant').success(function (response) {
-            $scope.shopName = response.data.name;
+        $http.get('api/merchantUser').success(function (response) {
+            $scope.shopName = response.data.merchantName;
+            $scope.loginName = response.data.name;
         });
         //  LOGOUT
         $scope.logout = function () {

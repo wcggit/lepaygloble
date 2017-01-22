@@ -82,7 +82,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
 
         return LejiaResult.ok(offLineOrderService.countTodayOrderDetail(merchant, start, end));
@@ -106,7 +106,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
 
         return LejiaResult.ok(offLineOrderService.countTodayOrderDetail(merchant, start, end));
@@ -123,7 +123,7 @@ public class OrderController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         olOrderCriteria.setMerchant(merchantUserByName.getMerchant());
         Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 10);
         return LejiaResult.ok(page);
@@ -134,7 +134,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
 
         return LejiaResult.ok(offLineOrderService.countOrderDetail(merchant));
@@ -148,7 +148,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
         olOrderCriteria.setMerchant(merchant);
 
@@ -163,7 +163,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
 
         Calendar calendar = Calendar.getInstance();
@@ -193,7 +193,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
         MerchantWallet
             merchantWallet =
@@ -222,7 +222,7 @@ public class OrderController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         olOrderCriteria.setMerchant(merchantUserByName.getMerchant());
         Page page = offLineOrderService.findOrderShareByPage(olOrderCriteria, 10);
         return LejiaResult.ok(page);
@@ -235,7 +235,7 @@ public class OrderController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         olOrderCriteria.setMerchant(merchantUserByName.getMerchant());
         return LejiaResult.ok(offLineOrderService.orderShareStatistic(olOrderCriteria));
     }
@@ -257,7 +257,7 @@ public class OrderController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         olOrderCriteria.setMerchant(merchantUserByName.getMerchant());
         Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 10000);
         Map map = new HashMap();
@@ -277,7 +277,7 @@ public class OrderController {
      */
     @RequestMapping(value = "/order/dailyOrder", method = RequestMethod.GET)
     public LejiaResult getDailyOrderData() {
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         Long offLineDailyCount = offLineOrderService.countOffLineOrder(merchants);          //  线下订单
         Long posDailyCount = posOrderSerivce.countPosOrder(merchants);                      //  pos 订单
@@ -311,7 +311,7 @@ public class OrderController {
         if(offset==null) {
             offset = 0L;
         }
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         List<Object[]> allOrderList = new ArrayList<>();
         for (Merchant merchant : merchants) {
@@ -363,7 +363,7 @@ public class OrderController {
         // 设置默认时间 - 最近七天
         setDefaultDailyCriteria(dailyOrderCriteria);
         //  根据条件查询账单
-        MerchantUser merchantUser = merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         List<MerchantOrderDto> orderDatas = lejiaOrderService.findMerchantOrderData(dailyOrderCriteria,merchants);
         return LejiaResult.ok(orderDatas);
