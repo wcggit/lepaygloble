@@ -5,7 +5,7 @@
 
 
 angular.module('lepayglobleApp')
-    .controller('homePageController', function ($scope, $state, $rootScope, $location,Principal,Auth,$http,Commission,HomePage) {
+    .controller('homePageController', function ($scope, $state, $rootScope, $location,Principal,Auth,$http,Commission,HomePage,Tracker) {
         $("[data-toggle='tooltip']").tooltip();
 
 
@@ -160,4 +160,43 @@ angular.module('lepayglobleApp')
                 }
             })
         }
+
+        /***********************************************local Variables**********************************************************/
+        // 语音播放
+
+        var HINT_SPEAK = "乐加支付成功,欢迎下次光临!";
+        var audioPalyUrl = "http://h5.xf-yun.com/audioStream/";
+
+        /**
+         * 初始化Session会话
+         * url                 连接的服务器地址（可选）
+         * reconnection        客户端是否支持断开重连
+         * reconnectionDelay   重连支持的延迟时间
+         */
+        var session = new IFlyTtsSession({
+            'url'                : 'ws://h5.xf-yun.com/tts.do',
+            'reconnection'       : true,
+            'reconnectionDelay'  : 30000
+        });
+
+
+        function play(content, vcn){
+            var player = document.getElementById("voicePlayer")
+            var ssb_param = {"appid": '585b74af', "appkey":"ea5b9c830cea7e90", "synid":"12345", "params" : "ent=aisound,aue=lame,vcn="+vcn};
+            session.start(ssb_param, content, function (err, obj)
+            {
+                var audio_url = audioPalyUrl + obj.audio_url;
+                if( audio_url != null && audio_url != undefined )
+                {
+                    player.src = audio_url;
+                    player.play();
+                }
+            });
+        };
+
+        function play_xiaoqi(){play(HINT_SPEAK, 'xiaoqi')};
+
+        Tracker.receiveMerchantVoice().then(null, null, function (data) {//等待websocket发送消息
+              play_xiaoqi();
+        });
     });

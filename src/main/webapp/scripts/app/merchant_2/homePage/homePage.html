@@ -32,6 +32,7 @@
                     <p class="text-center">商户今日入账</p>
                     <p class="text-center" ng-bind="'¥'+srgl.firNum"></p>
                 </div>
+
             </div>
             <div class="col-md-3">
                 <div class="out-div">
@@ -71,6 +72,8 @@
                 <span>门店今日流水￥{{obinfo.firNum+obinfo.secNum}}，扫码流水￥{{obinfo.firNum}}，POS机流水￥{{obinfo.secNum}}，乐加会员消费￥{{obinfo.thirNum}}/{{obinfo.fouNum}}次</span>
             </div>
             <span class="pull-right">语音提醒 <i class="iconfont icon-2wodezhangdan18x20"></i></span>
+            <!--播放器-->
+            <audio id="voicePlayer" src=""></audio>
         </div>
     </div>
     <div class="list-out-div">

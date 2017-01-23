@@ -33,23 +33,20 @@ angular.module('lepayglobleApp')
                              stompClient.connect(headers, function (frame) {
                                  Principal.identity().then(function (account) {
                                      if (account != null && account.login != null) {
-                                         if(account.authorities[0]=="partner") {
-                                             //注册合伙人绑定微信号事件
                                              alreadyConnectedOnce = true;
                                              subscriber =
                                                  stompClient.subscribe("/user/" + account.login + "/reply",
                                                      function (data) {
-                                                         bindWx.notify(1);
+                                                         //注册合伙人绑定微信号事件
+                                                         if(account.authorities[0]=="partner") {
+                                                             bindWx.notify(1);
+                                                         // 产生订单时商户语音事件
+                                                         }else if(account.authorities[0]=="merchant") {
+                                                             merchantVoice.notify(2);
+                                                         }
                                                      });
-                                         }else if(account.authorities[0]=="merchant") {
-                                             // 产生订单时商户语音事件
-                                             alreadyConnectedOnce = true;
-                                             subscriber =
-                                                 stompClient.subscribe("/user/" + account.login + "/reply",
-                                                     function (data) {
-                                                         merchantVoice.notify('');
-                                                     });
-                                         }
+
+
                                      }
                                  });
                                  //if (!alreadyConnectedOnce) {
@@ -82,6 +79,9 @@ angular.module('lepayglobleApp')
                      },
                      receiveWx: function () {
                          return bindWx.promise;
+                     },
+                     receiveMerchantVoice: function () {
+                         return merchantVoice.promise;
                      },
                      sendActivity: function () {
                          if (stompClient != null) {

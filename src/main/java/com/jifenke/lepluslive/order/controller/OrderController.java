@@ -273,6 +273,17 @@ public class OrderController {
     }
 
     /**
+     *  订单语音提示
+     */
+    @RequestMapping(value = "/leJiaOrder/message/{id}", method = RequestMethod.GET)
+    public void sendLejiaOrderMessage(@PathVariable String id) {
+        ActivityDTO activityDTO = new ActivityDTO();
+        activityDTO.setPage("Hello World "+id);
+        messagingTemplate.convertAndSendToUser(SecurityUtils.getCurrentUserLogin(), "/reply", activityDTO);
+    }
+
+
+    /**
      * 每日订单数据 (所有门店)
      */
     @RequestMapping(value = "/order/dailyOrder", method = RequestMethod.GET)

@@ -16,6 +16,7 @@ angular.module('lepayglobleApp')
                     }
                 },
                 resolve: {
+
                 }
             })
             .state('withdrawRecord', {
@@ -31,6 +32,7 @@ angular.module('lepayglobleApp')
                     }
                 },
                 resolve: {
+
                 }
              });
     });
