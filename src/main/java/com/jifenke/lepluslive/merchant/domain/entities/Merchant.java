@@ -379,4 +379,15 @@ public class Merchant {
     public void setMerchantInfo(MerchantInfo merchantInfo) {
         this.merchantInfo = merchantInfo;
     }
+
+    @ManyToOne
+    private MerchantUser merchantUser;                      //  门店所属合伙人
+
+    public MerchantUser getMerchantUser() {
+        return merchantUser;
+    }
+
+    public void setMerchantUser(MerchantUser merchantUser) {
+        this.merchantUser = merchantUser;
+    }
 }

@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,6 +171,16 @@ public class MerchantService {
         new Thread(() -> {
             fileImageService.SaveBarCode(finalBytes, filePath);
         }).start();
+        //  MerchantUser 创建商户账号
+        MerchantUser merchantUser = new MerchantUser();
+        merchantUser.setName(merchant.getName()+"管理员");
+        merchantUser.setCity(merchant.getCity());
+        merchantUser.setType(8);                                                 // 9-系统管理员  8-管理员(商户)
+        merchantUser.setCreatedDate(new Date());
+        String md5pwd = MD5Util.MD5Encode("123456", null);     // md5加密
+        merchantUser.setPassword(md5pwd);
+        merchantUserRepository.save(merchantUser);
+        merchant.setMerchantUser(merchantUser);
         //  MerchantInfo   02/12/16
         MerchantInfo merchantInfo = new MerchantInfo();
         merchantInfoRepository.save(merchantInfo);
