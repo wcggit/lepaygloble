@@ -16,7 +16,7 @@ angular.module('lepayglobleApp')
 
         // Echart 报表
         var myChart = echarts.init(document.getElementById('dailyBillingEchart'));
-        $scope.item=[]
+        $scope.item=[];
         // 显示标题，图例和空的坐标轴
         myChart.setOption({
             tooltip: {show: true},
