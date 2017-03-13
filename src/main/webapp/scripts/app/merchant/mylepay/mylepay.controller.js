@@ -92,6 +92,12 @@ angular.module("lepayglobleApp").controller("MyLePayController",
             $("#tx").modal("toggle");
         };
 
+        $scope.sysTransfer = function () {
+            $http.get('api/merchant/trans/login').success(function (response) {
+                window.location.href=response.data;
+            });
+        }
+
         MyLePay.getMonthOrderDetail().then(function (data) {
             var data = data.data;
             $scope.month = {

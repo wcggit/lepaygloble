@@ -1,7 +1,9 @@
 package com.jifenke.lepluslive.merchant.controller;
 
+import com.jifenke.lepluslive.global.util.HttpClientUtil;
 import com.jifenke.lepluslive.global.util.ImageLoad;
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.controller.dto.MerchantDto;
@@ -12,7 +14,9 @@ import com.jifenke.lepluslive.order.service.FinanicalStatisticService;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +32,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -60,6 +66,13 @@ public class MerchantController {
 
     @Inject
     private MerchantRebatePolicyService merchantRebatePolicyService;
+
+    @Value("${transfer.address}")
+    private String transferAddress;
+
+    @Value("${transfer.sign}")
+    private String transferKey;
+
 
     @RequestMapping(value = "/merchant/getCommission", method = RequestMethod.GET)
     public LejiaResult getAvaliableCommission() {
@@ -270,4 +283,20 @@ public class MerchantController {
         return LejiaResult.ok("修改商户成功");
     }
 
+
+    /***
+     *  登录跳转
+     */
+    @RequestMapping(value="/merchant/trans/login",method = RequestMethod.GET)
+    public LejiaResult transLogin() {
+        MerchantUser
+            merchantUser =
+            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        String userId = "user_id="+ merchantUser.getId();
+        String msgTime = "msg_time="+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String key = "key="+transferKey;
+        String sign = "sign="+MD5Util.MD5Encode(userId+"&"+msgTime+"&"+key,"UTF-8");
+        String url = transferAddress+"&"+userId+"&"+msgTime+"&"+sign;
+        return LejiaResult.ok(url);
+    }
 }
