@@ -180,6 +180,7 @@ margin-bottom: 15px}
 .withdrawRecord .page-top .left-icon{
     width: 24px;
     height: 24px;
+    margin-top: 5px;
     display: inline-block;
     background: url("../../../../assets/styles/images/merchant_2/homePage/left-icon.png") no-repeat;
     background-size: 100% 100%;

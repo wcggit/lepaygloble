@@ -53,7 +53,7 @@ angular.module('lepayglobleApp')
                 contentState:"1",
                 clickState:"1",
                 name:"提现记录",
-                state:"cp-withdrawRecod",
+                state:"cp-withdrawRecord",
                 icon:""
             },
             {

@@ -1,0 +1,94 @@
+.basicInfo .panel-body .row{
+    line-height: 45px;
+}
+.basicInfo .panel-body .row .col-md-2{
+    padding-left: 35px;
+}
+.basicInfo .panel-body .ttl2{
+    font-size: 14px;
+    color: #222;
+    padding: 10px 0;
+}
+.basicInfo .panel-body .row .col-md-2{
+    color: #666;
+    font-size: 14px;
+}
+.basicInfo .panel-body .row .col-md-4{
+    font-size: 14px;
+    color: #333;
+}
+.basicInfo select.form-control{
+    margin-left: 20px;
+}
+.basicInfo .panel-body hr{
+    margin: 20px 0;
+}
+
+.basicInfo .nav-pills{margin-bottom: 25px;}
+.basicInfo .nav-pills>li>a,.basicInfo .nav-pills>li>a:focus,.basicInfo .nav-pills>li>a:hover {
+    background-color: #fff;
+    color: #666;
+    border:solid 1px #d9d9d9;
+}
+.basicInfo .nav-pills>li.active>a,.basicInfo .nav-pills>li.active>a:focus,.basicInfo .nav-pills>li.active>a:hover {
+    background-color: #fff;
+    color: #fb991a;
+    border:solid 1px #fb991a;
+}
+.basicInfo .nav>li>a {
+    position: relative;
+    display: block;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+.basicInfo .nav-pills>li+li {
+    margin-left: 0px;
+}
+.basicInfo .nav-pills>li:first-child>a {
+    border-radius: 4px 0 0 4px;
+}
+.basicInfo .nav-pills>li:last-child>a {
+    border-radius:  0 4px 4px 0;
+}
+
+.basicInfo .changePassword{margin-left: 10px;color: #fb991a;font-size: 14px}
+
+.basicInfo .radio-left{
+    margin-left: 21px;
+}
+
+.basicInfo #changePassword label{position: relative;text-align: left;width: 17%;}
+.basicInfo #changePassword label:before{content: "*";color: red;position: absolute;left: 0px;top: 10px;}
+.basicInfo #changePassword .label-last:before{content: '\20' !important;}
+
+.basicInfo #changePassword2 .form-horizontal .control-label{
+    text-align: left;
+}
+.basicInfo #changePassword2 label{
+    line-height: 30px;
+}
+.basicInfo #unbind .wx-faceImg{
+    display: block;
+    margin: 10px auto;
+    height: 100px;
+    width: 100px;
+}
+.basicInfo #unbind p:first-child{
+    line-height: 55px;
+}
+
+.basicInfo .tishi{
+    color: #f66762;
+    font-size: 12px;
+}
+.basicInfo .current-name{
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    border-radius: 4px;
+}
