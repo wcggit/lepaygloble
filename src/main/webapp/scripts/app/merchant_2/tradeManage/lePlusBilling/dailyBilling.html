@@ -1,0 +1,66 @@
+<!--查询表单-->
+<form class="form-inline list-check">
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label>门店名称</label>
+            <div class="input-group col-md-6">
+                <select name="" id="selMerchant" class="current-store" ng-change="changeStore(x)" ng-model="x">
+                    <option value="">请选择</option>
+                    <option value="{{m.sid}}" ng-repeat="m in merchants">{{m.name}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label>交易完成时间</label>
+            <input type="text" name="completeTime" id="timePicker1" class="input-group timePicker col-md-9" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-5">
+            <label></label>
+            <button type="button" class="btn btn-warning btn-check2" ng-click="findByDate()">查询</button>
+        </div>
+    </div>
+</form>
+<div class="panel-body rjysr-panel-body">
+    <div my-chart style="height: 400px">
+        <div id="dailyBillingEchart"  my-chart ui-options='' style="height: 400px;width: 100%;"></div>
+    </div>
+</div>
+<!--表格信息总结-->
+<p class="ttl-add table-title clearfix">
+    详细数据<span class="pull-right"><i class="iconfont icon-2wodezhangdan18x20"></i>下载表格</span>
+</p>
+<!--表格-->
+<div class="panel panel-default">
+    <table class="table ol-tab">
+        <thead class="active">
+        <tr>
+            <td>交易完成时间</td>
+            <td>入账总金额</td>
+            <td>扫码微信入账</td>
+            <td>POS刷卡入账</td>
+            <td>POS移动支付入账</td>
+            <td>红包支付入账</td>
+            <td>操作</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="x in dates">
+            <td>{{x}}</td>
+            <td>￥{{totalTransfer[$index]| number:2}}</td>
+            <td>￥{{wxTransfer[$index]| number:2}}</td>
+            <td>￥{{posCardTransfer[$index]| number:2}}</td>
+            <td>
+                <p>￥{{posMobileTransfer[$index]| number:2}}</p>
+                <p>(微信￥{{wxMobileTransfer[$index]}}+支付宝￥{{aliMobileTransfer[$index]| number:2}})</p>
+            </td>
+            <td>
+                <p>￥{{scoreTransfer[$index]| number:2}}</p>
+                <p>(扫码￥{{offScores[$index]| number:2}}+POS￥{{posScores[$index]| number:2}})</p>
+            </td>
+            <td><a>下载表格</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

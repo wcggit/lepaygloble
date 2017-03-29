@@ -1,0 +1,23 @@
+.storeManage table tr td:nth-of-type(2){
+    width: 16%;
+}
+#addStore .icon-warning{
+    position: relative;
+    width: 240px;
+    text-align: right;
+}
+#addStore .icon-warning:before{
+    display: block;
+    width: 64px;
+    height: 64px;
+    content: '';
+    background: url("../../images/merchant_2/storeManage/warning.png") no-repeat;
+    background-size: 100% 100%;
+    position: absolute;
+    left:-35px;
+
+}
+#addStore .modal-body p:first-child span:last-child{
+    line-height: 64px;
+    display: inline-block;
+}

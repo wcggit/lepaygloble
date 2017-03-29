@@ -76,6 +76,7 @@ public class WxTemMsgService {
                     sb.append("¥");
                     sb.append(partnerWelfareLog.getScoreA() / 100.0);
                     sb.append("红包");
+                    keys[0] = sb.toString();
                 }
             } else {
                 sb.append(partnerWelfareLog.getScoreB());

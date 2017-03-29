@@ -4,6 +4,7 @@ package com.jifenke.lepluslive.lejiauser.service;
 import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
 import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
+import com.jifenke.lepluslive.merchant.domain.criteria.LockMemberCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 
@@ -282,4 +283,175 @@ public class LeJiaUserService {
         Date end = calendar.getTime();
         return leJiaUserRepository.countByBindPartnerAndBindPartnerDateBetween(partner, start, end);
     }
+
+    /**
+     *  查询 商户绑定会员List
+     * @param lockMemberCriteria
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List getMerchantLockMemberList(LockMemberCriteria lockMemberCriteria) {
+
+        int start = lockMemberCriteria.getPageSize() * (lockMemberCriteria.getCurrentPage() - 1);
+
+        StringBuffer sql = new StringBuffer();
+        sql.append("select  lju2.lju_id, lju2.bind_date, lju2.phone, ifnull(counts.total,0) as count, lju2.nickname, lju2.image, merchant.name from "
+            + " (select lju1.id lju_id, lju1.bind_merchant_date bind_date, lju1.phone_number phone, wxu1.nickname nickname, wxu1.head_image_url image, lju1.bind_merchant_id bind_merchant_id from le_jia_user lju1,wei_xin_user wxu1 where ");
+        if (lockMemberCriteria.getStoreIds() != null) {
+            sql.append(" lju1.bind_merchant_id in (");
+            for(int i =0;i<lockMemberCriteria.getStoreIds().length;i++){
+                sql.append(lockMemberCriteria.getStoreIds()[i]+",");
+            }
+            sql.deleteCharAt(sql.length()-1);
+            sql.append(") and ");
+        }
+        if (lockMemberCriteria.getStartDate() != null && lockMemberCriteria.getStartDate() != "") {
+            sql.append(" lju1.bind_merchant_date between '");
+            sql.append(lockMemberCriteria.getStartDate());
+            sql.append("' and '");
+            sql.append(lockMemberCriteria.getEndDate());
+            sql.append("' and ");
+        }
+        sql.append(" lju1.id = wxu1.le_jia_user_id order by lju1.bind_merchant_date desc limit ");
+        sql.append(start);
+        sql.append(",");
+        sql.append(lockMemberCriteria.getPageSize());
+        sql.append(" ) as lju2 left join "
+                   + "(select sum(off_line_order_share.to_lock_merchant) as total,off_line_order.le_jia_user_id as id from off_line_order,off_line_order_share where off_line_order.id = off_line_order_share.off_line_order_id ");
+
+        if (lockMemberCriteria.getStoreIds() != null) {
+            sql.append(" and off_line_order_share.lock_merchant_id in (");
+            for(int i =0;i<lockMemberCriteria.getStoreIds().length;i++){
+                sql.append(lockMemberCriteria.getStoreIds()[i]+",");
+            }
+            sql.deleteCharAt(sql.length()-1);
+            sql.append(")");
+        }
+        sql.append(" group by off_line_order.le_jia_user_id) as counts  on  lju2.lju_id = counts.id ");
+        sql.append(" left join merchant on lju2.bind_merchant_id = merchant.id");
+
+        Query query = em.createNativeQuery(sql.toString());
+        List<Object[]> details = query.getResultList();
+        return details;
+    }
+
+    /**
+     *  查询 商户绑定会员总数 和 总佣金贡献
+     * @param lockMemberCriteria
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List getMerchantLockMemberCount(LockMemberCriteria lockMemberCriteria) {
+
+        int start = lockMemberCriteria.getPageSize() * (lockMemberCriteria.getCurrentPage() - 1);
+
+        StringBuffer sql = new StringBuffer();
+        sql.append("select  count(lju2.lju_id) , sum(counts.total)  from "
+                   + " (select lju1.id lju_id from le_jia_user lju1,wei_xin_user wxu1 where ");
+        if (lockMemberCriteria.getStoreIds() != null) {
+            sql.append(" lju1.bind_merchant_id in (");
+            for(int i =0;i<lockMemberCriteria.getStoreIds().length;i++){
+                sql.append(lockMemberCriteria.getStoreIds()[i]+",");
+            }
+            sql.deleteCharAt(sql.length()-1);
+            sql.append(") and ");
+        }
+        if (lockMemberCriteria.getStartDate() != null && lockMemberCriteria.getStartDate() != "") {
+            sql.append(" lju1.bind_merchant_date between '");
+            sql.append(lockMemberCriteria.getStartDate());
+            sql.append("' and '");
+            sql.append(lockMemberCriteria.getEndDate());
+            sql.append("' and ");
+        }
+        sql.append(" lju1.id = wxu1.le_jia_user_id order by lju1.bind_merchant_date desc ");
+        sql.append(" ) as lju2 left join "
+                   + "(select sum(off_line_order_share.to_lock_merchant) as total,off_line_order.le_jia_user_id as id from off_line_order,off_line_order_share where off_line_order.id = off_line_order_share.off_line_order_id ");
+
+        if (lockMemberCriteria.getStoreIds() != null) {
+            sql.append(" and off_line_order_share.lock_merchant_id in (");
+            for(int i =0;i<lockMemberCriteria.getStoreIds().length;i++){
+                sql.append(lockMemberCriteria.getStoreIds()[i]+",");
+            }
+            sql.deleteCharAt(sql.length()-1);
+            sql.append(")");
+        }
+        sql.append(" group by off_line_order.le_jia_user_id ) as counts  on  lju2.lju_id = counts.id ");
+
+        Query query = em.createNativeQuery(sql.toString());
+        List<Object[]> details = query.getResultList();
+        return details;
+    }
+
+    /***************************************** 查询 商户门店下 绑定会员信息 **********************************************/
+    /**
+     * 根据商户门店分页查询锁定会员
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List<Object[]> getMerchantLockMemberByPage(LockMemberCriteria lockMemberCriteria) {
+        int start = lockMemberCriteria.getPageSize() * (lockMemberCriteria.getCurrentPage() - 1);
+        StringBuffer sql = new StringBuffer();
+        sql.append("select  lju2.lju_id, lju2.bind_date, lju2.phone, lju2.nickname, lju2.image, merchant.name, merchant.id from "
+                   + " (select lju1.id lju_id, lju1.bind_merchant_date bind_date, lju1.phone_number phone, wxu1.nickname nickname, wxu1.head_image_url image, lju1.bind_merchant_id bind_merchant_id from le_jia_user lju1,wei_xin_user wxu1 where ");
+        if (lockMemberCriteria.getStoreIds() != null) {
+            sql.append(" lju1.bind_merchant_id in (");
+            for(int i =0;i<lockMemberCriteria.getStoreIds().length;i++){
+                sql.append(lockMemberCriteria.getStoreIds()[i]+",");
+            }
+            sql.deleteCharAt(sql.length()-1);
+            sql.append(") and ");
+        }
+        if (lockMemberCriteria.getStartDate() != null && lockMemberCriteria.getStartDate() != "") {
+            sql.append(" lju1.bind_merchant_date between '");
+            sql.append(lockMemberCriteria.getStartDate());
+            sql.append("' and '");
+            sql.append(lockMemberCriteria.getEndDate());
+            sql.append("' and ");
+        }
+        sql.append(" lju1.id = wxu1.le_jia_user_id order by lju1.bind_merchant_date desc limit ");
+        sql.append(start);
+        sql.append(",");
+        sql.append(lockMemberCriteria.getPageSize());
+        sql.append(" ) as lju2 left join merchant on lju2.bind_merchant_id = merchant.id");
+
+        Query query = em.createNativeQuery(sql.toString());
+        List<Object[]> details = query.getResultList();
+        return details;
+    }
+    /**
+     *  统计锁定会员数量
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Long countMerchantLockMember(LockMemberCriteria lockMemberCriteria) {
+        int start = lockMemberCriteria.getPageSize() * (lockMemberCriteria.getCurrentPage() - 1);
+        StringBuffer sql = new StringBuffer();
+        sql.append("select count(1)  from (");
+        sql.append("select  lju2.lju_id, lju2.bind_date, lju2.phone, lju2.nickname, lju2.image from "
+            + " (select lju1.id lju_id, lju1.bind_merchant_date bind_date, lju1.phone_number phone, wxu1.nickname nickname, wxu1.head_image_url image, lju1.bind_merchant_id bind_merchant_id from le_jia_user lju1,wei_xin_user wxu1 where ");
+        if (lockMemberCriteria.getStoreIds() != null) {
+            sql.append(" lju1.bind_merchant_id in ( ");
+            for(int i =0;i<lockMemberCriteria.getStoreIds().length;i++){
+                sql.append(lockMemberCriteria.getStoreIds()[i]+",");
+            }
+            sql.deleteCharAt(sql.length()-1);
+            sql.append(") and ");
+        }
+        if (lockMemberCriteria.getStartDate() != null && lockMemberCriteria.getStartDate() != "") {
+            sql.append(" lju1.bind_merchant_date between '");
+            sql.append(lockMemberCriteria.getStartDate());
+            sql.append("' and '");
+            sql.append(lockMemberCriteria.getEndDate());
+            sql.append("' and ");
+        }
+        sql.append(" lju1.id = wxu1.le_jia_user_id order by lju1.bind_merchant_date desc ");
+        sql.append(" ) as lju2 ) total");
+        Query query = em.createNativeQuery(sql.toString());
+        List details = query.getResultList();
+        Long result = 0L;
+        if(details!=null) {
+            result = new Long(details.get(0).toString());
+        }
+        return result;
+    }
+
+
 }

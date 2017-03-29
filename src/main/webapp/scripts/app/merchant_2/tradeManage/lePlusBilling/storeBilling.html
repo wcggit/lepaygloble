@@ -1,0 +1,50 @@
+<!--查询表单-->
+<form class="form-inline list-check">
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>交易完成时间</label>
+            <input type="text" name="completeTime" id="date_picker" class="input-group timePicker col-md-9" />
+        </div>
+        <div class="form-group col-md-4">
+            <button type="button" class="btn btn-warning btn-check2" ng-click="findByDate()">查询</button>
+        </div>
+    </div>
+</form>
+<!--表格信息总结-->
+<p class="ttl-add table-title clearfix">
+    详细数据<span class="pull-right"><i class="iconfont icon-2wodezhangdan18x20"></i>下载表格</span>
+</p>
+<!--表格-->
+<div class="panel panel-default">
+    <table class="table ol-tab">
+        <thead class="active">
+        <tr>
+            <td>门店名称</td>
+            <td>时段内总入账</td>
+            <td>扫码微信入账</td>
+            <td>POS刷卡入账</td>
+            <td>POS移动支付入账</td>
+            <td>红包支付入账</td>
+            <td>操作</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="tr-empty"><td class="text-center" colspan="8" ng-show="merchantBills==null">暂无数据！</td></tr>
+        <tr class="tr-noEmpty" ng-repeat="bill in merchantBills">
+            <td>{{bill.merchantName}}
+            <td>￥{{bill.totalTransfer| number:2 }}</td>
+            <td>￥{{bill.offTransferFromTruePay| number:2}}</td>
+            <td>￥{{bill.posCardTransfer| number:2}}</td>
+            <td>
+                <p>￥{{bill.mobileTransfer| number:2}}</p>
+                <p>(微信￥{{bill.mobileWxTransfer| number:2}}+支付宝￥{{bill.mobileAliTransfer| number:2}})</p>
+            </td>
+            <td>
+                <p>￥{{bill.totalScore| number:2}}</p>
+                <p>(扫码￥{{bill.offScore}| number:2}+POS￥{{bill.posScore| number:2}})</p>
+            </td>
+            <td><a>下载表格</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

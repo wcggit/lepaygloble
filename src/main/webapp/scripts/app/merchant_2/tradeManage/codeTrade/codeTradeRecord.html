@@ -1,0 +1,137 @@
+<!--查询表单-->
+<form class="form-inline list-check">
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label>门店名称</label>
+            <div class="input-group col-md-6">
+                <select id="selectStore" class="form-control">
+                    <option value="">请选择</option>
+                    <option ng-repeat="x in myStore" value="{{x[0]}}">{{x[1]}}</option>
+                </select>
+                <span class="select-jiao"></span>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label>交易完成时间</label>
+            <!--<date-choice class="input-group timePicker col-md-9"></date-choice>-->
+            <div class="input-group timePicker col-md-9">
+                <input type="text" name="reservation" id="completeDate" class="form-control"/>
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label>订单类型</label>
+            <div class="input-group col-md-6">
+                <select class="form-control" id="rebateWay">
+                    <option value="">请选择</option>
+                    <option value="1">非会员订单</option>
+                    <option value="2">会员订单</option>
+                    <option value="3">导流订单</option>
+                    <option value="4">会员普通订单</option>
+                </select>
+                <span class="select-jiao"></span>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <label>支付方式</label>
+            <div class="input-group col-md-6">
+                <select class="form-control" id="payWay">
+                    <option value="">请选择</option>
+                    <option value="1">微信</option>
+                    <option value="2">红包</option>
+                </select>
+                <span class="select-jiao"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label>订单号</label>
+            <input type="text" class="form-control" id="orderSid">
+        </div>
+        <div class="form-group col-md-4">
+            <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+        </div>
+    </div>
+</form>
+<!--表格信息总结-->
+<p class="ttl-add table-title">
+    <!--所选条件下，共有<span class="font-yellow">258</span>条交易记录，-->
+    <!--订单总金额<span class="font-yellow">￥8520.56</span>，-->
+    <!--使用红包<span class="font-yellow">￥20</span>，-->
+    <!--微信实付<span class="font-yellow">￥8500</span>，-->
+    <!--实际入账<span class="font-yellow">￥23233+￥12</span>红包-->
+
+    所选条件下，共有<span class="font-yellow">{{merchantCodePage.totalElements}}</span>条交易记录，
+    订单总金额<span class="font-yellow">{{merchantCount.totalPrice / 100.0 | currency:'￥'}}</span>，
+    使用红包<span class="font-yellow">{{merchantCount.trueScore / 100.0 | currency:'￥'}}</span>，
+    微信实付<span class="font-yellow">{{merchantCount.truePay / 100.0 | currency:'￥'}}</span>，
+    实际入账<span class="font-yellow">{{merchantCount.transferMoneyFromTruePay / 100.0 | currency:'￥'}}+{{merchantCount.transferMoneyHB / 100.0 | currency:'￥'}}</span>红包
+</p>
+<!--表格-->
+<div class="panel panel-default">
+    <table class="table ol-tab">
+        <thead class="active">
+        <tr>
+            <td>交易完成时间</td>
+            <td>交易门店</td>
+            <td>订单号</td>
+            <td>支付方式</td>
+            <td>订单金额</td>
+            <td>交易类型(费率)</td>
+            <td>实际入账</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="tr-empty" id="notData" hidden="true"><td class="text-center" colspan="8" >暂无数据！</td></tr>
+        <tr class="tr-noEmpty" ng-repeat="x in codeOrderCriteria" id="HaveData">
+            <td class="td-date">
+                <p>{{x.completeDate | date:'yyyy-MM-dd hh:mm:ss'}}</p></td>
+            <td>
+                {{x.merchant.name}}</td>
+            <td>
+                {{x.orderSid}}</td>
+            <td>
+                <p ng-show="{{x.payWay.id==1}}">微信</p>
+                <p ng-show="{{x.payWay.id==2}}">红包</p></td>
+            <td>
+                <p>{{x.totalPrice / 100.0 | currency:'￥'}}</p></td>
+            <td>
+                <p ng-show="{{x.rebateWay==1}}">非会员订单</p>
+                <p ng-show="{{x.rebateWay==2}}">会员订单</p>
+                <p ng-show="{{x.rebateWay==3}}">导流订单</p>
+                <p ng-show="{{x.rebateWay==4}}">会员普通订单</p></td>
+            <td>
+                <p>{{x.transferMoney / 100.0 | currency:'￥'}}</p></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--分页-->
+<div class=" clearfix">
+    <nav class="pull-right">
+        <ul class="pagination">
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+            </li>
+            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                1}}</a>
+            </li>
+            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                2}}</a>
+            </li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(page+1)"><a aria-label="Next">
+                <span aria-hidden="true">›</span>
+            </a></li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+        </ul>
+    </nav>
+</div>

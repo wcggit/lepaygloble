@@ -1,0 +1,99 @@
+<div class="homePage">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">
+            锁定会员
+        </div>
+    </div>
+    <div class="container-fluid">
+        <!--查询表单-->
+        <form class="form-inline list-check">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>门店名称</label>
+                    <div class="input-group col-md-6">
+                        <select id="selectStore" class="form-control">
+                            <option value="">请选择</option>
+                            <option ng-repeat="x in myStore" value="{{x[0]}}">{{x[1]}}</option>
+                        </select>
+                        <span class="select-jiao"></span>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>交易完成时间</label>
+                    <!--<date-choice class="input-group timePicker col-md-9"></date-choice>-->
+                    <div class="input-group timePicker col-md-9">
+                        <input type="text" name="reservation" id="completeDate" class="form-control"/>
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label></label>
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+                </div>
+            </div>
+        </form>
+        <!--表格信息总结-->
+        <p class="ttl-add table-title">
+            筛选条件下共有<span class="font-yellow">{{lockMembersData.lockMemberCount}}</span>个会员，
+            给您带来<span class="font-yellow">{{lockMembersData.commissionIncome / 100.0 | currency:'￥'}}</span>佣金收入
+        </p>
+        <!--表格-->
+        <div class="panel panel-default">
+            <table class="table ol-tab">
+                <thead class="active">
+                <tr>
+                    <td>微信信息</td>
+                    <td>锁定时间</td>
+                    <td>锁定门店</td>
+                    <td>手机号</td>
+                    <td>佣金贡献</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="tr-empty" id="notData" hidden="true"><td class="text-center" colspan="8" >暂无数据！</td></tr>
+                <tr class="tr-noEmpty" ng-repeat="x in lockMembersCriteria" id="HaveData">
+                    <td><span class="wx-faceImg"><img ng-src="{{x[5]}}" alt=""></span>
+                        <span>{{x[4]}}</span></td>
+                    <td class="td-date">
+                        <p ng-bind="x[1]|date:'yyyy-MM-dd'"></p>
+                        <p ng-bind="x[1]|date:'HH:mm:ss'"></p>
+                    </td>
+                    <td>
+                        {{x[6]}}</td>
+                    <td ng-show="x[2]!=null" ng-bind="x[2]"></td>
+                    <td ng-show="x[2]==null">--</td>
+                    <td ng-bind="'¥'+x[3]/100.0"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

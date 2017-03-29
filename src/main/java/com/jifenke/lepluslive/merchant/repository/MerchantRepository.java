@@ -20,10 +20,11 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
 
     /**
      * 查询合伙人虚拟商户
+     *
      * @param partnerId
      * @return
      */
-    @Query(value="SELECT * FROM merchant WHERE partner_id = ?1 AND partnership = 2",nativeQuery = true)
+    @Query(value = "SELECT * FROM merchant WHERE partner_id = ?1 AND partnership = 2", nativeQuery = true)
     Merchant findVtMerchantByPartner(Long partnerId);
 
     @Query(value = "select count(*) from merchant group by ?1", nativeQuery = true)
@@ -46,4 +47,35 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
 
     Merchant findByMerchantSid(String sid);
 
+    /***
+     * 根据门店查询数据
+     */
+    @Query(value = "select * from (" +
+        "        SELECT o.order_sid,o.complete_date,lepay_code,true_pay,true_score,o.rebate_way,0 order_type,1 merchant_name FROM off_line_order o where o.state=1 and  o.merchant_id=?1" +
+        "        UNION " +
+        "        SELECT p.order_sid,p.complete_date,null,true_pay,true_score,p.rebate_way,1 order_type,1 merchant_name FROM pos_order p where  p.state=1 and p.merchant_id =?1" +
+        "    ) r order by r.complete_date desc limit ?2,10", nativeQuery = true)
+    List<Object[]> findOrderListByMerchant(Long merchantId, Long offSet);
+
+    /**
+     * 分页查询商户旗下各门店锁定会数量和总数
+     *
+     * @param obj
+     * @param offSet
+     * @return
+     */
+    @Query(value = "SELECT b.`name`,count(a.id) number,b.user_limit " +
+        "from le_jia_user a LEFT JOIN merchant b on a.bind_merchant_id = b.id " +
+        "where a.bind_merchant_id in (?1) GROUP BY " +
+        "a.bind_merchant_id ORDER BY number DESC LIMIT ?2,6", nativeQuery = true)
+    List<Object[]> findPageMerchantMemberLockNumber(List<Object> obj, Integer offSet);
+
+    /**
+     * 查询商户旗下所有的会员锁定总数
+     *
+     * @param obj
+     * @return
+     */
+    @Query(value = "SELECT count(a.id) from le_jia_user a where a.bind_merchant_id in (?1)", nativeQuery = true)
+    Integer findMerchantTotalMember(List<Object> obj);
 }

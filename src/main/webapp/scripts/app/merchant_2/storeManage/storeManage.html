@@ -1,0 +1,84 @@
+<div class="storeManage">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">
+            门店管理 <input type="button" class="btn btn-warning pull-right" data-target="#addStore" data-toggle="modal" value="添加门店">
+        </div>
+    </div>
+    <div class="container-fluid">
+        <!--表格-->
+        <div class="panel panel-default">
+            <table class="table ol-tab">
+                <thead class="active">
+                <tr>
+                    <td>门店名称</td>
+                    <td>门店地址</td>
+                    <td>门店联系人</td>
+                    <td>座机服务电话</td>
+                    <td>收红包权限</td>
+                    <td>乐店状态</td>
+                    <td>锁定会员</td>
+                    <td>累计佣金收入</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="tr-empty"><td class="text-center" colspan="8">暂无数据！</td></tr>
+                <tr class="tr-noEmpty">
+                    <td>一拼江南棉花糖KTV</td>
+                    <td>北京市朝阳区朝阳路锐城国际0917室</td>
+                    <td>
+                        <p>孙天奇</p>
+                        <p>15227162563</p>
+                    </td>
+                    <td>010-234567899</td>
+                    <td>已开通</td>
+                    <td>已开启</td>
+                    <td>500</td>
+                    <td>￥200.22</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<!--提现成功提示框-->
+<div class="modal fade" id="addStore">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p class="text-center"><span class="icon-warning">门店自助添加功能暂未上线</span></p>
+                <p class="text-center">新门店添加需要联系乐加客服处理，客服电话 400-0412-800</p>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
