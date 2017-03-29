@@ -87,9 +87,9 @@ public class ttt {
 //        }
         List<MerchantUser> users = merchantUserRepository.findAll();
         for (MerchantUser user : users) {
-//            user.setMerchantSid(MvUtil.getMerchantUserSid());
-//            merchantUserRepository.save(user);
-            System.out.println(user.getMerchantSid());
+            user.setMerchantSid(MvUtil.getMerchantUserSid());
+            merchantUserRepository.save(user);
+//            System.out.println(user.getMerchantSid());
         }
 
     }

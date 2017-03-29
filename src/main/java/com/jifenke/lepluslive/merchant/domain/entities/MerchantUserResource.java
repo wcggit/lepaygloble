@@ -20,7 +20,7 @@ public class MerchantUserResource {
     @ManyToOne
     private LejiaResource leJiaResource;
 
-    private Integer resourceType;
+    private Integer resourceType;                                            //  0 - 门店
 
     public Long getId() {
         return id;
