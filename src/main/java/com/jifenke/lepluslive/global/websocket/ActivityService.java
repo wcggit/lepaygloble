@@ -1,6 +1,8 @@
 package com.jifenke.lepluslive.global.websocket;
 
 import com.jifenke.lepluslive.global.websocket.dto.ActivityDTO;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
+import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
 import org.slf4j.Logger;
@@ -34,10 +36,15 @@ public class ActivityService implements ApplicationListener<SessionDisconnectEve
     @Inject
     SimpMessageSendingOperations messagingTemplate;
 
+    @Inject
+    private MerchantUserRepository merchantUserRepository;
+
+
     @SubscribeMapping("/topic/activity")
     @SendTo("/topic/tracker")
     public ActivityDTO sendActivity(@Payload ActivityDTO activityDTO, StompHeaderAccessor stompHeaderAccessor, Principal principal) {
-        activityDTO.setUserLogin(SecurityUtils.getCurrentUserLogin());
+        MerchantUser user  = merchantUserRepository.findMerchantUserByMerchantSid(SecurityUtils.getCurrentUserLogin()).get();
+        activityDTO.setUserLogin(user.getName());
         activityDTO.setUserLogin(principal.getName());
         activityDTO.setSessionId(stompHeaderAccessor.getSessionId());
         activityDTO.setIpAddress(stompHeaderAccessor.getSessionAttributes().get(IP_ADDRESS).toString());

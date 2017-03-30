@@ -1,0 +1,221 @@
+/*自定义*/
+*{color: #222;font-size:16px;margin: 0;padding: 0;font-family: "microsoft yahei";}
+:focus {
+    outline:none;
+}
+html,body{position: relative;background-color: #e7e8eb}
+input::-webkit-input-placeholder {
+    color: #888;
+}
+input:-moz-placeholder {
+    color: #888;
+}
+input::-moz-placeholder {
+    color: #888;
+}
+input:-ms-input-placeholder {
+    color: #888;
+}
+/*框架改造*/
+.timePicker i{
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    top: auto;
+    cursor: pointer;
+    z-index: 10;
+}
+.clear-float:after{
+    content: '';
+    clear: both;
+    height: 0;
+    display: block;
+}
+hr{margin-top: 6px;margin-bottom: 6px}
+ul,li{list-style: none}
+.btn{padding: 5px 24px}
+.btn-default:hover {
+    color: #fff;
+    background-color: #fb991a;
+    border-color: #adadad;
+}
+.tooltip-inner {
+    max-width: 500px;
+    color: #fb991a;
+    border: solid 1px #fb991a;
+    background-color: #fff;
+    font-size: 12px;
+}
+.tooltip.top .tooltip-arrow{
+    border-width: 0;
+}
+.tooltip.right .tooltip-arrow{
+    width: 8px;
+    height: 8px;
+    border-left: solid 1px #fb991a;
+    border-top: solid 1px #fb991a;
+    transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg); /* IE 9 */
+    -webkit-transform: rotate(-45deg); /* Safari and Chrome */
+    border-right-color: transparent;
+    background-color: #fff;
+    left:1px;
+    border-width: 1px;
+}
+.tooltip.top .tooltip-arrow{
+    width: 8px;
+    height: 8px;
+    border-left: solid 1px #fb991a;
+    border-top: solid 1px #fb991a;
+    transform: rotate(-1355deg);
+    -ms-transform: rotate(-135deg); /* IE 9 */
+    -webkit-transform: rotate(-135deg); /* Safari and Chrome */
+    border-right-color: transparent;
+    background-color: #fff;
+    bottom:1px;
+
+}
+.modal-content{border-radius: 0}
+label{
+    font-weight: normal;
+    font-size: 14px;
+    text-align: right;
+    width: 90px;
+    display: inline-block;
+}
+.table>tbody>tr>td, .table>tbody>tr>th,
+.table>tfoot>tr>td, .table>tfoot>tr>th,
+.table>thead>tr>td, .table>thead>tr>th{
+    vertical-align:middle;
+}
+.table>tbody>tr>td>p, .table>tbody>tr>th>p,
+.table>tfoot>tr>td>p, .table>tfoot>tr>th>p,
+.table>thead>tr>td>p, .table>thead>tr>th>p{
+    margin: 0;
+}
+thead>tr>td,tbody>tr>td,thead>tr>td>p,tbody>tr>td>p{font-size: 14px;}
+.progress,.progress-bar{border-radius: 10px}
+/*自定义属性*/
+.page-top{border: none;border-bottom: solid 1px #e7e8eb;border-radius: 0px}
+.page-bottom{border: none;border-bottom: solid 1px #e7e8eb;border-top: solid 1px #e7e8eb;border-radius: 0px}
+.page-top > div{
+    line-height: 32px;
+}
+.ttl{border-left: solid 2px #fb991a;height: 20px;line-height: 20px;padding-left: 10px;margin: 24px 0 20px}
+.tooltip-problem{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #fb991a;
+    color: #fff;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+}
+.list-check .row{margin: 10px 0 30px}
+.timePicker{cursor: pointer ;}
+.font-yellow{color: #fb991a}
+.table-title{font-size: 14px}
+.margin-center{display:block;margin: 20px auto;}
+.color222{color: #222}
+.color666{color: #666}
+.colorfff{color: #fff}
+.fontSize12{font-size: 12px}
+.fontSize14{font-size: 14px}
+.fontSize16{font-size: 16px}
+.merchant-data .col-md-3 .out-div{
+    width: 210px;
+    border: solid 1px #e4e4e4;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+.merchant-data .col-md-3 .out-div p:first-child{
+    color: #666;
+    font-size: 14px;
+    line-height: 35px;
+}
+.merchant-data .col-md-3 .out-div p:last-child{
+    color: #444;
+    font-size: 28px;
+}
+.row-margin{
+    margin-left: 0;
+    margin-right: 0;
+}
+.wx-faceImg{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+.wx-faceImg img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+/*a-btn样式*/
+.a-btn{cursor: pointer}
+
+/* 去掉默认样式，设置新的样式 */
+.select-style{
+    position: relative;
+    display: inline-block;
+}
+.select-style select{
+    box-sizing:border-box;
+    background:none;
+    outline:none;
+    -webkit-appearance:none;
+    padding:0 25px 0 5px;
+    line-height:inherit;
+    color:inherit;
+    cursor:pointer;
+    font-size:14px;
+    position:relative;
+    z-index:3;
+    width: 100%;
+    color: #999;
+}
+.select-style:after{
+    display: block;
+    width: 10px;
+    height: 26px;
+    content: url("../../images/merchant_2/homePage/select_sanjiao.png");
+    color: #636363;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    right: 10px;
+    margin: auto;
+}
+.select-style select option{
+    color:#222;
+    font-size: 14px;
+}
+select::-ms-expand { display: none; }
+select.select-inline-block{display: inline-block;width: auto;}
+
+/*头部*/
+.nav-style>li{
+    float: left;
+}
+.nav-style>li>a, .nav-style>li>a:focus, .nav-style>li>a:hover{
+    color: #555;
+    cursor: pointer;
+    background-color: #fff;
+}
+.nav-style>li.active>a, .nav-style>li.active>a:focus, .nav-style>li.active>a:hover{
+    cursor: default;
+    background-color: #fff;
+    border-bottom:solid 2px #fb991a;
+    color: #fb991a;
+}
+.top-style1 .panel-body{padding-bottom: 65px;position: relative}
+.top-style1 .nav-style{
+    margin-bottom: -20px;
+    position: absolute;
+    bottom: 19px;
+    left:0px;
+}

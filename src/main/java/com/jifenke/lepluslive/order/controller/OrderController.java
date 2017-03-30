@@ -7,29 +7,31 @@ import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
+import com.jifenke.lepluslive.order.controller.view.LejiaOrderDTO;
+import com.jifenke.lepluslive.order.controller.view.MerchantOrderDto;
+import com.jifenke.lepluslive.order.controller.view.MerchantOrderExcel;
 import com.jifenke.lepluslive.order.controller.view.OrderViewExcel;
+import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OLOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OrderShareCriteria;
+import com.jifenke.lepluslive.order.service.LejiaOrderService;
 import com.jifenke.lepluslive.order.service.OffLineOrderService;
+import com.jifenke.lepluslive.order.service.PosOrderSerivce;
 import com.jifenke.lepluslive.security.SecurityUtils;
-
 import org.springframework.data.domain.Page;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Inject;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by wcg on 16/6/29.
@@ -54,6 +56,17 @@ public class OrderController {
     @Inject
     SimpMessageSendingOperations messagingTemplate;
 
+    @Inject
+    private MerchantUserResourceService merchantUserResourceService;
+
+    @Inject
+    private PosOrderSerivce posOrderSerivce;
+
+    @Inject
+    private LejiaOrderService lejiaOrderService;
+
+    @Inject
+    private MerchantOrderExcel merchantOrderExcel;
 
     @RequestMapping(value = "/order/todayOrderDetail", method = RequestMethod.GET)
     public LejiaResult getTodayOrderDetail() {
@@ -69,7 +82,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
 
         return LejiaResult.ok(offLineOrderService.countTodayOrderDetail(merchant, start, end));
@@ -93,7 +106,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
 
         return LejiaResult.ok(offLineOrderService.countTodayOrderDetail(merchant, start, end));
@@ -110,7 +123,7 @@ public class OrderController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         olOrderCriteria.setMerchant(merchantUserByName.getMerchant());
         Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 10);
         return LejiaResult.ok(page);
@@ -121,7 +134,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
 
         return LejiaResult.ok(offLineOrderService.countOrderDetail(merchant));
@@ -135,7 +148,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
         olOrderCriteria.setMerchant(merchant);
 
@@ -150,7 +163,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
 
         Calendar calendar = Calendar.getInstance();
@@ -180,7 +193,7 @@ public class OrderController {
 
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
         MerchantWallet
             merchantWallet =
@@ -209,7 +222,7 @@ public class OrderController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         olOrderCriteria.setMerchant(merchantUserByName.getMerchant());
         Page page = offLineOrderService.findOrderShareByPage(olOrderCriteria, 10);
         return LejiaResult.ok(page);
@@ -222,7 +235,7 @@ public class OrderController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         olOrderCriteria.setMerchant(merchantUserByName.getMerchant());
         return LejiaResult.ok(offLineOrderService.orderShareStatistic(olOrderCriteria));
     }
@@ -244,7 +257,7 @@ public class OrderController {
         MerchantUser
             merchantUserByName =
             merchantService
-                .findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         olOrderCriteria.setMerchant(merchantUserByName.getMerchant());
         Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 10000);
         Map map = new HashMap();
@@ -259,4 +272,149 @@ public class OrderController {
         messagingTemplate.convertAndSendToUser("wcg", "/reply", activityDTO);
     }
 
+    /**
+     *  订单语音提示
+     */
+    @RequestMapping(value = "/leJiaOrder/message/{id}", method = RequestMethod.GET)
+    public void sendLejiaOrderMessage(@PathVariable String id) {
+        ActivityDTO activityDTO = new ActivityDTO();
+        activityDTO.setPage("Hello World "+id);
+        messagingTemplate.convertAndSendToUser(SecurityUtils.getCurrentUserLogin(), "/reply", activityDTO);
+    }
+
+
+    /**
+     * 每日订单数据 (所有门店)
+     */
+    @RequestMapping(value = "/order/dailyOrder", method = RequestMethod.GET)
+    public LejiaResult getDailyOrderData() {
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        Long offLineDailyCount = offLineOrderService.countOffLineOrder(merchants);          //  线下订单
+        Long posDailyCount = posOrderSerivce.countPosOrder(merchants);                      //  pos 订单
+        Map<String, Long> map = offLineOrderService.countMemberDailyOrdersDetail(merchants);     //  会员消费
+        map.put("offLineDailyCount", offLineDailyCount);
+        map.put("posDailyCount", posDailyCount);
+        return LejiaResult.ok(map);
+    }
+
+    /**
+     * 每日订单数据 (指定门店)
+     */
+    @RequestMapping(value = "/order/dailyOrder/merchant/{id}", method = RequestMethod.GET)
+    public LejiaResult getDailyOrderData(@PathVariable Long id) {
+        Merchant merchant = merchantService.findMerchantById(id);
+        List<Merchant> merchants = new ArrayList<>();
+        merchants.add(merchant);
+        Long offLineDailyCount = offLineOrderService.countOffLineOrder(merchants);          //  线下订单
+        Long posDailyCount = posOrderSerivce.countPosOrder(merchants);                      //  pos 订单
+        Map<String, Long> map = offLineOrderService.countMemberDailyOrdersDetail(merchants);     //  会员消费
+        map.put("offLineDailyCount", offLineDailyCount == null ? 0L : offLineDailyCount);
+        map.put("posDailyCount", posDailyCount == null ? 0L : posDailyCount);
+        return LejiaResult.ok(map);
+    }
+
+    /**
+     * 每日订单列表 (所有门店)
+     */
+    @RequestMapping(value = "/order/orderList/{offset}", method = RequestMethod.GET)
+    public LejiaResult getOrderList(@PathVariable Long offset) {
+        if(offset==null) {
+            offset = 0L;
+        }
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        List<Object[]> allOrderList = new ArrayList<>();
+        for (Merchant merchant : merchants) {
+            List<Object[]> orderList = merchantService.findOrderList(merchant,offset);
+            for (Object[] objects : orderList) {
+                objects[7] = merchant.getName();
+            }
+            allOrderList.addAll(orderList);
+            // TO-DO   设置门店名称
+        }
+        return LejiaResult.ok(allOrderList);
+    }
+
+    /**
+     * 每日订单列表 (指定门店)
+     */
+    @RequestMapping(value = "/order/orderList/merchant/{param}", method = RequestMethod.GET)
+    public LejiaResult getOrderListByMerchant(@PathVariable String param) {
+        String[] split = param.split("-");
+        Long id = new Long(split[0]);
+        Long offset = new Long(split[1]);
+        if(offset==null) {
+            offset = 0L;
+        }
+        List<Merchant> merchants = new ArrayList<>();
+        Merchant merchant = merchantService.findMerchantById(id);
+        merchants.add(merchant);
+        List<Object[]> orderList = merchantService.findOrderList(merchant,offset);
+        for (Object[] objects : orderList) {
+            objects[7] = merchant.getName();
+        }
+        return LejiaResult.ok(orderList);
+    }
+
+    /**
+     * 乐加账单 - 每日账单
+     */
+    @RequestMapping(value="/lejiaOrder/daily",method = RequestMethod.POST)
+    public LejiaResult getDailyOrderDataByCriteria(@RequestBody DailyOrderCriteria dailyOrderCriteria) {
+        LejiaOrderDTO orderDTO = lejiaOrderService.findDailyOrderByMerchant(dailyOrderCriteria);
+        return LejiaResult.ok(orderDTO);
+    }
+
+    /***
+     *  乐加账单 - 门店账单
+     */
+    @RequestMapping(value="/lejiaOrder/merchant",method = RequestMethod.POST)
+    public LejiaResult getMerchantOrderDataByCriteria(@RequestBody DailyOrderCriteria dailyOrderCriteria) {
+        // 设置默认时间 - 最近七天
+        setDefaultDailyCriteria(dailyOrderCriteria);
+        //  根据条件查询账单
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        List<MerchantOrderDto> orderDatas = lejiaOrderService.findMerchantOrderData(dailyOrderCriteria,merchants);
+        return LejiaResult.ok(orderDatas);
+    }
+
+    /**
+     *  导出指定门店订单数据 Excel
+     */
+    @RequestMapping(value="/lejiaOrder/merchant/export",method = RequestMethod.GET)
+    public ModelAndView exportOrderExcel(@RequestParam(required = false) String startDate,
+                                   @RequestParam(required = false) String endDate,
+                                   @RequestParam(required = true) Long merchantId) {
+        String [] titles1 = {"订单编号","交易完成时间","订单状态","支付渠道","消费金额","使用红包","实际支付","订单类型","微信手续费","红包手续费","总入账金额","微信支付入账","红包支付入账","退款时间"};
+        String [] titles2 = {"退款单号","退款完成时间","订单编号","订单类型","订单完成时间","微信渠道退款","微信渠道退款","微信支付少转账","红包支付少转账"};
+        String [] titles3 = {"微信支付","红包支付","微信退款","红包退款","微信支付入账","红包支付入账"};
+        // 设置默认时间 - 最近七天
+        DailyOrderCriteria dailyOrderCriteria = new DailyOrderCriteria();
+        dailyOrderCriteria.setStartDate(startDate);
+        dailyOrderCriteria.setEndDate(endDate);
+        Merchant merchant = merchantService.findMerchantById(merchantId);
+        dailyOrderCriteria.setMerchant(merchant);
+        setDefaultDailyCriteria(dailyOrderCriteria);
+        // 导出 Excel
+        Map map = lejiaOrderService.findOrderExcelData(dailyOrderCriteria);
+        map.put("titles1",titles1);
+        map.put("titles2",titles2);
+        map.put("titles3",titles3);
+        map.put("dailyOrderCriteria",dailyOrderCriteria);
+        return new ModelAndView(merchantOrderExcel,map);
+    }
+
+    public DailyOrderCriteria setDefaultDailyCriteria(DailyOrderCriteria dailyOrderCriteria) {
+        if(dailyOrderCriteria.getStartDate()==null||dailyOrderCriteria.getEndDate()==null) {
+            Date endDate = new Date();
+            Date startDate = new Date();
+            startDate.setTime(endDate.getTime()-(86400000L*7));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            dailyOrderCriteria.setStartDate(simpleDateFormat.format(startDate));
+            dailyOrderCriteria.setEndDate(simpleDateFormat.format(endDate));
+        }
+        return dailyOrderCriteria;
+    }
 }

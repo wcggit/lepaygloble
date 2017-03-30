@@ -1,0 +1,11 @@
+<div class="row myCode">
+    <div class="col-md-3 text-center" ng-repeat="img in merchantCodes">
+        <p class="fontSize14 color222">{{merchantNames[$index]}}</p>
+        <div class="haibao">
+            <div class="rvCode">
+                <img src="{{img}}" alt="">
+            </div>
+            <div class="text-center download-code" ng-click="downLoad(img)"><span class="iconfont icon-2wodezhangdan18x20"></span>立即下载</div>
+        </div>
+    </div>
+</div>

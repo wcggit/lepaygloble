@@ -1,0 +1,176 @@
+<div class="accountManage">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">账户管理</div>
+    </div>
+    <div class="container-fluid" id="content">
+        <p class="ttl">基本信息</p>
+        <div class="panel panel-default" id="baseInfo">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-2">商户名称</div>
+                    <div class="col-md-4">{{loginInfo.merchantName}}</div>
+                    <div class="col-md-2">商户联系人</div>
+                    <div class="col-md-4">{{loginInfo.linkMan}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">登陆账号</div>
+                    <div class="col-md-4">{{loginInfo.name}}</div>
+                    <div class="col-md-2">登陆密码</div>
+                    <div class="col-md-4" >**********<a class="changePassword a-btn" data-target="#changePassword" ng-click="changePassword()">修改</a></div>
+                </div>
+            </div>
+        </div>
+        <p class="ttl">结算信息</p>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p class="ttl2">佣金结算账户</p>
+                <div class="row">
+                    <div class="col-md-2">银行账号</div>
+                    <div class="col-md-4">****** ******** {{loginInfo.merchantBank.bankNumber| limitTo:-4 }}</div>
+                    <div class="col-md-2">结算周期</div>
+                    <div class="col-md-4"> T+2(提现申请后两个工作日内到账)</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">开户支行</div>
+                    <div class="col-md-4">{{loginInfo.merchantBank.bankName}}</div>
+                    <!--<div class="col-md-2">收款人</div>
+                    <div class="col-md-4" >{{loginInfo.merchantBank.bankName}}</div>-->
+                </div>
+                <hr>
+                <p class="ttl2">门店结算账户
+                    <span class="select-style">
+                        <select class="form-control select-inline-block" ng-model="x" id="selMerchant" ng-change="getBankByMerchant()">
+                            <option value="">门店选择</option>
+                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                        </select>
+                    </span>
+                </p>
+                <div class="row">
+                    <div class="col-md-2">银行账号</div>
+                    <div class="col-md-4">****** ******** {{bankInfo.bankNumber| limitTo:-4}}</div>
+                    <div class="col-md-2">结算周期</div>
+                    <div class="col-md-4"> T+2(提现申请后两个工作日内到账)</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">开户支行</div>
+                    <div class="col-md-4">{{bankInfo.bankName}}</div>
+                    <div class="col-md-2">收款人</div>
+                    <div class="col-md-4" >{{payee}}</div>
+                </div>
+            </div>
+        </div>
+
+<p class="ttl clearfix"  id="p-accnoutInfo" style="display: none">账号信息<button class="btn btn-warning pull-right" data-target="#createAccount" data-toggle="modal">新建账号</button></p>
+<div class="panel panel-default" id="div-accnoutInfo" style="display: none">
+            <div class="panel-body">
+                <ul id="myTab" class="nav nav-pills">
+                    <li ng-class="{'active':accountInfoState0}" ng-click="shopOwnerAccount()"><a data-toggle="tab">账号</a></li>
+                    <li ng-class="{'active':accountInfoState1}" ng-click="cashierAccount()"><a data-toggle="tab">收银微信号</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+
+
+                </div>
+            </div>
+</div>
+<!--新建账户提示框-->
+<div class="modal fade" id="createAccount">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">新建账号</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">账户名称</label>
+                        <div class="col-sm-4">
+                            <input type="name"  class="form-control" id="username" placeholder="请输入账户名称" ng-blur="checkNameRepeat()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">账户类型</label>
+                        <div class="col-sm-4">
+                            <div><input type="radio" name="accountType" value="1"/>&nbsp;&nbsp;店主账号</div>
+                            <div><input type="radio" name="accountType" value="0">&nbsp;&nbsp;收银员账号</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">账户密码</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" id="passwd" placeholder="请输入账户密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">再次确认密码</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" id="repasswd" placeholder="请再次输入密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-sm-offset-1 control-label">管理员登陆密码</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" id="thisPwd"placeholder="请输入您当前账号密码" ng-blur="checkInfo()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
+                        <div class="col-sm-7">
+                            <select class="form-control" style="margin: 0 0 10px 0"  ng-model="y" id="selBankName" ng-change="selBankName()">
+                                <option value=""> -  请选择  -</option>
+                                <option value="1">中国农业银行</option>
+                                <option value="2">中国工商银行</option>
+                                <option value="3">中国银行</option>
+                                <option value="4">交通银行</option>
+                                <option value="5">中信银行</option>
+                                <option value="6">中国光大银行</option>
+                                <option value="7">华夏银行</option>
+                                <option value="8">中国民生银行</option>
+                                <option value="9">广发银行股份有限公司</option>
+                                <option value="10">中国邮政储蓄银行</option>
+                                <option value="11">平安银行</option>
+                                <option value="12">兴业银行</option>
+                                <option value="13">上海浦东发展银行</option>
+                                <option value="14">中国建设银行</option>
+                                <option value="15">鞍山市商业银行</option>
+                                <option value="16">营口银行</option>
+                                <option value="17">农村信用社</option>
+                                <option value="18">锦州银行</option>
+                                <option value="19">北京农村商业银行</option>
+                                <option value="20">吉林银行</option>
+                                <option value="21">盛京银行</option>
+                                <option value="22">大连银行</option>
+                            </select>
+                            <p class="text-muted" class="form-control"><input type="text"  id="bankName" name="bankName" class="form-control" placeholder="请设置银行名称"/></p>
+                            <p class="text-muted" class="form-control"><input type="text"  id="bankNum" name="bankNum"  class="form-control" placeholder="请输入银行卡号"/></p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="saveAccount()">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--提现成功提示框-->
+<div class="modal fade" id="tx-success">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="icon-success"></div>
+                <p class="text-center">提现申请成功</p>
+                <p class="text-center">佣金将会在1个工作日内后抵达您的结算账户</p>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

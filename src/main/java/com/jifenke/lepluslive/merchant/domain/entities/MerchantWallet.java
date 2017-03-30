@@ -89,4 +89,15 @@ public class MerchantWallet {
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
     }
+
+    // 2.0 版本,扩展,商户 id
+    private Long merchantUserId;
+
+    public Long getMerchantUserId() {
+        return merchantUserId;
+    }
+
+    public void setMerchantUserId(Long merchantUserId) {
+        this.merchantUserId = merchantUserId;
+    }
 }

@@ -1,0 +1,111 @@
+.merchant-header{
+    height: 70px;
+    background-color: #fff;
+}
+.merchant-header .container{
+    width: 1200px;
+}
+.merchant-header .navbar-brand img{
+    width: 118px;
+}
+.merchant-header .navbar-brand{
+    height: auto;
+    position: relative;
+    padding: 18px 15px;
+}
+.merchant-header .navbar-brand:after{
+    content: '';
+    display: block;
+    width: 1px;
+    height: 34px;
+    border-right: solid 2px #8d8d8d;
+    position: absolute;
+    right:-5px;
+    top:0;
+    bottom: 0;
+    margin: auto;
+}
+.panel-footer{
+    background-color: #fff;
+    margin-top: 20px;
+    padding: 10px 0;
+}
+.panel-footer .logo{
+    background: url("../../../../assets/images/head/logo.png") no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    width: 112px;
+    height: 34px;
+}
+.header-ttl{
+    height: 100%;
+    line-height: 70px;
+    color: #111;
+    font-size: 20px;
+    display: inline-block;
+    padding-left: 22px;
+}
+.header-quit{
+    cursor: pointer;
+    color: #222;
+    font-size: 14px;
+}
+.header-quit:hover{
+    color: #222;
+    text-decoration: none;
+}
+.header-personal{
+    line-height: 70px;
+}
+.navbar{
+    margin-bottom: 30px;
+}
+
+/*content*/
+.content{
+    width: 1200px;
+    min-width: 1200px;
+    height: 100%;
+    margin: 0 auto;
+    border: solid 1px #d9dadc;
+    background-color: #fff;
+}
+.content .left-menu{
+    width: 198px;
+    height: 100%;
+    padding-top: 20px;
+}
+.content .left-menu ul li{
+    cursor: pointer;
+}
+.content .left-menu ul li p{
+    width: 70px;
+    line-height: 36px;
+    margin: 0 auto;
+    position: relative;
+    color: #222;
+    font-size: 14px;
+}
+.content .left-menu ul li p .iconfont{
+    position: absolute;
+    left:-28px;
+    top: 1px;
+}
+.content .left-menu ul li.contClick p{
+    color: #8d8d8d;
+}
+.content .left-menu ul li.active{
+    background-color: #fb991a;
+    color: #fff;
+}
+.content .left-menu ul li.active p{
+    color: #fff;
+}
+.content .left-menu ul li.active p span{
+    color: #fff;
+}
+.content .right-content{
+    width: 1000px;
+    border-left: solid 1px #e7e8eb;
+    padding-bottom: 40px;
+}

@@ -1,0 +1,106 @@
+<div class="row merchant-data">
+    <div class="col-md-3">
+        <div class="out-div">
+            <p class="text-center">今日邀请会员</p>
+            <p class="text-center">{{lockCount.firNum}}</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="out-div">
+            <p class="text-center">累计邀请会员</p>
+            <p class="text-center">{{lockCount.secNum}}</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="out-div">
+            <p class="text-center">注册获得红包</p>
+            <p class="text-center">￥{{lockCount.thirNum}}</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="out-div">
+            <p class="text-center">注册获得积分</p>
+            <p class="text-center">{{lockCount.fouNum}}</p>
+        </div>
+    </div>
+</div>
+<hr>
+<!--查询表单-->
+<form class="form-inline list-check">
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label>门店名称</label>
+            <div class="input-group col-md-6 select-style">
+                <select class="form-control" id="selMerchant">
+                    <option value="">请选择</option>
+                    <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                </select>
+                <span class="select-jiao"></span>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label>邀请时间</label>
+            <input type="text" name="reservation" id="completeDate" class="form-control"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label></label>
+            <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+        </div>
+    </div>
+</form>
+
+<!--表格-->
+<div class="panel panel-default">
+    <table class="table ol-tab">
+        <thead class="active">
+        <tr>
+            <td>微信信息</td>
+            <td>锁定时间</td>
+            <td>锁定门店</td>
+            <td>注册获得红包</td>
+            <td>注册获得积分</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="tr-empty" ng-show="lockMembers==null || lockMembers==''"><td class="text-center" colspan="6">暂无数据！</td></tr>
+        <tr class="tr-noEmpty" ng-repeat="m in lockMembers">
+            <td><span class="wx-faceImg"><img src="{{m[4]}}" alt=""></span><span>{{m[3]}}</span></td>
+            <td class="td-date">
+                <p>{{m[1]|date:"yyyy-MM-dd"}}</p>
+                <p>{{m[1]|date:"HH:mm"}}</p>
+            </td>
+            <td>{{m[5]}}</td>
+            <td>{{scoreas[$index]/100.0|currency:" ￥ "}}</td>
+            <td>{{scorebs[$index]|number:1}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--分页-->
+<div class=" clearfix">
+    <nav class="pull-right">
+        <ul class="pagination">
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+            </li>
+            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                1}}</a>
+            </li>
+            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                2}}</a>
+            </li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(page+1)"><a aria-label="Next">
+                <span aria-hidden="true">›</span>
+            </a></li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+        </ul>
+    </nav>
+</div>

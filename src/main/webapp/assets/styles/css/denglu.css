@@ -4,6 +4,8 @@
 .banner-partner{background: url(../images/denglu/banner_partner.jpg) no-repeat center center;min-width: 1263px;max-width: 1920px;height: 500px;position: relative}
 
 .denglu form{width: 320px;height:280px;position: absolute;top: 0;bottom:0;margin:auto;left:62.5%;background-color: rgba(0,0,0,0.5);padding: 10px 30px 30px}
+.denglu-partner form{height:310px;}
+.denglu-partner form label{color: #fff}
 .denglu h3{color: #fff;margin-bottom: 23px}
 .denglu input{padding-left: 60px}
 .denglu button{background-color: #fb991a;color: #fff;margin-bottom: 10px}

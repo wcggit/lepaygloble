@@ -1,0 +1,12 @@
+<div class="lePlusBilling top-style1">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix ">
+            乐加账单
+            <ul class="nav nav-style">
+                <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab()" ui-sref="dailyBilling"><a>每日账单</a></li>
+                <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab()" ui-sref="storeBilling"><a>门店账单</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid" ui-view="lePlusBillingTab"></div>
+</div>

@@ -50,9 +50,10 @@ public class LeJiaUserDetailsServiceImpl implements LeJiaUserDetailsService {
         if ("merchant".equals(userRole)) {
             Optional<MerchantUser> userFromDatabase = userRepository.findByName(lowercaseLogin);
             return userFromDatabase.map(user -> {
-                return new org.springframework.security.core.userdetails.User(lowercaseLogin,
+                return new org.springframework.security.core.userdetails.User(user.getMerchantSid(),
                                                                               user.getPassword(),
                                                                               grantedAuthorities);
+//                return new org.springframework.security.core.userdetails.User(user.getMerchantSid(),
             }).orElseThrow(() -> new UsernameNotFoundException(
                 "User " + lowercaseLogin + " was not found in the " +
                 "database"));

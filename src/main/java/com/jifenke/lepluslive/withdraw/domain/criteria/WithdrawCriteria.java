@@ -2,6 +2,7 @@ package com.jifenke.lepluslive.withdraw.domain.criteria;
 
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 
 
 /**
@@ -17,6 +18,7 @@ public class WithdrawCriteria {
     private Integer billType;           //  0是合伙人管理员  1是合伙人 2是商户
     private Partner partner;            //  合伙人
     private Merchant merchant;          //  商户
+    private PartnerManager partnerManager;  // 城市合伙人
 
 
     public Integer getOffset() {
@@ -89,5 +91,13 @@ public class WithdrawCriteria {
 
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
+    }
+
+    public PartnerManager getPartnerManager() {
+        return partnerManager;
+    }
+
+    public void setPartnerManager(PartnerManager partnerManager) {
+        this.partnerManager = partnerManager;
     }
 }

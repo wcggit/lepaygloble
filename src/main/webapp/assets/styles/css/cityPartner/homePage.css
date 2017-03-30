@@ -1,0 +1,344 @@
+/*---------------首页开始---------------*/
+.cp-homePage .basic-info .face-img{width: 90px;height: 90px;border-radius: 50%;overflow: hidden;border: solid 1px #e2e2e2;margin: auto}
+.cp-homePage .basic-info .face-img img{width: 100%;height: 100%;}
+.cp-homePage .basic-info .money-ttl{font-size: 16px;margin-bottom: 10px}
+.cp-homePage .basic-info .money-content span{font-size: 40px}
+.cp-homePage .basic-info .money-content input{margin:16px 30px}
+.cp-homePage .basic-info .money-content a{margin-top:21px;cursor: pointer}
+.cp-homePage .basic-info .ttl-te4e4e4op{margin-left: -24px}
+.cp-homePage .basic-info .ttl-top p:last-child{margin-left: -8px}
+.cp-homePage .basic-info h5{
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+}
+.cp-homePage .form-control{
+    width: auto;
+    display: inline-block;
+}
+.cp-homePage .page-bottom .current-store{
+    margin: 0 10px;
+}
+
+/*list*/
+.cp-homePage .dd-list{
+    padding-top: 15px;
+}
+.cp-homePage .list{
+    width: 85%;
+    height: 120px;
+    border-left: solid 2px #e1e1e1;
+    position: relative;
+}
+.cp-homePage .list .list-detail{
+    position: relative;
+    border: solid 1px #d7d7d7;
+    width: 95%;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-top: -16px;
+}
+.cp-homePage .list .list-info1{
+    font-size: 14px;
+    color: #333;
+margin-bottom: 15px}
+.cp-homePage .list .list-info1 .hydd-font,.cp-homePage .list .list-info1 .dldd-font{
+    color: #f54339;
+    font-size: 14px;
+}
+.cp-homePage .list .list-info1 .ptdd-font{
+    font-size: 14px;
+    color: #666;
+}
+.cp-homePage .list .list-info2 .pay-detail{
+    font-size: 20px;
+    color: #444;
+    line-height: 40px;
+}
+.cp-homePage .list .list-info2 .pay-detail span{
+    font-size: 14px;
+    color: #666;
+}
+.cp-homePage .list .list-info2 .face-img{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+}
+.cp-homePage .list .list-info2 .face-img img{
+    width: 100%;
+    height: 100%;
+}
+.cp-homePage .list .list-info2 .nickname{
+    font-size: 14px;
+    color: #333;
+    line-height: 40px;
+}
+.cp-homePage .list .list-detail .left-icon{
+    width: 15px;
+    height: 15px;
+    border-left: solid 1px #d7d7d7;
+    border-top: solid 1px #d7d7d7;
+    transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg); /* IE 9 */
+    -webkit-transform: rotate(-45deg); /* Safari and Chrome */
+    position: absolute;
+    left:-8px;
+    top:10px;
+    background-color: #fff;
+}
+.cp-homePage .list .ddIcon{
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    left: -16px;
+    top: -16px;
+}
+.cp-homePage .list .hyIcon{
+    background: url("../../images/merchant_2/homePage/hyddIcon.png") no-repeat;
+    background-size: 100% 100%;
+}
+.cp-homePage .list .dlIcon{
+    background: url("../../images/merchant_2/homePage/dlddIcon.png") no-repeat;
+    background-size: 100% 100%;
+}
+.cp-homePage .list .dd-time{
+    color: #333;
+    font-size: 16px;
+    position: absolute;
+    left: -122px;
+    top:-16px;
+    line-height: 20px;
+}
+.cp-homePage .list .dd-time span{
+    color: #666;
+    font-size: 14px;
+}
+.cp-homePage .look-more{
+    margin: 15px auto;
+    display: block;
+}
+.cp-homePage .list-out-div{
+    width: 100%;
+    height: 600px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 30px 0;
+    margin-bottom: 30px;
+}
+
+/*提现*/
+#tx p {
+    margin-top: 6px;
+    color: #4f4f4f;
+}
+#tx .modal-header > h4 > span {
+    font-size: 14px;
+    color:#666;
+    margin-left: 20px;
+}
+#tx .modal-header > h4 > span >span{
+    color: #f75555;
+    font-size: 18px;
+}
+#tx .modal-body .ts{
+    font-size: 12px;
+    color: #f75555;
+    display: inline-block;
+    line-height: 33px;
+    margin-left: -10px
+}
+#tx label{
+    color: #4f4f4f;
+    font-size: 16px;
+    font-weight: normal;
+}
+.btn-div {
+    width: 400px;
+    margin: 0 auto;
+}
+#tx-success .modal-body .icon-success{
+    width: 60px;
+    height: 60px;
+    background: url("../../images/merchant_2/homePage/success.png") no-repeat;
+    background-size: 100% 100%;
+    margin: 20px auto 10px;
+}
+#tx-success .modal-body p{
+    color: #4f4f4f;
+    text-align: center;
+}
+#tx-success .modal-body p:nth-of-type(1){
+    font-size: 22px;
+}
+#tx-success .modal-body p:nth-of-type(2){
+    font-size: 16px;
+    padding: 20px 0;
+}
+
+#bind-wx .modal-body .icon-success{
+    width: 210px;
+    height: 210px;
+    margin: 0 auto;
+}
+#bind-wx .modal-body .icon-success img{
+    width: 100%;
+    height: 100%;
+}
+
+.cp-homePage .nav>li>a {
+    padding: 7px 0;
+    width: 88px;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+}
+.cp-homePage .nav>li:not(.active) {
+    background-color: #eee;
+    border-radius: 4px;
+}
+.cp-homePage .nav>li:not(.active)>a {
+    color: #222;
+}
+/*---------------圆形进度条开始------------*/
+.sdjl .col-md-4{
+    text-align: center;
+}
+.clock{
+    position: relative;
+    width: 140px;
+    height: 140px;
+    display: inline-block;
+}
+.clock .out{
+    width: 140px;
+    height: 140px;
+    border: 5px solid rgba(0,0,0,.2);
+    position: absolute;
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+}
+.clock .clock-progress{
+    position: absolute;
+    z-index: 4;
+    width: 130px;
+    height:130px;
+    background-color: white;
+    border-radius: 50%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right:0;
+    margin: auto;
+    line-height: 120px;
+    text-align: center;
+}
+.clock .left,.right{
+    width: 70px;
+    height: 140px;
+    overflow: hidden;
+    position: relative;
+    position: absolute;
+    top: 0;
+    z-index: 3;
+}
+.clock .left{
+    left: 0;
+    border-radius: 140px 0 0 140px;
+}
+.clock .right{
+    right: 0;
+    border-radius: 0 140px 140px 0;
+}
+.clock .left div,.right div{
+    content:"";
+    position:absolute;
+    z-index: 2;
+    display:block;
+    width: 70px;
+    height: 140px;
+    background-color: white;
+    border-radius: 140px 0 0 140px;
+    transition:all .3s;
+    transform-origin:right center;
+    transform:rotateZ(-180deg);}
+.clock .right div{
+    content:"";
+    position:absolute;
+    display:block;
+    border-radius: 0 140px 140px 0;
+    transform-origin:left center;
+}
+.sdjl .col-md-4:nth-child(1) .clock .left div,.sdjl .col-md-4:nth-child(1) .clock .right div{
+    background-color: #f8a539;
+}
+.sdjl .col-md-4:nth-child(1) .clock .clock-progress span{
+    color: #f8a539;
+}
+.sdjl .col-md-4:nth-child(2) .clock .left div,.sdjl .col-md-4:nth-child(2) .clock .right div{
+    background-color: #64c1c6;
+}
+.sdjl .col-md-4:nth-child(2) .clock .clock-progress span{
+    color: #64c1c6;
+}
+.sdjl .col-md-4:nth-child(3) .clock .left div,.sdjl .col-md-4:nth-child(3) .clock .right div{
+    background-color: #6b8cec;
+}
+.sdjl .col-md-4:nth-child(3) .clock .clock-progress span{
+    color: #6b8cec;
+}
+.clock .clock-progress span{
+    display: inline-block;
+    font-size: 52px;
+    font-weight: 100;
+    width: 120px;
+    height: 52px;
+    line-height: 52px;
+    padding-right: 30px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right:0;
+    margin: auto;
+}
+.clock .clock-progress span:after{
+    position: absolute;
+    right: 0px;
+    top: 3px;
+    display: inline-block;
+    width: 29px;
+    height: 29px;
+    content: '%';
+    font-size: 29px;
+    line-height: 29px;
+    font-weight: 100;
+}
+/*---------------圆形进度条结束------------*/
+/*---------------首页结束---------------*/
+
+/*---------------提现记录开始---------------*/
+.withdrawRecord .page-top .left-icon{
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background: url("../../images/merchant_2/homePage/left-icon.png") no-repeat;
+    background-size: 100% 100%;
+    margin-right: 10px;
+}
+.withdrawRecord .page-top .left-icon+span{
+    cursor: pointer;
+    font-size: 16px;
+}
+.withdrawRecord .page-top .current-page{
+    color: #fb991a;
+    font-size: 16px;
+}
+.withdrawRecord .tr-noEmpty td.td-date p:last-child{
+    color: #999;
+    font-size: 14px;
+}
+/*---------------提现记录结束---------------*/
