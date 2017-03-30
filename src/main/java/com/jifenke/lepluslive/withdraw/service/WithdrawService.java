@@ -54,22 +54,25 @@ public class WithdrawService {
             @Override
             public Predicate toPredicate(Root<WithdrawBill> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if (criteria.getBillType() != null) {
-                    predicate.getExpressions().add(cb.equal(root.get("billType"), criteria.getBillType()));
+                if(criteria.getBillType()!=null) {
+                    predicate.getExpressions().add(cb.equal(root.get("billType"),criteria.getBillType()));
                 }
-                if (criteria.getPartner() != null) {
-                    predicate.getExpressions().add(cb.equal(root.get("partner"), criteria.getPartner()));
+                if(criteria.getPartner()!=null)  {
+                    predicate.getExpressions().add(cb.equal(root.get("partner"),criteria.getPartner()));
                 }
-                if (criteria.getState() != null) {
-                    predicate.getExpressions().add(cb.equal(root.get("state"), criteria.getState()));
+                if(criteria.getPartnerManager()!=null) {
+                    predicate.getExpressions().add(cb.equal(root.get("partnerManager"),criteria.getPartnerManager()));
+                }
+                if(criteria.getState()!=null) {
+                    predicate.getExpressions().add(cb.equal(root.get("state"),criteria.getState()));
                 }
                 //  提现开始时间
-                if (criteria.getWithDrawStartDate() != null && criteria.getWithDrawEndDate() != null) {
-                    predicate.getExpressions().add(cb.between(root.get("createdDate"), new Date(criteria.getWithDrawStartDate()), new Date(criteria.getWithDrawEndDate())));
+                if(criteria.getWithDrawStartDate()!=null&&criteria.getWithDrawEndDate()!=null) {
+                    predicate.getExpressions().add(cb.between(root.get("createdDate"),new Date(criteria.getWithDrawStartDate()),new Date(criteria.getWithDrawEndDate())));
                 }
                 //  提现结束时间
-                if (criteria.getCompleteDateStartDate() != null && criteria.getCompleteDateEndDate() != null) {
-                    predicate.getExpressions().add(cb.between(root.get("completeDate"), new Date(criteria.getCompleteDateStartDate()), new Date(criteria.getCompleteDateEndDate())));
+                if(criteria.getCompleteDateStartDate()!=null&&criteria.getCompleteDateEndDate()!=null) {
+                    predicate.getExpressions().add(cb.between(root.get("completeDate"),new Date(criteria.getCompleteDateStartDate()),new Date(criteria.getCompleteDateEndDate())));
                 }
                 return predicate;
             }

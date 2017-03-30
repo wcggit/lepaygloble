@@ -7,6 +7,8 @@ import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
+import com.jifenke.lepluslive.partner.service.PartnerManagerService;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
@@ -41,6 +43,8 @@ public class WithdrawController {
     private WithdrawService withdrawService;
     @Inject
     private MerchantUserResourceService merchantUserResourceService;
+    @Inject
+    private PartnerManagerService partnerManagerService;
 
     @RequestMapping(value = "/merchant_withdraw", method = RequestMethod.POST)
     public LejiaResult merchantWithDraw(HttpServletRequest request) {
@@ -141,4 +145,24 @@ public class WithdrawController {
              return LejiaResult.build(400, msg);
          }
      }
+
+    /**
+     * 分页查询提现详情
+     * @param withdrawCriteria
+     * @return
+     */
+    @RequestMapping(value = "/cityPartner_withdraw/findAll", method = RequestMethod.POST)
+    @ResponseBody
+    public LejiaResult cityPartnerFindByCriteria(@RequestBody WithdrawCriteria withdrawCriteria) {
+        Partner partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        PartnerManager partnerManager = partnerManagerService.findByPartnerAccountId(partner.getId());
+        withdrawCriteria.setPartnerManager(partnerManager);
+        withdrawCriteria.setBillType(0);
+        if(withdrawCriteria.getOffset()==null) {
+            withdrawCriteria.setOffset(1);
+        }
+        // 查询数据
+        Page page  = withdrawService.findPartnerWithDrawByCriteria(withdrawCriteria,10);
+        return  new LejiaResult(page);
+    }
 }

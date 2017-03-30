@@ -65,6 +65,10 @@ public class PartnerManager {
 
     private Date createTime;
 
+    private String password;             //  登录密码
+
+    private String partnerManagerSid;    //   sid
+
     public String getBankNumber() {
         return bankNumber;
     }
@@ -135,5 +139,21 @@ public class PartnerManager {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPartnerManagerSid() {
+        return partnerManagerSid;
+    }
+
+    public void setPartnerManagerSid(String partnerManagerSid) {
+        this.partnerManagerSid = partnerManagerSid;
     }
 }
