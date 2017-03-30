@@ -12,7 +12,7 @@ angular.module('lepayglobleApp')
                     });
                     $scope.login = function (event) {
                         event.preventDefault();
-                        if ($("#inlineRadio2").val() == 1) {
+                        if ($('input[name=inlineRadioOptions]:checked').val() == 1) {
                             Auth.login({
                                            username: $scope.username.trim(),
                                            password: $scope.password.trim(),
@@ -51,7 +51,9 @@ angular.module('lepayglobleApp')
                                 } else {
                                     $rootScope.back();
                                 }
-                            })
+                            }).catch(function () {
+                                $scope.authenticationError = true;
+                            });
                         }
 
                     };
