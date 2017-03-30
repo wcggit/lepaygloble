@@ -3,7 +3,13 @@ package com.jifenke.lepluslive.web;
 
 import com.jifenke.lepluslive.Application;
 import com.jifenke.lepluslive.global.config.Constants;
+import com.jifenke.lepluslive.global.util.MD5Util;
+import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.order.repository.OffLineOrderRepository;
+import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
+import com.jifenke.lepluslive.partner.repository.PartnerManagerRepository;
+import com.jifenke.lepluslive.partner.repository.PartnerRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
@@ -54,6 +60,12 @@ public class SimpleTest {
     @Inject
     private OffLineOrderRepository offLineOrderRepository;
 
+    @Inject
+    private PartnerManagerRepository partnerManagerRepository;
+
+    @Inject
+    private PartnerRepository partnerRepository;
+
     @Test
     public void dateTest() {
         // 当前时间
@@ -74,6 +86,30 @@ public class SimpleTest {
         List<Object[]> objects = offLineOrderRepository.countWeekOfflineWx(10L, new Date());
         for (Object[] object : objects) {
             System.out.println(Arrays.toString(object));
+        }
+    }
+
+
+    /**
+     *  创建城市合伙人账号
+     */
+    @Test
+    public void saverPartnerMerchantAccount() {
+        List<PartnerManager> managers = partnerManagerRepository.findAll();
+        for (PartnerManager manager : managers) {
+            if(manager.getPartnerId()==null) {
+                Partner partner = new Partner();
+                partner.setName(manager.getName());
+                partner.setPartnerName(manager.getName());
+                partner.setPassword(MD5Util.MD5Encode("123456",null));
+                partner.setPartnerManager(manager);
+                partner.setBankName(manager.getBankName());
+                partner.setPayee(manager.getBankName());
+                partner.setPartnerSid(MvUtil.getMerchantSid());
+                partnerRepository.save(partner);
+                manager.setPartnerId(partner.getId());
+                partnerManagerRepository.save(manager);
+            }
         }
     }
 }

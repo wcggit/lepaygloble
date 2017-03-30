@@ -80,4 +80,11 @@ public interface LeJiaUserRepository extends JpaRepository<LeJiaUser, Long> {
     @Query(value = "SELECT ifnull(SUM(detail.number),0) FROM wei_xin_user u,scoreb b,scoreb_detail detail WHERE u.le_jia_user_id=b.le_jia_user_id AND u.sub_source=?1 AND u.state=1 and detail.scoreb_id = b.id and detail.origin = 0", nativeQuery = true)
     Long countScoreBBySubSource(String subSource);
 
+    /**
+     * 根据日期查询合伙人绑定会员数
+     *
+     * @return
+     */
+    @Query(value = "select DATE_FORMAT(create_date,\"%Y-%m-%d\"),count(*) from le_jia_user where bind_partner_id = ?1 and create_date between ?2 and ?3 GROUP BY DATE_FORMAT(create_date,\"%Y-%m-%d\")", nativeQuery = true)
+    List<Object[]> countBindUserByPartnerAndDate(Long partnerId, Date startDate, Date endDate);
 }

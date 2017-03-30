@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../assets/styles/css/cityPartner/main.css">
+<link rel="stylesheet" href="../../../assets/styles/css/merchant_2/merchant_2.css">
+<link rel="stylesheet" href="../../../assets/styles/css/cityPartner/homePage.css">
+<link rel="stylesheet" href="../../../assets/styles/css/cityPartner/partnerManager.css">
+<link rel="stylesheet" href="../../../assets/styles/css/cityPartner/withdrawRecord.css">
+<link rel="stylesheet" href="../../../assets/styles/css/cityPartner/basicInfo.css">
+<nav class="navbar navbar-default merchant-header">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <img alt="Brand" src="/assets/images/head/logo.png">
+            </a>
+            <span class="header-ttl" href="#">城市合伙人平台</span>
+        </div>
+        <div class="pull-right header-personal">
+            {{partnerName}}
+            <a class="header-quit" ng-click="logout()">退出</a>
+        </div>
+    </div>
+</nav>
+<div class="content clear-float">
+    <div class ="pull-left left-menu">
+        <ul>
+            <li ng-repeat="x in menuList" ng-class="{'contClick':x.clickState==0,'active':isActiveTab(x.state)}" ng-click="onClickTab(x)">
+                <hr ng-if="x.contentState==0">
+                <p ng-if="x.contentState==1"><span ng-if="x.icon!=''" ng-class="x.icon"></span>{{x.name}}</p>
+            </li>
+        </ul>
+    </div>
+    <div class="pull-right right-content" ui-view="right-content"></div>
+</div>

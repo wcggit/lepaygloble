@@ -1,0 +1,76 @@
+<div class="cp-withdrawRecord">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">佣金明细</div>
+        <ul class="nav nav-style">
+            <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab(0)"><a>全部记录</a></li>
+            <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab(1)"><a>提现中</a></li>
+            <li role="presentation" ng-class="{active:currentTab2}" ng-click="onClickTab(2)"><a>已驳回</a></li>
+            <li role="presentation" ng-class="{active:currentTab3}" ng-click="onClickTab(3)"><a>已完成</a></li>
+        </ul>
+    </div>
+    <div class="container-fluid">
+        <!--表格-->
+        <div class="panel panel-default">
+            <table class="table ol-tab">
+                <thead class="active">
+                <tr>
+                    <td>提现单号</td>
+                    <td>提现申请时间</td>
+                    <td>提现现金</td>
+                    <td>结算帐号</td>
+                    <td>开户银行</td>
+                    <td>收款人</td>
+                    <td>状态</td>
+                    <td>乐加备注</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="tr-empty" id="notData" ng-show="pulls==null">
+                    <td class="text-center" colspan="9">暂无数据！</td>
+                </tr>
+                <tr class="tr-noEmpty" id="HaveData" ng-repeat="x in pulls">
+                    <td ng-bind="x.withdrawBillSid"></td>
+                    <td class="td-date">
+                        <p ng-bind="x.createdDate|date:'yyyy-MM-dd'"></p>
+                        <p ng-bind="x.createdDate|date:'HH:mm:ss'" class="two-style"></p>
+                    </td>
+                    <td ng-bind="'¥'+x.totalPrice/100.0"></td>
+                    <td><span ng-bind="x.bankNumber|limitTo:4"></span>*********<span
+                        ng-bind="x.bankNumber|limitTo:-5"></span></td>
+                    <td ng-bind="x.bankName"></td>
+                    <td ng-bind="x.payee"></td>
+                    <td ng-show="x.state==0">审核中</td>
+                    <td ng-show="x.state==1">已完成</td>
+                    <td ng-show="x.state==2">未通过</td>
+                    <td ng-bind="x.note"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a aria-label="Previous">
+                        <span aria-hidden="true">‹</span>
+                    </a></li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page + 1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(page+1)"><a
+                        aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(totalPages)">
+                        <a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
