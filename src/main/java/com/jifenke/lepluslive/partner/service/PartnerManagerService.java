@@ -143,4 +143,13 @@ public class PartnerManagerService {
 
         return list;
     }
+
+    /**
+     *  根据 Sid 查询PartnerManager
+     */
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public PartnerManager findByPartnerManagerSid(String partnerManagerSid) {
+        return partnerManagerRepository.findByPartnerManagerSid(partnerManagerSid);
+    }
+
 }

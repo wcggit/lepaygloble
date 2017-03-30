@@ -4,6 +4,10 @@ import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 
 import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
+import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,7 +23,6 @@ import javax.persistence.LockModeType;
  * Created by wcg on 16/6/3.
  */
 public interface PartnerRepository extends JpaRepository<Partner, Long> {
-
     Optional<Partner> findByPartnerSid(String userName);
 
     @Query(value = "select count(*) from merchant where partner_id = ?1 and partnerShip != 2", nativeQuery = true)
@@ -35,4 +38,6 @@ public interface PartnerRepository extends JpaRepository<Partner, Long> {
 
     @Query(value = "select count(*) from partner where partner_manager_id = ?1 ", nativeQuery = true)
     Long countByPartnerManager(Long managerId);
+
+    Page findAll(Specification<Partner> specification, Pageable pageRequest);
 }

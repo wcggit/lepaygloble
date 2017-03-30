@@ -9,6 +9,12 @@
 
 angular.module('lepayglobleApp')
     .controller('cp-withdrawRecordController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http) {
+        // 设置查询条件
+        var currentPage = 1;
+        var withdrawCriteria = {};
+        withdrawCriteria.offset = 1;
+        var state = -1;                          //  0是申请中 1是提现完成   2已驳回
+
         $scope.currentTab0 = true;
         $scope.currentTab1 =$scope.currentTab2 =$scope.currentTab3 = false;
         $scope.priviousState = 0;
@@ -16,7 +22,15 @@ angular.module('lepayglobleApp')
         $scope.onClickTab = function (index) {
             $scope.priviousState = $scope.currentState;
             $scope.currentState = index;
-
+            if(index==0) {
+                state = -1;
+            }else if(index==1) {
+                state = 0;
+            }else if(index==2) {
+                state = 2;
+            }else {
+                state = 1;
+            }
             switch($scope.priviousState)
             {
                 case 0:
@@ -45,12 +59,8 @@ angular.module('lepayglobleApp')
                 default:
                     $scope.currentTab3 = true;
             }
+            $scope.searchByCriteria();
         };
-
-
-        var currentPage = 1;
-        var withdrawCriteria = {};
-        withdrawCriteria.offset = 1;
 
         loadContent();
         function loadContent() {
@@ -85,11 +95,11 @@ angular.module('lepayglobleApp')
         };
 
         $scope.searchByCriteria = function () {
-            /*if($("#state").val()!=-1) {
-                withdrawCriteria.state = $("#state").val();
+            if(state!=-1) {
+                withdrawCriteria.state = state;
             }else {
                 withdrawCriteria.state = null;
-            }*/
+            }
             withdrawCriteria.offset = 1;
             currentPage = 1;
             loadContent();

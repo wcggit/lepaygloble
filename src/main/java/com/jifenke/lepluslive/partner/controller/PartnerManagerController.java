@@ -6,6 +6,7 @@ import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.partner.controller.dto.PartnerDto;
 import com.jifenke.lepluslive.partner.controller.dto.PartnerManagerDto;
+import com.jifenke.lepluslive.partner.domain.criteria.PartnerCriteria;
 import com.jifenke.lepluslive.partner.domain.criteria.PartnerManagerCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
@@ -16,6 +17,7 @@ import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.partner.service.PartnerWalletService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 import net.sf.json.JSONArray;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,10 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by xf on 17-3-17.
@@ -53,10 +52,7 @@ public class PartnerManagerController {
     @RequestMapping(value = "/partnerManager/basic", method = RequestMethod.GET)
     @ResponseBody
     public LejiaResult getPartnerManagerInfo() {
-        Partner
-            partner =
-            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        PartnerManager partnerManager = partnerManagerService.findByPartnerAccountId(partner.getId());
+        PartnerManager partnerManager = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
         return LejiaResult.ok(partnerManager);
     }
 
@@ -66,12 +62,8 @@ public class PartnerManagerController {
     @RequestMapping(value = "/partnerManager/wallet", method = RequestMethod.GET)
     @ResponseBody
     public LejiaResult getPartnerWalletInfo(Model model) {
-        Partner
-            partner =
-            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        PartnerManager partnerManager = partnerManagerService.findByPartnerAccountId(partner.getId());
+        PartnerManager partnerManager = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
         PartnerManagerWallet partnerManagerWallet = partnerManagerService.findWalletByPartnerManager(partnerManager);
-        model.addAttribute("partner", partner);
         model.addAttribute("partnerManager", partnerManager);
         model.addAttribute("partnerManagerWallet", partnerManagerWallet);
         return LejiaResult.ok(model);
@@ -83,10 +75,7 @@ public class PartnerManagerController {
     @RequestMapping(value = "/partnerManager/commission", method = RequestMethod.GET)
     @ResponseBody
     public LejiaResult getPartnerWalletCommission() {
-        Partner
-            partner =
-            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        PartnerManager partnerManager = partnerManagerService.findByPartnerAccountId(partner.getId());
+        PartnerManager partnerManager = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
         Long dailyCommission = partnerManagerService.findDailyCommissionByPartnerManager(partnerManager.getPartnerId());
         return LejiaResult.ok(dailyCommission);
     }
@@ -97,10 +86,7 @@ public class PartnerManagerController {
     @RequestMapping(value = "/partnerManager/members", method = RequestMethod.GET)
     @ResponseBody
     public LejiaResult getPartnerManagerNumbers(Model model) {
-        Partner
-            partner =
-            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        PartnerManager partnerManager = partnerManagerService.findByPartnerAccountId(partner.getId());
+        PartnerManager partnerManager = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
         List<Partner> partners = partnerService.findPartnerByManager(partnerManager);
         model.addAttribute("partnerLimit", partnerManager.getBindPartnerLimit());
         model.addAttribute("merchantLimit", partnerManager.getBindMerchantLimit());
@@ -140,10 +126,7 @@ public class PartnerManagerController {
             partnerManagerCriteria.setStartDate(new SimpleDateFormat("yyyy/MM/dd").format(aWeekBefore));
             partnerManagerCriteria.setEndDate(new SimpleDateFormat("yyyy/MM/dd").format(nowDate));
         }
-        Partner
-            partner =
-            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        PartnerManager partnerManager = partnerManagerService.findByPartnerAccountId(partner.getId());
+        PartnerManager partnerManager = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
         partnerManagerCriteria.setPartnerManager(partnerManager);
         if (partnerManagerCriteria.getType() != null && partnerManagerCriteria.getType() != 2) {
             List<Partner> partners = partnerService.findPartnerByManager(partnerManager);
@@ -161,44 +144,42 @@ public class PartnerManagerController {
      */
     @RequestMapping(value = "/partnerManager/partners", method = RequestMethod.POST)
     @ResponseBody
-    public LejiaResult findPartnersByCriteria(@RequestBody PartnerManagerCriteria partnerManagerCriteria) {
-        Partner
-            loginPartner =
-            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        PartnerManager partnerManager = partnerManagerService.findByPartnerAccountId(loginPartner.getId());
-        partnerManagerCriteria.setPartnerManager(partnerManager);
-        if (partnerManagerCriteria.getLimit() == null) {
-            partnerManagerCriteria.setLimit(1);
+    public LejiaResult findPartnersByCriteria(@RequestBody PartnerCriteria partnerCriteria) {
+        PartnerManager partnerManager = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
+        partnerCriteria.setPartnerManager(partnerManager);
+        if (partnerCriteria.getOffset() == null) {
+            partnerCriteria.setOffset(1);
         }
         List<PartnerDto> dtoList = new ArrayList<>();
-        List result = partnerService.findPartnerByPageAndManager(partnerManagerCriteria);
-        for (Object obj : result) {
-            JSONArray json = JSONArray.fromObject(obj);
+        Page page =partnerService.findPartnerByCriteria(partnerCriteria,10);
+        List<Partner> content = page.getContent();
+        for (Partner partner : content) {
             PartnerDto dto = new PartnerDto();
-            Partner partner = partnerService.findPartnerById(new Long(json.get(0).toString()));
             dto.setPartner(partner);
             Long merchantNum = merchantService.countPartnerBindMerchant(partner);
             Long userNum = leJiaUserService.countPartnerBindLeJiaUser(partner);
             PartnerWallet wallet = partnerWalletService.findByPartner(partner);
-            dto.setOnLineCommission(wallet.getTotalScoreB());
-            dto.setOffLineCommission(wallet.getTotalScoreA());
-            dto.setBindMerchanNum(merchantNum);
-            dto.setBindUserNum(userNum);
+            dto.setBindMerchantNum(merchantNum==null?0L:merchantNum);
+            dto.setBindUserNum(userNum==null?0L:userNum);
+            dto.setOnLineCommission(wallet==null?0L:wallet.getAvailableBalance());
+            dto.setOffLineCommission(wallet==null?0L:wallet.getTotalMoney());
             dtoList.add(dto);
-
         }
-        return LejiaResult.ok(dtoList);
+        Map map =new HashMap<>();
+        map.put("content",dtoList);
+        map.put("totalPages",page.getTotalPages());
+        return LejiaResult.ok(map);
     }
 
     @RequestMapping(value = "/partnerManager/partner/pages", method = RequestMethod.GET)
     @ResponseBody
     public LejiaResult getPartnerPages() {
-        Partner
-            partner =
-            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        PartnerManager partnerManager = partnerManagerService.findByPartnerAccountId(partner.getId());
+        PartnerManager partnerManager = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
         Long count = partnerService.countPartnerByManager(partnerManager);
         Long pages = Math.round(new Double(count) / 10.0);
         return LejiaResult.ok(pages);
     }
+
+
+
 }

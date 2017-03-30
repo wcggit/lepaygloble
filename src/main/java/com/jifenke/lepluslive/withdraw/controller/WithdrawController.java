@@ -154,8 +154,7 @@ public class WithdrawController {
     @RequestMapping(value = "/cityPartner_withdraw/findAll", method = RequestMethod.POST)
     @ResponseBody
     public LejiaResult cityPartnerFindByCriteria(@RequestBody WithdrawCriteria withdrawCriteria) {
-        Partner partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        PartnerManager partnerManager = partnerManagerService.findByPartnerAccountId(partner.getId());
+        PartnerManager partnerManager = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
         withdrawCriteria.setPartnerManager(partnerManager);
         withdrawCriteria.setBillType(0);
         if(withdrawCriteria.getOffset()==null) {

@@ -86,7 +86,7 @@ angular.module('lepayglobleApp')
             var aEle = getByClass(oClass)[0].children,
                 Rdeg = num > n ? n : num,
                 Ldeg = num > n ? num - n : 0;
-            aEle[2].innerHTML = "<span>" + $scope.toDecimal(num/n/2*100) + "</span>";
+            aEle[2].innerHTML = "<span>" + num + "</span>";
 
             aEle[1].children[0].style.transform = "rotateZ(" + (360 / (2 * n) * Rdeg - 180) + "deg)";
             aEle[0].children[0].style.transform = "rotateZ(" + (360 / (2 * n) * Ldeg - 180) + "deg)";
