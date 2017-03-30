@@ -10,7 +10,7 @@ angular.module('lepayglobleApp')
             if(Principal.hasAnyAuthority(['merchant'] )){
                 $scope.merchant = true;
             }
-            if(Principal.hasAnyAuthority(['partner'])){
+            if(Principal.hasAnyAuthority(['partner'])||Principal.hasAnyAuthority(['partnerManager'])){
                 $scope.partner = true;
             }
             $scope.isAuthenticated = Principal.isAuthenticated();
@@ -29,6 +29,9 @@ angular.module('lepayglobleApp')
             }
             if(Principal.hasAnyAuthority(['partner'])){
                 $state.go('partnerhome');
+            }
+            if(Principal.hasAnyAuthority(['partnerManager'])){
+                $state.go('cp-homePage');
             }
         };
     });

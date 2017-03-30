@@ -1,5 +1,6 @@
 package com.jifenke.lepluslive.order.service;
 
+import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.CommissionDetailsCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
@@ -379,11 +380,35 @@ public class OffLineOrderService {
                                    start,
                                    end));
                 }
-
                 if (orderCriteria.getMerchant() != null) {
                     predicate.getExpressions().add(
                         cb.equal(r.<Merchant>get("lockMerchant"),
                                  orderCriteria.getMerchant()));
+                }
+                //   合伙人 -  佣金分润 - 查询条件
+                if(orderCriteria.getPartnerManager()!=null) {
+                    predicate.getExpressions().add(cb.equal(r.get("toLockPartnerManager"),orderCriteria.getPartnerManager().getId()));
+                }
+                if(orderCriteria.getLockMerchant()!=null) {
+                    predicate.getExpressions().add(cb.like(r.get("lockMerchant").get("name"),"%"+orderCriteria.getLockMerchant().getName()+"%"));
+                }
+                if(orderCriteria.getTradeMerchant()!=null) {
+                    predicate.getExpressions().add(cb.like(r.get("tradeMerchant").get("name"),"%"+orderCriteria.getTradeMerchant().getName()+"%"));
+                }
+                if(orderCriteria.getTradePartner()!=null) {
+                    predicate.getExpressions().add(cb.like(r.get("tradePartner").get("name"),"%"+orderCriteria.getTradePartner().getName()+"%"));
+                }
+                if(orderCriteria.getLockPartner()!=null) {
+                    predicate.getExpressions().add(cb.like(r.get("lockPartner").get("name"),"%"+orderCriteria.getLockPartner().getName()+"%"));
+                }
+                LeJiaUser lejiaUser = orderCriteria.getLejiaUser();
+                if(lejiaUser!=null) {
+                    if(lejiaUser.getUserName()!=null) {
+                        predicate.getExpressions().add(cb.like(r.get("offLineOrder").get("leJiaUser").get("name"),"%"+orderCriteria.getLockPartner().getName()+"%"));
+                    }
+                    if(lejiaUser.getPhoneNumber()!=null) {
+                        predicate.getExpressions().add(cb.like(r.get("offLineOrder").get("leJiaUser").get("phoneNumber"),"%"+orderCriteria.getLockPartner().getName()+"%"));
+                    }
                 }
                 return predicate;
             }

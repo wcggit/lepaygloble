@@ -51,7 +51,9 @@ angular.module('lepayglobleApp')
                                 } else {
                                     $rootScope.back();
                                 }
-                            })
+                            }).catch(function () {
+                                $scope.authenticationError = true;
+                            });
                         }
 
                     };
