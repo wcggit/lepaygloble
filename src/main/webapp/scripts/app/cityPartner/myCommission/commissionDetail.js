@@ -10,7 +10,7 @@ angular.module('lepayglobleApp')
                 parent: 'cityPartner',
                 url: '/cp-commissionDetail',
                 data: {
-                    authorities: ["partner"]
+                    authorities: ["partnerManager"]
                 },
                 views: {
                     'right-content@cityPartner': {

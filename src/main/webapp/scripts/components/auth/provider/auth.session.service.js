@@ -10,6 +10,8 @@ angular.module('lepayglobleApp')
                                     '&remember-me=' + credentials.rememberMe + '&submit=Login';
                          if (credentials.isPartner) {
                              data += '&userRole=' + encodeURIComponent("partner");
+                         } else if (credentials.isPartnerManager) {
+                             data += '&userRole=' + encodeURIComponent("partnerManager");
                          } else {
                              data += '&userRole=' + encodeURIComponent("merchant");
                          }

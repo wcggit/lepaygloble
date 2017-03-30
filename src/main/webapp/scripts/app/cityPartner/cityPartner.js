@@ -7,7 +7,7 @@ angular.module('lepayglobleApp')
                 parent: 'site',
                 url: '/cityPartner',
                 data: {
-                    authorities: ["partner"]
+                    authorities: ["partnerManager"]
                 },
                 views: {
                     'navbar@': {

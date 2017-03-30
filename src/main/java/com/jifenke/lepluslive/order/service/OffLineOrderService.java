@@ -309,9 +309,11 @@ public class OffLineOrderService {
         }
         if (olOrderCriteria.getRebateWay() != null) {
             if (olOrderCriteria.getRebateWay() == 2) {
-                sql.append(" and rebate_way != 1");
-            } else {
+                sql.append(" and rebate_way != 1 and rebate_way !=3");
+            } else if (olOrderCriteria.getRebateWay() == 1){
                 sql.append(" and rebate_way = 1");
+            }else if (olOrderCriteria.getRebateWay() == 3){
+                sql.append(" and rebate_way = 3");
             }
         }
         sql.append(" and state = 1 group by merchant_id");

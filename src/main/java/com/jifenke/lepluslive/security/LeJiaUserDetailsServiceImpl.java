@@ -3,6 +3,8 @@ package com.jifenke.lepluslive.security;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
+import com.jifenke.lepluslive.partner.repository.PartnerManagerRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerRepository;
 
 import org.slf4j.Logger;
@@ -34,6 +36,9 @@ public class LeJiaUserDetailsServiceImpl implements LeJiaUserDetailsService {
     @Inject
     private PartnerRepository partnerRepository;
 
+    @Inject
+    private PartnerManagerRepository partnerManagerRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username)
         throws UsernameNotFoundException {
@@ -57,11 +62,23 @@ public class LeJiaUserDetailsServiceImpl implements LeJiaUserDetailsService {
             }).orElseThrow(() -> new UsernameNotFoundException(
                 "User " + lowercaseLogin + " was not found in the " +
                 "database"));
-        } else {
+        } else if ("partner".equals(userRole)) {
             Optional<Partner> userFromDatabase = partnerRepository.findByName(lowercaseLogin);
             return userFromDatabase.map(user -> {
                 return new org.springframework.security.core.userdetails.User(
                     userFromDatabase.get().getPartnerSid(),
+                    user.getPassword(),
+                    grantedAuthorities);
+            }).orElseThrow(() -> new UsernameNotFoundException(
+                "User " + lowercaseLogin + " was not found in the " +
+                "database"));
+        } else {
+            Optional<PartnerManager>
+                userFromDatabase =
+                partnerManagerRepository.findByName(lowercaseLogin);
+            return userFromDatabase.map(user -> {
+                return new org.springframework.security.core.userdetails.User(
+                    userFromDatabase.get().getPartnerManagerSid(),
                     user.getPassword(),
                     grantedAuthorities);
             }).orElseThrow(() -> new UsernameNotFoundException(
