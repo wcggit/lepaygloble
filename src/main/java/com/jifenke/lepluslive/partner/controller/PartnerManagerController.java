@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
@@ -151,7 +152,7 @@ public class PartnerManagerController {
             partnerCriteria.setOffset(1);
         }
         List<PartnerDto> dtoList = new ArrayList<>();
-        Page page =partnerService.findPartnerByCriteria(partnerCriteria,10);
+        Page page = partnerService.findPartnerByCriteria(partnerCriteria, 10);
         List<Partner> content = page.getContent();
         for (Partner partner : content) {
             PartnerDto dto = new PartnerDto();
@@ -159,15 +160,15 @@ public class PartnerManagerController {
             Long merchantNum = merchantService.countPartnerBindMerchant(partner);
             Long userNum = leJiaUserService.countPartnerBindLeJiaUser(partner);
             PartnerWallet wallet = partnerWalletService.findByPartner(partner);
-            dto.setBindMerchantNum(merchantNum==null?0L:merchantNum);
-            dto.setBindUserNum(userNum==null?0L:userNum);
-            dto.setOnLineCommission(wallet==null?0L:wallet.getAvailableBalance());
-            dto.setOffLineCommission(wallet==null?0L:wallet.getTotalMoney());
+            dto.setBindMerchantNum(merchantNum == null ? 0L : merchantNum);
+            dto.setBindUserNum(userNum == null ? 0L : userNum);
+            dto.setOnLineCommission(wallet == null ? 0L : wallet.getAvailableBalance());
+            dto.setOffLineCommission(wallet == null ? 0L : wallet.getTotalMoney());
             dtoList.add(dto);
         }
-        Map map =new HashMap<>();
-        map.put("content",dtoList);
-        map.put("totalPages",page.getTotalPages());
+        Map map = new HashMap<>();
+        map.put("content", dtoList);
+        map.put("totalPages", page.getTotalPages());
         return LejiaResult.ok(map);
     }
 
@@ -180,6 +181,42 @@ public class PartnerManagerController {
         return LejiaResult.ok(pages);
     }
 
+
+    /**
+     * 合伙人 - 折线图
+     *
+     * @return
+     */
+    @RequestMapping(value = "/partnerManager/chart/week", method = RequestMethod.POST)
+    @ResponseBody
+    public LejiaResult findManagerWeekNumberChart(@RequestBody PartnerManagerCriteria managerCriteria) {
+        PartnerManager partnerManager = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
+        managerCriteria.setPartnerManager(partnerManager);
+        Map map = partnerManagerService.findManagerWeekNumberChartData(managerCriteria);
+        return LejiaResult.ok(map);
+    }
+
+    /**
+     * 指定合伙人 - 信息
+     */
+    @RequestMapping(value = "/partnerManager/chart/partner", method = RequestMethod.POST)
+    @ResponseBody
+    public LejiaResult findPartnerChartData(@RequestBody PartnerManagerCriteria partnerManagerCriteria) {
+        Partner partner =
+            partnerService.findByPartnerSid(partnerManagerCriteria.getPartner().getPartnerSid());
+        Map map = partnerManagerService.findPartnerData(partnerManagerCriteria, partner);
+        PartnerWallet partnerWallet = partnerWalletService.findByPartner(partner);
+        map.put("partnerWallet", partnerWallet);
+        Long bindMerchants = merchantService.countPartnerBindMerchant(partner);
+        Long bindUsers = leJiaUserService.countPartnerBindLeJiaUser(partner);
+        Long dayCommission = partnerService.countPartnerDayCommission(partner);
+        map.put("bindMerchants", bindMerchants);
+        map.put("bindUsers", bindUsers);
+        map.put("dayCommission", dayCommission);
+        map.put("userLimit", partner.getUserLimit());
+        map.put("merchantLimit", partner.getMerchantLimit());
+        return LejiaResult.ok(map);
+    }
 
 
 }

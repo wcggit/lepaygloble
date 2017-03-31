@@ -78,4 +78,20 @@ angular.module('lepayglobleApp')
             currentPage = 1;
             loadContent();
         }
+
+        $scope.partnerManage = function (partnerSid) {
+            $scope.$parent.currentTab = "imDataOverview";
+            $state.go("cp-infoManage", {partnerSid: partnerSid});
+            // partnerCriteria = {};
+            // var partner = {};
+            // partner.partnerSid = partnerSid;
+            // partnerCriteria.partner = partner;
+            // $http.post('api/partnerManager/chart/partner', partnerCriteria, {
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     }
+            // }).success(function (response) {
+            //     console.log(JSON.stringify(response));
+            // });
+        }
     });

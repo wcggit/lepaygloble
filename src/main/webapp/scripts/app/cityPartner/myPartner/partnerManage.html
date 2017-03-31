@@ -73,7 +73,8 @@
                     <td>￥{{x.offLineCommission/100.0|number:2}}</td>
                     <td>￥{{x.onLineCommission/100.0|number:2}}</td>
                     <td>￥{{(x.offLineCommission+x.onLineCommission)/100.0|number:2}}</td>
-                    <td><a ui-sref="cp-infoManage" ui-sref-opts="{reload:true}">管理</a></td>
+                    <!--<td><a ng-click="partnerManage(x.partner.partnerSid)">管理</a></td>-->
+                    <td><a ui-sref="cp-infoManage({partnerSid:{{x.partner.partnerSid}}})"  ui-sref-opts="{reload:true}" >管理</a></td>
                 </tr>
                 </tbody>
             </table>

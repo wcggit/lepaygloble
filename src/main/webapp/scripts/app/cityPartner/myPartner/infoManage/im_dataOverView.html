@@ -5,25 +5,19 @@
         <div class="col-md-3">
             <div class="out-div">
                 <p class="text-center">商户今日入账</p>
-                <p class="text-center">¥<span>500.00</span></p>
+                <p class="text-center"><span ng-bind="'￥'+dailyCommission/100.0"></span></p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="out-div">
                 <p class="text-center">商户累计入账</p>
-                <p class="text-center">¥<span>500.00</span></p>
+                <p class="text-center">¥<span ng-bind="wallet.totalMoney/100.0"></span></p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="out-div">
                 <p class="text-center">接收红包总额</p>
-                <p class="text-center">¥<span>500.00</span></p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="out-div">
-                <p class="text-center">接收红包总额</p>
-                <p class="text-center">¥<span>500.00</span></p>
+                <p class="text-center">¥<span ng-bind="wallet.totalScoreA/100.0"></span></p>
             </div>
         </div>
     </div>
@@ -34,7 +28,7 @@
         <div class="col-md-6">
             <p>锁定会员</p>
 
-            <p><font class="" size="12" color="#333">200</font>/500</p>
+            <p><font class="" size="12" color="#333">{{bindUsers}}</font>/{{userLimit}}</p>
 
             <div class="progress">
                 <div class="progress-bar progress-bar-warning progress-bar1" role="progressbar"
@@ -45,7 +39,7 @@
         <div class="col-md-6">
             <p>锁定门店</p>
 
-            <p><font size="6" color="#333">200</font>/500</p>
+            <p><font size="6" color="#333">{{bindMerchants}}</font>/{{merchantLimit}}</p>
 
             <div class="progress">
                 <div class="progress-bar progress-bar2" role="progressbar" aria-valuenow="0"
@@ -88,46 +82,18 @@
                 <td>日期</td>
                 <td>锁定会员</td>
                 <td>锁定门店</td>
-                <td>线下佣金收入</td>
-                <td>线上佣金收入</td>
+                <td>佣金收入</td>
             </tr>
             </thead>
             <tbody>
-            <tr class="tr-empty" id="notData"><td class="text-center" colspan="5" >暂无数据！</td></tr>
-            <tr class="tr-noEmpty" id="HaveData">
-                <td>2016-05-05</td>
-                <td>30</td>
-                <td>30</td>
-                <td>￥20.00</td>
-                <td>￥20.00</td>
+            <tr class="tr-empty" id="notData"><td class="text-center" colspan="5" ng-show="dates==null">暂无数据！</td></tr>
+            <tr class="tr-noEmpty" id="HaveData" ng-repeat="x in dates">
+                <td>{{x}}</td>
+                <td>{{merchantNumbers[$index]}}</td>
+                <td>{{userNumbers[$index]}}</td>
+                <td>￥{{totalCommission[$index]/100.0}}</td>
             </tr>
             </tbody>
         </table>
-    </div>
-    <!--分页-->
-    <div class=" clearfix">
-        <nav class="pull-right">
-            <ul class="pagination">
-                <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
-                <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
-                    <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
-                </li>
-                <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
-                <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
-                <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
-                <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
-                    1}}</a>
-                </li>
-                <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
-                    2}}</a>
-                </li>
-                <li ng-class="{disabled: page==totalPages||totalPages==0}"
-                    ng-click="loadPage(page+1)"><a aria-label="Next">
-                    <span aria-hidden="true">›</span>
-                </a></li>
-                <li ng-class="{disabled: page==totalPages||totalPages==0}"
-                    ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
-            </ul>
-        </nav>
     </div>
 </div>

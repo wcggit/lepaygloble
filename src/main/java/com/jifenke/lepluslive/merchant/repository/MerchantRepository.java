@@ -102,4 +102,11 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
 
     @Query(value = "select DATE_FORMAT(create_date,\"%Y-%m-%d\"),count(*) from merchant where partner_id = ?1 and create_date between ?2 and ?3 GROUP BY DATE_FORMAT(create_date,\"%Y-%m-%d\")", nativeQuery = true)
     List<Object[]> countMerchantByPartnerAndDate(Long partnerId, Date startDate, Date endDate);
+
+    /**
+     *  统计指定合伙人 7 天内锁定的商户数量
+     */
+    @Query(value = "select DATE_FORMAT(create_date,'%Y-%m-%d'),IFNULL(count(*),0) from merchant " +
+        " where  partner_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(create_date) group by DATE_FORMAT(create_date,'%Y-%m-%d')",nativeQuery = true)
+    List<Object[]> countMerchantByPartnerWeek(Long partnerId,Date start);
 }
