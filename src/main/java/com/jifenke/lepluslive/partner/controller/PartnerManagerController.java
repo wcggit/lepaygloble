@@ -29,6 +29,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by xf on 17-3-17.
@@ -151,24 +154,30 @@ public class PartnerManagerController {
         if (partnerCriteria.getOffset() == null) {
             partnerCriteria.setOffset(1);
         }
-        List<PartnerDto> dtoList = new ArrayList<>();
+        List<PartnerDto> dtoList = Collections.synchronizedList(new ArrayList<PartnerDto>());
         Page page = partnerService.findPartnerByCriteria(partnerCriteria, 10);
         List<Partner> content = page.getContent();
+        ExecutorService executor =  Executors.newFixedThreadPool(content.size());
         for (Partner partner : content) {
-            PartnerDto dto = new PartnerDto();
-            dto.setPartner(partner);
-            Long merchantNum = merchantService.countPartnerBindMerchant(partner);
-            Long userNum = leJiaUserService.countPartnerBindLeJiaUser(partner);
-            PartnerWallet wallet = partnerWalletService.findByPartner(partner);
-            dto.setBindMerchantNum(merchantNum == null ? 0L : merchantNum);
-            dto.setBindUserNum(userNum == null ? 0L : userNum);
-            dto.setOnLineCommission(wallet == null ? 0L : wallet.getAvailableBalance());
-            dto.setOffLineCommission(wallet == null ? 0L : wallet.getTotalMoney());
-            dtoList.add(dto);
+            executor.execute(new Thread(() -> {
+                PartnerDto dto = new PartnerDto();
+                dto.setPartner(partner);
+                Long merchantNum = merchantService.countPartnerBindMerchant(partner);
+                Long userNum = leJiaUserService.countPartnerBindLeJiaUser(partner);
+                PartnerWallet wallet = partnerWalletService.findByPartner(partner);
+                dto.setBindMerchantNum(merchantNum == null ? 0L : merchantNum);
+                dto.setBindUserNum(userNum == null ? 0L : userNum);
+                dto.setOnLineCommission(wallet == null ? 0L : wallet.getAvailableBalance());
+                dto.setOffLineCommission(wallet == null ? 0L : wallet.getTotalMoney());
+                dtoList.add(dto);
+            }));
         }
         Map map = new HashMap<>();
         map.put("content", dtoList);
         map.put("totalPages", page.getTotalPages());
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+        }
         return LejiaResult.ok(map);
     }
 

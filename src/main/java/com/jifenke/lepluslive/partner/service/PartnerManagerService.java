@@ -248,6 +248,7 @@ public class PartnerManagerService {
             merchantNumbers.add(0L);
             totalCommission.add(0.0);
         }
+
         for (int i = 0; i < dates.size(); i++) {
             String startTime = dates.get(i);
             for (Object[] merchantNum : merchantNumber) {

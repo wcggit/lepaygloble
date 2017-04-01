@@ -14,12 +14,14 @@ import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 import com.jifenke.lepluslive.partner.service.PartnerManagerService;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
+import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wanjun on 2016/12/15.
@@ -66,5 +68,13 @@ public class OffLineOrderShareController {
         olOrderCriteria.setPartnerManager(partnerManager);
         Page page = offLineOrderService.findOrderShareByPage(olOrderCriteria, 10);
         return LejiaResult.ok(page);
+    }
+
+    @RequestMapping(value = "/offLineOrder/partner/otherData", method = RequestMethod.POST)
+    public LejiaResult cityPartnerFindOtherData(@RequestBody OrderShareCriteria orderShareCriteria) {
+        PartnerManager partnerManager = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
+        orderShareCriteria.setPartnerManager(partnerManager);
+        Map map = offLineOrderService.findOtherData(orderShareCriteria);
+        return  new LejiaResult(map);
     }
 }

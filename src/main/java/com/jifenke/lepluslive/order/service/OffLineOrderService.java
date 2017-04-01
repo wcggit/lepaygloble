@@ -13,6 +13,7 @@ import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrderShare;
 import com.jifenke.lepluslive.order.repository.*;
 
+import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -354,6 +355,13 @@ public class OffLineOrderService {
         return offLineOrderShareRepository.countByLockMerchant(merchant);
     }
 
+
+    /**
+     *  城市合伙人 , 佣金明细
+     * @param orderCriteria
+     * @param limit
+     * @return
+     */
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Page findOrderShareByPage(OrderShareCriteria orderCriteria, int limit) {
         Sort sort = new Sort(Sort.Direction.DESC, "createDate");
@@ -414,7 +422,24 @@ public class OffLineOrderService {
             }
         };
     }
-
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Map findOtherData(OrderShareCriteria managerCriteria) {
+        Date start = null;
+        Date end = null;
+        if(managerCriteria.getStartDate()==null) {
+            start = new Date();
+            end = new Date();
+        }else {
+            start = new Date(managerCriteria.getStartDate());
+            end = new Date(managerCriteria.getEndDate());
+        }
+        List<Object[]> otherData = offLineOrderShareRepository.findOtherData(managerCriteria.getPartnerManager().getId(),start,end);
+        Map map = new HashMap();
+        map.put("bind_merchants",otherData.get(0)[0]==null?0L:otherData.get(0)[0]);
+        map.put("bind_partner_manager",otherData.get(0)[1]==null?0L:otherData.get(0)[1]);
+        map.put("total_price",otherData.get(0)[2]==null?0L:otherData.get(0)[2]);
+        return map;
+    }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Map orderShareStatistic(OrderShareCriteria olOrderCriteria) {

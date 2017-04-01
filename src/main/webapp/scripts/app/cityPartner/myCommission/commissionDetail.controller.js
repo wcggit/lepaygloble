@@ -71,6 +71,19 @@ angular.module('lepayglobleApp')
             loadContent();
         };
 
+
+        function loadOtherData() {
+            $http.post('api/offLineOrder/partner/otherData', olOrderCriteria, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function (response) {
+                var data = response.data;
+                console.log(JSON.stringify(data));
+                $scope.page = currentPage;
+            });
+        }
+
         $scope.searchByCriteria = function () {
             if ($("#completeDate").val() != null && $("#completeDate").val() != '') {
                 var completeDate = $("#completeDate").val().split("-");
