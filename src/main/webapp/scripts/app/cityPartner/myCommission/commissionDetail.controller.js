@@ -79,7 +79,7 @@ angular.module('lepayglobleApp')
                 }
             }).success(function (response) {
                 var data = response.data;
-                console.log(JSON.stringify(data));
+                // console.log(JSON.stringify(data));
                 $scope.page = currentPage;
             });
         }

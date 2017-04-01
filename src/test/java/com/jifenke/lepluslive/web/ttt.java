@@ -11,8 +11,10 @@ import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.partner.domain.criteria.PartnerScoreLogCriteria;
 import com.jifenke.lepluslive.partner.domain.criteria.WeiXinUserInfoCriteria;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerScoreLog;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWelfareLog;
+import com.jifenke.lepluslive.partner.repository.PartnerManagerRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerRepository;
 import com.jifenke.lepluslive.partner.service.PartnerScoreLogService;
 import com.jifenke.lepluslive.partner.service.PartnerService;
@@ -67,6 +69,9 @@ public class ttt {
     @Inject
     private MerchantUserRepository merchantUserRepository;
 
+    @Inject
+    private PartnerManagerRepository partnerManagerRepository;
+
     @Test
     public void tttt() {
 //        PartnerWelfareLog partnerWelfareLog = new PartnerWelfareLog();
@@ -85,13 +90,17 @@ public class ttt {
 //        while (true) {
 //
 //        }
-        List<MerchantUser> users = merchantUserRepository.findAll();
+        /*List<MerchantUser> users = merchantUserRepository.findAll();
         for (MerchantUser user : users) {
             user.setMerchantSid(MvUtil.getMerchantUserSid());
             merchantUserRepository.save(user);
-//            System.out.println(user.getMerchantSid());
+            System.out.println(user.getMerchantSid());
+        }*/
+        List<PartnerManager> managers = partnerManagerRepository.findAll();
+        for (PartnerManager manager : managers) {
+            manager.setPartnerManagerSid(MvUtil.getMerchantUserSid());
+            partnerManagerRepository.save(manager);
         }
-
     }
 
 ////  public static void main(String[] args) {

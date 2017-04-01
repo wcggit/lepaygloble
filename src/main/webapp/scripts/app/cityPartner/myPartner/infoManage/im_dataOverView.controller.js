@@ -41,7 +41,7 @@ angular.module('lepayglobleApp')
                     'Content-Type': 'application/json'
                 }
             }).success(function (response) {
-                console.log(JSON.stringify(response));
+                // console.log(JSON.stringify(response));
                 $scope.dailyCommission = response.data.dayCommission;
                 $scope.bindUsers = response.data.bindUsers;
                 $scope.bindMerchants = response.data.bindMerchants;
