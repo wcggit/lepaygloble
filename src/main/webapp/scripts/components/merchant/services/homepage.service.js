@@ -25,6 +25,17 @@ angular.module('lepayglobleApp')
                 });
                 return deferred.promise;
             },
+            getCommissionByMerchantUser: function () {
+                var deferred = $q.defer();
+                $http.get('/api/offLineOrder/merchantUserCommission', {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).success(function (response) {
+                    deferred.resolve(response);
+                });
+                return deferred.promise;
+            },
             getMerchantsInfo: function () {
                 var deferred = $q.defer();
                 $http.get('/api/merchantUser/merchants', {

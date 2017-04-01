@@ -19,9 +19,9 @@
             </div>
             <div class="col-md-6">
                 <p>锁定会员数</p>
-                <p class="lockMemberNum"><span>{{data.merchantUserLockLimit}}</span>/{{data.merchantUserTotalLockLimit}}</p>
+                <p class="lockMemberNum"><span>{{merchantUserLockLimit}}</span>/{{userTotalLockLimit}}</p>
                 <div class="progress">
-                    <div style="width: {{data.merchantUserLockLimit/data.merchantUserTotalLockLimit*100}}%" class="progress-bar progress-bar-warning" role="progressbar"  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div style="width: {{merchantUserLockLimit/userTotalLockLimit*100}}%" class="progress-bar progress-bar-warning" role="progressbar"  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
         </div>

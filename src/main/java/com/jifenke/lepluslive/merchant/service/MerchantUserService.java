@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.merchant.service;
 
 import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.repository.MerchantRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
@@ -89,4 +90,5 @@ public class MerchantUserService {
     public MerchantUser findByName(String username) {
         return merchantUserRepository.findByUserName(username);
     }
+
 }
