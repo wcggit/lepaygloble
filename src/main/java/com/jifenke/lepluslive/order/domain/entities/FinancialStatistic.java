@@ -29,11 +29,7 @@ public class FinancialStatistic {
 
     private Long transferPrice;
 
-<<<<<<< HEAD
     private Integer state = 0; //状态2 表示挂帐
-=======
-  private Integer state = 0; //状态2 表示挂帐
->>>>>>> 9d0a76cf7863542b79adb69eceb808dd5a9af7e0
 
 
     private Long transferFromTruePay; //扫码支付转账金额

@@ -3,7 +3,7 @@
         <div class="panel-body clearfix">
             <span class="left-icon pull-left" ui-sref="homePage" ui-sref-opts="{reload:true}"></span>
             <span ui-sref="homePage" ui-sref-opts="{reload:true}">首页 / </span>
-            <span class="current-page">提现记录</span>
+            <span class="current-page">每日账单</span>
         </div>
     </div>
     <div class="container-fluid">
@@ -11,17 +11,17 @@
         <form class="form-inline list-check">
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label>创建时间</label>
-                    <date-choice class="input-group timePicker col-md-9"></date-choice>
+                    <label>结算日期</label>
+                    <input type="text" id="timePicker1" class="form-control">
                 </div>
                 <div class="form-group col-md-4">
-                    <label>会员锁定状态</label>
+                    <label>到账状态</label>
                     <div class="input-group col-md-6 select-style">
-                            <select class="form-control" id="userBindState">
+                            <select class="form-control" id="financialState">
                                 <option value="-1">全部</option>
-                                <option value="0">未锁定</option>
-                                <option value="1">即将锁满</option>
-                                <option value="2">已锁满</option>
+                                <option value="0">转账中</option>
+                                <option value="1">已到账</option>
+                                <option value="2">已到账</option>
                             </select>
                         <span class="select-jiao"></span>
                     </div>
@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="form-group col-md-5">
                     <label></label>
-                    <button type="button" class="btn btn-warning btn-check2">查询</button>
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByDate()">查询</button>
                 </div>
             </div>
         </form>
@@ -39,29 +39,23 @@
             <table class="table ol-tab">
                 <thead class="active">
                 <tr>
-                    <td>提现时间</td>
+                    <td>结算日期</td>
                     <td>状态</td>
-                    <td>提现金额</td>
-                    <td>结算账号</td>
-                    <td>收款人</td>
-                    <td>备注信息</td>
+                    <td>到账金额</td>
+                    <td>结算方式</td>
+                    <td>银行卡号</td>
                 </tr>
                 </thead>
                 <tbody>
-                    <tr class="tr-empty"><td class="text-center" colspan="6">暂无数据！</td></tr>
-                    <tr class="tr-noEmpty">
-                        <td class="td-date">
-                            <p>2016-05-05 </p>
-                            <p>11:30</p>
-                        </td>
-                        <td>转账中</td>
-                        <td>￥1234.45</td>
-                        <td class="td-bank">
-                            <p>建设银行</p>
-                            <p>xxxxxxxxxxxxxxxxxxx1234</p>
-                        </td>
-                        <td>孙天奇</td>
-                        <td>---------</td>
+                    <tr class="tr-empty"><td class="text-center" colspan="6" ng-show="pulls==null">暂无数据！</td></tr>
+                    <tr ng-repeat="financial in pulls">
+                        <td>{{financial.balanceDate|date:'yyyy-MM-dd'}}</td>
+                        <td ng-if="financial.state==1">已到账</td>
+                        <td ng-if="financial.state==0">转账中</td>
+                        <td ng-if="financial.state==2">已挂账</td>
+                        <td>{{'￥'+(financial.transferPrice+financial.posTransfer+financial.appTransfer)/100}}</td>
+                        <td>{{financial.merchant.merchantBank.bankName}}</td>
+                        <td class="bank">{{financial.merchant.merchantBank.bankNumber}}</td>
                     </tr>
                 </tbody>
             </table>

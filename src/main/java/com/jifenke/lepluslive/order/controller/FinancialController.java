@@ -3,7 +3,9 @@ package com.jifenke.lepluslive.order.controller;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserResource;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.order.controller.view.FinancialViewExcel;
 import com.jifenke.lepluslive.order.domain.criteria.FinancialCriteria;
 import com.jifenke.lepluslive.order.domain.entities.FinancialStatistic;
@@ -48,6 +50,8 @@ public class FinancialController {
     @Inject
     protected FinanicalStatisticService finanicalStatisticService;
 
+    @Inject
+    private MerchantUserResourceService merchantUserResourceService;
 
     @RequestMapping(value = "/financial", method = RequestMethod.POST)
     public
@@ -64,6 +68,20 @@ public class FinancialController {
         Page page = offLineOrderService.findFinancialByCirterial(financialCriteria, 10);
         return LejiaResult.ok(page);
     }
+
+    /*@RequestMapping(value = "/financial/merchantUser", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    LejiaResult searchMerchantUserFinancialBycriterial(@RequestBody FinancialCriteria financialCriteria) {
+        if (financialCriteria.getOffset() == null) {
+            financialCriteria.setOffset(1);
+        }
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        financialCriteria.setMerchantList(merchants);
+        Page page = offLineOrderService.findFinancialByCirterial(financialCriteria, 10);
+        return LejiaResult.ok(page);
+    }*/
 
     @RequestMapping(value = "/financial/export", method = RequestMethod.GET)
     public ModelAndView exporeExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) {

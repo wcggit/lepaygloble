@@ -29,11 +29,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-<<<<<<< HEAD
-import java.util.*;
 
-=======
->>>>>>> 9d0a76cf7863542b79adb69eceb808dd5a9af7e0
 import javax.inject.Inject;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -67,9 +63,7 @@ public class OrderController {
     SimpMessageSendingOperations messagingTemplate;
 
     @Inject
-<<<<<<< HEAD
     WithdrawService withdrawService;
-=======
     private MerchantUserResourceService merchantUserResourceService;
 
     @Inject
@@ -80,7 +74,6 @@ public class OrderController {
 
     @Inject
     private MerchantOrderExcel merchantOrderExcel;
->>>>>>> 9d0a76cf7863542b79adb69eceb808dd5a9af7e0
 
     @RequestMapping(value = "/order/todayOrderDetail", method = RequestMethod.GET)
     public LejiaResult getTodayOrderDetail() {
@@ -216,10 +209,10 @@ public class OrderController {
         Long currentBind = leJiaUserService.countBindMerchant(merchant);
 
         Map map = new HashMap<>();
-        List<WithdrawBill> withdrawBillList=withdrawService.findByMerchantId(merchant.getId());
-        Long withdrawTotalPrice=0l;
-        for(WithdrawBill withdrawBill:withdrawBillList){
-            withdrawTotalPrice=withdrawTotalPrice+withdrawBill.getTotalPrice();
+        List<WithdrawBill> withdrawBillList = withdrawService.findByMerchantId(merchant.getId());
+        Long withdrawTotalPrice = 0l;
+        for (WithdrawBill withdrawBill : withdrawBillList) {
+            withdrawTotalPrice = withdrawTotalPrice + withdrawBill.getTotalPrice();
         }
         map.put("withdrawTotalPrice", withdrawTotalPrice);
         map.put("available", merchantWallet.getAvailableBalance());
@@ -455,7 +448,7 @@ public class OrderController {
         String[]
             titles1 =
             {"订单编号", "交易完成时间", "订单状态", "支付渠道", "消费金额", "使用红包", "实际支付", "订单类型", "微信手续费", "红包手续费",
-             "总入账金额", "微信支付入账", "红包支付入账", "退款时间"};
+                "总入账金额", "微信支付入账", "红包支付入账", "退款时间"};
         String[]
             titles2 =
             {"退款单号", "退款完成时间", "订单编号", "订单类型", "订单完成时间", "微信渠道退款", "微信渠道退款", "微信支付少转账", "红包支付少转账"};

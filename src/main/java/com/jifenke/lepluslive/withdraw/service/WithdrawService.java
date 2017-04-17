@@ -38,24 +38,19 @@ public class WithdrawService {
     private MerchantWalletRepository merchantWalletRepository;
 
 
-<<<<<<< HEAD
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<WithdrawBill> findByMerchantId(Long id) {
-        return   withdrawRepository.findByMerchantId(id);
+        return withdrawRepository.findByMerchantId(id);
     }
 
 
-
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<WithdrawBill> findByPartnerId(Long id) {
-        return   withdrawRepository.findByPartnerId(id);
+        return withdrawRepository.findByPartnerId(id);
     }
 
 
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
-=======
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
->>>>>>> 9d0a76cf7863542b79adb69eceb808dd5a9af7e0
     public void saveWithdrawBill(WithdrawBill withdrawBill) {
         withdrawRepository.save(withdrawBill);
     }
@@ -71,25 +66,25 @@ public class WithdrawService {
             @Override
             public Predicate toPredicate(Root<WithdrawBill> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
-                if(criteria.getBillType()!=null) {
-                    predicate.getExpressions().add(cb.equal(root.get("billType"),criteria.getBillType()));
+                if (criteria.getBillType() != null) {
+                    predicate.getExpressions().add(cb.equal(root.get("billType"), criteria.getBillType()));
                 }
-                if(criteria.getPartner()!=null)  {
-                    predicate.getExpressions().add(cb.equal(root.get("partner"),criteria.getPartner()));
+                if (criteria.getPartner() != null) {
+                    predicate.getExpressions().add(cb.equal(root.get("partner"), criteria.getPartner()));
                 }
-                if(criteria.getPartnerManager()!=null) {
-                    predicate.getExpressions().add(cb.equal(root.get("partnerManager"),criteria.getPartnerManager()));
+                if (criteria.getPartnerManager() != null) {
+                    predicate.getExpressions().add(cb.equal(root.get("partnerManager"), criteria.getPartnerManager()));
                 }
-                if(criteria.getState()!=null) {
-                    predicate.getExpressions().add(cb.equal(root.get("state"),criteria.getState()));
+                if (criteria.getState() != null) {
+                    predicate.getExpressions().add(cb.equal(root.get("state"), criteria.getState()));
                 }
                 //  提现开始时间
-                if(criteria.getWithDrawStartDate()!=null&&criteria.getWithDrawEndDate()!=null) {
-                    predicate.getExpressions().add(cb.between(root.get("createdDate"),new Date(criteria.getWithDrawStartDate()),new Date(criteria.getWithDrawEndDate())));
+                if (criteria.getWithDrawStartDate() != null && criteria.getWithDrawEndDate() != null) {
+                    predicate.getExpressions().add(cb.between(root.get("createdDate"), new Date(criteria.getWithDrawStartDate()), new Date(criteria.getWithDrawEndDate())));
                 }
                 //  提现结束时间
-                if(criteria.getCompleteDateStartDate()!=null&&criteria.getCompleteDateEndDate()!=null) {
-                    predicate.getExpressions().add(cb.between(root.get("completeDate"),new Date(criteria.getCompleteDateStartDate()),new Date(criteria.getCompleteDateEndDate())));
+                if (criteria.getCompleteDateStartDate() != null && criteria.getCompleteDateEndDate() != null) {
+                    predicate.getExpressions().add(cb.between(root.get("completeDate"), new Date(criteria.getCompleteDateStartDate()), new Date(criteria.getCompleteDateEndDate())));
                 }
                 return predicate;
             }
@@ -109,13 +104,13 @@ public class WithdrawService {
             wallet.setAvailableBalance(0L);
         }
         MerchantWallet merchantUserWallet = merchantWalletRepository.findByMerchantUser(merchantUser.getId());
-        if(merchantUserWallet==null) {
+        if (merchantUserWallet == null) {
             merchantUserWallet = new MerchantWallet();
             merchantUserWallet.setAvailableBalance(0L);
             merchantUserWallet.setMerchantUserId(merchantUser.getId());
             merchantWalletRepository.save(merchantUserWallet);
         }
-        merchantUserWallet.setAvailableBalance(merchantUserWallet.getAvailableBalance()+transfer);
+        merchantUserWallet.setAvailableBalance(merchantUserWallet.getAvailableBalance() + transfer);
         //  生成提现单
         String randomBillSid = MvUtil.getOrderNumber();
         WithdrawBill withdrawBill = new WithdrawBill();

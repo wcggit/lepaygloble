@@ -174,6 +174,11 @@ public class OffLineOrderService {
                         cb.equal(r.<Merchant>get("merchant"),
                                  financialCriteria.getMerchant()));
                 }
+                if(financialCriteria.getState()!=null&&financialCriteria.getState()!=-1) {
+                    predicate.getExpressions().add(
+                        cb.equal(r.<Merchant>get("state"),
+                            financialCriteria.getState()));
+                }
                 return predicate;
             }
         };
