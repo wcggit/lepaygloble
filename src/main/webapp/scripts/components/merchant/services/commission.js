@@ -4,16 +4,6 @@ angular.module('lepayglobleApp')
     .factory('Commission', function Trade($q, $http) {
                  return {
                      getMerchantCommissionDetail: function () {
-                         //return  $.ajax({
-                         //                   type: "post",
-                         //                   url: "/api/financial",
-                         //                   async: false,
-                         //                   contentType: "application/json",
-                         //                   data: JSON.stringify(financialCriteria),
-                         //                   success: function (data) {
-                         //                       return data;
-                         //                   }
-                         //               });
                          var deferred = $q.defer();
                          $http.get('/api/offLineOrder/commission', {
                              headers: {
@@ -36,16 +26,6 @@ angular.module('lepayglobleApp')
                          return deferred.promise;
                      },
                      getOrderShareList: function (orderCriteria) {
-                         //return  $.ajax({
-                         //                   type: "post",
-                         //                   url: "/api/financial",
-                         //                   async: false,
-                         //                   contentType: "application/json",
-                         //                   data: JSON.stringify(financialCriteria),
-                         //                   success: function (data) {
-                         //                       return data;
-                         //                   }
-                         //               });
                          var deferred = $q.defer();
                          $http.post('/api/offLineOrder/share', orderCriteria, {
                              headers: {

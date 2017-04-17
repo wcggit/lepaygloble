@@ -1,0 +1,151 @@
+<div class="dataOverview">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">
+            数据概览
+        </div>
+    </div>
+    <div class="container-fluid">
+        <p class="ttl">数据概览</p>
+        <div class="row sjgl1 row-margin">
+            <div class="col-md-6 clearfix sjgl1-left">
+                <div class="pull-left col-md-6">
+                    <p class="text-center">{{available | currency:'￥'}}</p>
+                    <p class="text-center commission-balance">佣金余额 <span class="balance-operating"></span></p>
+                </div>
+                <div class="pull-right col-md-6">
+                    <p class="text-center">{{totalCommission | currency:'￥'}}</p>
+                    <p class="text-center">累计佣金收入</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <p>锁定会员数</p>
+                <p class="lockMemberNum"><span>{{merchantUserLockLimit}}</span>/{{userTotalLockLimit}}</p>
+                <div class="progress">
+                    <div style="width: {{merchantUserLockLimit/userTotalLockLimit*100}}%" class="progress-bar progress-bar-warning" role="progressbar"  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+        <p class="ttl">线上佣金收入</p>
+        <div class="row merchant-data">
+            <div class="col-md-3">
+                <div class="out-div">
+                    <p class="text-center">今日佣金收入</p>
+                    <p class="text-center">{{data.onTodayTotalCommission | currency:'￥'}}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="out-div">
+                    <p class="text-center">人均佣金收入</p>
+                    <p class="text-center">{{data.onPerCapita | currency:'￥'}}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="out-div">
+                    <p class="text-center">今日佣金单数</p>
+                    <p class="text-center">{{data.onTodayTotalNumber}}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="out-div">
+                    <p class="text-center">累计佣金单数</p>
+                    <p class="text-center">{{data.onTotalNumber}}</p>
+                </div>
+            </div>
+        </div>
+        <p class="ttl">线下佣金收入</p>
+        <div class="row merchant-data">
+            <div class="col-md-3">
+                <div class="out-div">
+                    <p class="text-center">今日佣金收入</p>
+                    <p class="text-center">{{data.offTodayTotalCommission | currency:'￥'}}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="out-div">
+                    <p class="text-center">人均佣金收入</p>
+                    <p class="text-center">{{data.offPerCapita | currency:'￥'}}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="out-div">
+                    <p class="text-center">今日佣金单数</p>
+                    <p class="text-center">{{data.offTodayTotalNumber}}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="out-div">
+                    <p class="text-center">累计佣金单数</p>
+                    <p class="text-center">{{data.offTotalNumber}}</p>
+                </div>
+            </div>
+        </div>
+        <p class="ttl">门店锁定情况</p>
+        <div class="row row-margin lockStoreState">
+            <div class="col-md-8 col-md-offset-2" ng-repeat="x in merchants">
+                <div class="col-md-11">
+                    <p>{{x[0]}}</p>
+                    <div class="progress">
+                        <div style="width:{{x[1]/x[2]*100}}%" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="col-md-1"><span>{{x[1]}}</span>/{{x[2]}}</div>
+            </div>
+            <div class="col-md-8 col-md-offset-2" id="seeMore">
+                <input type="button" class="btn btn-warning look-more" value="查看更多" ng-click="moreMerchant()">
+            </div>
+        </div>
+    </div>
+</div>
+<!--提现提示框-->
+<div class="modal fade" id="tx">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">提现 <span>佣金余额：<font color="#fb991a">100.22</font>元</span></h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="inputPassword1" class="col-sm-3 col-sm-offset-1 control-label">提现金额（元）</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="inputPassword1" placeholder="请输入金额">
+                        </div>
+                        <div class="col-sm-3"><span class="ts">至少提现200元</span></div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
+                        <div class="col-sm-7">
+                            <p class="text-muted" class="form-control">xxxxxxxxxxxxxxxxxxx{{bank}}</p>
+                            <p class="text-muted" class="form-control">农行</p>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="withDraw()">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--提现成功提示框-->
+<div class="modal fade" id="tx-success">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="icon-success"></div>
+                <p class="text-center">提现申请成功</p>
+                <p class="text-center">佣金将会在1个工作日内后抵达您的结算账户</p>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

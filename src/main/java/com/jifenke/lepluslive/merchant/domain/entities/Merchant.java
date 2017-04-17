@@ -72,7 +72,7 @@ public class Merchant {
 
     private String pureQrCode; //纯支付码
 
-    private Long userLimit; //会员绑定上线
+    private Long userLimit; //会员绑定上限
 
     private BigDecimal ljCommission; //乐加佣金 单位百分比
 

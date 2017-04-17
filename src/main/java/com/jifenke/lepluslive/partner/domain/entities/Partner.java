@@ -2,12 +2,7 @@ package com.jifenke.lepluslive.partner.domain.entities;
 
 import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by wcg on 16/6/3. 合伙人表
@@ -17,143 +12,154 @@ import javax.persistence.Table;
 public class Partner {
 
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  private String partnerSid;
+    private String partnerSid;
 
-  private String name; //账户名
+    private String name; //账户名
 
-  private Long userLimit = 0L;
+    private Long userLimit = 0L;
 
-  private Long merchantLimit = 0L;
+    private Long merchantLimit = 0L;
 
-  private String partnerName; //合伙人姓名
+    private String partnerName; //合伙人姓名
 
-  private String phoneNumber;
+    private String phoneNumber;
 
-  private String password;
+    private String password;
 
-  private String bankName;
+    private String bankName;
 
-  private String bankNumber;
+    private String bankNumber;
 
-  private String payee;
+    private String payee;
 
-  private Integer benefitTime; //发放福利次数
+    private Integer benefitTime; //发放福利次数
 
-  @OneToOne
-  private WeiXinUser weiXinUser;
+    @OneToOne
+    private WeiXinUser weiXinUser;
 
-  public WeiXinUser getWeiXinUser() {
-    return weiXinUser;
-  }
+    @ManyToOne
+    private PartnerManager partnerManager;
 
-  public void setWeiXinUser(WeiXinUser weiXinUser) {
-    this.weiXinUser = weiXinUser;
-  }
+    public WeiXinUser getWeiXinUser() {
+        return weiXinUser;
+    }
 
-  public Integer getBenefitTime() {
-    return benefitTime;
-  }
+    public void setWeiXinUser(WeiXinUser weiXinUser) {
+        this.weiXinUser = weiXinUser;
+    }
 
-  public void setBenefitTime(Integer benefitTime) {
-    this.benefitTime = benefitTime;
-  }
+    public Integer getBenefitTime() {
+        return benefitTime;
+    }
 
-  public String getPayee() {
-    return payee;
-  }
+    public void setBenefitTime(Integer benefitTime) {
+        this.benefitTime = benefitTime;
+    }
 
-  public void setPayee(String payee) {
-    this.payee = payee;
-  }
+    public String getPayee() {
+        return payee;
+    }
 
-  public String getBankName() {
-    return bankName;
-  }
+    public void setPayee(String payee) {
+        this.payee = payee;
+    }
 
-  public void setBankName(String bankName) {
-    this.bankName = bankName;
-  }
+    public String getBankName() {
+        return bankName;
+    }
 
-  public String getBankNumber() {
-    return bankNumber;
-  }
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
 
-  public void setBankNumber(String bankNumber) {
-    this.bankNumber = bankNumber;
-  }
+    public String getBankNumber() {
+        return bankNumber;
+    }
 
-  public Long getMerchantLimit() {
-    return merchantLimit;
-  }
+    public void setBankNumber(String bankNumber) {
+        this.bankNumber = bankNumber;
+    }
 
-  public void setMerchantLimit(Long merchantLimit) {
-    this.merchantLimit = merchantLimit;
-  }
+    public Long getMerchantLimit() {
+        return merchantLimit;
+    }
 
-  public String getPartnerName() {
-    return partnerName;
-  }
+    public void setMerchantLimit(Long merchantLimit) {
+        this.merchantLimit = merchantLimit;
+    }
 
-  public void setPartnerName(String partnerName) {
-    this.partnerName = partnerName;
-  }
+    public String getPartnerName() {
+        return partnerName;
+    }
 
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
+    }
 
-  public void setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
-  }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-  public String getPassword() {
-    return password;
-  }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+    public String getPassword() {
+        return password;
+    }
 
-  public Long getUserLimit() {
-    return userLimit;
-  }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-  public void setUserLimit(Long userLimit) {
-    this.userLimit = userLimit;
-  }
+    public Long getUserLimit() {
+        return userLimit;
+    }
 
-  public Partner(Long id) {
-    this.id = id;
-  }
+    public void setUserLimit(Long userLimit) {
+        this.userLimit = userLimit;
+    }
 
-  public Partner() {
-  }
+    public Partner(Long id) {
+        this.id = id;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Partner() {
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public String getPartnerSid() {
-    return partnerSid;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setPartnerSid(String partnerSid) {
-    this.partnerSid = partnerSid;
-  }
+    public String getPartnerSid() {
+        return partnerSid;
+    }
+
+    public void setPartnerSid(String partnerSid) {
+        this.partnerSid = partnerSid;
+    }
+
+    public PartnerManager getPartnerManager() {
+        return partnerManager;
+    }
+
+    public void setPartnerManager(PartnerManager partnerManager) {
+        this.partnerManager = partnerManager;
+    }
 }

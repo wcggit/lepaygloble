@@ -37,7 +37,7 @@ public class MerchantWalletOnlineController {
         Date end = calendar.getTime();
         Merchant
             merchant =
-            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin())
+            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
                 .getMerchant();
         Long totalMoney = merchantWalletOnlineService.findTotalMoney(merchant.getId());
         List<Object[]> objs = merchantWalletOnlineService.findOneDayLogCountAndSum(merchant.getId(), start, end);

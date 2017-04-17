@@ -1,6 +1,9 @@
 package com.jifenke.lepluslive.merchant.domain.entities;
 
+import javax.persistence.Entity;
+
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.global.util.MvUtil;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,7 +26,7 @@ public class MerchantUser {
     @ManyToOne
     private Merchant merchant;
 
-    private Integer type; //9-系统管理员  8-管理员(商户)  2-子账号  【之前：0收营员 1 店主 一个商户只有一个店主】
+    private Integer type; // 9-系统管理员  8-管理员(商户)  2-子账号  【之前：0收营员 1 店主 一个商户只有一个店主】
 
     public Integer getType() {
         return type;
@@ -66,37 +69,28 @@ public class MerchantUser {
     }
 
     // ---  新版本扩展属性 ---
-    @OneToOne
-    private MerchantBank merchantBank;  //  银行卡号及名称
-    private String merchantName;        // 商户名称
-    private String linkMan;             // 商户负责人 （联系人）
-    private String phoneNum;            // 联系方式
-    private Long lockLimit;             // 锁定上限
-    private Date createdDate;           // 创建时间
-
-    @ManyToOne
-    private City city;                  // 所在城市
 
     @ManyToOne
     private Partner partner;            // 合伙人
 
     private Long createUserId;                                                                  // 所属商户（管理员） ID
 
-    public MerchantBank getMerchantBank() {
-        return merchantBank;
-    }
 
-    public void setMerchantBank(MerchantBank merchantBank) {
-        this.merchantBank = merchantBank;
-    }
+    private String merchantName;        // 商户名称
+    private String linkMan;             // 商户负责人 （联系人）
+    private String phoneNum;            // 联系方式
+    private String cardNum;             // 结算卡号
+    private String bankName;            // 开户行
+    private Long lockLimit;             // 锁定上限
+    private Date createdDate;            // 创建时间
 
-    public String getMerchantName() {
-        return merchantName;
-    }
+    @OneToOne
+    private MerchantBank merchantBank;  //  银行卡号及名称
 
-    public void setMerchantName(String merchantName) {
-        this.merchantName = merchantName;
-    }
+    private String payee; //收款人
+
+    @ManyToOne
+    private City city;                  // 所在城市
 
     public String getLinkMan() {
         return linkMan;
@@ -112,6 +106,22 @@ public class MerchantUser {
 
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public String getCardNum() {
+        return cardNum;
+    }
+
+    public void setCardNum(String cardNum) {
+        this.cardNum = cardNum;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 
     public Long getLockLimit() {
@@ -146,6 +156,15 @@ public class MerchantUser {
         this.partner = partner;
     }
 
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
+    }
+
+
     public Long getCreateUserId() {
         return createUserId;
     }
@@ -153,4 +172,31 @@ public class MerchantUser {
     public void setCreateUserId(Long createUserId) {
         this.createUserId = createUserId;
     }
+
+    public MerchantBank getMerchantBank() {
+        return merchantBank;
+    }
+
+    public void setMerchantBank(MerchantBank merchantBank) {
+        this.merchantBank = merchantBank;
+    }
+
+    public String getPayee() {
+        return payee;
+    }
+
+    public void setPayee(String payee) {
+        this.payee = payee;
+    }
+
+    private String merchantSid = MvUtil.getMerchantUserSid();
+
+    public String getMerchantSid() {
+        return merchantSid;
+    }
+
+    public void setMerchantSid(String merchantSid) {
+        this.merchantSid = merchantSid;
+    }
+
 }

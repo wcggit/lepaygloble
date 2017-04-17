@@ -6,10 +6,6 @@
     height: 68px;
 }
 .navbar-brand img{width: 100px}
-.shouye .navbar-brand{padding: 19px 15px}
-.shouye .navbar-brand img,.denglu .navbar-brand img{width: 250px}
-.shouye-button{margin: 17px 30px 0 0;}
-.denglu{height: 68px}
 .navbar-brand:first-child{
     padding: 19px 15px;
 }

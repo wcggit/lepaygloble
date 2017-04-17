@@ -7,6 +7,7 @@ angular.module('lepayglobleApp')
                  var listener = $q.defer();
                  var connected = $q.defer();
                  var bindWx = $q.defer();
+                 var merchantVoice = $q.defer();
                  var alreadyConnectedOnce = false;
 
                  function sendActivity() {
@@ -30,15 +31,22 @@ angular.module('lepayglobleApp')
                              var headers = {};
                              headers['X-CSRF-TOKEN'] = $cookies[$http.defaults.xsrfCookieName];
                              stompClient.connect(headers, function (frame) {
-                                 //注册合伙人绑定微信号事件
                                  Principal.identity().then(function (account) {
                                      if (account != null && account.login != null) {
-                                         alreadyConnectedOnce = true;
-                                         subscriber =
-                                         stompClient.subscribe("/user/" + account.login + "/reply",
-                                                               function (data) {
-                                                                   bindWx.notify(1);
-                                                               });
+                                             alreadyConnectedOnce = true;
+                                             subscriber =
+                                                 stompClient.subscribe("/user/" + account.login + "/reply",
+                                                     function (data) {
+                                                         //注册合伙人绑定微信号事件
+                                                         if(account.authorities[0]=="partner") {
+                                                             bindWx.notify(1);
+                                                         // 产生订单时商户语音事件
+                                                         }else if(account.authorities[0]=="merchant") {
+                                                             merchantVoice.notify(2);
+                                                         }
+                                                     });
+
+
                                      }
                                  });
                                  //if (!alreadyConnectedOnce) {
@@ -71,6 +79,9 @@ angular.module('lepayglobleApp')
                      },
                      receiveWx: function () {
                          return bindWx.promise;
+                     },
+                     receiveMerchantVoice: function () {
+                         return merchantVoice.promise;
                      },
                      sendActivity: function () {
                          if (stompClient != null) {

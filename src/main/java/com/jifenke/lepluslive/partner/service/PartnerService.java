@@ -3,10 +3,8 @@ package com.jifenke.lepluslive.partner.service;
 import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.partner.domain.criteria.MerchantCriteria;
-import com.jifenke.lepluslive.partner.domain.entities.Partner;
-import com.jifenke.lepluslive.partner.domain.entities.PartnerInfo;
-import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
-import com.jifenke.lepluslive.partner.domain.entities.PartnerWelfareLog;
+import com.jifenke.lepluslive.partner.domain.criteria.PartnerManagerCriteria;
+import com.jifenke.lepluslive.partner.domain.entities.*;
 import com.jifenke.lepluslive.partner.repository.PartnerInfoRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerWalletRepository;
@@ -428,5 +426,34 @@ public class PartnerService {
             sql.append("10)");
             em.createNativeQuery(sql.toString()).executeUpdate();
         }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public List<Partner> findPartnerByManager(PartnerManager partnerManager) {
+        return partnerRepository.findByPartnerManager(partnerManager);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public List findPartnerByPageAndManager(PartnerManagerCriteria criteria) {
+        int start = 10 * (criteria.getLimit() - 1);
+        StringBuffer sql = new StringBuffer();
+        sql.append("select * from partner where partner_manager_id = "+criteria.getPartnerManager().getId());
+        /*if (criteria.getStartDate()!=null) {
+            sql.append(" and create_date between "+criteria.getStartDate()+" and "+ criteria.getEndDate());
+        }*/
+        if (criteria.getPartnerName()!=null) {
+            sql.append(" and name  like \"%"+criteria.getPartnerName()+"%\" ");
+        }
+        //        sql.append(" order by create_date desc limit ");
+        sql.append(" limit ");
+        sql.append(start);
+        sql.append(",10");
+        Query nativeQuery = em.createNativeQuery(sql.toString());
+        return nativeQuery.getResultList();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public Long countPartnerByManager(PartnerManager partnerManager) {
+        return partnerRepository.countByPartnerManager(partnerManager.getId());
     }
 }

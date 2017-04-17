@@ -2,7 +2,7 @@
 
 angular.module('lepayglobleApp')
     .controller('LoginPartnerController',
-                function ($rootScope, $scope, $state, $timeout, Auth, Principal,Tracker) {
+                function ($rootScope, $scope, $state, $timeout, Auth, Principal, Tracker) {
                     $scope.user = {};
                     $scope.errors = {};
 
@@ -12,26 +12,49 @@ angular.module('lepayglobleApp')
                     });
                     $scope.login = function (event) {
                         event.preventDefault();
-                        Auth.login({
-                                       username: $scope.username.trim(),
-                                       password: $scope.password.trim(),
-                                       isPartner: true
-                                   }).then(function () {
-                            //登录成功开启webSocket
-                            Tracker.connect();
-                            $scope.authenticationError = false;
-                            if ($rootScope.previousStateName === 'home'
-                                || $rootScope.previousStateName == null
-                                || $rootScope.previousStateName == ""
-                                || $rootScope.previousStateName == "loginPartner") {
-                                if (Principal.hasAuthority('partner')) {
-                                    $state.go('partnerhome');
+                        if ($('input[name=inlineRadioOptions]:checked').val() == 1) {
+                            Auth.login({
+                                           username: $scope.username.trim(),
+                                           password: $scope.password.trim(),
+                                           isPartner: true
+                                       }).then(function () {
+                                //登录成功开启webSocket
+                                Tracker.connect();
+                                $scope.authenticationError = false;
+                                if ($rootScope.previousStateName === 'home'
+                                    || $rootScope.previousStateName == null
+                                    || $rootScope.previousStateName == ""
+                                    || $rootScope.previousStateName == "loginPartner") {
+                                    if (Principal.hasAuthority('partner')) {
+                                        $state.go('partnerhome');
+                                    }
+                                } else {
+                                    $rootScope.back();
                                 }
-                            } else {
-                                $rootScope.back();
-                            }
-                        }).catch(function () {
-                            $scope.authenticationError = true;
-                        });
+                            }).catch(function () {
+                                $scope.authenticationError = true;
+                            });
+                        } else {
+                            Auth.login({
+                                           username: $scope.username.trim(),
+                                           password: $scope.password.trim(),
+                                           isPartnerManager: true
+                                       }).then(function () {
+                                $scope.authenticationError = false;
+                                if ($rootScope.previousStateName === 'home'
+                                    || $rootScope.previousStateName == null
+                                    || $rootScope.previousStateName == ""
+                                    || $rootScope.previousStateName == "loginPartner") {
+                                    if (Principal.hasAuthority('partnerManager')) {
+                                        $state.go('cp-homePage');
+                                    }
+                                } else {
+                                    $rootScope.back();
+                                }
+                            }).catch(function () {
+                                $scope.authenticationError = true;
+                            });
+                        }
+
                     };
                 });

@@ -14,20 +14,6 @@
     <link rel="stylesheet" href="assets/styles/framework/bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="assets/styles/framework/bootstrap/daterangepicker-bs3.css"/>
     <link rel="stylesheet" href="assets/styles/css/font/iconfont.css"/>
-    <link rel="stylesheet" href="assets/styles/css/head.css"/>
-    <!--<link rel="stylesheet" href="assets/styles/css/left.css"/>-->
-    <link rel="stylesheet" href="assets/styles/css/zhsz.css"/>
-    <link rel="stylesheet" href="assets/styles/css/main.css"/>
-    <link rel="stylesheet" href="assets/styles/css/shouye.css"/>
-    <link rel="stylesheet" href="assets/styles/css/dlfw.css"/>
-    <link rel="stylesheet" href="assets/styles/css/denglu.css"/>
-    <link rel="stylesheet" href="assets/styles/css/hybx.css"/>
-    <link rel="stylesheet" href="assets/styles/css/jygl.css"/>
-    <link rel="stylesheet" href="assets/styles/css/itemsmanager.css"/>
-    <link rel="stylesheet" href="assets/styles/css/wdlf.css"/>
-    <link rel="stylesheet" href="assets/styles/css/partnerhome.css"/>
-    <link rel="stylesheet" href="assets/styles/css/myPOS.css"/>
-    <link rel="stylesheet" href="assets/styles/css/usermanager.css"/>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css assets/styles/main.css -->
@@ -64,6 +50,7 @@
 <!-- bower:js -->
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/angular/angular.min.js"></script>
+<script src="assets/styles/framework/bootstrap/tooltip.js"></script>
 <!--<script src="bower_components/angular-aria/angular-aria.min.js"></script>-->
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script src="bower_components/angular-cache-buster/angular-cache-buster.js"></script>
@@ -227,11 +214,70 @@
 <script src="scripts/components/partner/Welfare.js"></script>
 <script src="scripts/app/partner/config/partner-config.controller.js"></script>
 <script src="scripts/app/partner/config/partner-config.js"></script>
+<!--merchant_2-->
+<script src="scripts/app/merchant_2/merchant_2.js"></script>
+<script src="scripts/app/merchant_2/merchant_2.controller.js"></script>
+<script src="scripts/app/merchant_2/homePage/homePage.js"></script>
+<script src="scripts/app/merchant_2/homePage/homePage.controller.js"></script>
+<script src="scripts/app/merchant_2/homePage/withdrawRecord.controller.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/POSTrade/POSTrade.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/POSTrade/POSTrade.controller.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/POSTrade/POSTradeRecord.controller.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/POSTrade/myPOSTrade.controller.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/POSTrade/myPOSEmpty.controller.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/codeTrade/codeTrade.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/codeTrade/codeTrade.controller.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/codeTrade/codeTradeRecord.controller.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/codeTrade/myCode.controller.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/lePlusBilling/lePlusBilling.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/lePlusBilling/lePlusBilling.controller.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/lePlusBilling/dailyBilling.controller.js"></script>
+<script src="scripts/app/merchant_2/tradeManage/lePlusBilling/storeBilling.controller.js"></script>
+<script src="scripts/app/merchant_2/storeManage/storeManage.js"></script>
+<script src="scripts/app/merchant_2/storeManage/storeManage.controller.js"></script>
+<script src="scripts/app/merchant_2/commissionIncome/dataOverview/dataOverview.js"></script>
+<script src="scripts/app/merchant_2/commissionIncome/dataOverview/dataOverview.controller.js"></script>
+<script src="scripts/app/merchant_2/commissionIncome/lockMembers/lockMembers.js"></script>
+<script src="scripts/app/merchant_2/commissionIncome/lockMembers/lockMembers.controller.js"></script>
+<script src="scripts/app/merchant_2/commissionIncome/commissionDetails/commissionDetails.js"></script>
+<script src="scripts/app/merchant_2/commissionIncome/commissionDetails/commissionDetails.controller.js"></script>
+<script src="scripts/app/merchant_2/commissionIncome/invitationCode/invitationCode.js"></script>
+<script src="scripts/app/merchant_2/commissionIncome/invitationCode/invitationCode.controller.js"></script>
+<script src="scripts/app/merchant_2/commissionIncome/invitationCode/invitationRecord.controller.js"></script>
+<script src="scripts/app/merchant_2/commissionIncome/invitationCode/myInvitationCode.controller.js"></script>
+<script src="scripts/app/merchant_2/accountManage/accountManage.js"></script>
+<script src="scripts/app/merchant_2/accountManage/accountManage.controller.js"></script>
+<script src="scripts/app/merchant_2/directive/dateChoice.directive.js"></script>
+<!--merchant_2  service-->
+<script src="scripts/components/merchant/services/homepage.service.js"></script>
+<script src="scripts/components/merchant/services/lejiaBilling.service.js"></script>
+<script src="scripts/components/merchant/services/bindUser.service.js"></script>
+<!--城市合伙人  开始-->
+<script src="scripts/app/cityPartner/cityPartner.js"></script>
+<script src="scripts/app/cityPartner/cityPartner.controller.js"></script>
+<script src="scripts/app/cityPartner/homePage/homePage.js"></script>
+<script src="scripts/app/cityPartner/homePage/homePage.controller.js"></script>
+<script src="scripts/app/cityPartner/myPartner/partnerManage.js"></script>
+<script src="scripts/app/cityPartner/myPartner/partnerManage.controller.js"></script>
+<script src="scripts/app/cityPartner/myPartner/infoManage/infoManage.js"></script>
+<script src="scripts/app/cityPartner/myPartner/infoManage/infoManage.controller.js"></script>
+<script src="scripts/app/cityPartner/myPartner/infoManage/im_dataOverView.controller.js"></script>
+<script src="scripts/app/cityPartner/myPartner/infoManage/im_basicInfo.controller.js"></script>
+<script src="scripts/app/cityPartner/myCommission/commissionDetail.js"></script>
+<script src="scripts/app/cityPartner/myCommission/commissionDetail.controller.js"></script>
+<script src="scripts/app/cityPartner/withdrawRecord/withdrawRecord.js"></script>
+<script src="scripts/app/cityPartner/withdrawRecord/withdrawRecord.controller.js"></script>
+<script src="scripts/app/cityPartner/basicInfo/basicInfo.js"></script>
+<script src="scripts/app/cityPartner/basicInfo/basicInfo.controller.js"></script>
+<!--XunFei Voice-->
+<script src="bower_components/xunfei-voice/fingerprint.js"></script>
+<script src="bower_components/xunfei-voice/tts.min.js"></script>
+
 
 <script type="text/javascript"
         src="http://webapi.amap.com/maps?v=1.3&key=2674be5e0b36ed1b4b3204e85ead8a28&plugin=AMap.Autocomplete"></script>
 <div class="panel-footer">
-    <p class="text-center"><span class="logo"></span><br>Copyright©2016 积分客网络科技有限公司</p>
+    <p class="text-center"><span class="logo"></span><br>辽宁积分客网络科技股份有限公司<br>Copyright©2016 乐＋支付所有权</p>
 </div>
 </body>
 </html>
