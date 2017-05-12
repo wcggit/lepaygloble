@@ -9,6 +9,9 @@ angular.module('lepayglobleApp')
                 data: {
                     authorities: ["partnerManager"]
                 },
+                params: {
+                    partnerSid: {value: null}
+                },
                 views: {
                     'right-content@cityPartner': {
                         templateUrl: 'scripts/app/cityPartner/myPartner/infoManage/infoManage.html',

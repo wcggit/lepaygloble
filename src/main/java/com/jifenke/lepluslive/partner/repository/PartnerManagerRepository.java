@@ -15,4 +15,6 @@ public interface PartnerManagerRepository extends JpaRepository<PartnerManager, 
     PartnerManager findByPartnerId(Long accountId);
 
     Optional<PartnerManager> findByName(String lowercaseLogin);
+
+    PartnerManager findByPartnerManagerSid(String partnerManagerSid);
 }

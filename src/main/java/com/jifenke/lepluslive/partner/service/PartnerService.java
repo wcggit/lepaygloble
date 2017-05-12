@@ -3,6 +3,7 @@ package com.jifenke.lepluslive.partner.service;
 import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.partner.domain.criteria.MerchantCriteria;
+import com.jifenke.lepluslive.partner.domain.criteria.PartnerCriteria;
 import com.jifenke.lepluslive.partner.domain.criteria.PartnerManagerCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.*;
 import com.jifenke.lepluslive.partner.repository.PartnerInfoRepository;
@@ -10,7 +11,13 @@ import com.jifenke.lepluslive.partner.repository.PartnerRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerWalletRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerWelfareLogRepository;
 
+import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
+import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
 import org.hibernate.LockMode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +34,10 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Created by wcg on 16/6/3.
@@ -428,21 +439,21 @@ public class PartnerService {
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<Partner> findPartnerByManager(PartnerManager partnerManager) {
         return partnerRepository.findByPartnerManager(partnerManager);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
-    public List findPartnerByPageAndManager(PartnerManagerCriteria criteria) {
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List findPartnerByPageAndManagerTest(PartnerManagerCriteria criteria) {
         int start = 10 * (criteria.getLimit() - 1);
         StringBuffer sql = new StringBuffer();
-        sql.append("select * from partner where partner_manager_id = "+criteria.getPartnerManager().getId());
+        sql.append("select * from partner where partner_manager_id = " + criteria.getPartnerManager().getId());
         /*if (criteria.getStartDate()!=null) {
             sql.append(" and create_date between "+criteria.getStartDate()+" and "+ criteria.getEndDate());
         }*/
-        if (criteria.getPartnerName()!=null) {
-            sql.append(" and name  like \"%"+criteria.getPartnerName()+"%\" ");
+        if (criteria.getPartnerName() != null) {
+            sql.append(" and name  like \"%" + criteria.getPartnerName() + "%\" ");
         }
         //        sql.append(" order by create_date desc limit ");
         sql.append(" limit ");
@@ -452,8 +463,38 @@ public class PartnerService {
         return nativeQuery.getResultList();
     }
 
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Long countPartnerByManager(PartnerManager partnerManager) {
         return partnerRepository.countByPartnerManager(partnerManager.getId());
     }
+
+
+    /**
+     * 根据条件查询合伙人
+     */
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Page findPartnerByCriteria(PartnerCriteria partnerCriteria, Integer limit) {
+        return partnerRepository.findAll(getWhereClause(partnerCriteria), new PageRequest(partnerCriteria.getOffset() - 1, limit));
+    }
+
+    public static Specification<Partner> getWhereClause(PartnerCriteria criteria) {
+        return new Specification<Partner>() {
+            @Override
+            public Predicate toPredicate(Root<Partner> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Predicate predicate = cb.conjunction();
+                if (criteria.getName() != null) {
+                    predicate.getExpressions().add(cb.like(root.get("name"), "%" + criteria.getName() + "%"));
+                }
+                if (criteria.getPhoneNumer() != null) {
+                    predicate.getExpressions().add(cb.like(root.get("phoneNumber"), "%" + criteria.getPhoneNumer() + "%"));
+                }
+                if (criteria.getPartnerManager() != null) {
+                    predicate.getExpressions().add(cb.equal(root.get("partnerManager"), criteria.getPartnerManager()));
+                }
+                return predicate;
+            }
+        };
+    }
+
 }

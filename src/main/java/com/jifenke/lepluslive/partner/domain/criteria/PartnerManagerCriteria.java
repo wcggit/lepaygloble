@@ -14,6 +14,7 @@ public class PartnerManagerCriteria {
     private Long type;          // 0-锁定会员  1-锁定门店  2-佣金收入
     private PartnerManager partnerManager;
     private List<Partner> partners;     // 城市合伙人下的天使合伙人
+    private Partner partner;            // 城市合伙人下指定天使合伙人
 
     public String getStartDate() {
         return startDate;
@@ -83,5 +84,13 @@ public class PartnerManagerCriteria {
 
     public void setLimit(Integer limit) {
         this.limit = limit;
+    }
+
+    public Partner getPartner() {
+        return partner;
+    }
+
+    public void setPartner(Partner partner) {
+        this.partner = partner;
     }
 }

@@ -10,6 +10,8 @@ import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 import com.jifenke.lepluslive.partner.repository.PartnerManagerRepository;
 import com.jifenke.lepluslive.partner.repository.PartnerRepository;
+import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
+import com.jifenke.lepluslive.withdraw.repository.WithdrawRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
@@ -66,6 +68,9 @@ public class SimpleTest {
     @Inject
     private PartnerRepository partnerRepository;
 
+    @Inject
+    private WithdrawRepository withdrawRepository;
+
     @Test
     public void dateTest() {
         // 当前时间
@@ -110,6 +115,30 @@ public class SimpleTest {
                 manager.setPartnerId(partner.getId());
                 partnerManagerRepository.save(manager);
             }
+        }
+    }
+
+    //  测试分页效果
+    @Test
+    public void addTestDate() {
+        List<WithdrawBill> bills = withdrawRepository.findAll();
+        for (WithdrawBill bill : bills) {
+//            for(int i=0;i<10;i++) {
+//                WithdrawBill wb = new WithdrawBill();
+//                wb.setPartnerManager(bill.getPartnerManager());
+//                wb.setCreatedDate(bill.getCreatedDate());
+//                wb.setCompleteDate(bill.getCompleteDate());
+//                wb.setPayee(bill.getPayee());
+//                wb.setTotalPrice(bill.getTotalPrice());
+//                wb.setWithdrawBillSid(bill.getWithdrawBillSid());
+//                wb.setState(bill.getState());
+//                wb.setBankName(bill.getBankName());
+//                wb.setBankNumber(bill.getBankNumber());
+//                wb.setBillType(0);
+//                withdrawRepository.save(wb);
+//            }
+            bill.setBillType(0);
+            withdrawRepository.save(bill);
         }
     }
 }

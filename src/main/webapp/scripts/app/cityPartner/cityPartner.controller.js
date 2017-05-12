@@ -92,9 +92,8 @@ angular.module('lepayglobleApp')
             Auth.logout();
             $state.go('home')
         }
-        $http.get('api/partner').success(function (response) {
-            $scope.partnerName = response.data.partnerName;
-            $scope.partneraccount = response.data.name;
+        $http.get('api/partnerManager/wallet').success(function (response) {
+            $scope.partnerName = response.data.partnerManager.name;
+            $scope.partneraccount = response.data.partnerManager.name;
         });
-
     })
