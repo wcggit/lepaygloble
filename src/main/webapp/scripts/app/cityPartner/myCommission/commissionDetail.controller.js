@@ -26,6 +26,118 @@ angular.module('lepayglobleApp')
                 '最近30日': [moment().subtract('days', 29), moment()]
             }
         }, function (start, end, label) {
-            console.log(start+"--------"+end);
+            console.log(start + "--------" + end);
         });
+
+        var currentPage = 1;
+        var olOrderCriteria = {};
+        var lockMerchant = {};
+        var lockPartner = {};
+        var tradeMerchant = {};
+        var tradePartner = {};
+        var leJiaUser = {};
+        olOrderCriteria.offset = 1;
+
+        loadContent();
+        function loadContent() {
+            $http.post('api/offLineOrder/partner/share', olOrderCriteria, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function (response) {
+                var data = response.data;
+                $scope.page = currentPage;
+                $scope.totalPages = data.totalPages;
+                $scope.totalElements = data.totalElements;
+                $scope.pulls = data.content;
+            });
+        }
+
+        $scope.loadPage = function (page) {
+            if (page == 0) {
+                return;
+            }
+            if (page > $scope.totalPages) {
+                return;
+            }
+            if (currentPage == $scope.totalPages && page == $scope.totalPages) {
+                return;
+            }
+            if (currentPage == 1 && page == 1) {
+                return;
+            }
+            currentPage = page;
+            olOrderCriteria.offset = page;
+            loadContent();
+        };
+
+
+        function loadOtherData() {
+            $http.post('api/offLineOrder/partner/otherData', olOrderCriteria, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function (response) {
+                var data = response.data;
+                // console.log(JSON.stringify(data));
+                $scope.page = currentPage;
+            });
+        }
+
+        $scope.searchByCriteria = function () {
+            if ($("#completeDate").val() != null && $("#completeDate").val() != '') {
+                var completeDate = $("#completeDate").val().split("-");
+                olOrderCriteria.startDate = completeDate[0];
+                olOrderCriteria.endDate = completeDate[1];
+            }else {
+                olOrderCriteria.startDate = null;
+                olOrderCriteria.endDate = null;
+            }
+            var userName = $("#userName").val();
+            var phoneNumber = $("#phoneNumber").val();
+            var traderMerchantName = $("#traderMerchantName").val();
+            var lockPartnerName = $("#lockPartnerName").val();
+            var traderPartnerName = $("#traderPartnerName").val();
+            var lockMerchantName = $("#lockMerchantName").val();
+            if (userName != null && userName != '') {
+                leJiaUser.userName = userName;
+                olOrderCriteria.leJiaUser = leJiaUser;
+            } else {
+                olOrderCriteria.leJiaUser = null;
+            }
+            if (phoneNumber != null && phoneNumber != '') {
+                leJiaUser.phoneNumber = phoneNumber;
+                olOrderCriteria.leJiaUser = leJiaUser;
+            } else {
+                olOrderCriteria.leJiaUser = null;
+            }
+            if (traderMerchantName != null && traderMerchantName != '') {
+                tradeMerchant.name = traderMerchantName;
+                olOrderCriteria.tradeMerchant = tradeMerchant;
+            } else {
+                olOrderCriteria.tradeMerchant = null;
+            }
+            if (traderPartnerName != null && traderPartnerName != '') {
+                tradePartner.name = traderPartnerName;
+                olOrderCriteria.tradePartner = tradePartner;
+            } else {
+                olOrderCriteria.tradePartner = null;
+            }
+            if (lockMerchantName != null && lockMerchantName != '') {
+                lockMerchant.name = lockMerchantName;
+                olOrderCriteria.lockMerchant = lockMerchant;
+            } else {
+                olOrderCriteria.lockMerchant = null;
+            }
+            if (lockPartner != null && lockPartner != '') {
+                lockPartner.name = lockPartnerName;
+                olOrderCriteria.lockPartner = lockPartner;
+            } else {
+                olOrderCriteria.lockPartner = null;
+            }
+
+            olOrderCriteria.offset = 1;
+            currentPage = 1;
+            loadContent();
+        }
     });

@@ -32,7 +32,7 @@ angular.module('lepayglobleApp')
                 clickState:"1",
                 name:"首页",
                 state:"homePage",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-shanghushouye"
             },
             {
                 contentState:"0",
@@ -42,7 +42,7 @@ angular.module('lepayglobleApp')
                 clickState:"0",
                 name:"交易管理",
                 state:"",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-shanghujiaoyiguanli"
             },
             {
                 contentState:"1",
@@ -73,7 +73,7 @@ angular.module('lepayglobleApp')
                 clickState:"0",
                 name:"佣金收入",
                 state:"commissionIncome",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-shanghuhuiyuanbianxian"
             },
             {
                 contentState:"1",
@@ -111,7 +111,7 @@ angular.module('lepayglobleApp')
                 clickState:"1",
                 name:"门店管理",
                 state:"storeManage",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-shanghumendianguanli"
             },
             {
                 contentState:"0",
@@ -121,7 +121,7 @@ angular.module('lepayglobleApp')
                 clickState:"1",
                 name:"账户管理",
                 state:"accountManage",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-shanghuzhanghuguanli"
             },
             {
                 contentState:"0",

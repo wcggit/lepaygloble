@@ -13,7 +13,7 @@ angular.module('lepayglobleApp')
                 clickState:"1",
                 name:"首页",
                 state:"cp-homePage",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-shouye"
             },
             {
                 contentState:"0",
@@ -23,7 +23,7 @@ angular.module('lepayglobleApp')
                 clickState:"0",
                 name:"我的合伙人",
                 state:"",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-wodehehuoren"
             },
             {
                 contentState:"1",
@@ -40,7 +40,7 @@ angular.module('lepayglobleApp')
                 clickState:"0",
                 name:"我的佣金",
                 state:"",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-wodeyongjin"
             },
             {
                 contentState:"1",
@@ -64,7 +64,7 @@ angular.module('lepayglobleApp')
                 clickState:"0",
                 name:"账号设置",
                 state:"",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-zhanghaoshezhi"
             },
             {
                 contentState:"1",
@@ -92,9 +92,8 @@ angular.module('lepayglobleApp')
             Auth.logout();
             $state.go('home')
         }
-        $http.get('api/partner').success(function (response) {
-            $scope.partnerName = response.data.partnerName;
-            $scope.partneraccount = response.data.name;
+        $http.get('api/partnerManager/wallet').success(function (response) {
+            $scope.partnerName = response.data.partnerManager.name;
+            $scope.partneraccount = response.data.partnerManager.name;
         });
-
     })

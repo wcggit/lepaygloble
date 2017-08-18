@@ -64,7 +64,13 @@ public class FinancialController {
             merchantUserByName =
             merchantService
                 .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
-        financialCriteria.setMerchant(merchantUserByName.getMerchant());
+        if(financialCriteria.getMerchant()!=null) {
+            Merchant merchant = financialCriteria.getMerchant();
+            Merchant existMerchant = merchantService.findMerchantById(merchant.getId());
+            financialCriteria.setMerchant(existMerchant);
+        }else {
+            financialCriteria.setMerchant(merchantUserByName.getMerchant());
+        }
         Page page = offLineOrderService.findFinancialByCirterial(financialCriteria, 10);
         return LejiaResult.ok(page);
     }

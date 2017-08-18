@@ -1,8 +1,8 @@
 package com.jifenke.lepluslive.order.controller.view;
 
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
-import com.jifenke.lepluslive.order.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeRefundOrder;
@@ -62,7 +62,7 @@ public class MerchantOrderExcel extends AbstractExcelView {
             cell.setCellValue(titles1[i]);
         }
         Merchant merchant = dailyOrderCriteria.getMerchant();
-        if (payWay == null) {                          // 乐加订单结算
+        if (payWay == null||(payWay!=null&&payWay.getType()==1)) {                          // 乐加订单结算
             if (offLineOrders != null && offLineOrders.size() > 0) {
                 for (OffLineOrder offLineOrder : offLineOrders) {
                     HSSFRow contentRow = sheet.createRow(sheet.getLastRowNum() + 1);
@@ -135,7 +135,7 @@ public class MerchantOrderExcel extends AbstractExcelView {
                     }
                 }
             }
-        } else {                                     // 富有通道结算
+        } else {                                                                        // 易宝通道结算
             for (ScanCodeOrder scanCodeOrder : scanCodeOrders) {
                 HSSFRow contentRow = sheet.createRow(sheet.getLastRowNum() + 1);
                 // 订单编号
@@ -151,13 +151,13 @@ public class MerchantOrderExcel extends AbstractExcelView {
                 } else if (scanCodeOrder.getState() == 2) {
                     contentCell2.setCellValue("已退款");
                 }
-                // 支付渠道
+                // 付款方式
                 HSSFCell contentCell3 = contentRow.createCell(3);
-                if (scanCodeOrder.getPayment() == 0) {
+                if (scanCodeOrder.getScanCodeOrderExt().getPayment() == 0) {
                     contentCell3.setCellValue("纯现金");
-                } else if (scanCodeOrder.getPayment() == 1) {
-                    contentCell3.setCellValue("纯红包");
-                } else if (scanCodeOrder.getPayment() == 2) {
+                } else if (scanCodeOrder.getScanCodeOrderExt().getPayment() == 1) {
+                    contentCell3.setCellValue("纯鼓励金");
+                } else if (scanCodeOrder.getScanCodeOrderExt().getPayment() == 2) {
                     contentCell3.setCellValue("混合");
                 }
                 // 消费金额
@@ -171,11 +171,11 @@ public class MerchantOrderExcel extends AbstractExcelView {
                 contentCell6.setCellValue(new Double((scanCodeOrder.getTransferMoneyFromTruePay()) * 0.01));
                 // 订单类型
                 HSSFCell contentCell7 = contentRow.createCell(7);
-                contentCell7.setCellValue(scanCodeOrder.getOrderType().getValue());
+                contentCell7.setCellValue(scanCodeOrder.getOrderType());
                 //  导流订单和会员订单（佣金费率） 显示折扣
                 HSSFCell contentCell8 = contentRow.createCell(8);
                 HSSFCell contentCell9 = contentRow.createCell(9);
-                if (scanCodeOrder.getOrderType().getId() == 12005 || scanCodeOrder.getOrderType().getId() == 12003) {
+                if (scanCodeOrder.getOrderType() == 12005 || scanCodeOrder.getOrderType() == 12003) {
                     Long wxCommission = scanCodeOrder.getWxCommission();
                     String wxDiscount = new Double((100L - wxCommission) * 0.1).toString();
                     contentCell8.setCellValue(wxDiscount);
@@ -236,7 +236,7 @@ public class MerchantOrderExcel extends AbstractExcelView {
                     contentCell2.setCellValue(scanCodeOrder.getId());
                     // 订单类型
                     HSSFCell contentCell3 = contentRow.createCell(3);
-                    contentCell3.setCellValue(scanCodeOrder.getOrderType().getValue());
+                    contentCell3.setCellValue(scanCodeOrder.getOrderType());
                     // 订单完成时间
                     HSSFCell contentCell4 = contentRow.createCell(4);
                     contentCell4.setCellValue(scanCodeOrder.getCompleteDate());

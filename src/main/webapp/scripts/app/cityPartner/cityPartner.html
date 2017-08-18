@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="../../../assets/styles/css/cityPartner/partnerManager.css">
 <link rel="stylesheet" href="../../../assets/styles/css/cityPartner/withdrawRecord.css">
 <link rel="stylesheet" href="../../../assets/styles/css/cityPartner/basicInfo.css">
-<nav class="navbar navbar-default merchant-header">
+<link rel="stylesheet" href="../../../assets/styles/css/cityPartner/cp-commissionDetail.css">
+<nav class="navbar navbar-default merchant-header index-top">
     <div class="container">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">
@@ -13,12 +14,12 @@
             <span class="header-ttl" href="#">城市合伙人平台</span>
         </div>
         <div class="pull-right header-personal">
-            {{partnerName}}
+            {{partnerName}} &nbsp;
             <a class="header-quit" ng-click="logout()">退出</a>
         </div>
     </div>
 </nav>
-<div class="content clear-float">
+<div class="content clear-float index-content">
     <div class ="pull-left left-menu">
         <ul>
             <li ng-repeat="x in menuList" ng-class="{'contClick':x.clickState==0,'active':isActiveTab(x.state)}" ng-click="onClickTab(x)">

@@ -7,7 +7,7 @@ import com.jifenke.lepluslive.partner.domain.entities.Partner;
  */
 public class PartnerDto {
     private Partner partner;
-    private Long bindMerchanNum;         // 锁定门店数量
+    private Long bindMerchantNum;         // 锁定门店数量
     private Long bindUserNum;            // 锁定会员数量
     private double offLineCommission;       // 线下佣金收入
     private double onLineCommission;        // 线上佣金收入
@@ -20,9 +20,6 @@ public class PartnerDto {
         this.partner = partner;
     }
 
-    public void setBindMerchanNum(Long bindMerchanNum) {
-        this.bindMerchanNum = bindMerchanNum;
-    }
 
     public void setBindUserNum(Long bindUserNum) {
         this.bindUserNum = bindUserNum;
@@ -42,6 +39,18 @@ public class PartnerDto {
 
     public void setOnLineCommission(double onLineCommission) {
         this.onLineCommission = onLineCommission;
+    }
+
+    public Long getBindMerchantNum() {
+        return bindMerchantNum;
+    }
+
+    public void setBindMerchantNum(Long bindMerchantNum) {
+        this.bindMerchantNum = bindMerchantNum;
+    }
+
+    public Long getBindUserNum() {
+        return bindUserNum;
     }
 }
 

@@ -19,10 +19,9 @@
                     <span class="tooltip-problem" data-toggle="tooltip" data-placement="right" title="您店铺锁定的会员在乐加体系下的任何消费，都会给您带来佣金">?</span>
                 </p>
                 <p class="money-content clearfix">
-                    <span class="pull-left">¥{{available}}</span>
+                    <span class="pull-left"><span>¥</span>{{available}}</span>
                     <input type="button" class="btn btn-warning pull-left tx" data-target="#tx" data-toggle="modal" value="提现">
                 </p>
-                <p><a ui-sref="withdrawRecord" ui-sref-opts="{reload: true}">查看每日账单</a></p>
             </div>
         </div>
         <p class="ttl">商户数据</p>
@@ -30,14 +29,14 @@
             <div class="col-md-3">
                 <div class="out-div">
                     <p class="text-center">商户今日入账</p>
-                    <p class="text-center" ng-bind="'¥'+srgl.firNum"></p>
+                    <p class="text-center"><span>¥</span>{{srgl.firNum}}</p>
                 </div>
 
             </div>
             <div class="col-md-3">
                 <div class="out-div">
                     <p class="text-center">商户累计入账</p>
-                    <p class="text-center" ng-bind="'¥'+srgl.secNum"></p>
+                    <p class="text-center"><span>¥</span>{{srgl.secNum}}</p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -46,7 +45,7 @@
                         会员消费金额/次数
                         <span class="tooltip-problem" data-toggle="tooltip" data-placement="top" title="乐加会员到您店铺消费的交易额和消费次数">?</span>
                     </p>
-                    <p class="text-center" ng-bind="'¥'+srgl.thirNum+' / '+srgl.fouNum">></p>
+                    <p class="text-center"><span>¥</span>{{srgl.thirNum+' / '+srgl.fouNum}}</p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -55,7 +54,7 @@
                         接收红包总额
                         <span class="tooltip-problem" data-toggle="tooltip" data-placement="top" title="乐加会员到店使用的红包总额。消费者使用的红包扣除相应手续费后，按1红包等于1元结算给商户">?</span>
                     </p>
-                    <p class="text-center" ng-bind="'¥'+srgl.fifNum"></p>
+                    <p class="text-center"><span>¥</span>{{srgl.fifNum}}</p>
                 </div>
             </div>
         </div>
@@ -65,30 +64,34 @@
         <div class="panel-body clearfix">
             <div class="pull-left">
                 当前门店
-                <select name="" id="selMerchant" class="current-store" ng-change="changeStore(x)" ng-model="x">
+                <select name="" id="selMerchant" class="current-store form-control" ng-change="changeStore(x)" ng-model="x">
                     <option value="">请选择</option>
-                    <option value="{{m.sid}}" ng-repeat="m in merchants">{{m.name}}</option>
+                    <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
                 </select>
-                <span>门店今日流水￥{{obinfo.firNum+obinfo.secNum}}，扫码流水￥{{obinfo.firNum}}，POS机流水￥{{obinfo.secNum}}，乐加会员消费￥{{obinfo.thirNum}}/{{obinfo.fouNum}}次</span>
             </div>
-            <span class="pull-right">语音提醒 <i class="iconfont icon-2wodezhangdan18x20"></i></span>
+            <span class="pull-right" style="line-height: 34px">语音提醒 <i class="iconfont2 icon2-shanghukaiqiyuyin"></i></span>
             <!--播放器-->
             <audio id="voicePlayer" src=""></audio>
         </div>
     </div>
     <div class="list-out-div">
+        <p class="text-center ttl-list">门店今日流水￥<span class="color-origin">{{obinfo.firNum+obinfo.secNum}}</span>，
+            扫码流水￥<span class="color-origin">{{obinfo.firNum}}</span>，POS机流水￥<span class="color-origin">
+                {{obinfo.secNum}}</span>，乐加会员消费￥<span class="color-origin">{{obinfo.thirNum}}/{{obinfo.fouNum}}</span>次</p>
         <div class="container-fluid clearfix dd-list">
 
             <div class="list pull-right" ng-repeat="arr in orderList">
                 <!--扫码订单-->
                 <div class="list-detail pull-right"  ng-show="{{arr[6]==0}}">
-                    <div class="list-info1 clearfix">订单编号：{{arr[0]}}（确认码：{{arr[2]}}）<span class="pull-right hydd-font" ng-show="arr[5]==0">普通订单</span>
-                                                                                         <span class="pull-right dldd-font"  ng-show="arr[5]==1">导流订单</span>
-                                                                                         <span class="pull-right hydd-font" ng-show="arr[5]==2">会员订单</span>
-                                                                                         <span class="pull-right hydd-font" ng-show="arr[5]==3">会员订单</span>
-                                                                                         <span class="pull-right hydd-font" ng-show="arr[5]==4">扫码订单</span>
-                                                                                         <span class="pull-right hydd-font" ng-show="arr[5]==5">扫码订单</span>
-                                                                                         <span class="pull-right hydd-font" ng-show="arr[5]==6">会员订单</span>
+                    <div class="list-info1 clearfix">
+                        订单编号：{{arr[0]}}（确认码：{{arr[2]}}）
+                        <span class="pull-right hydd-font" ng-show="arr[5]==0">普通订单</span>
+                        <span class="pull-right dldd-font"  ng-show="arr[5]==1">导流订单</span>
+                        <span class="pull-right hydd-font" ng-show="arr[5]==2">会员订单</span>
+                        <span class="pull-right hydd-font" ng-show="arr[5]==3">会员订单</span>
+                        <span class="pull-right hydd-font" ng-show="arr[5]==4">扫码订单</span>
+                        <span class="pull-right hydd-font" ng-show="arr[5]==5">扫码订单</span>
+                        <span class="pull-right hydd-font" ng-show="arr[5]==6">会员订单</span>
 
                     </div>
                     <div class="list-info2 clearfix">
@@ -172,8 +175,10 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="icon-success"></div>
-                <p class="text-center">提现申请成功</p>
-                <p class="text-center">佣金将会在1个工作日内后抵达您的结算账户</p>
+                <!--<p class="text-center">提现申请成功</p>-->
+                <p class="text-center">温馨提示</p>
+                <!--<p class="text-center">佣金将会在1个工作日内后抵达您的结算账户</p>-->
+                <p class="text-center">提现功能维护中,佣金提现请联系乐加客服人员。</p>
             </div>
             <div class="modal-footer">
                 <div class="clearfix btn-div text-center">

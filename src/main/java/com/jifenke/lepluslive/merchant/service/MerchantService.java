@@ -11,7 +11,6 @@ import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.lejiauser.repository.RegisterOriginRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.repository.*;
-import com.jifenke.lepluslive.order.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.repository.MerchantScanPayWayRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
@@ -90,6 +89,12 @@ public class MerchantService {
 
     @Inject
     private MerchantBankRepository merchantBankRepository;
+
+    @Inject
+    private MerchantUserResourceRepository merchantUserResourceRepository;
+
+    @Inject
+    private LejiaResourceRepository lejiaResourceRepository;
 
     /**
      * 获取商家详情
@@ -358,24 +363,39 @@ public class MerchantService {
     public List<Object[]> findOrderList(Merchant merchant,Long limit) {
         Long offset = limit*10;
         MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
-        if(payway==null) {        // 返回 Pos 订单和乐加扫码订单
-            return merchantRepository.findOrderListByMerchant(merchant.getId(),offset);
-        }else {                   // 返回 Pos 订单和掌富扫码订单
+        if(payway!=null&&payway.getType()==3) {                   // 返回 Pos 订单和易宝
             return merchantRepository.findScanOrderListByMerchant(merchant.getId(),offset);
+        }else {                                                   // 返回 Pos 订单和乐加扫码订单
+            return merchantRepository.findOrderListByMerchant(merchant.getId(),offset);
         }
-
     }
 
     /**
      *  商户（管理员） 创建子账号
      */
     @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
-    public void saveUserAccount(MerchantUser merchantUser) {
-        MerchantBank merchantBank = merchantUser.getMerchantBank();
-        merchantBankRepository.save(merchantBank);
+    public void saveUserAccount(MerchantUser merchantUser,List<Merchant> merchants) {
+        // 设置 PassWord
         merchantUser.setPassword(MD5Util.MD5Encode(merchantUser.getPassword(),null));
-        merchantUser.setMerchantBank(merchantBank);
+        merchantUser.setMerchantSid(MvUtil.getMerchantUserSid());
         merchantUserRepository.save(merchantUser);
+        // 设置门店
+        if(merchants!=null&&merchants.size()>0) {
+            for (Merchant merchant : merchants) {
+                LejiaResource lejiaResource = lejiaResourceRepository.findByResourceIdAndResourceType(merchant.getId(), 0);
+                if(lejiaResource==null) {
+                    lejiaResource = new LejiaResource();
+                    lejiaResource.setResourceId(merchant.getId());
+                    lejiaResource.setResourceType(0);
+                }
+                MerchantUserResource merchantUserResource = new MerchantUserResource();
+                merchantUserResource.setMerchantUser(merchantUser);
+                merchantUserResource.setLeJiaResource(lejiaResource);
+                merchantUserResource.setResourceType(0);
+                merchantUserResourceRepository.save(merchantUserResource);
+            }
+        }
+
     }
 
 }

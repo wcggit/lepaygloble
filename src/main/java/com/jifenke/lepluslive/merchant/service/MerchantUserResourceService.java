@@ -104,7 +104,7 @@ public class MerchantUserResourceService {
                 }
                 if (posOrderCriteria.getOrderSid() != null && !"".equals(posOrderCriteria.getOrderSid())) {
                     predicate.getExpressions().add(
-                        cb.equal(root.get("orderSid"), posOrderCriteria.getOrderSid()));
+                        cb.like(root.get("orderSid"),"%"+ posOrderCriteria.getOrderSid()+"%"));
                 }
                 if (posOrderCriteria.getStartDate() != null && !"".equals(posOrderCriteria.getStartDate())
                     && posOrderCriteria.getEndDate() != null && !"".equals(posOrderCriteria.getEndDate())) {

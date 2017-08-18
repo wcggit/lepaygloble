@@ -7,6 +7,7 @@ angular.module('lepayglobleApp')
                  var listener = $q.defer();
                  var connected = $q.defer();
                  var bindWx = $q.defer();
+                 var cityBindWx = $q.defer();
                  var merchantVoice = $q.defer();
                  var alreadyConnectedOnce = false;
 
@@ -43,10 +44,11 @@ angular.module('lepayglobleApp')
                                                          // 产生订单时商户语音事件
                                                          }else if(account.authorities[0]=="merchant") {
                                                              merchantVoice.notify(2);
+                                                         // 城市合伙人绑定微信号时间
+                                                         } else if(account.authorities[0]=="partnerManager") {
+                                                             cityBindWx.notify(3);
                                                          }
-                                                     });
-
-
+                                                    });
                                      }
                                  });
                                  //if (!alreadyConnectedOnce) {
@@ -79,6 +81,9 @@ angular.module('lepayglobleApp')
                      },
                      receiveWx: function () {
                          return bindWx.promise;
+                     },
+                     receiveCityWx: function () {
+                         return cityBindWx.promise;
                      },
                      receiveMerchantVoice: function () {
                          return merchantVoice.promise;

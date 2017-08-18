@@ -2,6 +2,7 @@ package com.jifenke.lepluslive.merchant.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.global.util.MD5Util;
+import com.jifenke.lepluslive.merchant.controller.dto.PwdDto;
 import com.jifenke.lepluslive.merchant.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
@@ -12,6 +13,7 @@ import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserService;
 import com.jifenke.lepluslive.security.SecurityUtils;
+import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -184,13 +186,29 @@ public class MerchantUserController {
     public LejiaResult createAccount(@RequestBody MerchantUser merchantUser) {
         try{
             MerchantUser user = merchantUserService.findByName(merchantUser.getName());
+            MerchantUser currentUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
             if(user!=null) {
                 return LejiaResult.build(400,"保存失败 ！");
             }
-            MerchantUser currentUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+            String idStr = merchantUser.getLinkMan();         //  该账号所拥有的门店
+            List<Merchant> merchants = null;
+            if(idStr!=null&&!"".equals(idStr)) {
+                if(idStr.contains("-1")) {                    //  所有门店
+                    merchants = merchantUserResourceService.findMerchantsByMerchantUser(currentUser);
+                }else {                                       //  选中门店
+                    merchants = new ArrayList<>();
+                    String[] ids = idStr.split("~");
+                    for (String id : ids) {
+                        if(!"".equals(id)&&id!=null) {
+                            Merchant merchant = merchantService.findMerchantById(new Long(id));
+                            merchants.add(merchant);
+                        }
+                    }
+                }
+            }
             merchantUser.setCreateUserId(currentUser.getId());
             merchantUser.setCreatedDate(new Date());
-            merchantService.saveUserAccount(merchantUser);
+            merchantService.saveUserAccount(merchantUser,merchants);
             return LejiaResult.ok();
         }catch (Exception e) {
             e.printStackTrace();
@@ -210,4 +228,20 @@ public class MerchantUserController {
             return LejiaResult.build(400,"用户名已存在");
         }
     }
+
+    /**
+     *  修改登录密码  17/05/08
+     */
+    @RequestMapping(value="/merchantUser/updatePwd",method = RequestMethod.POST)
+    @ResponseBody
+    public LejiaResult updatePwd(@RequestBody PwdDto pwdDto) {
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        boolean result = merchantUserService.updatePwd(merchantUser,pwdDto.getOldPwd(),pwdDto.getNewPwd());
+        if(result) {
+            return LejiaResult.ok();
+        }else {
+            return LejiaResult.build(400,"原密码错误！");
+        }
+    }
+
 }

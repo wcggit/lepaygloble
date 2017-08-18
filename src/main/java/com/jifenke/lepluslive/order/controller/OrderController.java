@@ -64,6 +64,8 @@ public class OrderController {
 
     @Inject
     WithdrawService withdrawService;
+
+    @Inject
     private MerchantUserResourceService merchantUserResourceService;
 
     @Inject
@@ -230,8 +232,9 @@ public class OrderController {
     getCommissionByMerchantUser() {
         Long totalCommission = 0L;
         Long available = 0L;
-        for (Merchant merchant : merchantUserResourceService.findMerchantsByMerchantUser(
-            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin()))) {
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        for (Merchant merchant : merchants) {
             MerchantWallet
                 merchantWallet =
                 merchantService.findMerchantWalletByMerchant(merchant);
@@ -397,9 +400,7 @@ public class OrderController {
         if (offset == null) {
             offset = 0L;
         }
-        List<Merchant> merchants = new ArrayList<>();
         Merchant merchant = merchantService.findMerchantById(id);
-        merchants.add(merchant);
         List<Object[]> orderList = merchantService.findOrderList(merchant, offset);
         for (Object[] objects : orderList) {
             objects[7] = merchant.getName();

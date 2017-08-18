@@ -7,18 +7,15 @@ import com.jifenke.lepluslive.partner.domain.criteria.PartnerManagerCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerManagerWallet;
-import com.jifenke.lepluslive.partner.repository.PartnerManagerRepository;
-import com.jifenke.lepluslive.partner.repository.PartnerManagerWalletLogRepository;
-import com.jifenke.lepluslive.partner.repository.PartnerManagerWalletRepository;
+import com.jifenke.lepluslive.partner.repository.*;
+import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by xf on 17-3-17.
@@ -40,6 +37,12 @@ public class PartnerManagerService {
 
     @Inject
     private PartnerManagerWalletLogRepository partnerManagerWalletLogRepository;
+
+    @Inject
+    private PartnerRepository partnerRepository;
+
+    @Inject
+    private PartnerWalletLogRepository partnerWalletLogRepository;
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     public PartnerManager findByPartnerAccountId(Long accountId) {
@@ -142,5 +145,146 @@ public class PartnerManagerService {
         }
 
         return list;
+    }
+
+    /**
+     *  根据 Sid 查询PartnerManager
+     */
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public PartnerManager findByPartnerManagerSid(String partnerManagerSid) {
+        return partnerManagerRepository.findByPartnerManagerSid(partnerManagerSid);
+    }
+
+
+    /***
+     *  获取折线图数据 - PartnerManager
+     */
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public Map findManagerWeekNumberChartData(PartnerManagerCriteria managerCriteria) {
+        String start = managerCriteria.getStartDate();
+        Date startDate = null;                           // 开始时间
+        if(start==null||"".equals(start)) {
+            startDate = new Date();
+        }else  {
+            startDate = new Date(start);
+        }
+        Long dayMills = 86400000L;                                  // 一天的毫秒值
+        List<String> dates = new ArrayList<>();                     // 统计时间
+        List<Long> userNumbers = new ArrayList<>();                 // 合伙人管理员锁定会员;
+        List<Long> merchantNumbers = new ArrayList<>();             // 合伙人管理员锁定门店;
+        List<Double> totalCommission = new ArrayList<>();             // 合伙人管理员佣金收入;
+        for (int i = 0; i < 7; i++) {
+            String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(startDate);
+            startDate.setTime(startDate.getTime() - dayMills);
+            dates.add(dateStr);                                  // 设置时间和金额默认值
+            userNumbers.add(0L);
+            merchantNumbers.add(0L);
+            totalCommission.add(0.0);
+        }
+        Collections.reverse(dates);                               // 翻转
+        PartnerManager partnerManager = managerCriteria.getPartnerManager();
+        //  数据计算和封装
+        List<Partner> partners = partnerRepository.findByPartnerManager(partnerManager);
+        for (Partner partner : partners) {
+            List<Object[]> userNumer = leJiaUserRepository.countPartnerBindLeJiaUserByWeek(partner.getId(), startDate);
+            List<Object[]> merchantNumber = merchantRepository.countMerchantByPartnerWeek(partner.getId(), startDate);
+            for (int i = 0; i < dates.size(); i++) {
+                String startTime = dates.get(i);
+                for (Object[] merchantNum : merchantNumber) {
+                    if (startTime.equals(merchantNum[0].toString())) {
+                        merchantNumbers.set(i, (merchantNumbers.get(i) + new Long(merchantNum[1].toString())));
+                        break;
+                    }
+                }
+                for (Object[] userNum : userNumer) {
+                    if (startTime.equals(userNum[0].toString())) {
+                        userNumbers.set(i, (userNumbers.get(i) + new Long(userNum[1].toString())));
+                        break;
+                    }
+                }
+            }
+        }
+        List<Object[]> commissions = partnerManagerWalletLogRepository.findCommissionByPartnerWeek(partnerManager.getId(), startDate);
+        for (int i = 0; i < dates.size(); i++) {
+            String startTime = dates.get(i);
+            for (Object[] commission : commissions) {
+                if (startTime.equals(commission[0].toString())) {
+                    totalCommission.set(i, (totalCommission.get(i) + new Double(commission[1].toString())* 0.01));
+                    break;
+                }
+            }
+        }
+        Map map = new HashMap();
+        map.put("merchantNumbers",merchantNumbers);
+        map.put("userNumbers",userNumbers);
+        map.put("totalCommission",totalCommission);
+        map.put("dates",dates);
+        return map;
+    }
+
+    /***
+     *  获取折线图数据 - Partner
+     */
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public Map findPartnerData(PartnerManagerCriteria managerCriteria,Partner partner) {
+        String start = managerCriteria.getStartDate();
+        Date startDate = null;                           // 开始时间
+        if(start==null||"".equals(start)) {
+            startDate = new Date();
+        }else  {
+            startDate = new Date(start);
+        }
+        List<Object[]> userNumer = leJiaUserRepository.countPartnerBindLeJiaUserByWeek(partner.getId(), startDate);
+        List<Object[]> merchantNumber = merchantRepository.countMerchantByPartnerWeek(partner.getId(), startDate);
+        Long dayMills = 86400000L;                                  // 一天的毫秒值
+        List<String> dates = new ArrayList<>();                     // 统计时间
+        List<Long> userNumbers = new ArrayList<>();                 // 合伙人管理员锁定会员;
+        List<Long> merchantNumbers = new ArrayList<>();             // 合伙人管理员锁定门店;
+        List<Double> totalCommission = new ArrayList<>();             // 合伙人管理员佣金收入;
+        for (int i = 0; i < 7; i++) {
+            String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(startDate);
+            startDate.setTime(startDate.getTime() - dayMills);
+            dates.add(dateStr);                                  // 设置时间和金额默认值
+            userNumbers.add(0L);
+            merchantNumbers.add(0L);
+            totalCommission.add(0.0);
+        }
+
+        for (int i = 0; i < dates.size(); i++) {
+            String startTime = dates.get(i);
+            for (Object[] merchantNum : merchantNumber) {
+                if (startTime.equals(merchantNum[0].toString())) {
+                    merchantNumbers.set(i, (merchantNumbers.get(i) + new Long(merchantNum[1].toString())));
+                    break;
+                }
+            }
+            for (Object[] userNum : userNumer) {
+                if (startTime.equals(userNum[0].toString())) {
+                    userNumbers.set(i, (userNumbers.get(i) + new Long(userNum[1].toString())));
+                    break;
+                }
+            }
+        }
+        List<Object[]> commissions = partnerWalletLogRepository.findCommissionByPartnerWeek(partner.getId(), startDate);
+        for (int i = 0; i < dates.size(); i++) {
+            String startTime = dates.get(i);
+            for (Object[] commission : commissions) {
+                if (startTime.equals(commission[0].toString())) {
+                    totalCommission.set(i, (totalCommission.get(i) + new Double(commission[1].toString())* 0.01));
+                    break;
+                }
+            }
+        }
+        Map map = new HashMap();
+        map.put("merchantNumbers",merchantNumbers);
+        map.put("userNumbers",userNumbers);
+        map.put("totalCommission",totalCommission);
+        map.put("dates",dates);
+        return map;
+    }
+
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public Optional<Partner> findByWeiXinUser(WeiXinUser weiXinUser) {
+        return partnerManagerRepository.findByWeiXinUser(weiXinUser);
     }
 }

@@ -21,3 +21,7 @@
     line-height: 64px;
     display: inline-block;
 }
+
+.storeManage #addStore .modal-body p{
+    margin: 38px auto 46px;
+}

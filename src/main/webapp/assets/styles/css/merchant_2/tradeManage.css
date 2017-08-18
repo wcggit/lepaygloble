@@ -20,7 +20,7 @@
 .codeTrade .haibao{
     width: 162px;
     height: 228px;
-    background: url("../../images/merchant_2/tradeManage/haibao.png") no-repeat;
+    background: url("../../images/merchant_2/tradeManage/haibao.jpg") no-repeat;
     background-size: 100% 100%;
     border:solid 1px #e8e8ec;
     margin: 10px auto;
@@ -29,7 +29,7 @@
 .codeTrade .haibao .rvCode{
     width: 60px;
     height: 60px;
-    margin: 82px auto 2px;
+    margin: 102px auto 2px;
 }
 .codeTrade .haibao .rvCode img{
     width: 100%;
@@ -57,3 +57,59 @@
 .codeTrade .myCode .col-md-3{
     margin-top: 20px;
 }
+.codeTrade .myCode .shop-name{
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.codeTrade table tr td:nth-of-type(1){
+    width: 12%;
+}
+.codeTrade table tr td:nth-of-type(2){
+    width: 15%;
+}
+.codeTrade table tr td:nth-of-type(3){
+    width: 14%;
+}
+.codeTrade table tr td:nth-of-type(4){
+    width: 9%;
+}
+
+.codeTrade table tr td:nth-of-type(5){
+    width: 10%;
+}
+.codeTrade table tr td:nth-of-type(6){
+    width: 10%;
+}
+.codeTrade table tr td:nth-of-type(7){
+    width: 14%;
+}
+.codeTrade table tr td:nth-of-type(8){
+    width: 16%;
+}
+
+/*我的POS机*/
+.myPOSTrade tr td:nth-of-type(1){
+    width: 16%;
+}
+.myPOSTrade tr td:nth-of-type(2){
+    width: 9%;
+}
+.myPOSTrade tr td:nth-of-type(3){
+    width: 10%;
+}
+.myPOSTrade tr td:nth-of-type(4){
+    width: 23%;
+}
+.myPOSTrade tr td:nth-of-type(5){
+    width: 14%;
+}
+.myPOSTrade tr td:nth-of-type(6){
+    width: 14%;
+}
+.myPOSTrade tr td:nth-of-type(7){
+    width: 14%;
+}
+

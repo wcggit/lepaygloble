@@ -1,35 +1,87 @@
 /*---------------首页开始---------------*/
-.homePage .basic-info .face-img{width: 90px;height: 90px;border-radius: 50%;overflow: hidden;border: solid 1px #e2e2e2;margin: auto}
-.homePage .basic-info .face-img img{width: 100%;height: 100%;}
-.homePage .basic-info .money-ttl{font-size: 16px;margin-bottom: 10px}
-.homePage .basic-info .money-content span{font-size: 40px}
-.homePage .basic-info .money-content input{margin:16px 30px}
-.homePage .basic-info .money-content a{margin-top:21px;cursor: pointer}
-.homePage .basic-info .ttl-te4e4e4op{margin-left: -24px}
-.homePage .basic-info .ttl-top p:last-child{margin-left: -8px}
-.homePage .basic-info h5{
+.homePage .basic-info .face-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: solid 1px #e2e2e2;
+    margin: auto
+}
+
+.homePage .basic-info .face-img img {
+    width: 100%;
+    height: 100%;
+}
+
+.homePage .basic-info .money-ttl {
+    font-size: 16px;
+    margin: 16px 0 8px;
+}
+.homePage .basic-info .money-content{
+    margin: 0;
+}
+
+.homePage .basic-info .money-content > span {
+    font-size: 40px;
+    line-height: 40px;
+}
+
+.homePage .basic-info .money-content > span > span {
+    font-size: 26px
+}
+
+.homePage .basic-info .money-content input {
+    margin: 3px 30px
+}
+
+.homePage .basic-info .money-content a {
+    margin-top: 21px;
+    cursor: pointer
+}
+
+.homePage .basic-info .ttl-te4e4e4op {
+    margin-left: -24px
+}
+
+.homePage .basic-info .ttl-top .money-content a {
+    line-height: 37px;
+}
+
+.homePage .basic-info h5 {
     font-size: 14px;
     color: #666;
 }
-.homePage .form-control{
+
+.homePage .form-control {
     width: auto;
     display: inline-block;
 }
-.homePage .page-bottom .current-store{
+
+.homePage .page-bottom .current-store {
     margin: 0 10px;
 }
 
+.homePage .color-origin {
+    color: #fb991a
+}
+
 /*list*/
-.homePage .dd-list{
+.homePage .list-out-div .ttl-list {
+    margin: 0 0 20px
+}
+
+.homePage .dd-list {
     padding-top: 15px;
 }
-.homePage .list{
+
+.homePage .list {
     width: 85%;
     height: 120px;
     border-left: solid 2px #e1e1e1;
     position: relative;
 }
-.homePage .list .list-detail{
+
+.homePage .list .list-detail {
     position: relative;
     border: solid 1px #d7d7d7;
     width: 95%;
@@ -37,28 +89,35 @@
     border-radius: 5px;
     margin-top: -16px;
 }
-.homePage .list .list-info1{
+
+.homePage .list .list-info1 {
     font-size: 14px;
     color: #333;
-margin-bottom: 15px}
-.homePage .list .list-info1 .hydd-font,.homePage .list .list-info1 .dldd-font{
+    margin-bottom: 15px
+}
+
+.homePage .list .list-info1 .hydd-font, .homePage .list .list-info1 .dldd-font {
     color: #f54339;
     font-size: 14px;
 }
-.homePage .list .list-info1 .ptdd-font{
+
+.homePage .list .list-info1 .ptdd-font {
     font-size: 14px;
     color: #666;
 }
-.homePage .list .list-info2 .pay-detail{
+
+.homePage .list .list-info2 .pay-detail {
     font-size: 20px;
     color: #444;
     line-height: 40px;
 }
-.homePage .list .list-info2 .pay-detail span{
+
+.homePage .list .list-info2 .pay-detail span {
     font-size: 14px;
     color: #666;
 }
-.homePage .list .list-info2 .face-img{
+
+.homePage .list .list-info2 .face-img {
     display: inline-block;
     width: 40px;
     height: 40px;
@@ -66,16 +125,19 @@ margin-bottom: 15px}
     overflow: hidden;
     margin-right: 15px;
 }
-.homePage .list .list-info2 .face-img img{
+
+.homePage .list .list-info2 .face-img img {
     width: 100%;
     height: 100%;
 }
-.homePage .list .list-info2 .nickname{
+
+.homePage .list .list-info2 .nickname {
     font-size: 14px;
     color: #333;
     line-height: 40px;
 }
-.homePage .list .list-detail .left-icon{
+
+.homePage .list .list-detail .left-icon {
     width: 15px;
     height: 15px;
     border-left: solid 1px #d7d7d7;
@@ -84,47 +146,54 @@ margin-bottom: 15px}
     -ms-transform: rotate(-45deg); /* IE 9 */
     -webkit-transform: rotate(-45deg); /* Safari and Chrome */
     position: absolute;
-    left:-8px;
-    top:10px;
+    left: -8px;
+    top: 10px;
     background-color: #fff;
 }
-.homePage .list .ddIcon{
+
+.homePage .list .ddIcon {
     position: absolute;
     width: 32px;
     height: 32px;
     left: -16px;
     top: -16px;
 }
-.homePage .list .hyIcon{
+
+.homePage .list .hyIcon {
     background: url("../../images/merchant_2/homePage/hyddIcon.png") no-repeat;
     background-size: 100% 100%;
 }
-.homePage .list .dlIcon{
+
+.homePage .list .dlIcon {
     background: url("../../images/merchant_2/homePage/dlddIcon.png") no-repeat;
     background-size: 100% 100%;
 }
-.homePage .list .dd-time{
+
+.homePage .list .dd-time {
     color: #333;
     font-size: 16px;
     position: absolute;
     left: -122px;
-    top:-16px;
+    top: -16px;
     line-height: 20px;
 }
-.homePage .list .dd-time span{
+
+.homePage .list .dd-time span {
     color: #666;
     font-size: 14px;
 }
-.homePage .look-more{
+
+.homePage .look-more {
     margin: 15px auto;
     display: block;
 }
-.homePage .list-out-div{
+
+.homePage .list-out-div {
     width: 100%;
     height: 600px;
     overflow-y: scroll;
     overflow-x: hidden;
-    padding: 30px 0;
+    padding: 0 0 30px;
     margin-bottom: 30px;
 }
 
@@ -133,51 +202,61 @@ margin-bottom: 15px}
     margin-top: 6px;
     color: #4f4f4f;
 }
+
 #tx .modal-header > h4 > span {
     font-size: 14px;
-    color:#666;
+    color: #666;
     margin-left: 20px;
 }
-#tx .modal-header > h4 > span >font{
+
+#tx .modal-header > h4 > span > font {
     color: #f75555;
 }
-#tx .modal-body .ts{
+
+#tx .modal-body .ts {
     color: #fb991a;
     display: inline-block;
     line-height: 30px;
     margin-left: -10px
 }
-#tx label{
+
+#tx label {
     color: #4f4f4f;
     font-size: 16px;
     font-weight: normal;
 }
+
 .btn-div {
     width: 400px;
     margin: 0 auto;
 }
-#tx-success .modal-body .icon-success{
+
+#tx-success .modal-body .icon-success {
     width: 60px;
     height: 60px;
     background: url("../../../../assets/styles/images/merchant_2/homePage/success.png") no-repeat;
     background-size: 100% 100%;
     margin: 20px auto 10px;
 }
-#tx-success .modal-body p{
+
+#tx-success .modal-body p {
     color: #4f4f4f;
     text-align: center;
 }
-#tx-success .modal-body p:nth-of-type(1){
+
+#tx-success .modal-body p:nth-of-type(1) {
     font-size: 22px;
 }
-#tx-success .modal-body p:nth-of-type(2){
+
+#tx-success .modal-body p:nth-of-type(2) {
     font-size: 16px;
     padding: 20px 0;
 }
+
 /*---------------首页结束---------------*/
 
 /*---------------提现记录开始---------------*/
-.withdrawRecord .page-top .left-icon{
+.withdrawRecord .page-top .left-icon {
     width: 24px;
     height: 24px;
     display: inline-block;
@@ -185,16 +264,24 @@ margin-bottom: 15px}
     background-size: 100% 100%;
     margin-right: 10px;
 }
-.withdrawRecord .page-top .left-icon+span{
+
+.withdrawRecord .page-top .left-icon + span {
     cursor: pointer;
     font-size: 16px;
 }
-.withdrawRecord .page-top .current-page{
+
+.withdrawRecord .page-top .current-page {
     color: #fb991a;
     font-size: 16px;
 }
-.withdrawRecord .tr-noEmpty td.td-date p:last-child{
+
+.withdrawRecord .tr-noEmpty td.td-date p:last-child {
     color: #999;
     font-size: 14px;
 }
+
+.withdrawRecord tr td:nth-of-type(4){
+    width: 23%;
+}
+
 /*---------------提现记录结束---------------*/

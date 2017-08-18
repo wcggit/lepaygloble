@@ -41,8 +41,8 @@ angular.module('lepayglobleApp')
             var data = response.data;
             $scope.merchants = data;
             // 默认门店
-            var firstSid = data[0].sid;
-            $scope.firstSid = firstSid;
+            var firstId = data[0].id;
+            $scope.firstSid = firstId;
             // 查询
             $scope.findAll(0);
         });
@@ -135,7 +135,7 @@ angular.module('lepayglobleApp')
 
         //  提现
         $scope.withDraw = function () {
-            var amount = $("#withDrawInput").val();
+            /*var amount = $("#withDrawInput").val();
             var available = $scope.available;
             if(amount > available) {
                 alert("余额不足！");
@@ -145,8 +145,8 @@ angular.module('lepayglobleApp')
                 return;
             }
             var data = 'amount='
-                + encodeURIComponent(amount.trim());
-            $http.post('/withdraw/merchant_user_withdraw', data, {
+                + encodeURIComponent(amount.trim());*/
+            /*$http.post('/withdraw/merchant_user_withdraw', data, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
@@ -158,7 +158,8 @@ angular.module('lepayglobleApp')
                     $("#withDrawInput").val('');
                     $scope.tx();
                 }
-            })
+            })*/
+            $scope.tx();
         }
 
         /***********************************************local Variables**********************************************************/

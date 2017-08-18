@@ -66,6 +66,7 @@ public class PartnerController {
                                   .findByPartnerSid(SecurityUtils.getCurrentUserLogin()));
     }
 
+
     @RequestMapping(value = "/partner/info", method = RequestMethod.GET)
     public
     @ResponseBody

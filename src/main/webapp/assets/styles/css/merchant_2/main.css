@@ -76,12 +76,14 @@ ul,li{list-style: none}
 
 }
 .modal-content{border-radius: 0}
+.modal .close span:first-child{font-size: 33px}
 label{
     font-weight: normal;
     font-size: 14px;
     text-align: right;
     width: 90px;
     display: inline-block;
+    margin-right: 20px;
 }
 .table>tbody>tr>td, .table>tbody>tr>th,
 .table>tfoot>tr>td, .table>tfoot>tr>th,
@@ -138,6 +140,9 @@ thead>tr>td,tbody>tr>td,thead>tr>td>p,tbody>tr>td>p{font-size: 14px;}
 .merchant-data .col-md-3 .out-div p:last-child{
     color: #444;
     font-size: 28px;
+}
+.merchant-data .col-md-3 .out-div p:last-child span{
+    font-size: 20px;
 }
 .row-margin{
     margin-left: 0;

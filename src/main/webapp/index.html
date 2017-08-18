@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="assets/styles/framework/bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="assets/styles/framework/bootstrap/daterangepicker-bs3.css"/>
     <link rel="stylesheet" href="assets/styles/css/font/iconfont.css"/>
+    <link rel="stylesheet" href="assets/styles/css/font2/iconfont.css"/>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css assets/styles/main.css -->
@@ -31,10 +32,8 @@
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a
     href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
-<div ui-view="navbar"></div>
-<div class="container-fluid" ui-view="content" style="padding: 0">
-    <!--<div class="well" ui-view="content"></div>-->
-</div>
+
+
 
 <!-- Google Analytics: uncomment and change UA-XXXXX-X to be your site's ID.
 <script>
@@ -276,7 +275,10 @@
 
 <script type="text/javascript"
         src="http://webapi.amap.com/maps?v=1.3&key=2674be5e0b36ed1b4b3204e85ead8a28&plugin=AMap.Autocomplete"></script>
-<div class="panel-footer">
+<div ui-view="navbar" class="top-navbar"></div>
+<div class="container-fluid" ui-view="content" style="padding: 0"></div>
+
+<div class="panel-footer index-bottom">
     <p class="text-center"><span class="logo"></span><br>辽宁积分客网络科技股份有限公司<br>Copyright©2016 乐＋支付所有权</p>
 </div>
 </body>

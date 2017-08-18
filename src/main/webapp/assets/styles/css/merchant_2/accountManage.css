@@ -52,4 +52,35 @@
 }
 
 .accountManage .changePassword{margin-left: 10px}
+.accountManage #createAccount .radio-inline{
+    padding-left: 0;
+}
+.accountManage .radio-left{
+    margin-left: 21px;
+}
+
+.accountManage #changePassword label{position: relative;text-align: left;width: 17%;}
+.accountManage #changePassword label:before{content: "*";color: red;position: absolute;left: 0px;top: 10px;}
+.accountManage #changePassword .label-last:before{content: '\20' !important;}
+
+.accountManage #changePassword2 .form-horizontal .control-label{
+    text-align: left;
+}
+.accountManage #changePassword2 label{
+    line-height: 30px;
+}
+.accountManage #unbind .wx-faceImg{
+    display: block;
+    margin: 10px auto;
+    height: 100px;
+    width: 100px;
+}
+.accountManage #unbind p:first-child{
+    line-height: 55px;
+}
+.accountManage #div-accnoutInfo{padding: 20px 50px 0}
+
+
+
+
 

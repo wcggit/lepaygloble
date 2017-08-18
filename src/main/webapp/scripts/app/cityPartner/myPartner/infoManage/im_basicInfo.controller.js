@@ -5,6 +5,9 @@
 
 
 angular.module('lepayglobleApp')
-    .controller('imBasicInfoController', ['$scope', function ($scope) {
-
-    }])
+    .controller('imBasicInfoController',function ($scope, $state, $rootScope, $location,Principal,Auth,$http,$stateParams) {
+        var partnerSid = $stateParams.partnerSid2;
+        $http.get('api/partnerManager/partner/findBySid?partnerSid='+partnerSid).success(function (response) {
+            $scope.partner = response.data;
+        });
+    })

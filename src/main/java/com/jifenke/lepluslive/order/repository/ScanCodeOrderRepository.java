@@ -30,14 +30,14 @@ public interface ScanCodeOrderRepository extends JpaRepository<ScanCodeOrder,Str
      */
     @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),sum(transfer_money) from scan_code_order " +
         " where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
-    List<Object[]> countWeekScanCodeOrder(Long merchantId,Date startDate);
+    List<Object[]> countWeekScanCodeOrder(Long merchantId, Date startDate);
 
     /**
      *  门店下: 扫码牌微信最近七天入账
      */
     @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),IFNULL(sum(transfer_money_from_true_pay),0) from scan_code_order " +
         " where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
-    List<Object[]> countWeekScanCodeWx(Long merchantId,Date startDate);
+    List<Object[]> countWeekScanCodeWx(Long merchantId, Date startDate);
 
     /**
      *  门店下线下订单红包支付入账
@@ -45,43 +45,43 @@ public interface ScanCodeOrderRepository extends JpaRepository<ScanCodeOrder,Str
     @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),IFNULL(sum(transfer_money-transfer_money_from_true_pay),0) from scan_code_order " +
         "where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) " +
         "group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
-    List<Object[]> countWeekScanCodeScore(Long merchantId,Date completeDate);
+    List<Object[]> countWeekScanCodeScore(Long merchantId, Date completeDate);
 
     /**
      * 查询指定门店 时间段内总入账 (扫码订单)
      */
     @Query(value="select IFNULL(sum(transfer_money),0) from scan_code_order where merchant_id = ?1 and complete_date between ?2  and ?3",nativeQuery = true)
-    Long countMerchantTotal(Long id,String startDate,String endDate);
+    Long countMerchantTotal(Long id, String startDate, String endDate);
 
     /**
      * 查询指定门店 微信总入账
      */
     @Query(value="select IFNULL(sum(transfer_money_from_true_pay),0) from scan_code_order where merchant_id = ?1 and complete_date between ?2 and ?3",nativeQuery = true)
-    Long countMerchantWxTransfer(Long id,String startDate,String endDate);
+    Long countMerchantWxTransfer(Long id, String startDate, String endDate);
 
     /**
      * 查询指定门店 红包入账(扫码)
      */
     @Query(value="select IFNULL(sum(transfer_money-transfer_money_from_true_pay),0) from scan_code_order where merchant_id =?1 and complete_date between  ?2 and ?3",nativeQuery = true)
-    Long countMerchantOffScore(Long id,String startDate,String endDate);
+    Long countMerchantOffScore(Long id, String startDate, String endDate);
 
     /**
      * 查询指定门店 红包实际支付
      */
     @Query(value="select IFNULL(sum(true_score),0) from scan_code_order where merchant_id =?1 and complete_date between  ?2 and ?3",nativeQuery = true)
-    Long countMerchantCustScore(Long id,String startDate,String endDate);
+    Long countMerchantCustScore(Long id, String startDate, String endDate);
 
 
     /**
      * 查询指定门店 微信实际支付
      */
     @Query(value="select IFNULL(sum(true_pay),0) from scan_code_order where merchant_id = ?1 and complete_date between ?2 and ?3",nativeQuery = true)
-    Long countMerchantWxCustTransfer(Long id,String startDate,String endDate);
+    Long countMerchantWxCustTransfer(Long id, String startDate, String endDate);
 
 
     /**
      *  查询指定门店 订单记录(指定时间段)
      */
     @Query(value="select * from scan_code_order where merchant_id =?1 and complete_date between  ?2 and ?3",nativeQuery = true)
-    List<ScanCodeOrder> findByMerchantAndDate(Long merchantId,String startDate,String endDate);
+    List<ScanCodeOrder> findByMerchantAndDate(Long merchantId, String startDate, String endDate);
 }

@@ -81,7 +81,7 @@
         </div>
         <p class="ttl">门店锁定情况</p>
         <div class="row row-margin lockStoreState">
-            <div class="col-md-8 col-md-offset-2" ng-repeat="x in merchants">
+            <div class="col-md-10 col-md-offset-1" ng-repeat="x in merchants">
                 <div class="col-md-11">
                     <p>{{x[0]}}</p>
                     <div class="progress">
@@ -90,7 +90,7 @@
                 </div>
                 <div class="col-md-1"><span>{{x[1]}}</span>/{{x[2]}}</div>
             </div>
-            <div class="col-md-8 col-md-offset-2" id="seeMore">
+            <div class="col-md-10 col-md-offset-1" id="seeMore">
                 <input type="button" class="btn btn-warning look-more" value="查看更多" ng-click="moreMerchant()">
             </div>
         </div>

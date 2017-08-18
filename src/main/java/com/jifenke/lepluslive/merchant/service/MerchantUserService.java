@@ -1,19 +1,21 @@
 package com.jifenke.lepluslive.merchant.service;
 
+import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
-import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.repository.MerchantRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository;
 import com.jifenke.lepluslive.security.SecurityUtils;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wcg on 16/6/27.
@@ -91,4 +93,22 @@ public class MerchantUserService {
         return merchantUserRepository.findByUserName(username);
     }
 
+
+    /**
+     *  修改商户账号密码 17/05/08
+     *  merchantUser 当前登录商户
+     *  oldPwd 原密码
+     *  newPwd 新密码
+     */
+    @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
+    public boolean updatePwd(MerchantUser merchantUser,String oldPwd, String newPwd) {
+        String currPwd = merchantUser.getPassword();
+        if(currPwd.equals(MD5Util.MD5Encode(oldPwd,null))) {
+            merchantUser.setPassword(MD5Util.MD5Encode(newPwd,null));
+            merchantUserRepository.save(merchantUser);
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

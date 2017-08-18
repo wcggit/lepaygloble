@@ -24,6 +24,16 @@ public interface LeJiaUserRepository extends JpaRepository<LeJiaUser, Long> {
     @Query(value = "select count(*) from le_jia_user where bind_partner_id = ?1", nativeQuery = true)
     Long countPartnerBindLeJiaUser(Long partnerId);
 
+    /**
+     * 根据时间统计最近七天绑定数量
+     * @return
+     */
+    @Query(value = "select DATE_FORMAT(bind_partner_date,'%Y-%m-%d'),IFNULL(count(*),0) from le_jia_user " +
+        " where  bind_partner_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(bind_partner_date) group by DATE_FORMAT(bind_partner_date,'%Y-%m-%d') ", nativeQuery = true)
+    List<Object[]> countPartnerBindLeJiaUserByWeek(Long partnerId, Date start);
+
+
+
     Long countByBindPartnerAndBindPartnerDateBetween(Partner partner, Date start, Date end);
 
     /**

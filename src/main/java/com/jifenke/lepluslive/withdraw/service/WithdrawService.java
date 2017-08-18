@@ -5,10 +5,13 @@ import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
+import com.jifenke.lepluslive.partner.domain.criteria.PartnerManagerCriteria;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
 import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
 import com.jifenke.lepluslive.withdraw.repository.WithdrawRepository;
 
+import org.omg.CORBA.Object;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,7 +26,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by xf on 2016/9/18.
@@ -55,6 +60,9 @@ public class WithdrawService {
         withdrawRepository.save(withdrawBill);
     }
 
+    /***
+     *  城市合伙人 - 提现单
+     */
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Page findPartnerWithDrawByCriteria(WithdrawCriteria withdrawCriteria, Integer limit) {
         Sort sort = new Sort(Sort.Direction.DESC, "createdDate");
@@ -90,7 +98,6 @@ public class WithdrawService {
             }
         };
     }
-
     /**
      * 2.0 提现流程
      */

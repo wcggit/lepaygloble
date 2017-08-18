@@ -30,26 +30,20 @@ angular.module('lepayglobleApp')
         });
 
         var currentPage = 1;
-        var partnerManagerCriteria = {};
-        partnerManagerCriteria.offset = 1;
-
-        $http.get('api/partnerManager/partners/pages').success(function (response) {
-            alert(JSON.stringify(response));
-            // var data = response.data;
-            // $scope.totalPages = data;
-        });
+        var partnerCriteria = {};
+        partnerCriteria.offset = 1;
 
         loadContent();
         function loadContent() {
-            $http.post('api/partnerManager/partners', partnerManagerCriteria, {
+            $http.post('api/partnerManager/partners', partnerCriteria, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }).success(function (response) {
                 var data = response.data;
-                console.log(JSON.stringify(data));
-                // $scope.page = currentPage;
-                // $scope.pulls = data;
+                $scope.page = currentPage;
+                $scope.totalPages = data.totalPages;
+                $scope.pulls = data.content;
             });
         }
 
@@ -67,28 +61,37 @@ angular.module('lepayglobleApp')
                 return;
             }
             currentPage = page;
-            partnerManagerCriteria.offset = page;
+            partnerCriteria.offset = page;
             loadContent();
         };
 
         $scope.searchByCriteria = function () {
-            var partnerName = $("#partnerName").val();
+            var name = $("#partnerName").val();
             var phoneNumber = $("#phoneNumber").val();
-            /*var dateStr = $("#completeDate").val();
-            if(dateStr!=null&&dateStr!='') {
-                var startDate = dateStr.split("-")[0].trim();
-                var endDate = dateStr.split("-")[1].trim();
-                partnerManagerCriteria.startDate = startDate;
-                partnerManagerCriteria.endDate = endDate;
-            }*/
-            if(partnerName!=null && partnerName!='') {
-                partnerManagerCriteria.partnerName = partnerName;
+            if(name!=null && name!='') {
+                partnerCriteria.name = name;
             }
             if(phoneNumber!=null && phoneNumber!='') {
-                partnerManagerCriteria.phoneNumber = phoneNumber;
+                partnerCriteria.phoneNumber = phoneNumber;
             }
-            partnerManagerCriteria.offset = 1;
+            partnerCriteria.offset = 1;
             currentPage = 1;
             loadContent();
+        }
+
+        $scope.partnerManage = function (partnerSid) {
+            $scope.$parent.currentTab = "imDataOverview";
+            $state.go("cp-infoManage", {partnerSid: partnerSid});
+            // partnerCriteria = {};
+            // var partner = {};
+            // partner.partnerSid = partnerSid;
+            // partnerCriteria.partner = partner;
+            // $http.post('api/partnerManager/chart/partner', partnerCriteria, {
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     }
+            // }).success(function (response) {
+            //     console.log(JSON.stringify(response));
+            // });
         }
     });

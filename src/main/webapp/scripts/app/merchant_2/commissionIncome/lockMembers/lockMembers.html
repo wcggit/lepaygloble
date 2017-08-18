@@ -8,9 +8,9 @@
         <!--查询表单-->
         <form class="form-inline list-check">
             <div class="row">
-                <div class="form-group col-md-4">
-                    <label>门店名称</label>
-                    <div class="input-group col-md-6">
+                <div class="form-group col-md-5">
+                    <label>锁定门店</label>
+                    <div class="input-group col-md-8">
                         <select id="selectStore" class="form-control">
                             <option value="">请选择</option>
                             <option ng-repeat="x in myStore" value="{{x[0]}}">{{x[1]}}</option>
@@ -24,6 +24,20 @@
                     <div class="input-group timePicker col-md-9">
                         <input type="text" name="reservation" id="completeDate" class="form-control"/>
                         <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label>微信信息</label>
+                    <div class="input-group col-md-8">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>手机号</label>
+                    <div class="input-group col-md-6">
+                        <input type="tel"  class="form-control"/>
                     </div>
                 </div>
             </div>

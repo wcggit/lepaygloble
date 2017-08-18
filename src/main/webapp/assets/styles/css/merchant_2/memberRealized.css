@@ -27,7 +27,7 @@
     height: 600px;
     overflow-y: scroll;
 }
-.dataOverview .lockStoreState .col-md-8:first-child{
+.dataOverview .lockStoreState .col-md-10{
     margin-bottom: 20px;
 }
 .dataOverview .lockMemberNum{
