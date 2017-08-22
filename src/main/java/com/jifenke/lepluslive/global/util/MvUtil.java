@@ -34,13 +34,23 @@ public class MvUtil {
                 .random(10, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890");
 
         return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + randomStr + "."
-               + extendName;
+            + extendName;
     }
 
 
     //生成订单号
     public static String getOrderNumber() {
         String randomStr = RandomStringUtils.random(5, "1234567890");
+        return new SimpleDateFormat("yyMMddHHmmss").format(new Date()) + randomStr;
+    }
+
+    /**
+     * 生成时间戳+n位随机数
+     *
+     * @param random 随机位数
+     */
+    public static String getOrderNumber(int random) {
+        String randomStr = RandomStringUtils.random(random, "1234567890");
         return new SimpleDateFormat("yyMMddHHmmss").format(new Date()) + randomStr;
     }
 
@@ -80,6 +90,7 @@ public class MvUtil {
     public static String getMerchantSid() {
         return RandomStringUtils.random(7, "1234567890");
     }
+
     public static String getMerchantUserSid() {
         return RandomStringUtils.randomAlphanumeric(7);                 // 字母和数字的随机组合字符串 [7位]
     }

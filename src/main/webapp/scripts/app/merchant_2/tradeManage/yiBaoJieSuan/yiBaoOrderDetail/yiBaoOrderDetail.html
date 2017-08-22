@@ -1,0 +1,48 @@
+<div class="yiBaoJieSuanTrade yiBaoOrderDetail">
+    <div class="container-fluid">
+        <div class="panel panel-default page-top">
+            <div class="panel-body clearfix ">
+                <div class="panel-body clearfix">
+                    <span class="left-icon pull-left" ui-sref="yiBaoJieSuan"></span>
+                    <span ui-sref="yiBaoJieSuan">易宝结算 / </span>
+                    <span class="current-page">到账详情</span>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row ruzhang">
+                <div class="col-md-3">
+                    <h4>入账金额 ￥100</h4><h4>划款成功</h4>
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-6">门店1啊上次上传速度速 应入账：￥345</div>
+                        <div class="col-md-6">门店1 应入账：￥345</div>
+                        <div class="col-md-6">门店1 应入账：￥345</div>
+                        <div class="col-md-6">门店1 应入账：￥345</div>
+                        <div class="col-md-6">门店1 应入账：￥345</div>
+                        <div class="col-md-6">门店1 应入账：￥345</div>
+                        <div class="col-md-6">门店1 应入账：￥345</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--tab-->
+        <div class=" top-style1">
+            <div class="panel panel-default page-top">
+                <div class="panel-body">
+                    <ul class="nav nav-style">
+                        <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab(0)"><a>交易记录</a></li>
+                        <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab(1)"><a>退款记录（3）</a>
+                            <span class="tiple">交易记录应入账的金额，减去产生退款后少入账的金额，才是您实际入账的金额，请注意查看退款记录</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="container-fluid" ui-view="yiBaoOrderDetailTab"></div>
+    </div>
+
+</div>

@@ -363,11 +363,11 @@ public class MerchantService {
     public List<Object[]> findOrderList(Merchant merchant,Long limit) {
         Long offset = limit*10;
         MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
-        if(payway!=null&&payway.getType()==3) {                   // 返回 Pos 订单和易宝
-            return merchantRepository.findScanOrderListByMerchant(merchant.getId(),offset);
-        }else {                                                   // 返回 Pos 订单和乐加扫码订单
+//        if(payway!=null&&payway.getType()==3) {                   // 返回 Pos 订单和易宝
+//            return merchantRepository.findScanOrderListByMerchant(merchant.getId(),offset);
+//        }else {                                                   // 返回 Pos 订单和乐加扫码订单
             return merchantRepository.findOrderListByMerchant(merchant.getId(),offset);
-        }
+//        }
     }
 
     /**

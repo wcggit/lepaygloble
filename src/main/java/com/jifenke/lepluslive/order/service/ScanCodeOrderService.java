@@ -1,6 +1,16 @@
 package com.jifenke.lepluslive.order.service;
 
+import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
+import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
+import com.jifenke.lepluslive.order.repository.ScanCodeOrderRepository;
+import com.jifenke.lepluslive.weixin.domain.entities.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,6 +31,10 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class ScanCodeOrderService {
+
+    @Inject
+    private ScanCodeOrderRepository repository;
+
 
     @Inject
     private EntityManager em;
@@ -139,6 +158,100 @@ public class ScanCodeOrderService {
         }
 
         return codeOrderCriteria;
+    }
+
+
+    /***
+     *   根据条件查询订单数据
+     * @param criteria
+     * @param limit
+     * @return
+     */
+    public Page findOrderByPage(ScanCodeOrderCriteria criteria, Integer limit) {
+        Sort sort = new Sort(Sort.Direction.DESC, "createdDate");
+        return repository
+            .findAll(getWhereClause(criteria),
+                new PageRequest(criteria.getOffset() - 1, limit, sort));
+    }
+
+    private static Specification<ScanCodeOrder> getWhereClause(ScanCodeOrderCriteria orderCriteria) {
+        return new Specification<ScanCodeOrder>() {
+            @Override
+            public Predicate toPredicate(Root<ScanCodeOrder> r, CriteriaQuery<?> q,
+                                         CriteriaBuilder cb) {
+                Predicate predicate = cb.conjunction();
+                if (orderCriteria.getState() != null) { //订单状态
+                    predicate.getExpressions().add(cb.equal(r.get("state"), orderCriteria.getState()));
+                }
+
+                if (orderCriteria.getStartDate() != null && !""
+                    .equals(orderCriteria.getStartDate())) {//交易完成时间
+                    predicate.getExpressions().add(
+                        cb.between(r.get("completeDate"), new Date(orderCriteria.getStartDate()),
+                            new Date(orderCriteria.getEndDate())));
+                }
+                if (orderCriteria.getMerchantId() != null && !""
+                    .equals(orderCriteria.getMerchantName())) { //门店ID
+                    predicate.getExpressions().add(
+                        cb.equal(r.<Merchant>get("merchant").get("id"), orderCriteria.getMerchantId()));
+                }
+                if (orderCriteria.getState() != null && !""
+                    .equals(orderCriteria.getState())) { //门店ID
+                    predicate.getExpressions().add(
+                        cb.equal(r.<Merchant>get("merchant").get("id"), orderCriteria.getMerchantId()));
+                }
+                if (orderCriteria.getOrderType() != null) { //订单类型
+                    if (orderCriteria.getOrderType() == 2) {
+                        predicate.getExpressions().add(
+                            cb.or(cb.equal(r.<Category>get("orderType"), "12004"),
+                                cb.equal(r.<Category>get("orderType"), "12005"))
+                        );
+                    }
+                    if (orderCriteria.getOrderType() == 1) {
+                        predicate.getExpressions().add(
+                            cb.or(cb.equal(r.<Category>get("orderType"), "12001"),
+                                cb.equal(r.<Category>get("orderType"), "12002"),
+                                cb.equal(r.<Category>get("orderType"), "12003"),
+                                cb.equal(r.<Category>get("orderType"), "12006"))
+                        );
+                    }
+                }
+                if(orderCriteria.getPayType()!=null && !"".equals(orderCriteria.getPayType())) {
+                    predicate.getExpressions().add(cb.equal(r.<Category>get("scanCodeOrderExt").get("payType"),orderCriteria.getPayType()));
+                }
+                return predicate;
+            }
+        };
+    }
+
+    /***
+     *  根据条件查询订单流水和入账 - 交易记录【到账详情】
+     */
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public List<Object[]> findTotalDailyTransferAndIncome(ScanCodeOrderCriteria scanCodeOrderCriteria) {
+        String base = "select count(1),IFNULL(sum(so.transfer_money),0),IFNULL(sum(so.transfer_money_from_true_pay),0) from scan_code_order so,scan_code_order_ext se where so.scan_code_order_ext_id = se.id ";
+        StringBuffer sql = new StringBuffer(base);
+        if(scanCodeOrderCriteria.getMerchantId()!=null) {
+            sql.append(" and so.merchant_id = "+scanCodeOrderCriteria.getMerchantId());
+        }else {
+            return null;
+        }
+        if(scanCodeOrderCriteria.getOrderType()!=null && scanCodeOrderCriteria.getOrderType()==0) {        // 订单类型
+            sql.append(" and (so.order_type = 12001 or so.order_type = 12002 or so.order_type = 12003 or so.order_type = 12006) ");
+        }else {
+            sql.append(" and (so.order_type = 12004 or so.order_type = 12005) ");
+        }
+        if(scanCodeOrderCriteria.getPayType()!=null) {          // 支付类型
+            sql.append(" and se.pay_type = "+scanCodeOrderCriteria.getPayType());
+        }
+        if(scanCodeOrderCriteria.getStartDate()!=null && scanCodeOrderCriteria.getEndDate()!=null) {
+            sql.append(" and so.complete_date between "+scanCodeOrderCriteria.getStartDate()+" and "+scanCodeOrderCriteria.getEndDate());
+        }else {
+            return null;
+        }
+        Query query_count = em.createNativeQuery(sql.toString());
+        List<Object[]> details = query_count.getResultList();
+        return details;
     }
 
 }
