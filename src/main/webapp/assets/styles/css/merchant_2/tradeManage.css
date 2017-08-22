@@ -1,115 +1,266 @@
 /*乐加账单*/
-.lePlusBilling table tr td:nth-of-type(5),.lePlusBilling table tr td:nth-of-type(6)  {
+.lePlusBilling table tr td:nth-of-type(5), .lePlusBilling table tr td:nth-of-type(6) {
     width: 20%;
 }
+
 /*POS交易*/
-.POSTrade table tr td:nth-of-type(6){
+.POSTrade table tr td:nth-of-type(6) {
     width: 15%;
 }
-.POSTrade .icon-empty{
+
+.POSTrade .icon-empty {
     width: 146px;
     height: 161px;
     margin: 0px auto 50px;
     background: url("../../images/merchant_2/tradeManage/myPOSEmpty.png") no-repeat;
     background-size: 100% 100%;
 }
-.POSTrade .myPOSEmpty{
+
+.POSTrade .myPOSEmpty {
     padding: 100px 0;
 }
+
 /*扫码交易*/
-.codeTrade .haibao{
+.codeTrade .haibao {
     width: 162px;
     height: 228px;
     background: url("../../images/merchant_2/tradeManage/haibao.jpg") no-repeat;
     background-size: 100% 100%;
-    border:solid 1px #e8e8ec;
+    border: solid 1px #e8e8ec;
     margin: 10px auto;
     position: relative;
 }
-.codeTrade .haibao .rvCode{
+
+.codeTrade .haibao .rvCode {
     width: 60px;
     height: 60px;
     margin: 102px auto 2px;
 }
-.codeTrade .haibao .rvCode img{
+
+.codeTrade .haibao .rvCode img {
     width: 100%;
     height: 100%;
 }
-.codeTrade .haibao .download-code{
+
+.codeTrade .haibao .download-code {
     width: 100%;
     height: 36px;
     line-height: 36px;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     position: absolute;
-    left:0;
+    left: 0;
     bottom: 0;
     display: none;
     color: #fff;
     cursor: pointer;
 }
-.codeTrade .haibao .download-code span{
+
+.codeTrade .haibao .download-code span {
     color: #fff;
     margin-right: 5px;
 }
-.codeTrade .haibao:hover .download-code{
+
+.codeTrade .haibao:hover .download-code {
     display: block;
 }
-.codeTrade .myCode .col-md-3{
+
+.codeTrade .myCode .col-md-3 {
     margin-top: 20px;
 }
-.codeTrade .myCode .shop-name{
+
+.codeTrade .myCode .shop-name {
     position: absolute;
     top: 10px;
     width: 100%;
     text-align: center;
 }
 
-.codeTrade table tr td:nth-of-type(1){
+.codeTrade table tr td:nth-of-type(1) {
     width: 12%;
 }
-.codeTrade table tr td:nth-of-type(2){
+
+.codeTrade table tr td:nth-of-type(2) {
     width: 15%;
 }
-.codeTrade table tr td:nth-of-type(3){
+
+.codeTrade table tr td:nth-of-type(3) {
     width: 14%;
 }
-.codeTrade table tr td:nth-of-type(4){
+
+.codeTrade table tr td:nth-of-type(4) {
     width: 9%;
 }
 
-.codeTrade table tr td:nth-of-type(5){
+.codeTrade table tr td:nth-of-type(5) {
     width: 10%;
 }
-.codeTrade table tr td:nth-of-type(6){
+
+.codeTrade table tr td:nth-of-type(6) {
     width: 10%;
 }
-.codeTrade table tr td:nth-of-type(7){
+
+.codeTrade table tr td:nth-of-type(7) {
     width: 14%;
 }
-.codeTrade table tr td:nth-of-type(8){
+
+.codeTrade table tr td:nth-of-type(8) {
     width: 16%;
 }
 
 /*我的POS机*/
-.myPOSTrade tr td:nth-of-type(1){
+.myPOSTrade tr td:nth-of-type(1) {
     width: 16%;
 }
-.myPOSTrade tr td:nth-of-type(2){
+
+.myPOSTrade tr td:nth-of-type(2) {
     width: 9%;
 }
-.myPOSTrade tr td:nth-of-type(3){
+
+.myPOSTrade tr td:nth-of-type(3) {
     width: 10%;
 }
-.myPOSTrade tr td:nth-of-type(4){
+
+.myPOSTrade tr td:nth-of-type(4) {
     width: 23%;
 }
-.myPOSTrade tr td:nth-of-type(5){
-    width: 14%;
-}
-.myPOSTrade tr td:nth-of-type(6){
-    width: 14%;
-}
-.myPOSTrade tr td:nth-of-type(7){
+
+.myPOSTrade tr td:nth-of-type(5) {
     width: 14%;
 }
 
+.myPOSTrade tr td:nth-of-type(6) {
+    width: 14%;
+}
+
+.myPOSTrade tr td:nth-of-type(7) {
+    width: 14%;
+}
+
+/*易宝结算*/
+.yiBaoJieSuanTrade .page-top li {
+    position: relative;
+}
+
+.yiBaoJieSuanTrade .page-top li .title-warn {
+    position: absolute;
+    right: 3px;
+    top: 10px;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    line-height: 16px;
+    border-radius: 50%;
+    background: #fb991a;
+    color: #fff;
+    font-size: 12px;
+}
+
+.yiBaoJieSuanTrade .page-top {
+    position: relative;
+}
+
+.yiBaoJieSuanTrade .page-top .btn-warning {
+    position: absolute;
+    bottom: 15px;
+    right: 0;
+    height: 40px;
+    line-height: 26px;
+    padding: 5px 15px;
+}
+
+.yiBaoJieSuanTrade .page-top .left-icon {
+    width: 24px;
+    height: 24px;
+    margin-top: 5px;
+    display: inline-block;
+    background: url("../../images/merchant_2/homePage/left-icon.png") no-repeat;
+    background-size: 100% 100%;
+    margin-right: 10px;
+}
+
+.yiBaoJieSuanTrade .page-top .left-icon + span {
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.yiBaoOrderDetail .ruzhang > .col-md-3, .yiBaoOrderDetail .ruzhang > .col-md-9 {
+    height: 125px;
+    border: 1px solid #ddd;
+}
+
+.yiBaoOrderDetail .ruzhang > .col-md-3 {
+    margin-right: 15px;
+}
+
+.yiBaoOrderDetail .ruzhang > .col-md-3 h4 {
+    line-height: 35px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.yiBaoOrderDetail .ruzhang > .col-md-3 h4:first-child {
+    margin-top: 20px;
+}
+
+.yiBaoOrderDetail .ruzhang > .col-md-3 h4:last-child {
+    font-size: 18px;
+    color: #444;
+}
+
+.yiBaoOrderDetail .ruzhang > .col-md-9 {
+    width: 72%;
+    overflow-y: scroll;
+}
+
+.yiBaoOrderDetail .ruzhang > .col-md-9 .col-md-6 {
+    line-height: 58px;
+    border-bottom: 1px solid #eee;
+}
+
+.yiBaoOrderDetail label {
+    width: 75px;
+}
+
+.yiBaoOrderDetail td span {
+    font-size: 14px;
+}
+
+.yiBaoOrderDetail td h4 {
+    font-size: 14px;
+}
+
+.yiBaoOrderDetail .top-style1 li:last-child {
+    position: relative;
+}
+
+.yiBaoOrderDetail .top-style1 li:last-child .tiple {
+    display: inline-block;
+    width: 650px;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    top: 9px;
+    left: 135px;
+    background-color: rgba(251, 153, 26, .2);
+    /*padding: 12px 8px;*/
+    color: #333;
+    font-size: 14px
+}
+.yiBaoOrderDetail .top-style1 li:last-child .tiple:before{
+    position: absolute;
+    left: -30px;
+    top:0;
+    display: block;
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-right: 15px solid rgba(251, 153, 26, .2);
+    border-bottom: 15px solid transparent;
+    border-left: 15px solid transparent;
+}
+.yiBaoOrderDetail .dcbg, .yiBaoJieSuanTrade .dcbg{
+    margin: 27px 15px 0 0;
+    text-decoration: underline;
+}

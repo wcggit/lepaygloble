@@ -138,6 +138,26 @@ public class OrderController {
         return LejiaResult.ok(page);
     }
 
+    /**
+     *  2.0 版本  乐加账单 - 查看详情
+     * @param olOrderCriteria
+     * @return
+     */
+    @RequestMapping(value = "/offLineOrder/findByCriteria", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    LejiaResult searchOrderListByCriterial(@RequestBody OLOrderCriteria olOrderCriteria) {
+        if (olOrderCriteria.getOffset() == null) {
+            olOrderCriteria.setOffset(1);
+        }
+        if(olOrderCriteria.getMerchant()==null) {
+          return LejiaResult.build(400,"无数据");
+        }
+        olOrderCriteria.setState(1);
+        Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 10);
+        return LejiaResult.ok(page);
+    }
+
     @RequestMapping(value = "/order/orderDetail", method = RequestMethod.GET)
     public LejiaResult getOrderDetail() {
 

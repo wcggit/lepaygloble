@@ -1,0 +1,57 @@
+<!--表格-->
+<p style="margin-bottom:8px;background-color: #e1e1e1;padding: 5px 8px">
+    如果您的结算账户有问题，或遇到银行系统原因，可能导致划款失败，针对划款失败的资金，将会退回到您的待结算款中，留待下个工作日一起结算。
+</p>
+<div class="panel panel-default">
+    <table class="table ol-tab">
+        <thead class="active">
+        <tr>
+            <td>交易日期</td>
+            <td>划款失败待退回</td>
+            <td>到账金额</td>
+            <td>结算账户</td>
+            <td>操作</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="tr-empty"><td class="text-center" colspan="5" ng-show="pulls==null">暂无数据！</td></tr>
+        <tr>
+            <td>2017.05.06</td>
+            <td>已挂起</td>
+            <td>￥356.6</td>
+            <td>
+                <p>王尼玛</p>
+                <p>371422*********2345</p>
+            </td>
+            <td><a ui-sref="yiBaoOrderDetail">查看详情</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--分页-->
+<div class=" clearfix">
+    <nav class="pull-right">
+        <ul class="pagination">
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+            </li>
+            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                1}}</a>
+            </li>
+            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                2}}</a>
+            </li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(page+1)"><a aria-label="Next">
+                <span aria-hidden="true">›</span>
+            </a></li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+        </ul>
+    </nav>
+    <a class="pull-right dcbg" href="#">导出表格</a>
+</div>

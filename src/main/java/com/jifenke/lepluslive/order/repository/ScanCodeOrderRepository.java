@@ -1,6 +1,9 @@
 package com.jifenke.lepluslive.order.repository;
 
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -84,4 +87,8 @@ public interface ScanCodeOrderRepository extends JpaRepository<ScanCodeOrder,Str
      */
     @Query(value="select * from scan_code_order where merchant_id =?1 and complete_date between  ?2 and ?3",nativeQuery = true)
     List<ScanCodeOrder> findByMerchantAndDate(Long merchantId, String startDate, String endDate);
+
+
+    Page findAll(Specification<ScanCodeOrder> whereClause, Pageable pageRequest);
+
 }

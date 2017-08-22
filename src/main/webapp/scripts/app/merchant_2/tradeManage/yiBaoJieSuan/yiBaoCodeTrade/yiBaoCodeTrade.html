@@ -1,0 +1,47 @@
+<div class="yiBaoJieSuanTrade">
+    <div class="container-fluid">
+        <!--查询表单-->
+        <form class="form-inline list-check">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>选择门店</label>
+                    <div class="input-group col-md-6 select-style">
+                        <select class="form-control" id="selMerchant">
+                            <option value="-1">请选择</option>
+                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                        </select>
+                        <span class="select-jiao"></span>
+                    </div>
+                </div>
+                <div class="form-group col-md-5">
+                    <label>结算日期</label>
+                    <input type="text" id="timePicker1" class="form-control" style="width:200px">
+                </div>
+                <button type="button" class="btn btn-warning btn-check2" ng-click="searchByDate()">查询</button>
+            </div>
+        </form>
+        <!--表格信息总结-->
+        <p class="ttl-add table-title">
+            所选门店将和如下3家门店的交易款合为一笔到账。如需查看每家门店的统计账单，可点击下方【查看详情】按钮。
+        </p>
+        <p style="background-color: rgba(251, 153, 26, .2);padding: 12px 8px;color: #333">门店1，门店2，门店3</p>
+
+        <!--tab-->
+        <div class=" top-style1">
+            <div class="panel panel-default page-top">
+                <div class="panel-body">
+                    <ul class="nav nav-style">
+                        <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab(0)"><a>全部状态</a></li>
+                        <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab(1)"><a>待划款</a><span ng-show="ttlWarn1" class="title-warn">100</span></li>
+                        <li role="presentation" ng-class="{active:currentTab2}" ng-click="onClickTab(2)"><a>划款成功</a></li>
+                        <li role="presentation" ng-class="{active:currentTab3}" ng-click="onClickTab(3)"><a>划款失败退回</a><span ng-show="ttlWarn2" class="title-warn">11</span></li>
+                        <li role="presentation" ng-class="{active:currentTab4}" ng-click="onClickTab(4)"><a>已退回</a></li>
+                    </ul>
+                </div>
+                <div class="btn btn-warning" ng-click="lookHistoryTrade()">历史到账记录</div>
+            </div>
+            <div class="container-fluid" ui-view="yiBaoJieSuanCodeTab"></div>
+        </div>
+    </div>
+
+</div>

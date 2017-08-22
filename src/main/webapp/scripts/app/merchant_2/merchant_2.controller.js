@@ -1,7 +1,7 @@
- /**
+/**
  * Created by recoluan on 2016/11/16.
  */
- 'use strict';
+'use strict';
 
 
 angular.module('lepayglobleApp')
@@ -26,6 +26,8 @@ angular.module('lepayglobleApp')
             $state.go('home')
         }
         //  MENU
+
+
         $scope.menuList=[
             {
                 contentState:"1",
@@ -49,6 +51,13 @@ angular.module('lepayglobleApp')
                 clickState:"1",
                 name:"乐加账单",
                 state:"lePlusBilling",
+                icon:""
+            },
+            {
+                contentState:"1",
+                clickState:"1",
+                name:"易宝结算",
+                state:"yiBaoCodeTrade",
                 icon:""
             },
             {

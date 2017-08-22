@@ -1,0 +1,49 @@
+<div class="yiBaoJieSuanTrade">
+    <div class="container-fluid">
+        <div class="panel panel-default page-top">
+            <div class="panel-body clearfix ">
+                <div class="panel-body clearfix">
+                    <span class="left-icon pull-left" ui-sref="yiBaoJieSuan"></span>
+                    <span ui-sref="yiBaoJieSuan">易宝结算 / </span>
+                    <span class="current-page">历史到账记录</span>
+                </div>
+            </div>
+        </div>
+        <!--查询表单-->
+        <form class="form-inline list-check">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>选择门店</label>
+                    <div class="input-group col-md-6 select-style">
+                        <select class="form-control" id="selMerchant">
+                            <option value="-1">请选择</option>
+                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                        </select>
+                        <span class="select-jiao"></span>
+                    </div>
+                </div>
+                <div class="form-group col-md-5">
+                    <label>结算日期</label>
+                    <input type="text" id="timePicker1" class="form-control" style="width:200px">
+                </div>
+                <button type="button" class="btn btn-warning btn-check2" ng-click="searchByDate()">查询</button>
+            </div>
+        </form>
+        <!--tab-->
+        <div class=" top-style1">
+            <div class="panel panel-default page-top">
+                <div class="panel-body">
+                    <ul class="nav nav-style">
+                        <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab(0)"><a>全部状态</a></li>
+                        <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab(1)"><a>转账中</a><span ng-show="ttlWarn1" class="title-warn">100</span></li>
+                        <li role="presentation" ng-class="{active:currentTab2}" ng-click="onClickTab(2)"><a>已转账</a></li>
+                        <li role="presentation" ng-class="{active:currentTab3}" ng-click="onClickTab(3)"><a>已挂起</a><span ng-show="ttlWarn2" class="title-warn">11</span></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="container-fluid" ui-view="yiBaoHistoryTab"></div>
+    </div>
+
+</div>
