@@ -25,11 +25,9 @@ angular.module('lepayglobleApp')
             switch ($scope.currentState) {
                 case 0:
                     $scope.currentTab0 = true;
-                    $state.go(stateArr[0]);
                     break;
                 default:
                     $scope.currentTab1 = true;
-                    $state.go(stateArr[1]);
                     break;
             }
         };

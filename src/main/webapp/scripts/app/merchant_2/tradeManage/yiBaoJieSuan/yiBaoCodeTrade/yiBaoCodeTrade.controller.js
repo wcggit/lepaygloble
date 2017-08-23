@@ -6,6 +6,37 @@
 
 angular.module('lepayglobleApp')
     .controller('yiBaoCodeTradeController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, HomePage, LejiaBilling) {
+        var currentPage = null;
+        var settlementCriteria = {};
+        settlementCriteria.offset = 1;
+        currentPage = 1;
+
+        // 门店列表
+        HomePage.getMerchantsInfo().then(function (response) {
+            var data = response.data;
+            $scope.merchants = data;
+            $scope.defaultId = data[0].id;
+            var merchant = {};
+            merchant.id = $scope.defaultId;
+            settlementCriteria.merchant = merchant;
+            loadContent();
+        });
+
+
+        //  加载通道结算单
+        function loadContent() {
+            $http.post('/api/ledgerSettlement/findByPage', settlementCriteria, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function (response) {
+                var page = response.data;
+                $scope.pulls = page.content;
+                $scope.page = currentPage;
+                $scope.totalPages = page.totalPages;
+                console.log(JSON.stringify(page));
+            });
+        }
 
         $('#timePicker1')
             .daterangepicker({
@@ -22,6 +53,7 @@ angular.module('lepayglobleApp')
         $scope.lookHistoryTrade = function () {
             $state.go('yiBaoHistoryTrade');
         }
+
 
         var stateArr = ['yiBaoCodeTradeAllState', 'yiBaoCodeTradeTransfering', 'yiBaoCodeTradeTransferSuccess', 'yiBaoCodeTradeTransferErr', 'yiBaoCodeTradeReturn']
         $scope.ttlWarn1 = true;
@@ -52,25 +84,20 @@ angular.module('lepayglobleApp')
             switch ($scope.currentState) {
                 case 0:
                     $scope.currentTab0 = true;
-                    $state.go(stateArr[0]);
                     break;
                 case 1:
                     $scope.currentTab1 = true;
                     $scope.ttlWarn1 = false;
-                    $state.go(stateArr[1]);
                     break;
                 case 2:
                     $scope.currentTab2 = true;
-                    $state.go(stateArr[2]);
                     break;
                 case 3:
                     $scope.currentTab3 = true;
                     $scope.ttlWarn2 = false;
-                    $state.go(stateArr[3]);
                     break;
                 default:
                     $scope.currentTab4 = true;
-                    $state.go(stateArr[4]);
             }
         };
 

@@ -14,6 +14,7 @@ import com.jifenke.lepluslive.yibao.service.MerchantLedgerService;
 import com.jifenke.lepluslive.yibao.service.MerchantUserLedgerService;
 import com.jifenke.lepluslive.yibao.service.StoreSettlementService;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,11 +52,11 @@ public class LedgerSettlementController {
      * @return
      */
     @RequestMapping(value = "/ledgerSettlement/findByPage", method = RequestMethod.POST)
-    public LejiaResult findSettlemntByMerchant(LedgerSettlementCriteria settlementCriteria) {
+    public LejiaResult findSettlemntByMerchant(@RequestBody LedgerSettlementCriteria settlementCriteria) {
         if (settlementCriteria.getOffset() == null) {
             settlementCriteria.setOffset(1);
         }
-        Merchant merchant = settlementCriteria.getMerchant();
+         Merchant merchant = settlementCriteria.getMerchant();
         if (merchant == null) {
             return LejiaResult.build(400, "无门店信息");
         }
