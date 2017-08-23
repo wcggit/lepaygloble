@@ -9,6 +9,10 @@ angular.module('lepayglobleApp')
                 data: {
                     authorities: ["merchant"]
                 },
+                params: {
+                    ledgerNo: null,
+                    tradeDate: null
+                },
                 views: {
                     'right-content@merchant_2': {
                         templateUrl: 'scripts/app/merchant_2/tradeManage/yiBaoJieSuan/yiBaoOrderDetail/yiBaoOrderDetail.html',

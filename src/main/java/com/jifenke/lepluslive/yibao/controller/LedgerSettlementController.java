@@ -56,7 +56,7 @@ public class LedgerSettlementController {
         if (settlementCriteria.getOffset() == null) {
             settlementCriteria.setOffset(1);
         }
-         Merchant merchant = settlementCriteria.getMerchant();
+        Merchant merchant = settlementCriteria.getMerchant();
         if (merchant == null) {
             return LejiaResult.build(400, "无门店信息");
         }
@@ -71,7 +71,7 @@ public class LedgerSettlementController {
      *  根据通道结算单查询门店结算单 [到账详情]
      */
     public LejiaResult findSettlementDetialByNo(StoreSettlementCriteria criteria) {
-        if(criteria.getOffset()==null) {
+        if (criteria.getOffset() == null) {
             criteria.setOffset(1);
         }
         String sid = criteria.getLedgerSid();
@@ -85,7 +85,7 @@ public class LedgerSettlementController {
         criteria.setLedgerNo(ledgerNo);
         String tradeBefore = getTradeDateStrBefore(tradeDate);             // 获取前一天的结算日期
         criteria.setTradeDate(tradeBefore);
-        Page<StoreSettlement> page = storeSettlementService.findByCriteria(criteria,10);
+        Page<StoreSettlement> page = storeSettlementService.findByCriteria(criteria, 10);
         return LejiaResult.ok(page);
     }
 

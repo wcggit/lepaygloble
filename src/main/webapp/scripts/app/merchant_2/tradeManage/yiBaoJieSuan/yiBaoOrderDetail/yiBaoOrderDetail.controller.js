@@ -5,7 +5,9 @@
 
 
 angular.module('lepayglobleApp')
-    .controller('yiBaoOrderDetailController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, HomePage, LejiaBilling) {
+    .controller('yiBaoOrderDetailController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, HomePage, $stateParams) {
+        //  结算
+        alert($stateParams.ledgerNo);
 
         var stateArr = ['yiBaoTradeRecord', 'yiBaoReturnRecord'];
         $scope.currentTab0 = true;
