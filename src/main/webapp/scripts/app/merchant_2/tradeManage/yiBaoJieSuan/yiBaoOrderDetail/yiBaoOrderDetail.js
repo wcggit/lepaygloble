@@ -11,7 +11,9 @@ angular.module('lepayglobleApp')
                 },
                 params: {
                     ledgerNo: null,
-                    tradeDate: null
+                    tradeDate: null,
+                    totalTransfer:null,
+                    transferState:null
                 },
                 views: {
                     'right-content@merchant_2': {

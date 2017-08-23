@@ -12,17 +12,15 @@
         <div class="container-fluid">
             <div class="row ruzhang">
                 <div class="col-md-3">
-                    <h4>入账金额 ￥100</h4><h4>划款成功</h4>
+                    <h4>入账金额 ￥{{totalTransfer/100.0}}</h4>
+                    <h4 ng-if="transferState==4||transferState==3">待划款</h4>
+                    <h4 ng-if="transferState==1">划款成功</h4>
+                    <h4 ng-if="transferState==2">已退回</h4>
+                    <h4 ng-if="transferState==-2">划款失败退回</h4>
                 </div>
                 <div class="col-md-9">
                     <div class="row">
-                        <div class="col-md-6">门店1啊上次上传速度速 应入账：￥345</div>
-                        <div class="col-md-6">门店1 应入账：￥345</div>
-                        <div class="col-md-6">门店1 应入账：￥345</div>
-                        <div class="col-md-6">门店1 应入账：￥345</div>
-                        <div class="col-md-6">门店1 应入账：￥345</div>
-                        <div class="col-md-6">门店1 应入账：￥345</div>
-                        <div class="col-md-6">门店1 应入账：￥345</div>
+                        <div class="col-md-6" ng-repeat="m in mlist">{{m[0]}} 应入账：￥{{m[1]/100.0}}</div>
                     </div>
                 </div>
             </div>
@@ -50,7 +48,7 @@
                     <div class="input-group col-md-6 select-style">
                         <select class="form-control" id="selMerchant">
                             <option value="-1">请选择</option>
-                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                            <option value="{{m[2]}}" ng-repeat="m in mlist">{{m[0]}}</option>
                         </select>
                         <span class="select-jiao"></span>
                     </div>
@@ -60,7 +58,8 @@
                     <div class="input-group col-md-6 select-style">
                         <select class="form-control" id="orderType">
                             <option value="-1">请选择</option>
-                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                            <option value="0">普通订单</option>
+                            <option value="1">乐加订单</option>
                         </select>
                         <span class="select-jiao"></span>
                     </div>
@@ -70,7 +69,8 @@
                     <div class="input-group col-md-6 select-style">
                         <select class="form-control" id="payStyle">
                             <option value="-1">请选择</option>
-                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                            <option value="0">微信</option>
+                            <option value="1">支付宝</option>
                         </select>
                         <span class="select-jiao"></span>
                     </div>
@@ -103,13 +103,12 @@
                     <td>交易完成时间</td>
                     <td>订单金额</td>
                     <td>订单类型</td>
-                    <td>费率</td>
+                    <td>手续费</td>
                     <td>实际入账</td>
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="tr-empty"><td class="text-center" colspan="10" ng-show="pulls==null">暂无数据！</td></tr>
-                <tr>
+                <!--<tr>
                     <td>2142343</td>
                     <td><h4>棉花糖KTV</h4><h4>（朝阳）</h4></td>
                     <td>非会员</td>
@@ -120,18 +119,24 @@
                     <td>普通订单</td>
                     <td>￥0.5</td>
                     <td>￥324.43</td>
-                </tr>
-                <tr>
-                    <td>2142343</td>
-                    <td><h4>棉花糖KTV</h4><h4>（朝阳）</h4></td>
-                    <td><span class="wx-faceImg"><img src="../../../../../../assets/images/head/logo.png" alt=""></span><span>王尼玛</span></td>
-                    <td>微信</td>
-                    <td>1133</td>
-                    <td><h4>2012.23.34</h4><h4>05:48</h4></td>
-                    <td>￥324.43</td>
-                    <td>普通订单</td>
-                    <td>9折</td>
-                    <td>￥324.43</td>
+                </tr>-->
+                <tr class="tr-empty"><td class="text-center" colspan="10" ng-show="tradeList==null">暂无数据！</td></tr>
+                <tr ng-repeat="order in tradeList">
+                    <td>{{order.orderSid}}</td>
+                    <td><h4>{{order.merchant.name}}</h4><h4>（{{order.merchant.area.name}}）</h4></td>
+                    <td ng-show="order.leJiaUser!=null">{{order.leJiaUser.userName}}</td>
+                    <td ng-show="order.leJiaUser==null">非会员</td>
+                    <td ng-show="order.scanCodeOrderExt.payType==0">微信</td>
+                    <td ng-show="order.scanCodeOrderExt.payType==1">支付宝</td>
+                    <td>{{order.lePayCode}}</td>
+                    <td><h4>{{order.completeDate|date:'yyyy.MM.dd'}}</h4><h4>{{order.completeDate|date:'HH.mm'}}</h4></td>
+                    <td>￥{{order.totalPrice/100.0}}</td>
+                    <td ng-show="order.orderType==12001||order.orderType==12002||order.orderType==12003||order.orderType==12006">普通订单</td>
+                    <td ng-show="order.orderType==12004||order.orderType==12005">乐加订单</td>
+                    <td ng-show="order.orderType==12001||order.orderType==12002||order.orderType==12003||order.orderType==12006">({{order.scanCodeOrderExt.merchantRate/100.0}}折)</td>
+                    <!--<td ng-show="order.orderType==12004||order.orderType==12005">(￥{{order.scanCodeOrderExt.merchantRate/100.0}})</td>-->
+                    <td ng-show="order.orderType==12004||order.orderType==12005">￥{{order.commission/100.0}}</td>
+                    <td>￥{{order.transferMoneyFromTruePay/100.0}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -154,18 +159,6 @@
                 </thead>
                 <tbody>
                 <tr class="tr-empty"><td class="text-center" colspan="10" ng-show="pulls==null">暂无数据！</td></tr>
-                <tr>
-                    <td>2142343</td>
-                    <td><h4>棉花糖KTV</h4><h4>（朝阳）</h4></td>
-                    <td>微信</td>
-                    <td><h4>2012.23.34</h4><h4>05:48</h4></td>
-                    <td><h4>2012.23.34</h4><h4>05:48</h4></td>
-                    <td>￥324.43</td>
-                    <td>￥324.43</td>
-                    <td>普通订单</td>
-                    <td>￥0.5</td>
-                    <td>￥324.43</td>
-                </tr>
                 </tbody>
             </table>
         </div>
@@ -195,7 +188,7 @@
                         ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
                 </ul>
             </nav>
-            <a class="pull-right dcbg" href="#">导出表格</a>
+            <!--<a class="pull-right dcbg" href="#">导出表格</a>-->
         </div>
     </div>
 

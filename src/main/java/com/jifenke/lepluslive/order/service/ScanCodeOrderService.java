@@ -200,14 +200,14 @@ public class ScanCodeOrderService {
                     predicate.getExpressions().add(
                         cb.equal(r.<Merchant>get("merchant").get("id"), orderCriteria.getMerchantId()));
                 }
-                if (orderCriteria.getOrderType() != null) { //订单类型
-                    if (orderCriteria.getOrderType() == 2) {
+                if (orderCriteria.getOrderType() != null) {                     //订单类型
+                    if (orderCriteria.getOrderType() == 1) {
                         predicate.getExpressions().add(
                             cb.or(cb.equal(r.<Category>get("orderType"), "12004"),
                                 cb.equal(r.<Category>get("orderType"), "12005"))
                         );
                     }
-                    if (orderCriteria.getOrderType() == 1) {
+                    if (orderCriteria.getOrderType() == 0) {
                         predicate.getExpressions().add(
                             cb.or(cb.equal(r.<Category>get("orderType"), "12001"),
                                 cb.equal(r.<Category>get("orderType"), "12002"),
@@ -238,16 +238,14 @@ public class ScanCodeOrderService {
         }
         if(scanCodeOrderCriteria.getOrderType()!=null && scanCodeOrderCriteria.getOrderType()==0) {        // 订单类型
             sql.append(" and (so.order_type = 12001 or so.order_type = 12002 or so.order_type = 12003 or so.order_type = 12006) ");
-        }else {
+        }else if(scanCodeOrderCriteria.getOrderType()!=null && scanCodeOrderCriteria.getOrderType()==1){
             sql.append(" and (so.order_type = 12004 or so.order_type = 12005) ");
         }
         if(scanCodeOrderCriteria.getPayType()!=null) {          // 支付类型
             sql.append(" and se.pay_type = "+scanCodeOrderCriteria.getPayType());
         }
         if(scanCodeOrderCriteria.getStartDate()!=null && scanCodeOrderCriteria.getEndDate()!=null) {
-            sql.append(" and so.complete_date between "+scanCodeOrderCriteria.getStartDate()+" and "+scanCodeOrderCriteria.getEndDate());
-        }else {
-            return null;
+            sql.append(" and so.complete_date between '"+scanCodeOrderCriteria.getStartDate()+"' and '"+scanCodeOrderCriteria.getEndDate()+"'");
         }
         Query query_count = em.createNativeQuery(sql.toString());
         List<Object[]> details = query_count.getResultList();

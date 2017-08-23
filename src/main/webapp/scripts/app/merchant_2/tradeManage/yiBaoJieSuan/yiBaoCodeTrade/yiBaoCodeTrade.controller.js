@@ -94,10 +94,9 @@ angular.module('lepayglobleApp')
             loadContent();
         }
         // 跳转到详情页面
-        $scope.goDetail = function (ledgerNo,tradeDate) {
-            console.log(ledgerNo+"--"+tradeDate);
+        $scope.goDetail = function (ledgerNo,tradeDate,totalTransfer,transferState) {
             $scope.$parent.currentTab = "yiBaoOrderDetail";
-            $state.go("yiBaoOrderDetail", {ledgerNo: ledgerNo,tradeDate:tradeDate});
+            $state.go("yiBaoOrderDetail", {ledgerNo: ledgerNo,tradeDate:tradeDate,totalTransfer:totalTransfer,transferState:transferState});
         }
 
         $('#timePicker1')

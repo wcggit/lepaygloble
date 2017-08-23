@@ -94,7 +94,7 @@ public class StoreSettlementService {
      *  根据时间和易宝商户号查询门店结算单
      */
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
-    public List<StoreSettlement> findByTradeDateAndLedgerNo(String tradeDate,String ledgerNo) {
+    public List<Object[]> findByTradeDateAndLedgerNo(String tradeDate, String ledgerNo) {
         return storeSettlementRepository.findByTradeDateAndLedgerNo(tradeDate,ledgerNo);
     }
 }
