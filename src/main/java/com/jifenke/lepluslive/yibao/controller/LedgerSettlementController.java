@@ -14,6 +14,7 @@ import com.jifenke.lepluslive.yibao.service.MerchantLedgerService;
 import com.jifenke.lepluslive.yibao.service.MerchantUserLedgerService;
 import com.jifenke.lepluslive.yibao.service.StoreSettlementService;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,7 +52,7 @@ public class LedgerSettlementController {
      * @return
      */
     @RequestMapping(value = "/ledgerSettlement/findByPage", method = RequestMethod.POST)
-    public LejiaResult findSettlemntByMerchant(LedgerSettlementCriteria settlementCriteria) {
+    public LejiaResult findSettlemntByMerchant(@RequestBody LedgerSettlementCriteria settlementCriteria) {
         if (settlementCriteria.getOffset() == null) {
             settlementCriteria.setOffset(1);
         }
@@ -70,7 +71,7 @@ public class LedgerSettlementController {
      *  根据通道结算单查询门店结算单 [到账详情]
      */
     public LejiaResult findSettlementDetialByNo(StoreSettlementCriteria criteria) {
-        if(criteria.getOffset()==null) {
+        if (criteria.getOffset() == null) {
             criteria.setOffset(1);
         }
         String sid = criteria.getLedgerSid();
@@ -84,7 +85,7 @@ public class LedgerSettlementController {
         criteria.setLedgerNo(ledgerNo);
         String tradeBefore = getTradeDateStrBefore(tradeDate);             // 获取前一天的结算日期
         criteria.setTradeDate(tradeBefore);
-        Page<StoreSettlement> page = storeSettlementService.findByCriteria(criteria,10);
+        Page<StoreSettlement> page = storeSettlementService.findByCriteria(criteria, 10);
         return LejiaResult.ok(page);
     }
 

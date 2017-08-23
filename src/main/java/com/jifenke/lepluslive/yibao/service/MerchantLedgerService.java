@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.List;
 
 
 /**
@@ -23,12 +24,20 @@ public class MerchantLedgerService {
 
   /**
    *  根据商户账号获取Yibao 子商户
-   * @param merchantUser
+   * @param
    * @return
    */
   @Transactional(readOnly = true)
   public MerchantLedger findMerchantLedgerByMerchant(Merchant merchant) {
     return merchantLedgerRepository.findByMerchant(merchant);
+  }
+
+  /**
+  *  根据子商户号获取统一子商户门店
+  */
+  @Transactional(readOnly = true)
+  public List<Object[]> findMerchantLedgerByMerchantUserLedger(MerchantUserLedger merchantUserLedger) {
+      return merchantLedgerRepository.findMerchantIdsByMerchantUserLedger(merchantUserLedger.getId());
   }
 
   /**

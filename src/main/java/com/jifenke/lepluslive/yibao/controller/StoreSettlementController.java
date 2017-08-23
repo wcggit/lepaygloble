@@ -1,20 +1,22 @@
 package com.jifenke.lepluslive.yibao.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.service.ScanCodeOrderService;
 import com.jifenke.lepluslive.yibao.domain.criteria.LedgerRefundOrderCriteria;
+import com.jifenke.lepluslive.yibao.domain.entities.MerchantLedger;
+import com.jifenke.lepluslive.yibao.domain.entities.MerchantUserLedger;
 import com.jifenke.lepluslive.yibao.domain.entities.StoreSettlement;
 import com.jifenke.lepluslive.yibao.service.LedgerRefundOrderService;
+import com.jifenke.lepluslive.yibao.service.MerchantLedgerService;
 import com.jifenke.lepluslive.yibao.service.StoreSettlementService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by xf on 17-8-21.
@@ -35,7 +37,26 @@ public class StoreSettlementController {
     @Inject
     private LedgerRefundOrderService ledgerRefundOrderService;
 
-
+    @Inject
+    private MerchantLedgerService merchantLedgerService;
+    /**
+     *  根据门店查询子商户，及子商户下其他门店
+     */
+    @RequestMapping(value = "/settelement/merchantLedger/{mid}", method = RequestMethod.GET)
+    public LejiaResult findMerchantLedgerByMerchant(@PathVariable  Long mid) {
+        Merchant merchant = merchantService.findMerchantById(mid);
+        MerchantLedger merchantLedger = merchantLedgerService.findMerchantLedgerByMerchant(merchant);
+        MerchantUserLedger merchantUserLedger = merchantLedger.getMerchantUserLedger();
+        List<Object[]> merchantNames = merchantLedgerService.findMerchantLedgerByMerchantUserLedger(merchantUserLedger);
+        Map map = new HashMap();
+        if(merchantNames!=null&&merchantNames.size()>0) {
+            map.put("count",merchantNames.size());
+            map.put("merchantNames",merchantNames);
+        }else {
+            map.put("count",0);
+        }
+        return LejiaResult.ok(map);
+    }
     /**
      * 到账详情页面基本数据 【到账详情】
      * - 门店应入账
