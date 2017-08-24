@@ -30,6 +30,6 @@ public interface StoreSettlementRepository extends JpaRepository<StoreSettlement
 
     StoreSettlement findByOrderSid(String orderSid);
 
-    @Query(value = "SELECT * from yb_store_settlement  where trade_date=?1 and ledger_no=?2 ", nativeQuery = true)
-    List<StoreSettlement>  findByTradeDateAndLedgerNo(String tradeDate, String ledgerNo);
+    @Query(value = "SELECT m.name,ys.actual_transfer,m.id from yb_store_settlement ys,merchant m  where ys.merchant_id = m.id and  ys.trade_date=?1 and ys.ledger_no=?2 ", nativeQuery = true)
+    List<Object[]>  findByTradeDateAndLedgerNo(String tradeDate, String ledgerNo);
 }

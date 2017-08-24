@@ -69,4 +69,14 @@ public class LedgerRefundOrderCriteria {
     public void setRefundOrderSid(String refundOrderSid) {
         this.refundOrderSid = refundOrderSid;
     }
+
+    private String tradeDate;
+
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
+    }
 }

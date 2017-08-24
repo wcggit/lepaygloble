@@ -20,4 +20,6 @@ public interface LedgerRefundOrderRepository extends JpaRepository<LedgerRefundO
 
     @Query(value="select sum(transfer_money)  from yb_ledger_refund_order where merchant_id=?1 and trade_date = ?2 and state=2 and order_from=1",nativeQuery=true)
     Long sumDailyTotalRefund(String merchantId, String tradeDate);
+
+    
 }

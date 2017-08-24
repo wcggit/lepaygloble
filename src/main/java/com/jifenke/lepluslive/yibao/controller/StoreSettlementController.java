@@ -3,9 +3,11 @@ package com.jifenke.lepluslive.yibao.controller;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.service.ScanCodeOrderService;
 import com.jifenke.lepluslive.yibao.domain.criteria.LedgerRefundOrderCriteria;
+import com.jifenke.lepluslive.yibao.domain.entities.LedgerRefundOrder;
 import com.jifenke.lepluslive.yibao.domain.entities.MerchantLedger;
 import com.jifenke.lepluslive.yibao.domain.entities.MerchantUserLedger;
 import com.jifenke.lepluslive.yibao.domain.entities.StoreSettlement;
@@ -16,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -65,7 +69,8 @@ public class StoreSettlementController {
     @RequestMapping(value = "/settelement/detail", method = RequestMethod.GET)
     @ResponseBody
     public LejiaResult findSettlementDetial(String ledgerNo, String tradeDate) {
-        List<StoreSettlement> storeSettlements = storeSettlementService.findByTradeDateAndLedgerNo(ledgerNo, tradeDate);
+        String tradeBefore = getTradeDateStrBefore(tradeDate);                          // 获取前一天的结算数据
+        List<Object[]> storeSettlements = storeSettlementService.findByTradeDateAndLedgerNo(tradeBefore,ledgerNo);
         return LejiaResult.ok(storeSettlements);
     }
 
@@ -81,7 +86,15 @@ public class StoreSettlementController {
         if (detailCriteria.getMerchantId() == null) {
             return LejiaResult.build(400, "无相关数据");
         }
+        //  获取前一天
+        if(detailCriteria.getTradeDate()!=null && !"".equals(detailCriteria.getTradeDate())) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            detailCriteria =setStartAndEndDate(detailCriteria,simpleDateFormat);
+        }else {
+            return LejiaResult.build(400, "无相关数据");
+        }
         Page page = scanCodeOrderService.findOrderByPage(detailCriteria, 10);
+
         return LejiaResult.ok(page);
     }
 
@@ -91,6 +104,13 @@ public class StoreSettlementController {
     @RequestMapping(value = "/settlement/tradeData", method = RequestMethod.POST)
     @ResponseBody
     public LejiaResult findTradeData(@RequestBody ScanCodeOrderCriteria detailCriteria) {
+        //  获取前一天
+        if(detailCriteria.getTradeDate()!=null && !"".equals(detailCriteria.getTradeDate())) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            detailCriteria =setStartAndEndDate(detailCriteria,simpleDateFormat);
+        }else {
+            return LejiaResult.build(400, "无相关数据");
+        }
         Map<String, List<Object[]>> map = new HashMap<>();
         // 全部类型订单
         detailCriteria.setOrderType(null);
@@ -107,6 +127,8 @@ public class StoreSettlementController {
         return LejiaResult.ok(map);
     }
 
+
+
     /***
      * 查看退款记录 - 易宝 【到账详情】
      */
@@ -119,8 +141,64 @@ public class StoreSettlementController {
         if (refundCriteria.getMerchantId() == null) {
             return LejiaResult.build(400, "无相关数据");
         }
+        // 设置前一天
+        if(refundCriteria.getTradeDate()!=null && !"".equals(refundCriteria.getTradeDate())) {
+            String tradeBefore = getTradeDateStrBefore(refundCriteria.getTradeDate());
+            refundCriteria.setTradeDate(tradeBefore);
+        }else {
+            return LejiaResult.build(400, "无相关数据");
+        }
+        Map map = new HashMap();
         Page page = ledgerRefundOrderService.findByCriteria(refundCriteria, 10);
-        return LejiaResult.ok(page);
+        map.put("page",page);
+        Long dailyTotal = ledgerRefundOrderService.sumDailyTotalRefund(refundCriteria.getMerchantId(), refundCriteria.getTradeDate());
+        map.put("dailyTotal",dailyTotal==null?0:dailyTotal);
+        map.put("dailyCount",page.getTotalElements());
+        return LejiaResult.ok(map);
+
+    }
+
+
+
+    // 日期转换
+    public String getTradeDateStrBefore(String tradeDateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date tradeDate = null;
+        try {
+            tradeDate = sdf.parse(tradeDateStr);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(tradeDate);
+            calendar.add(Calendar.DATE, -1);
+            tradeDate = calendar.getTime();
+            return sdf.format(tradeDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ScanCodeOrderCriteria setStartAndEndDate(ScanCodeOrderCriteria detailCriteria,SimpleDateFormat simpleDateFormat) {
+        try{
+            String tradeBefore = getTradeDateStrBefore(detailCriteria.getTradeDate());
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+            Date tradeDate = sdf2.parse(tradeBefore);
+            Date start = tradeDate;
+            Date end = tradeDate;
+            // 日期计算
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(end);                          // 计算结束时间
+            calendar.add(Calendar.HOUR,23);
+            calendar.add(Calendar.MINUTE,59);
+            calendar.add(Calendar.SECOND,59);
+            end = calendar.getTime();
+            String startDate = simpleDateFormat.format(start);
+            String endDate =simpleDateFormat.format(end);
+            detailCriteria.setStartDate(startDate);
+            detailCriteria.setEndDate(endDate);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return detailCriteria;
     }
 
 }

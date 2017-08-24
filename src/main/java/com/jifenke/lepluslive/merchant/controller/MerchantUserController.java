@@ -7,11 +7,13 @@ import com.jifenke.lepluslive.merchant.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantBank;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserService;
+import com.jifenke.lepluslive.order.service.MerchantScanPayWayService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.transaction.annotation.Propagation;
@@ -21,10 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by xf on 16-12-5.
@@ -39,6 +38,8 @@ public class MerchantUserController {
     private MerchantUserResourceService merchantUserResourceService;
     @Inject
     private MerchantUserService merchantUserService;
+    @Inject
+    private MerchantScanPayWayService merchantScanPayWayService;
 
     /**
      *  获取当前登录用户信息
@@ -73,6 +74,28 @@ public class MerchantUserController {
         MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         return LejiaResult.ok(merchants);
+    }
+
+    /***
+     *  查询商户下所有的门店和支付方式
+     */
+    @RequestMapping(value="/merchantUser/merchantsAndPayWay",method=RequestMethod.GET)
+    public LejiaResult getMerchantsAndPayway() {
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        List<Object []>  merchantList = merchantUserResourceService.findMerchantsByMerchantUserSql(merchantUser.getName());
+        Map map = new HashMap();
+        map.put("merchants",merchantList);
+        for (Object[] obj : merchantList) {
+            Long merchantId = new Long(obj[0].toString());
+            MerchantScanPayWay payWay = merchantScanPayWayService.findByMerchant(merchantId);
+            if(payWay==null) {
+                map.put("merchant-"+merchantId,payWay.getType());
+            }else {
+                map.put("merchant-"+payWay.getMerchantId(),payWay.getType());
+            }
+
+        }
+        return LejiaResult.ok(map);
     }
 
 

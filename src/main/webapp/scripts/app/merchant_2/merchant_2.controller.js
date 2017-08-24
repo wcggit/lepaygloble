@@ -45,18 +45,18 @@ angular.module('lepayglobleApp')
                 name:"交易管理",
                 state:"",
                 icon:"iconfont2 icon2-shanghujiaoyiguanli"
-            },
+            }/*,
             {
                 contentState:"1",
                 clickState:"1",
                 name:"乐加账单",
                 state:"lePlusBilling",
                 icon:""
-            },
+            }*/,
             {
                 contentState:"1",
                 clickState:"1",
-                name:"易宝结算",
+                name:"乐加结算",
                 state:"yiBaoCodeTrade",
                 icon:""
             },
