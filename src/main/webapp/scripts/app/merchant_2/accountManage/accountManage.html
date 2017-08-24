@@ -1,4 +1,4 @@
-<div class="accountManage">
+ <div class="accountManage">
     <div class="panel panel-default page-top">
         <div class="panel-body clearfix">账户管理</div>
     </div>
@@ -20,6 +20,10 @@
                         <a class="changePassword a-btn" data-target="#changePassword" data-toggle="modal">修改</a>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-2">绑定手机号</div>
+                    <div class="col-md-4">19283645367</div>
+                </div>
             </div>
         </div>
         <p class="ttl">结算信息</p>
@@ -30,14 +34,12 @@
                 <div class="row">
                     <div class="col-md-2">银行账号</div>
                     <div class="col-md-4">****** ******** {{loginInfo.merchantBank.bankNumber| limitTo:-4 }}</div>
-                    <div class="col-md-2">结算周期</div>
-                    <div class="col-md-4"> T+1(提现申请后一个工作日内到账)</div>
+                    <div class="col-md-2">收款人</div>
+                    <div class="col-md-4">{{loginInfo.merchantBank.payee}}</div>
                 </div>
                 <div class="row">
                     <div class="col-md-2">开户支行</div>
                     <div class="col-md-4">{{loginInfo.merchantBank.bankName}}</div>
-                    <div class="col-md-2">收款人</div>
-                    <div class="col-md-4">{{loginInfo.merchantBank.payee}}</div>
                 </div>
                 <hr>
                 <p class="ttl2">门店结算账户
@@ -71,12 +73,12 @@
             <div class="panel-body">
                 <ul id="myTab" class="nav nav-pills">
                     <li ng-class="{'active':accountInfoState0}" ng-click="accountInfoFun0()"><a
-                        data-toggle="tab" id="iosTab" style="display: none">账号</a></li>
+                        data-toggle="tab" id="iosTab">账号</a></li>
                     <li ng-class="{'active':accountInfoState1}" ng-click="accountInfoFun1()"><a
-                        data-toggle="tab" id="homeTab"  style="display: none">收银微信号</a></li>
+                        data-toggle="tab" id="homeTab">收银微信号</a></li>
                 </ul>
                 <div id="myTabContent" class="tab-content">
-                    <div ng-class="{'active':accountInfoState0}" class="tab-pane fade in" id="home" style="display: none">
+                    <div ng-class="{'active':accountInfoState0}" class="tab-pane fade in" id="home">
                         <!--表格-->
                         <div class="panel panel-default">
                             <table class="table ol-tab">
@@ -89,11 +91,12 @@
                                 </tr>
                                 </thead>
                                 <tbody id="account">
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div ng-class="{'active':accountInfoState1}" class="tab-pane fade in" id="ios" style="display: none">
+                    <div ng-class="{'active':accountInfoState1}" class="tab-pane fade in" id="ios">
                         <!--表格-->
                         <div class="panel panel-default">
                             <table class="table ol-tab">
@@ -125,22 +128,17 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group radio-style">
-                            <label class="col-sm-3 col-sm-offset-1 control-label">账号类型</label>
+                            <label class="col-sm-3 col-sm-offset-1 control-label">角色</label>
                             <div class="col-sm-7">
                                 <div class="radio-inline">
                                     <label>
-                                        <input type="radio" name="accountType"   value="1">店主账号
-                                    </label>
-                                </div>
-                                <div class="radio-inline">
-                                    <label>
-                                        <input type="radio" name="accountType"   value="0">收银员账号
+                                        <input type="radio" name="accountType"  checked value="1">收银员
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group radio-style">
-                            <label class="col-sm-3 col-sm-offset-1 control-label">门店权限</label>
+                            <label class="col-sm-3 col-sm-offset-1 control-label">门店</label>
                             <div class="col-sm-7">
                                 <div class="panel panel-default">
                                     <div class="radio-inline">
@@ -153,7 +151,6 @@
                                         <label>
                                             <input type="checkbox" name="checkMerchant" value="{{m.id}}"><span ng-bind="m.name"></span>
                                         </label>
-                                        <!--<br ng-show="!=0"/>-->
                                         <span ng-show="$index%2!=0"><div></div></span>
                                     </div>
                                 </div>
@@ -207,7 +204,7 @@
                         <div class="form-group">
                             <label for="inputPassword1" class="col-sm-2 col-sm-offset-1 control-label">当前密码</label>
                             <div class="col-sm-7">
-                                <input type="password" class="form-control" id="inputPassword1">
+                                <input type="password" class="form-control" id="inputPassword1" placeholder="密码由数字和字母组合，不少于6位">
                                 <p class="text-muted small" style="visibility: hidden;color: #ff0000">密码不正确</p>
                             </div>
                         </div>
@@ -215,13 +212,14 @@
                             <label for="inputPassword2" class="col-sm-2 col-sm-offset-1 control-label">新密码</label>
                             <div class="col-sm-7">
                                 <input type="password" class="form-control" id="inputPassword2">
-                                <p class="text-muted small tishi">密码由数字和字母组合，不少于6位</p>
+                                <p class="text-muted small tishi"></p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-2 col-sm-offset-1 control-label">确认新密码</label>
                             <div class="col-sm-7">
                                 <input type="password" class="form-control" id="inputPassword3">
+                                <p class="text-muted small tishi">输入管理员登陆密码进行操作</p>
                             </div>
                         </div>
                     </form>
@@ -298,6 +296,26 @@
             </div>
         </div>
     </div>
+     <!--解除绑定提示框-->
+     <div class="modal fade" id="jb-success">
+         <div class="modal-dialog">
+             <div class="modal-content">
+                 <div class="modal-header bg-warning">
+                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                     <h4 class="modal-title">解除绑定</h4>
+                 </div>
+                 <div class="modal-body">
+                     <div class="icon-success"></div>
+                     <p class="text-center">解绑成功</p>
+                 </div>
+                 <div class="modal-footer">
+                     <div class="clearfix btn-div text-center">
+                         <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
 </div>
 
 

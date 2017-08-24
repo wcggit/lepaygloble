@@ -49,4 +49,18 @@ angular.module('lepayglobleApp')
                 },
                 resolve: {}
             })
+            .state('historyTradeRecord', {
+                parent: 'codeTrade',
+                url: '/historyTradeRecord',
+                data: {
+                    authorities: ["merchant"]
+                },
+                views: {
+                    'codeTradeTab@codeTrade': {
+                        templateUrl: 'scripts/app/merchant_2/tradeManage/codeTrade/historyTradeRecord.html',
+                        controller: 'historyTradeRecordController'
+                    }
+                },
+                resolve: {}
+            })
     });

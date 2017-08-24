@@ -80,6 +80,13 @@
 }
 .accountManage #div-accnoutInfo{padding: 20px 50px 0}
 
+.accountManage #jb-success .modal-body .icon-success {
+    width: 60px;
+    height: 60px;
+    background: url("../../../../assets/styles/images/merchant_2/homePage/success.png") no-repeat;
+    background-size: 100% 100%;
+    margin: 20px auto 10px;
+}
 
 
 

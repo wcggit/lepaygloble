@@ -63,17 +63,24 @@ angular.module('lepayglobleApp')
             {
                 contentState:"1",
                 clickState:"1",
-                name:"扫码交易",
-                state:"codeTrade",
+                name:"乐加结算",
+                state:"lePlusCodeTrade",
                 icon:""
             },
             {
                 contentState:"1",
                 clickState:"1",
-                name:"POS交易",
-                state:"POSTrade",
+                name:"扫码交易",
+                state:"codeTrade",
                 icon:""
             },
+            // {
+            //     contentState:"1",
+            //     clickState:"1",
+            //     name:"POS交易",
+            //     state:"POSTrade",
+            //     icon:""
+            // },
             {
                 contentState:"0",
             },
@@ -87,7 +94,7 @@ angular.module('lepayglobleApp')
             {
                 contentState:"1",
                 clickState:"1",
-                name:"数据概览",
+                name:"佣金管理",
                 state:"dataOverview",
                 icon:""
             },
