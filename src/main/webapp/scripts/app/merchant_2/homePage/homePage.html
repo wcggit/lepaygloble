@@ -7,13 +7,13 @@
     <div class="container-fluid">
         <p class="ttl">基本信息</p>
         <div class="row basic-info">
-            <div class="col-md-2 col-md-offset-1">
+            <div class="col-md-2 face-img-wrapper">
                 <div class="face-img">
                     <img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt="">
                 </div>
                 <h5 class="text-center">{{loginName}}</h5>
             </div>
-            <div class="col-md-8 ttl-top">
+            <div class="col-md-4 ttl-top">
                 <p class="money-ttl">
                     佣金余额
                     <span class="tooltip-problem" data-toggle="tooltip" data-placement="right" title="您店铺锁定的会员在乐加体系下的任何消费，都会给您带来佣金">?</span>
@@ -21,7 +21,12 @@
                 <p class="money-content clearfix">
                     <span class="pull-left"><span>¥</span>{{available}}</span>
                     <input type="button" class="btn btn-warning pull-left tx" data-target="#tx" data-toggle="modal" value="提现">
+                    <a class="pull-left" style="text-decoration: underline;margin-top: 0" ui-sref="withdrawRecord2">提现记录</a>
                 </p>
+            </div>
+            <div class="col-md-5 btn-warning-group">
+                <div class="btn btn-warning">交易记录</div>
+                <div class="btn btn-warning">到账记录</div>
             </div>
         </div>
         <p class="ttl">商户数据</p>
@@ -68,69 +73,72 @@
                     <option value="">请选择</option>
                     <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
                 </select>
+                <span>门店今日扫码52笔，总流水￥234234</span>
             </div>
-            <span class="pull-right" style="line-height: 34px">语音提醒 <i class="iconfont2 icon2-shanghukaiqiyuyin"></i></span>
+            <span class="pull-right" style="line-height: 34px">语音提醒 <i ng-click="toggleYuYin()" class="iconfont2 icon2-shanghukaiqiyuyin"></i><i class="iconfont2 icon2-shanghuguanbiyuyin"></i></span>
+            <a href="#" class="pull-right refresh">刷新</a>
             <!--播放器-->
             <audio id="voicePlayer" src=""></audio>
         </div>
     </div>
     <div class="list-out-div">
-        <p class="text-center ttl-list">门店今日流水￥<span class="color-origin">{{obinfo.firNum+obinfo.secNum}}</span>，
-            扫码流水￥<span class="color-origin">{{obinfo.firNum}}</span>，POS机流水￥<span class="color-origin">
+        <div class="list-in-div">
+            <p class="text-center ttl-list">门店今日流水￥<span class="color-origin">{{obinfo.firNum+obinfo.secNum}}</span>，
+                扫码流水￥<span class="color-origin">{{obinfo.firNum}}</span>，POS机流水￥<span class="color-origin">
                 {{obinfo.secNum}}</span>，乐加会员消费￥<span class="color-origin">{{obinfo.thirNum}}/{{obinfo.fouNum}}</span>次</p>
-        <div class="container-fluid clearfix dd-list">
+            <div class="container-fluid clearfix dd-list">
+                <div class="list pull-right" ng-repeat="arr in orderList">
+                    <!--扫码订单-->
+                    <div class="list-detail pull-right"  ng-show="{{arr[6]==0}}">
+                        <div class="list-info1 clearfix">
+                            订单编号：{{arr[0]}}（确认码：{{arr[2]}}）
+                            <span class="pull-right hydd-font" ng-show="arr[5]==0">普通订单</span>
+                            <span class="pull-right dldd-font"  ng-show="arr[5]==1">导流订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[5]==2">会员订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[5]==3">会员订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[5]==4">扫码订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[5]==5">扫码订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[5]==6">会员订单</span>
 
-            <div class="list pull-right" ng-repeat="arr in orderList">
-                <!--扫码订单-->
-                <div class="list-detail pull-right"  ng-show="{{arr[6]==0}}">
-                    <div class="list-info1 clearfix">
-                        订单编号：{{arr[0]}}（确认码：{{arr[2]}}）
-                        <span class="pull-right hydd-font" ng-show="arr[5]==0">普通订单</span>
-                        <span class="pull-right dldd-font"  ng-show="arr[5]==1">导流订单</span>
-                        <span class="pull-right hydd-font" ng-show="arr[5]==2">会员订单</span>
-                        <span class="pull-right hydd-font" ng-show="arr[5]==3">会员订单</span>
-                        <span class="pull-right hydd-font" ng-show="arr[5]==4">扫码订单</span>
-                        <span class="pull-right hydd-font" ng-show="arr[5]==5">扫码订单</span>
-                        <span class="pull-right hydd-font" ng-show="arr[5]==6">会员订单</span>
+                        </div>
+                        <div class="list-info2 clearfix">
+                            <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
+                            <span class="pull-left nickname">{{arr[7]}}</span>
+                            <span class="pull-right pay-detail">付款:{{arr[3]/100.0+arr[4]/100.0}}元<span>（微信支付{{arr[3]/100.0}}元+{{arr[4]/100.0}}元红包）</span></span>
+                        </div>
+                        <div class="left-icon"></div>
+                    </div>
+                    <!--Pos订单-->
+                    <div class="list-detail pull-right" ng-show="{{arr[6]==1}}">
+                        <div class="list-info1 clearfix">订单编号：{{arr[0]}}<span class="pull-right hydd-font" ng-show="arr[5]==0">普通订单</span>
+                            <span class="pull-right dldd-font"  ng-show="arr[5]==1">导流订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[5]==2">会员订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[5]==3">会员订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[5]==4">扫码订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[5]==5">扫码订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[5]==6">会员订单</span>
+                        </div>
+                        <div class="list-info2 clearfix">
+                            <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
+                            <span class="pull-left nickname">{{arr[7]}}</span>
+                            <span class="pull-right pay-detail">付款:{{arr[3]/100.0+arr[4]/100.0}}元<span>（微信支付{{arr[3]/100.0}}元+{{arr[4]/100.0}}元红包）</span></span>
+                        </div>
+                        <div class="left-icon"></div>
+                    </div>
 
-                    </div>
-                    <div class="list-info2 clearfix">
-                        <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
-                        <span class="pull-left nickname">{{arr[7]}}</span>
-                        <span class="pull-right pay-detail">付款:{{arr[3]/100.0+arr[4]/100.0}}元<span>（微信支付{{arr[3]/100.0}}元+{{arr[4]/100.0}}元红包）</span></span>
-                    </div>
-                    <div class="left-icon"></div>
+                    <div class="ddIcon hyIcon"  ng-show="{{arr[6]==1}}"></div>
+                    <div class="ddIcon dlIcon"  ng-show="{{arr[6]==0}}"></div>
+                    <div class="dd-time text-right">{{arr[1]|date:'yyyy-MM-dd'}}<br><span>{{arr[1]|date:'HH:mm:ss'}}</span></div>
                 </div>
-                <!--Pos订单-->
-                <div class="list-detail pull-right" ng-show="{{arr[6]==1}}">
-                    <div class="list-info1 clearfix">订单编号：{{arr[0]}}<span class="pull-right hydd-font" ng-show="arr[5]==0">普通订单</span>
-                                                                            <span class="pull-right dldd-font"  ng-show="arr[5]==1">导流订单</span>
-                                                                            <span class="pull-right hydd-font" ng-show="arr[5]==2">会员订单</span>
-                                                                            <span class="pull-right hydd-font" ng-show="arr[5]==3">会员订单</span>
-                                                                            <span class="pull-right hydd-font" ng-show="arr[5]==4">扫码订单</span>
-                                                                            <span class="pull-right hydd-font" ng-show="arr[5]==5">扫码订单</span>
-                                                                            <span class="pull-right hydd-font" ng-show="arr[5]==6">会员订单</span>
-                    </div>
-                    <div class="list-info2 clearfix">
-                        <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
-                        <span class="pull-left nickname">{{arr[7]}}</span>
-                        <span class="pull-right pay-detail">付款:{{arr[3]/100.0+arr[4]/100.0}}元<span>（微信支付{{arr[3]/100.0}}元+{{arr[4]/100.0}}元红包）</span></span>
-                    </div>
-                    <div class="left-icon"></div>
-                </div>
-
-                <div class="ddIcon hyIcon"  ng-show="{{arr[6]==1}}"></div>
-                <div class="ddIcon dlIcon"  ng-show="{{arr[6]==0}}"></div>
-                <div class="dd-time text-right">{{arr[1]|date:'yyyy-MM-dd'}}<br><span>{{arr[1]|date:'HH:mm:ss'}}</span></div>
-            </div>
-            <!---->
-            <!--<div class="list pull-right">-->
+                <!---->
+                <!--<div class="list pull-right">-->
                 <!---->
                 <!--<div class="ddIcon dlIcon"></div>-->
                 <!--<div class="dd-time text-right">2016-11-20<br><span>16:16:16</span></div>-->
-            <!--</div>-->
+                <!--</div>-->
+            </div>
         </div>
-        <input type="button" class="btn btn-warning look-more" value="查看更多" ng-click="findMore()">
+        <div class="text-center" ng-show="tsContentShow">没有更多了，亲！</div>
     </div>
 </div>
 <!--提现提示框-->

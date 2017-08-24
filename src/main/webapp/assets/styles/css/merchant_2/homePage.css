@@ -31,7 +31,7 @@
 }
 
 .homePage .basic-info .money-content input {
-    margin: 3px 30px
+    margin: 3px 16px 3px 30px
 }
 
 .homePage .basic-info .money-content a {
@@ -47,9 +47,25 @@
     line-height: 37px;
 }
 
+.homePage .basic-info .face-img-wrapper {
+    margin-left: 50px;
+}
 .homePage .basic-info h5 {
     font-size: 14px;
     color: #666;
+}
+.homePage .basic-info .btn-warning-group {
+    border-left: 1px solid #ddd;
+    padding: 49px 0 49px 0;
+    text-align: center;
+}
+.homePage .basic-info .btn-warning-group .btn {
+    margin: 0 28px;
+    padding: 5px 15px;
+}
+.homePage .refresh {
+    padding: 5px 20px;
+    text-decoration: underline;
 }
 
 .homePage .form-control {
@@ -166,6 +182,19 @@
 
 .homePage .list .dlIcon {
     background: url("../../images/merchant_2/homePage/dlddIcon.png") no-repeat;
+    background-size: 100% 100%;
+}
+
+.homePage .list .gljIcon {
+    background: url("../../images/merchant_2/homePage/gulijin.png") no-repeat;
+    background-size: 100% 100%;
+}
+.homePage .list .wechatIcon {
+    background: url("../../images/merchant_2/homePage/wechat.png") no-repeat;
+    background-size: 100% 100%;
+}
+.homePage .list .alipayIcon {
+    background: url("../../images/merchant_2/homePage/alipay.png") no-repeat;
     background-size: 100% 100%;
 }
 

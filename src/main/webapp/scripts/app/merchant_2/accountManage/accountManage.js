@@ -18,19 +18,19 @@ angular.module('lepayglobleApp')
                 resolve: {
                 }
             })
-            // .state('withdrawRecord', {
-            //     parent: 'merchant_2',
-            //     url: '/withdrawRecord',
-            //     data: {
-            //         authorities: ["merchant"]
-            //     },
-            //     views: {
-            //         'right-content@merchant_2': {
-            //             templateUrl: 'scripts/app/merchant_2/homePage/withdrawRecord.html',
-            //             controller: 'withdrawRecordController'
-            //         }
-            //     },
-            //     resolve: {
-            //     }
-            //  });
+            .state('withdrawRecord2', {
+                parent: 'merchant_2',
+                url: '/withdrawRecord2',
+                data: {
+                    authorities: ["merchant"]
+                },
+                views: {
+                    'right-content@merchant_2': {
+                        templateUrl: 'scripts/app/merchant_2/accountManage/withdrawRecord.html',
+                        controller: 'withdrawRecordController'
+                    }
+                },
+                resolve: {
+                }
+             });
     });

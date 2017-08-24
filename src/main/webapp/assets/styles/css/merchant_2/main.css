@@ -224,3 +224,12 @@ select.select-inline-block{display: inline-block;width: auto;}
     bottom: 19px;
     left:0px;
 }
+/*下载表格*/
+.dcbg{
+    margin: 27px 15px 0 0;
+    text-decoration: underline;
+}
+
+.btn-long{
+    padding: 5px 15px;
+}

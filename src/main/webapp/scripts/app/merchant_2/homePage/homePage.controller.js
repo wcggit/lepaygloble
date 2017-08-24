@@ -7,7 +7,7 @@
 angular.module('lepayglobleApp')
     .controller('homePageController', function ($scope, $state, $rootScope, $location,Principal,Auth,$http,Commission,HomePage,Tracker) {
         $("[data-toggle='tooltip']").tooltip();
-
+        $scope.tsContentShow = false;
 
         //强制保留两位小数
         $scope.toDecimal = function (x) {
@@ -161,6 +161,32 @@ angular.module('lepayglobleApp')
             })*/
             $scope.tx();
         }
+        /**********上拉加载**********/
+
+        var list = document.querySelector('.list-out-div');
+        var pageNum = 1,pageAllNum = 3;
+
+        list.addEventListener('scroll', function (e) {
+            var outHeight = list.clientHeight;
+            var inHeight = document.querySelector('.list-in-div').clientHeight;
+            var scrollHeight = e.path[0].scrollTop;
+
+
+            if(inHeight-outHeight-scrollHeight < 2) {
+                pageNum ++
+                console.log(pageNum > pageAllNum)
+                if(pageNum > pageAllNum) {
+                    pageNum = pageAllNum;
+                    $scope.tsContentShow = true;
+                    return;
+                }
+
+                /********根据pageNum加载相应的数据添加到list-in-div的底部*********/
+            }
+        }, false)
+
+        /**********上拉加载**********/
+
 
         /***********************************************local Variables**********************************************************/
         // 语音播放
