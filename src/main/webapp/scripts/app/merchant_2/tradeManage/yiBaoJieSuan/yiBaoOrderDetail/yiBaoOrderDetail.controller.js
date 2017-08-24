@@ -15,9 +15,12 @@ angular.module('lepayglobleApp')
         $scope.transferState = transferState;
         //  查询条件
         var currentPage=1;
-        var detailCriteria = {};
+        var detailCriteria = {};              // 交易记录
         detailCriteria.offset = 1;
         detailCriteria.tradeDate = tradeDate;
+        var refundCriteria = {};              // 退款记录
+        refundCriteria.offset = 1;
+        refundCriteria.tradeDate = tradeDate;
         //  加载门店详情
         loadStoreSettlement();
         function loadStoreSettlement() {
@@ -25,6 +28,7 @@ angular.module('lepayglobleApp')
                 $scope.mlist = response.data;
                 $scope.defaultId = response.data[0][2];
                 detailCriteria.merchantId = $scope.defaultId;
+                refundCriteria.merchantId = $scope.defaultId;
                 loadTradeCount();
                 loadTradeList();
             });
@@ -36,11 +40,22 @@ angular.module('lepayglobleApp')
                     'Content-Type': 'application/json'
                 }
             }).success(function (response) {
-                var page = response.data;
-                console.log(JSON.stringify(response));
-                // $scope.tradeList = page.content;
-                // $scope.page = currentPage;
-                // $scope.totalPages = page.totalPages;
+                var data = response.data;
+                if(data.totalData!=null&&data.totalData[0]!=null) {
+                    $scope.totalData =  data.totalData[0];
+                }else {
+                    $scope.totalData =  [0,0,0];
+                }
+                if(data.totalData!=null&&data.lejiaData[0]!=null) {
+                    $scope.lejiaData =  data.lejiaData[0];
+                }else {
+                    $scope.lejiaData =  [0,0,0];
+                }
+                if(data.totalData!=null&&data.commonData[0]!=null) {
+                    $scope.commonData =  data.commonData[0];
+                }else {
+                    $scope.commonData =  [0,0,0];
+                }
             });
         }
         //  加载交易记录
@@ -54,6 +69,21 @@ angular.module('lepayglobleApp')
                 $scope.tradeList = page.content;
                 $scope.page = currentPage;
                 $scope.totalPages = page.totalPages;
+            });
+        }
+        // 加载退款记录
+        function loadRefundList() {
+            $http.post('/api/settlement/refundList', refundCriteria, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function (response) {
+                var page = response.data.page;
+                $scope.refundList = page.content;
+                $scope.page = currentPage;
+                $scope.totalPages = page.totalPages;
+                $scope.dailyRefundTotal = response.data.dailyTotal;
+                $scope.dailyRefundCount = response.data.dailyCount;
             });
         }
         // 加载页数
@@ -104,6 +134,17 @@ angular.module('lepayglobleApp')
             loadTradeList();
         }
 
+        $scope.searchRefundByCriteria = function () {
+            //  门店
+            var mid = $("#selMerchant").val();
+            if (mid != -1) {
+                detailCriteria.merchantId = $scope.mid;
+            } else {
+                detailCriteria.merchantId = $scope.defaultId;
+            }
+            loadRefundList();
+        }
+
         var stateArr = ['yiBaoTradeRecord', 'yiBaoReturnRecord'];
         $scope.currentTab0 = true;
         $scope.currentTab1 = false;
@@ -125,6 +166,7 @@ angular.module('lepayglobleApp')
                     break;
                 default:
                     $scope.currentTab1 = true;
+                    loadRefundList();
                     break;
             }
         };

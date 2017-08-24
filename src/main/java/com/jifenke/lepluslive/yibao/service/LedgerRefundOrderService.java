@@ -70,11 +70,9 @@ public class LedgerRefundOrderService {
                         cb.equal(root.get("merchantId"), criteria.getMerchantId()));
                 }
                 // 退款完成时间
-                if (criteria.getCompleteStart() != null && criteria.getCompleteEnd() != null) {
-                    Date start = new Date(criteria.getCompleteStart());
-                    Date end = new Date(criteria.getCompleteEnd());
+                if (criteria.getTradeDate() != null && criteria.getTradeDate() != null) {
                     predicate.getExpressions().add(
-                        cb.between(root.get("dateCompleted"), start, end));
+                        cb.equal(root.get("tradeDate"), criteria.getTradeDate()));
                 }
                 return predicate;
             }

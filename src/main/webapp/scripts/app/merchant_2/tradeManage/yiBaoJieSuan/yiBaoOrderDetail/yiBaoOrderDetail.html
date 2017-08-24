@@ -4,7 +4,7 @@
             <div class="panel-body clearfix ">
                 <div class="panel-body clearfix">
                     <span class="left-icon pull-left" ui-sref="yiBaoJieSuan"></span>
-                    <span ui-sref="yiBaoJieSuan">易宝结算 / </span>
+                    <span ui-sref="yiBaoJieSuan">乐加结算 / </span>
                     <span class="current-page">到账详情</span>
                 </div>
             </div>
@@ -32,136 +32,163 @@
                 <div class="panel-body">
                     <ul class="nav nav-style">
                         <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab(0)"><a>交易记录</a></li>
-                        <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab(1)"><a>退款记录（3）</a>
+                        <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab(1)"><a>退款记录</a>
                             <span class="tiple">交易记录应入账的金额，减去产生退款后少入账的金额，才是您实际入账的金额，请注意查看退款记录</span>
                         </li>
                     </ul>
                 </div>
             </div>
-
         </div>
-        <!--查询表单-->
-        <form class="form-inline list-check">
-            <div class="row">
-                <div class="form-group col-md-3">
-                    <label>交易门店</label>
-                    <div class="input-group col-md-6 select-style">
-                        <select class="form-control" id="selMerchant">
-                            <option value="-1">请选择</option>
-                            <option value="{{m[2]}}" ng-repeat="m in mlist">{{m[0]}}</option>
-                        </select>
-                        <span class="select-jiao"></span>
+        <div ng-show="currentState == 0">
+            <!--查询表单-->
+            <form class="form-inline list-check">
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label>交易门店</label>
+                        <div class="input-group col-md-6 select-style">
+                            <select class="form-control" id="selMerchant">
+                                <option value="-1">请选择</option>
+                                <option value="{{m[2]}}" ng-repeat="m in mlist">{{m[0]}}</option>
+                            </select>
+                            <span class="select-jiao"></span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="orderType">订单类型</label>
-                    <div class="input-group col-md-6 select-style">
-                        <select class="form-control" id="orderType">
-                            <option value="-1">请选择</option>
-                            <option value="0">普通订单</option>
-                            <option value="1">乐加订单</option>
-                        </select>
-                        <span class="select-jiao"></span>
+                    <div class="form-group col-md-3">
+                        <label for="orderType">订单类型</label>
+                        <div class="input-group col-md-6 select-style">
+                            <select class="form-control" id="orderType">
+                                <option value="-1">请选择</option>
+                                <option value="0">普通订单</option>
+                                <option value="1">乐加订单</option>
+                            </select>
+                            <span class="select-jiao"></span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="payStyle">支付方式</label>
-                    <div class="input-group col-md-6 select-style">
-                        <select class="form-control" id="payStyle">
-                            <option value="-1">请选择</option>
-                            <option value="0">微信</option>
-                            <option value="1">支付宝</option>
-                        </select>
-                        <span class="select-jiao"></span>
+                    <div class="form-group col-md-3">
+                        <label for="payStyle">支付方式</label>
+                        <div class="input-group col-md-6 select-style">
+                            <select class="form-control" id="payStyle">
+                                <option value="-1">请选择</option>
+                                <option value="0">微信</option>
+                                <option value="1">支付宝</option>
+                            </select>
+                            <span class="select-jiao"></span>
+                        </div>
                     </div>
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
                 </div>
-                <button type="button" class="btn btn-warning btn-check2" ng-click="searchByDate()">查询</button>
+            </form>
+            <!--表格信息总结-->
+            <p class="ttl-add table-title">
+                所选条件下，共有<span class="font-yellow" ng-bind="totalData[0]"></span>条交易记录，
+                总流水<span class="font-yellow" ng-bind="'￥'+totalData[1]/100.0"></span>，
+                总入账<span class="font-yellow" ng-bind="'￥'+totalData[2]/100.0"></span>。<br>
+                普通订单<span class="font-yellow" ng-bind="commonData[0]"></span>笔，
+                总流水<span class="font-yellow" ng-bind="'￥'+commonData[1]/100.0"></span>，
+                总入账<span class="font-yellow" ng-bind="'￥'+commonData[2]/100.0"></span>。
+                乐加订单<span class="font-yellow" ng-bind="lejiaData[0]"></span>笔，
+                总流水<span class="font-yellow" ng-bind="'￥'+lejiaData[1]/100.0"></span>，
+                总入账<span class="font-yellow" ng-bind="'￥'+lejiaData[2]/100.0"></span>。
+            </p>
+            <!--表格-->
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>订单号</td>
+                        <td>交易门店</td>
+                        <td>消费者</td>
+                        <td>支付方式</td>
+                        <td>确认码</td>
+                        <td>交易完成时间</td>
+                        <td>订单金额</td>
+                        <td>订单类型</td>
+                        <td>手续费</td>
+                        <td>实际入账</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--<tr>
+                        <td>2142343</td>
+                        <td><h4>棉花糖KTV</h4><h4>（朝阳）</h4></td>
+                        <td>非会员</td>
+                        <td>微信</td>
+                        <td>1133</td>
+                        <td><h4>2012.23.34</h4><h4>05:48</h4></td>
+                        <td>￥324.43</td>
+                        <td>普通订单</td>
+                        <td>￥0.5</td>
+                        <td>￥324.43</td>
+                    </tr>-->
+                    <tr class="tr-empty"><td class="text-center" colspan="10" ng-show="tradeList==null">暂无数据！</td></tr>
+                    <tr ng-repeat="order in tradeList">
+                        <td>{{order.orderSid}}</td>
+                        <td><h4>{{order.merchant.name}}</h4><h4>（{{order.merchant.area.name}}）</h4></td>
+                        <td ng-show="order.leJiaUser!=null">{{order.leJiaUser.userName}}</td>
+                        <td ng-show="order.leJiaUser==null">非会员</td>
+                        <td ng-show="order.scanCodeOrderExt.payType==0">微信</td>
+                        <td ng-show="order.scanCodeOrderExt.payType==1">支付宝</td>
+                        <td>{{order.lePayCode}}</td>
+                        <td><h4>{{order.completeDate|date:'yyyy.MM.dd'}}</h4><h4>{{order.completeDate|date:'HH.mm'}}</h4></td>
+                        <td>￥{{order.totalPrice/100.0}}</td>
+                        <td ng-show="order.orderType==12001||order.orderType==12002||order.orderType==12003||order.orderType==12006">普通订单</td>
+                        <td ng-show="order.orderType==12004||order.orderType==12005">乐加订单</td>
+                        <td ng-show="order.orderType==12001||order.orderType==12002||order.orderType==12003||order.orderType==12006">({{order.scanCodeOrderExt.merchantRate/100.0}}折)</td>
+                        <!--<td ng-show="order.orderType==12004||order.orderType==12005">(￥{{order.scanCodeOrderExt.merchantRate/100.0}})</td>-->
+                        <td ng-show="order.orderType==12004||order.orderType==12005">￥{{order.commission/100.0}}</td>
+                        <td>￥{{order.transferMoneyFromTruePay/100.0}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-        </form>
-        <!--表格信息总结-->
-        <p class="ttl-add table-title">
-            所选条件下，共有<span class="font-yellow">258</span>条交易记录，
-            总流水<span class="font-yellow">￥111111</span>，
-            总入账<span class="font-yellow">￥111111</span>。<br>
-            普通订单<span class="font-yellow">128</span>笔，
-            总流水<span class="font-yellow">￥111111</span>，
-            总入账<span class="font-yellow">￥111111</span>。
-            乐加订单<span class="font-yellow">128</span>笔，
-            总流水<span class="font-yellow">￥111111</span>，
-            总入账<span class="font-yellow">￥111111</span>。
-        </p>
-        <!--表格-->
-        <div class="panel panel-default">
-            <table class="table ol-tab">
-                <thead class="active">
-                <tr>
-                    <td>订单号</td>
-                    <td>交易门店</td>
-                    <td>消费者</td>
-                    <td>支付方式</td>
-                    <td>确认码</td>
-                    <td>交易完成时间</td>
-                    <td>订单金额</td>
-                    <td>订单类型</td>
-                    <td>手续费</td>
-                    <td>实际入账</td>
-                </tr>
-                </thead>
-                <tbody>
-                <!--<tr>
-                    <td>2142343</td>
-                    <td><h4>棉花糖KTV</h4><h4>（朝阳）</h4></td>
-                    <td>非会员</td>
-                    <td>微信</td>
-                    <td>1133</td>
-                    <td><h4>2012.23.34</h4><h4>05:48</h4></td>
-                    <td>￥324.43</td>
-                    <td>普通订单</td>
-                    <td>￥0.5</td>
-                    <td>￥324.43</td>
-                </tr>-->
-                <tr class="tr-empty"><td class="text-center" colspan="10" ng-show="tradeList==null">暂无数据！</td></tr>
-                <tr ng-repeat="order in tradeList">
-                    <td>{{order.orderSid}}</td>
-                    <td><h4>{{order.merchant.name}}</h4><h4>（{{order.merchant.area.name}}）</h4></td>
-                    <td ng-show="order.leJiaUser!=null">{{order.leJiaUser.userName}}</td>
-                    <td ng-show="order.leJiaUser==null">非会员</td>
-                    <td ng-show="order.scanCodeOrderExt.payType==0">微信</td>
-                    <td ng-show="order.scanCodeOrderExt.payType==1">支付宝</td>
-                    <td>{{order.lePayCode}}</td>
-                    <td><h4>{{order.completeDate|date:'yyyy.MM.dd'}}</h4><h4>{{order.completeDate|date:'HH.mm'}}</h4></td>
-                    <td>￥{{order.totalPrice/100.0}}</td>
-                    <td ng-show="order.orderType==12001||order.orderType==12002||order.orderType==12003||order.orderType==12006">普通订单</td>
-                    <td ng-show="order.orderType==12004||order.orderType==12005">乐加订单</td>
-                    <td ng-show="order.orderType==12001||order.orderType==12002||order.orderType==12003||order.orderType==12006">({{order.scanCodeOrderExt.merchantRate/100.0}}折)</td>
-                    <!--<td ng-show="order.orderType==12004||order.orderType==12005">(￥{{order.scanCodeOrderExt.merchantRate/100.0}})</td>-->
-                    <td ng-show="order.orderType==12004||order.orderType==12005">￥{{order.commission/100.0}}</td>
-                    <td>￥{{order.transferMoneyFromTruePay/100.0}}</td>
-                </tr>
-                </tbody>
-            </table>
         </div>
-        <div class="panel panel-default">
-            <table class="table ol-tab">
-                <thead class="active">
-                <tr>
-                    <td>订单号</td>
-                    <td>交易门店</td>
-                    <td>支付方式</td>
-                    <td>交易完成时间</td>
-                    <td>退款完成时间</td>
-                    <td>订单金额</td>
-                    <td>退款金额</td>
-                    <td>订单类型</td>
-                    <td>费率</td>
-                    <td>实际少入账</td></td>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="tr-empty"><td class="text-center" colspan="10" ng-show="pulls==null">暂无数据！</td></tr>
-                </tbody>
-            </table>
+        <div ng-show="currentState == 1">
+            <!--查询表单-->
+            <form class="form-inline list-check">
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label>交易门店</label>
+                        <div class="input-group col-md-6 select-style">
+                            <select class="form-control" id="refundMerchant">
+                                <option value="-1">请选择</option>
+                                <option value="{{m[2]}}" ng-repeat="m in mlist">{{m[0]}}</option>
+                            </select>
+                            <span class="select-jiao"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchRefundByCriteria()">查询</button>
+                </div>
+            </form>
+            <!--表格信息总结-->
+            <p class="ttl-add table-title">
+                共有<span class="font-yellow" ng-bind="dailyRefundCount"></span>条退款记录，
+                因产生退款，商户少入账了<span class="font-yellow" ng-bind="'￥'+dailyRefundTotal/100.0+'元'"></span>
+            </p>
+            <!--表格-->
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>订单号</td>
+                        <td>交易门店</td>
+                        <td>支付方式</td>
+                        <td>交易完成时间</td>
+                        <td>退款完成时间</td>
+                        <td>订单金额</td>
+                        <td>退款金额</td>
+                        <td>订单类型</td>
+                        <td>费率</td>
+                        <td>实际少入账</td></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="tr-empty"><td class="text-center" colspan="10" ng-show="refundList==null">暂无数据！</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+
 
         <!--分页-->
         <div class=" clearfix">

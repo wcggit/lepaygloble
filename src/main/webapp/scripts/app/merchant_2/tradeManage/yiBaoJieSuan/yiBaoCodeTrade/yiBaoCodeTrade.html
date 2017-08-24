@@ -8,7 +8,7 @@
                     <div class="input-group col-md-6 select-style">
                         <select class="form-control" id="selMerchant">
                             <option value="-1">请选择</option>
-                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                            <option value="{{m[0]}}" ng-repeat="m in merchants">{{m[1]}}</option>
                         </select>
                         <span class="select-jiao"></span>
                     </div>

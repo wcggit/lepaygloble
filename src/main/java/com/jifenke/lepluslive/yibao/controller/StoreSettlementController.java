@@ -7,6 +7,7 @@ import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.service.ScanCodeOrderService;
 import com.jifenke.lepluslive.yibao.domain.criteria.LedgerRefundOrderCriteria;
+import com.jifenke.lepluslive.yibao.domain.entities.LedgerRefundOrder;
 import com.jifenke.lepluslive.yibao.domain.entities.MerchantLedger;
 import com.jifenke.lepluslive.yibao.domain.entities.MerchantUserLedger;
 import com.jifenke.lepluslive.yibao.domain.entities.StoreSettlement;
@@ -126,6 +127,8 @@ public class StoreSettlementController {
         return LejiaResult.ok(map);
     }
 
+
+
     /***
      * 查看退款记录 - 易宝 【到账详情】
      */
@@ -138,9 +141,23 @@ public class StoreSettlementController {
         if (refundCriteria.getMerchantId() == null) {
             return LejiaResult.build(400, "无相关数据");
         }
+        // 设置前一天
+        if(refundCriteria.getTradeDate()!=null && !"".equals(refundCriteria.getTradeDate())) {
+            String tradeBefore = getTradeDateStrBefore(refundCriteria.getTradeDate());
+            refundCriteria.setTradeDate(tradeBefore);
+        }else {
+            return LejiaResult.build(400, "无相关数据");
+        }
+        Map map = new HashMap();
         Page page = ledgerRefundOrderService.findByCriteria(refundCriteria, 10);
-        return LejiaResult.ok(page);
+        map.put("page",page);
+        Long dailyTotal = ledgerRefundOrderService.sumDailyTotalRefund(refundCriteria.getMerchantId(), refundCriteria.getTradeDate());
+        map.put("dailyTotal",dailyTotal==null?0:dailyTotal);
+        map.put("dailyCount",page.getTotalElements());
+        return LejiaResult.ok(map);
+
     }
+
 
 
     // 日期转换
@@ -183,4 +200,5 @@ public class StoreSettlementController {
         }
         return detailCriteria;
     }
+
 }

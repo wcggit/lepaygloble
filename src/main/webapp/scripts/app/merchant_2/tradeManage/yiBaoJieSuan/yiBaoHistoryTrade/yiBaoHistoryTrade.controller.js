@@ -5,7 +5,28 @@
 
 
 angular.module('lepayglobleApp')
-    .controller('yiBaoHistoryTradeController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, HomePage, LejiaBilling) {
+    .controller('yiBaoHistoryTradeController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, HomePage, $stateParams) {
+        var currentPage = null;
+        var financialCriteria = {};
+        financialCriteria.offset = 1;
+        currentPage = 1;
+        $scope.topDisplay = false;
+        // 门店列表
+        HomePage.getMerchantsInfo().then(function (response) {
+            var data = response.data;
+            $scope.merchants = data;
+            if($stateParams.mid!=null) {
+                $scope.defaultId = $stateParams.mid;
+            }else {
+                $scope.topDisplay = true;
+                $scope.defaultId = data[0].id;
+            }
+            var merchant = {};
+            merchant.id = $scope.defaultId;
+            financialCriteria.merchant = merchant;
+            loadContent();
+        });
+
 
         $('#timePicker1')
             .daterangepicker({
@@ -19,7 +40,81 @@ angular.module('lepayglobleApp')
             }, function (start, end, label) {
             });
 
-        var stateArr = ['yiBaoHistoryTradeAllState', 'yiBaoHistoryTradeTransfering', 'yiBaoHistoryTradeTransferSuccess', 'yiBaoHistoryTradeHanged'];
+
+        //  展示到账记录
+        function loadContent() {
+            $http.post('/api/financial', financialCriteria, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function (response) {
+                var page = response.data;
+                $scope.pulls = page.content;
+                $scope.page = currentPage;
+                $scope.totalPages = page.totalPages;
+                var dates = [];
+                var totalPrice = [];
+                var transferPrice = [];
+                var posTransfer = [];
+                var appTransfer = [];
+                for (var i = 0; i < page.content.length; i++) {
+                    dates[i] = page.content[i].balanceDate.substring(0,10);
+                    transferPrice[i] = page.content[i].transferPrice / 100.0;
+                    posTransfer[i] = page.content[i].posTransfer / 100.0;
+                    appTransfer[i] = page.content[i].appTransfer / 100.0;
+                    totalPrice[i] = (page.content[i].transferPrice + page.content[i].posTransfer + page.content[i].appTransfer) / 100.0;
+                }
+
+            });
+        }
+
+        $scope.loadPage = function (page) {
+            if (page == 0) {
+                return;
+            }
+            if (page > $scope.totalPages) {
+                return;
+            }
+            if (currentPage == $scope.totalPages && page == $scope.totalPages) {
+                return;
+            }
+            if (currentPage == 1 && page == 1) {
+                return;
+            }
+            currentPage = page;
+            financialCriteria.offset = page;
+            loadContent();
+        };
+
+        $scope.searchByDate = function () {
+            //  日期
+            var dateStr = $("#timePicker1").val();
+            if (dateStr != null && dateStr != "") {
+                var startDate = dateStr.split("-")[0];
+                var endDate = dateStr.split("-")[1].trim();
+                financialCriteria.startDate = startDate;
+                financialCriteria.endDate = endDate;
+            } else {
+                financialCriteria.startDate = null;
+                financialCriteria.endDate = null;
+            }
+            //  门店
+            var merchant = {};
+            var mid = $("#selMerchant").val();
+            if(mid!=-1) {
+                merchant.id = mid;
+                financialCriteria.merchant = merchant;
+            }else {
+                var deftId = $scope.defaultId;
+                $("#selMerchant").val(deftId);
+                merchant.id = deftId;
+                financialCriteria.merchant = merchant;
+            }
+            financialCriteria.offset = 1;
+            currentPage = 1;
+            loadContent();
+        }
+
         $scope.ttlWarn1 = true;
         $scope.ttlWarn2 = true;
         $scope.currentTab0 = true;
@@ -45,21 +140,25 @@ angular.module('lepayglobleApp')
             switch ($scope.currentState) {
                 case 0:
                     $scope.currentTab0 = true;
-                    $state.go(stateArr[0]);
+                    financialCriteria.state=null;
+                    $scope.searchByDate();
                     break;
                 case 1:
                     $scope.currentTab1 = true;
                     $scope.ttlWarn1 = false;
-                    $state.go(stateArr[1]);
+                    financialCriteria.state=0;
+                    $scope.searchByDate();
                     break;
                 case 2:
                     $scope.currentTab2 = true;
-                    $state.go(stateArr[2]);
+                    financialCriteria.state=1;
+                    $scope.searchByDate();
                     break;
                 default:
                     $scope.currentTab3 = true;
                     $scope.ttlWarn2 = false;
-                    $state.go(stateArr[3]);
+                    financialCriteria.state=2;
+                    $scope.searchByDate();
                     break;
             }
         };

@@ -9,7 +9,9 @@ angular.module('lepayglobleApp')
                 data: {
                     authorities: ["merchant"]
                 },
-                views: {
+                params: {
+                    mid: null
+                }, views: {
                     'right-content@merchant_2': {
                         templateUrl: 'scripts/app/merchant_2/tradeManage/yiBaoJieSuan/yiBaoHistoryTrade/yiBaoHistoryTrade.html',
                         controller: 'yiBaoHistoryTradeController'

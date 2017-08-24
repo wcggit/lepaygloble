@@ -10,9 +10,27 @@ angular.module('lepayglobleApp')
         var settlementCriteria = {};
         settlementCriteria.offset = 1;
         currentPage = 1;
-
-        // 门店列表
-        HomePage.getMerchantsInfo().then(function (response) {
+        getMerchantPayWay();
+        // 门店列表和支付方式
+        function getMerchantPayWay() {
+            $http.get('api/merchantUser/merchantsAndPayWay').success(function (response) {
+                var data = response.data;
+                $scope.payway = data;
+                $scope.merchants = data.merchants;
+                $scope.defaultId = data.merchants[0][0];
+                var merchant = {};
+                merchant.id = $scope.defaultId;
+                settlementCriteria.merchant = merchant;
+                var payWay = data["merchant-"+$scope.defaultId];    // 根据支付通道选择页面
+                if(payWay==3) {                 // 易宝
+                    loadContent();
+                    loadMerchantLedger($scope.defaultId);
+                }else {                         // 乐加
+                    $state.go("yiBaoHistoryTrade", {mid: $scope.defaultId});
+                }
+            });
+        }
+        /*HomePage.getMerchantsInfo().then(function (response) {
             var data = response.data;
             $scope.merchants = data;
             $scope.defaultId = data[0].id;
@@ -21,7 +39,7 @@ angular.module('lepayglobleApp')
             settlementCriteria.merchant = merchant;
             loadContent();
             loadMerchantLedger($scope.defaultId);
-        });
+        });*/
 
         // 加载易宝商户数,同子商户门店
         function loadMerchantLedger(mid) {
@@ -91,7 +109,12 @@ angular.module('lepayglobleApp')
             }
             settlementCriteria.offset = 1;
             currentPage = 1;
-            loadContent();
+            var payWay = $scope.payway["merchant-"+mid];    // 根据支付通道选择页面
+            if(payWay==3) {                 // 易宝
+                loadContent();
+            }else {                         // 乐加
+                $state.go("yiBaoHistoryTrade", {mid: mid});
+            }
         }
         // 跳转到详情页面
         $scope.goDetail = function (ledgerNo,tradeDate,totalTransfer,transferState) {
