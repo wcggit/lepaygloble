@@ -119,5 +119,22 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
     Long findCustScoreByMerchantAndDate(Long merchantId, String startTime, String endTime);
 
 
+    /***
+     *  查询指定日期总流水、总入账
+     */
+    @Query(value="select IFNULL(sum(total_price),0),IFNULL(sum(transfer_money),0) from off_line_order where merchant_id = ?1 and complete_date between ?2 and ?3",nativeQuery = true)
+    List<Object[]> countTotalTransferByMerchantAndDate(Long merchantId, String startTime, String endTime);
+
+
+    @Query(value="select count(1),IFNULL(sum(total_price),0),IFNULL(sum(transfer_money),0) from off_line_order where merchant_id = ?1 and complete_date between ?2 and ?3 and (rebate_way=1 or rebate_way=3)",nativeQuery = true)
+    List<Object[]> countLejiaTransferByMerchantAndDate(Long merchantId, String startTime, String endTime);
+
+    @Query(value="select count(1),IFNULL(sum(total_price),0),IFNULL(sum(transfer_money),0) from off_line_order where merchant_id = ?1 and complete_date between ?2 and ?3 and (rebate_way=0 or rebate_way=2 or rebate_way=4 or rebate_way=6) ",nativeQuery = true)
+    List<Object[]> countCommonTransferByMerchantAndDate(Long merchantId, String startTime, String endTime);
+
+
+
+
+
 }
 

@@ -3,22 +3,20 @@ package com.jifenke.lepluslive.order.controller;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.global.websocket.dto.ActivityDTO;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
+import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserService;
-import com.jifenke.lepluslive.order.controller.view.LejiaOrderDTO;
-import com.jifenke.lepluslive.order.controller.view.MerchantOrderDto;
-import com.jifenke.lepluslive.order.controller.view.MerchantOrderExcel;
-import com.jifenke.lepluslive.order.controller.view.OrderViewExcel;
+import com.jifenke.lepluslive.order.controller.view.*;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OLOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OrderShareCriteria;
-import com.jifenke.lepluslive.order.service.LejiaOrderService;
-import com.jifenke.lepluslive.order.service.OffLineOrderService;
-import com.jifenke.lepluslive.order.service.PosOrderSerivce;
+import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
+import com.jifenke.lepluslive.order.service.*;
 import com.jifenke.lepluslive.security.SecurityUtils;
 
 import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
@@ -31,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 import javax.inject.Inject;
+import javax.print.attribute.standard.MediaSize;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
@@ -76,6 +75,18 @@ public class OrderController {
 
     @Inject
     private MerchantOrderExcel merchantOrderExcel;
+
+    @Inject
+    private MerchantScanPayWayService merchantScanPayWayService;
+
+    @Inject
+    private ScanCodeOrderService scanCodeOrderService;
+
+    @Inject
+    private OffLineOrderExcel offLineOrderExcel;
+
+    @Inject
+    private ScanCodeOrderExcel scanCodeOrderExcel;
 
     @RequestMapping(value = "/order/todayOrderDetail", method = RequestMethod.GET)
     public LejiaResult getTodayOrderDetail() {
@@ -138,20 +149,42 @@ public class OrderController {
         return LejiaResult.ok(page);
     }
 
+    /***
+     *
+     * @param olOrderCriteria
+     * @return
+     */
+    @RequestMapping(value = "/offLineOrder/tradeDetail", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    LejiaResult searchTradeDetailByCriterial(@RequestBody OLOrderCriteria olOrderCriteria) {
+        if (olOrderCriteria.getOffset() == null) {
+            olOrderCriteria.setOffset(1);
+        }
+        Merchant merchant = olOrderCriteria.getMerchant();
+        if (merchant == null) {
+            return LejiaResult.build(400, "无数据");
+        }
+        olOrderCriteria.setState(1);
+        Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 10);
+        return LejiaResult.ok(page);
+    }
+
     /**
-     *  2.0 版本  乐加账单 - 查看详情
+     * 2.0 版本  乐加账单 - 查看详情
+     *
      * @param olOrderCriteria
      * @return
      */
     @RequestMapping(value = "/offLineOrder/findByCriteria", method = RequestMethod.POST)
     public
     @ResponseBody
-    LejiaResult searchOrderListByCriterial(@RequestBody OLOrderCriteria olOrderCriteria) {
+    LejiaResult searchOrderListByCriteria(@RequestBody OLOrderCriteria olOrderCriteria) {
         if (olOrderCriteria.getOffset() == null) {
             olOrderCriteria.setOffset(1);
         }
-        if(olOrderCriteria.getMerchant()==null) {
-          return LejiaResult.build(400,"无数据");
+        if (olOrderCriteria.getMerchant() == null) {
+            return LejiaResult.build(400, "无数据");
         }
         olOrderCriteria.setState(1);
         Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 10);
@@ -182,6 +215,23 @@ public class OrderController {
         olOrderCriteria.setMerchant(merchant);
 
         return LejiaResult.ok(offLineOrderService.orderStatistic(olOrderCriteria));
+    }
+
+
+    /***
+     * 乐加结算到账详情 - 数据概览
+     * @param olOrderCriteria
+     * @return
+     */
+    @RequestMapping(value = "/offLineOrder/orderStatistic", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    LejiaResult getOfflineOrderStatistic(@RequestBody OLOrderCriteria olOrderCriteria) {
+        if (olOrderCriteria.getMerchant() != null) {
+            return LejiaResult.ok(offLineOrderService.orderStatistic(olOrderCriteria));
+        } else {
+            return LejiaResult.build(400, "无数据");
+        }
     }
 
     @RequestMapping(value = "/offLineOrder/dayCommission", method = RequestMethod.GET)
@@ -500,5 +550,223 @@ public class OrderController {
             dailyOrderCriteria.setEndDate(simpleDateFormat.format(endDate));
         }
         return dailyOrderCriteria;
+    }
+
+
+    /**
+     * 门店订单数据
+     * 乐加 / 易宝
+     */
+    @RequestMapping(value = "/codeTrade/codeOrderByCriteria", method = RequestMethod.POST)
+    @ResponseBody
+    public LejiaResult codeOrderByCriteria(@RequestBody CodeOrderCriteria codeOrderCriteria) {
+        if (codeOrderCriteria.getMerchant() == null) {
+            return LejiaResult.build(400, "无数据");
+        } else {
+            MerchantScanPayWay scanPayWay = merchantScanPayWayService.findByMerchant(codeOrderCriteria.getMerchant().getId());
+            if (scanPayWay.getType() == 3) {
+                // 易宝结算
+                ScanCodeOrderCriteria scanCodeOrderCriteria = new ScanCodeOrderCriteria();
+                scanCodeOrderCriteria.setMerchantId(codeOrderCriteria.getMerchant().getId());
+                scanCodeOrderCriteria.setState(1);
+                scanCodeOrderCriteria.setPayment(codeOrderCriteria.getPayWay());
+                scanCodeOrderCriteria.setOrderSid(codeOrderCriteria.getOrderSid());
+                scanCodeOrderCriteria.setOrderType(codeOrderCriteria.getOrderType());
+                scanCodeOrderCriteria.setStartDate(codeOrderCriteria.getStartDate());
+                scanCodeOrderCriteria.setEndDate(codeOrderCriteria.getEndDate());
+                if (codeOrderCriteria.getOffset() == null) {
+                    scanCodeOrderCriteria.setOffset(1);
+                } else {
+                    scanCodeOrderCriteria.setOffset(codeOrderCriteria.getOffset());
+                }
+                Page page = scanCodeOrderService.findOrderByPage(scanCodeOrderCriteria, 10);
+                Map map = new HashMap();
+                map.put("page", page);
+                map.put("payWay", scanPayWay.getType());
+                return LejiaResult.ok(map);
+            } else {
+                // 乐加结算
+                OLOrderCriteria olOrderCriteria = new OLOrderCriteria();
+                olOrderCriteria.setMerchant(codeOrderCriteria.getMerchant());
+                olOrderCriteria.setState(1);
+                if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 0) {
+                    olOrderCriteria.setPayWay(1L);
+                } else if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 1) {
+                    olOrderCriteria.setPayWay(2L);
+                } else {
+                    olOrderCriteria.setPayWay(null);
+                }
+                olOrderCriteria.setOrderSid(codeOrderCriteria.getOrderSid());
+                olOrderCriteria.setOrderType(codeOrderCriteria.getOrderType());
+                olOrderCriteria.setStartDate(codeOrderCriteria.getStartDate());
+                olOrderCriteria.setEndDate(codeOrderCriteria.getEndDate());
+                if (codeOrderCriteria.getOffset() == null) {
+                    olOrderCriteria.setOffset(1);
+                } else {
+                    olOrderCriteria.setOffset(codeOrderCriteria.getOffset());
+                }
+                Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 10);
+                Map map = new HashMap();
+                map.put("page", page);
+                map.put("payWay", scanPayWay.getType());
+                return LejiaResult.ok(map);
+            }
+        }
+    }
+
+    @RequestMapping(value = "/codeTradeList/export", method = RequestMethod.GET)
+    public ModelAndView exporeExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = true) Long merchantId,
+                                    @RequestParam(required = false) Integer payWay, @RequestParam(required = false) Integer orderType, @RequestParam(required = false) String orderSid) {
+        MerchantScanPayWay scanPayWay = merchantScanPayWayService.findByMerchant(merchantId);
+        if (scanPayWay.getType() == 3) {
+            // 易宝结算
+            ScanCodeOrderCriteria scanCodeOrderCriteria = new ScanCodeOrderCriteria();
+            scanCodeOrderCriteria.setMerchantId(merchantId);
+            scanCodeOrderCriteria.setState(1);
+            scanCodeOrderCriteria.setPayment(payWay);
+            scanCodeOrderCriteria.setOrderSid(orderSid);
+            scanCodeOrderCriteria.setOrderType(orderType);
+            scanCodeOrderCriteria.setStartDate(startDate);
+            scanCodeOrderCriteria.setEndDate(endDate);
+            scanCodeOrderCriteria.setOffset(1);
+            Page page = scanCodeOrderService.findOrderByPage(scanCodeOrderCriteria, 1000);
+            Map map = new HashMap();
+            map.put("scOrderList", page.getContent());
+            return new ModelAndView(scanCodeOrderExcel, map);
+        } else {
+            // 乐加结算
+            OLOrderCriteria olOrderCriteria = new OLOrderCriteria();
+            Merchant merchant = merchantService.findMerchantById(merchantId);
+            olOrderCriteria.setMerchant(merchant);
+            olOrderCriteria.setState(1);
+            if (payWay != null && payWay == 0) {
+                olOrderCriteria.setPayWay(1L);
+            } else if (payWay != null && payWay == 1) {
+                olOrderCriteria.setPayWay(2L);
+            } else {
+                olOrderCriteria.setPayWay(null);
+            }
+            olOrderCriteria.setOrderSid(orderSid);
+            olOrderCriteria.setOrderType(orderType);
+            olOrderCriteria.setStartDate(startDate);
+            olOrderCriteria.setEndDate(endDate);
+            olOrderCriteria.setOffset(1);
+            Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 1000);
+            Map map = new HashMap();
+            map.put("olOrderList", page.getContent());
+            return new ModelAndView(offLineOrderExcel, map);
+        }
+    }
+
+    /***
+     *  订单数据统计
+     */
+    @RequestMapping(value = "/codeTrade/codeOrderStatistic", method = RequestMethod.POST)
+    @ResponseBody
+    public LejiaResult codeOrderStatistic(@RequestBody CodeOrderCriteria codeOrderCriteria) {
+        MerchantScanPayWay scanPayWay = merchantScanPayWayService.findByMerchant(codeOrderCriteria.getMerchant().getId());
+        if (scanPayWay.getType() == 3) {
+            // 易宝结算
+            ScanCodeOrderCriteria scanCodeOrderCriteria = new ScanCodeOrderCriteria();
+            scanCodeOrderCriteria.setMerchantId(codeOrderCriteria.getMerchant().getId());
+            scanCodeOrderCriteria.setState(1);
+            scanCodeOrderCriteria.setPayment(codeOrderCriteria.getPayWay());
+            scanCodeOrderCriteria.setOrderSid(codeOrderCriteria.getOrderSid());
+            scanCodeOrderCriteria.setStartDate(codeOrderCriteria.getStartDate());
+            scanCodeOrderCriteria.setEndDate(codeOrderCriteria.getEndDate());
+            Map map = new HashMap();
+            if(scanCodeOrderCriteria.getOrderType()!=null && scanCodeOrderCriteria.getOrderType()==0) {
+                List<Object[]> commonData = scanCodeOrderService.findTotalDailyTransferAndIncome(scanCodeOrderCriteria);
+                map.put("totalData",commonData);
+                map.put("commonData",commonData);
+                map.put("lejiaData",null);
+            }else if(scanCodeOrderCriteria.getOrderType()!=null && scanCodeOrderCriteria.getOrderType()==1) {
+                List<Object[]> lejiaData = scanCodeOrderService.findTotalDailyTransferAndIncome(scanCodeOrderCriteria);
+                map.put("totalData",lejiaData);
+                map.put("lejiaData",lejiaData);
+                map.put("commonData",null);
+            }else {
+                scanCodeOrderCriteria.setOrderType(null);
+                List<Object[]> totalData = scanCodeOrderService.findTotalDailyTransferAndIncome(scanCodeOrderCriteria);
+                scanCodeOrderCriteria.setOrderType(0);
+                List<Object[]> commonData = scanCodeOrderService.findTotalDailyTransferAndIncome(scanCodeOrderCriteria);
+                scanCodeOrderCriteria.setOrderType(1);
+                List<Object[]> lejiaData = scanCodeOrderService.findTotalDailyTransferAndIncome(scanCodeOrderCriteria);
+                map.put("totalData",totalData);
+                map.put("commonData",commonData);
+                map.put("lejiaData",lejiaData);
+            }
+            return LejiaResult.ok(map);
+        } else {
+            // 乐加结算
+            OLOrderCriteria olOrderCriteria = new OLOrderCriteria();
+            olOrderCriteria.setMerchant(codeOrderCriteria.getMerchant());
+            olOrderCriteria.setState(1);
+            if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 0) {
+                olOrderCriteria.setPayWay(1L);
+            } else if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 1) {
+                olOrderCriteria.setPayWay(2L);
+            } else {
+                olOrderCriteria.setPayWay(null);
+            }
+            olOrderCriteria.setOrderSid(codeOrderCriteria.getOrderSid());
+            olOrderCriteria.setOrderType(codeOrderCriteria.getOrderType());
+            olOrderCriteria.setStartDate(codeOrderCriteria.getStartDate());
+            olOrderCriteria.setEndDate(codeOrderCriteria.getEndDate());
+            Map map = new HashMap();
+            if(olOrderCriteria.getOrderType()!=null && olOrderCriteria.getOrderType()==0) {
+                List<Object[]> commonData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+                map.put("totalData",commonData);
+                map.put("commonData",commonData);
+                map.put("lejiaData",null);
+            }else if(olOrderCriteria.getOrderType()!=null && olOrderCriteria.getOrderType()==1) {
+                List<Object[]> lejiaData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+                map.put("totalData",lejiaData);
+                map.put("lejiaData",lejiaData);
+                map.put("commonData",null);
+            }else {
+                olOrderCriteria.setOrderType(null);
+                List<Object[]> totalData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+                olOrderCriteria.setOrderType(0);
+                List<Object[]> commonData= offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+                olOrderCriteria.setOrderType(1);
+                List<Object[]> lejiaData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+                map.put("totalData",totalData);
+                map.put("commonData",commonData);
+                map.put("lejiaData",lejiaData);
+            }
+            return LejiaResult.ok(map);
+        }
+    }
+
+
+    @RequestMapping(value = "/offLineOrder/olOrderStatistic", method = RequestMethod.POST)
+    @ResponseBody
+    public LejiaResult codeOrderStatistic(@RequestBody OLOrderCriteria olOrderCriteria) {
+            // 乐加结算
+            olOrderCriteria.setState(1);
+            Map map = new HashMap();
+            if(olOrderCriteria.getOrderType()!=null && olOrderCriteria.getOrderType()==0) {
+                List<Object[]> commonData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+                map.put("totalData",commonData);
+                map.put("commonData",commonData);
+                map.put("lejiaData",null);
+            }else if(olOrderCriteria.getOrderType()!=null && olOrderCriteria.getOrderType()==1) {
+                List<Object[]> lejiaData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+                map.put("totalData",lejiaData);
+                map.put("lejiaData",lejiaData);
+                map.put("commonData",null);
+            }else {
+                olOrderCriteria.setOrderType(null);
+                List<Object[]> totalData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+                olOrderCriteria.setOrderType(0);
+                List<Object[]> commonData= offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+                olOrderCriteria.setOrderType(1);
+                List<Object[]> lejiaData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+                map.put("totalData",totalData);
+                map.put("commonData",commonData);
+                map.put("lejiaData",lejiaData);
+            }
+            return LejiaResult.ok(map);
     }
 }

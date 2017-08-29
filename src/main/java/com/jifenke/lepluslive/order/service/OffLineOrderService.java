@@ -3,6 +3,7 @@ package com.jifenke.lepluslive.order.service;
 import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.CommissionDetailsCriteria;
+import com.jifenke.lepluslive.merchant.domain.entities.LejiaResource;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.domain.criteria.FinancialCriteria;
@@ -11,6 +12,7 @@ import com.jifenke.lepluslive.order.domain.criteria.OrderShareCriteria;
 import com.jifenke.lepluslive.order.domain.entities.FinancialStatistic;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrderShare;
+import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.repository.*;
 
 import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
@@ -68,7 +70,7 @@ public class OffLineOrderService {
         Sort sort = new Sort(Sort.Direction.DESC, "completeDate");
         return offLineOrderRepository
             .findAll(getWhereClause(orderCriteria),
-                     new PageRequest(orderCriteria.getOffset() - 1, limit, sort));
+                new PageRequest(orderCriteria.getOffset() - 1, limit, sort));
     }
 
     public static Specification<OffLineOrder> getWhereClause(final OLOrderCriteria orderCriteria) {
@@ -80,45 +82,53 @@ public class OffLineOrderService {
                 if (orderCriteria.getState() != null) {
                     predicate.getExpressions().add(
                         cb.equal(r.get("state"),
-                                 orderCriteria.getState()));
+                            orderCriteria.getState()));
                 }
 
-                if (orderCriteria.getStartDate() != null && orderCriteria.getStartDate() != "") {
+                if (orderCriteria.getStartDate() != null &&!"".equals(orderCriteria.getStartDate())) {
                     predicate.getExpressions().add(
                         cb.between(r.<Date>get("completeDate"),
-                                   new Date(orderCriteria.getStartDate()),
-                                   new Date(orderCriteria.getEndDate())));
+                            new Date(orderCriteria.getStartDate()),
+                            new Date(orderCriteria.getEndDate())));
                 }
 
-                if (orderCriteria.getRebateWay() != null) {
+                if (orderCriteria.getRebateWay() != null&&!"".equals(orderCriteria.getRebateWay())) {
                     if (orderCriteria.getRebateWay() == 1) {
                         predicate.getExpressions().add(
                             cb.equal(r.get("rebateWay"),
-                                     1));
+                                1));
                     } else if (orderCriteria.getRebateWay() == 2) {
                         predicate.getExpressions().add(
                             cb.notEqual(r.get("rebateWay"),
-                                        1));
+                                1));
                         predicate.getExpressions().add(
                             cb.notEqual(r.get("rebateWay"),
-                                        3));
+                                3));
                     } else {
                         predicate.getExpressions().add(
                             cb.equal(r.get("rebateWay"),
-                                     3));
+                                3));
                     }
 
                 }
 
-                if (orderCriteria.getOrderSid() != null && orderCriteria.getOrderSid() != "") {
+                if (orderCriteria.getOrderSid() != null && !"".equals(orderCriteria.getOrderSid())) {
                     predicate.getExpressions().add(
                         cb.like(r.get("orderSid"), "%" + orderCriteria.getOrderSid() + "%"));
+                }
+
+                if (orderCriteria.getOrderType() != null) {
+                    if(orderCriteria.getOrderType()==0) {
+                        predicate.getExpressions().add(cb.or(cb.equal(r.get("rebateWay"),0),cb.equal(r.get("rebateWay"),2),cb.equal(r.get("rebateWay"),4),cb.equal(r.get("rebateWay"),5),cb.equal(r.get("rebateWay"),6)));
+                    }else if(orderCriteria.getOrderType()==1) {
+                        predicate.getExpressions().add(cb.or(cb.equal(r.get("rebateWay"),1),cb.equal(r.get("rebateWay"),3)));
+                    }
                 }
 
                 if (orderCriteria.getMerchant() != null) {
                     predicate.getExpressions().add(
                         cb.equal(r.<Merchant>get("merchant"),
-                                 orderCriteria.getMerchant()));
+                            orderCriteria.getMerchant()));
                 }
                 return predicate;
             }
@@ -130,7 +140,7 @@ public class OffLineOrderService {
         Sort sort = new Sort(Sort.Direction.DESC, "balanceDate");
         return financialStatisticRepository
             .findAll(getFinancialClause(financialCriteria),
-                     new PageRequest(financialCriteria.getOffset() - 1, limit, sort));
+                new PageRequest(financialCriteria.getOffset() - 1, limit, sort));
     }
 
 
@@ -145,7 +155,7 @@ public class OffLineOrderService {
                 if (financialCriteria.getState() != null) {
                     predicate.getExpressions().add(
                         cb.equal(r.get("state"),
-                                 financialCriteria.getState()));
+                            financialCriteria.getState()));
                 }
 
                 if (financialCriteria.getStartDate() != null
@@ -167,16 +177,16 @@ public class OffLineOrderService {
                     end = calendar.getTime();
                     predicate.getExpressions().add(
                         cb.between(r.<Date>get("balanceDate"),
-                                   start,
-                                   end));
+                            start,
+                            end));
                 }
 
                 if (financialCriteria.getMerchant() != null) {
                     predicate.getExpressions().add(
                         cb.equal(r.<Merchant>get("merchant"),
-                                 financialCriteria.getMerchant()));
+                            financialCriteria.getMerchant()));
                 }
-                if(financialCriteria.getState()!=null&&financialCriteria.getState()!=-1) {
+                if (financialCriteria.getState() != null && financialCriteria.getState() != -1) {
                     predicate.getExpressions().add(
                         cb.equal(r.<Merchant>get("state"),
                             financialCriteria.getState()));
@@ -200,82 +210,85 @@ public class OffLineOrderService {
     }
 
     /**
-     *  计算会员消费次数,总金额和红包 (全部)
+     * 计算会员消费次数,总金额和红包 (全部)
+     *
      * @param
      * @return
      */
-    public Map<String,Long> countMemberOrdersDetail(List<Merchant> merchants) {
-        Map<String,Long> map = new HashMap<>();
+    public Map<String, Long> countMemberOrdersDetail(List<Merchant> merchants) {
+        Map<String, Long> map = new HashMap<>();
         Long totalCount = 0L;       // 次数
         Long totalSales = 0L;       // 总金额
         Long totalRebate = 0L;      // 共收到红包
         for (Merchant merchant : merchants) {
             MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
             List<Object[]> details = null;
-            if (payway==null) {
+            if (payway == null) {
                 details = offLineOrderRepository.countMemberOrderDetail(merchant.getId());
-            }else {
+            } else {
                 details = scanCodeOrderRepository.countScanOrderDetail(merchant.getId());
             }
-            Long count = new Long(details.get(0)[0] ==null ?"0" : details.get(0)[0].toString());
+            Long count = new Long(details.get(0)[0] == null ? "0" : details.get(0)[0].toString());
             Long sales = new Long(details.get(0)[1] == null ? "0" : details.get(0)[1].toString());
             Long rebate = new Long(details.get(0)[2] == null ? "0" : details.get(0)[2].toString());
-            totalCount+=(count==null?0L:count);
-            totalSales+=(sales==null?0L:sales);
-            totalRebate+=(rebate==null?0L:rebate);
+            totalCount += (count == null ? 0L : count);
+            totalSales += (sales == null ? 0L : sales);
+            totalRebate += (rebate == null ? 0L : rebate);
         }
-        map.put("totalCount",totalCount);
-        map.put("totalSales",totalSales);
-        map.put("totalRebate",totalRebate);
+        map.put("totalCount", totalCount);
+        map.put("totalSales", totalSales);
+        map.put("totalRebate", totalRebate);
         return map;
     }
 
 
     /**
-     *  计算会员消费次数,总金额和红包  (每日)
+     * 计算会员消费次数,总金额和红包  (每日)
+     *
      * @param
      * @return
      */
-    public Map<String,Long> countMemberDailyOrdersDetail(List<Merchant> merchants) {
-        Map<String,Long> map = new HashMap<>();
+    public Map<String, Long> countMemberDailyOrdersDetail(List<Merchant> merchants) {
+        Map<String, Long> map = new HashMap<>();
         Long dailyCount = 0L;       // 次数
         Long dailySales = 0L;       // 总金额
         Long dailyRebate = 0L;      // 共收到红包
         for (Merchant merchant : merchants) {
             List<Object[]> details = offLineOrderRepository.countMemberDailyOrderDetail(merchant.getId());
-            Long count = new Long(details.get(0)[0] ==null ?"0" : details.get(0)[0].toString());
+            Long count = new Long(details.get(0)[0] == null ? "0" : details.get(0)[0].toString());
             Long sales = new Long(details.get(0)[1] == null ? "0" : details.get(0)[1].toString());
             Long rebate = new Long(details.get(0)[2] == null ? "0" : details.get(0)[2].toString());
-            dailyCount+=(count==null?0L:count);
-            dailySales+=(sales==null?0L:sales);
-            dailyRebate+=(rebate==null?0L:rebate);
+            dailyCount += (count == null ? 0L : count);
+            dailySales += (sales == null ? 0L : sales);
+            dailyRebate += (rebate == null ? 0L : rebate);
         }
-        map.put("dailyCount",dailyCount);
-        map.put("dailySales",dailySales);
-        map.put("dailyRebate",dailyRebate);
+        map.put("dailyCount", dailyCount);
+        map.put("dailySales", dailySales);
+        map.put("dailyRebate", dailyRebate);
         return map;
     }
 
 
     /**
      * 多门店-今日交易金额：
+     *
      * @param merchants
      * @return
      */
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Long countDailyTransfering(List<Merchant> merchants) {
         Long totalTransfering = 0L;
-        for(Merchant merchant:merchants) {
+        for (Merchant merchant : merchants) {
             Long transfering = null;
             MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
-             if (payway==null) {
-                 transfering = offLineOrderRepository.countDailyTransferMoney(merchant.getId());
-             }else {
-                 transfering = scanCodeOrderRepository.countDailyScanTransferMoney(merchant.getId());
-             }
-             if(transfering!=null) {
-                 totalTransfering += (transfering==null?0L:transfering);
-             }
+            if (payway == null) {
+                transfering = offLineOrderRepository.countDailyTransferMoney(merchant.getId());
+            } else {
+                transfering = scanCodeOrderRepository.countDailyScanTransferMoney(merchant.getId());
+            }
+            if (transfering != null) {
+                totalTransfering += (transfering == null ? 0L : transfering);
+            }
         }
         return totalTransfering;
     }
@@ -317,9 +330,9 @@ public class OffLineOrderService {
         if (olOrderCriteria.getRebateWay() != null) {
             if (olOrderCriteria.getRebateWay() == 2) {
                 sql.append(" and rebate_way != 1 and rebate_way !=3");
-            } else if (olOrderCriteria.getRebateWay() == 1){
+            } else if (olOrderCriteria.getRebateWay() == 1) {
                 sql.append(" and rebate_way = 1");
-            }else if (olOrderCriteria.getRebateWay() == 3){
+            } else if (olOrderCriteria.getRebateWay() == 3) {
                 sql.append(" and rebate_way = 3");
             }
         }
@@ -362,7 +375,8 @@ public class OffLineOrderService {
 
 
     /**
-     *  城市合伙人 , 佣金明细
+     * 城市合伙人 , 佣金明细
+     *
      * @param orderCriteria
      * @param limit
      * @return
@@ -372,7 +386,7 @@ public class OffLineOrderService {
         Sort sort = new Sort(Sort.Direction.DESC, "createDate");
         return offLineOrderShareRepository
             .findAll(getOrderShareClause(orderCriteria),
-                     new PageRequest(orderCriteria.getOffset() - 1, limit, sort));
+                new PageRequest(orderCriteria.getOffset() - 1, limit, sort));
     }
 
 
@@ -390,59 +404,60 @@ public class OffLineOrderService {
                     Date end = new Date(orderCriteria.getEndDate());
                     predicate.getExpressions().add(
                         cb.between(r.<Date>get("createDate"),
-                                   start,
-                                   end));
+                            start,
+                            end));
                 }
                 if (orderCriteria.getMerchant() != null) {
                     predicate.getExpressions().add(
                         cb.equal(r.<Merchant>get("lockMerchant"),
-                                 orderCriteria.getMerchant()));
+                            orderCriteria.getMerchant()));
                 }
                 //   合伙人 -  佣金分润 - 查询条件
-                if(orderCriteria.getPartnerManager()!=null) {
-                    predicate.getExpressions().add(cb.equal(r.get("toLockPartnerManager"),orderCriteria.getPartnerManager().getId()));
+                if (orderCriteria.getPartnerManager() != null) {
+                    predicate.getExpressions().add(cb.equal(r.get("toLockPartnerManager"), orderCriteria.getPartnerManager().getId()));
                 }
-                if(orderCriteria.getLockMerchant()!=null) {
-                    predicate.getExpressions().add(cb.like(r.get("lockMerchant").get("name"),"%"+orderCriteria.getLockMerchant().getName()+"%"));
+                if (orderCriteria.getLockMerchant() != null) {
+                    predicate.getExpressions().add(cb.like(r.get("lockMerchant").get("name"), "%" + orderCriteria.getLockMerchant().getName() + "%"));
                 }
-                if(orderCriteria.getTradeMerchant()!=null) {
-                    predicate.getExpressions().add(cb.like(r.get("tradeMerchant").get("name"),"%"+orderCriteria.getTradeMerchant().getName()+"%"));
+                if (orderCriteria.getTradeMerchant() != null) {
+                    predicate.getExpressions().add(cb.like(r.get("tradeMerchant").get("name"), "%" + orderCriteria.getTradeMerchant().getName() + "%"));
                 }
-                if(orderCriteria.getTradePartner()!=null) {
-                    predicate.getExpressions().add(cb.like(r.get("tradePartner").get("name"),"%"+orderCriteria.getTradePartner().getName()+"%"));
+                if (orderCriteria.getTradePartner() != null) {
+                    predicate.getExpressions().add(cb.like(r.get("tradePartner").get("name"), "%" + orderCriteria.getTradePartner().getName() + "%"));
                 }
-                if(orderCriteria.getLockPartner()!=null) {
-                    predicate.getExpressions().add(cb.like(r.get("lockPartner").get("name"),"%"+orderCriteria.getLockPartner().getName()+"%"));
+                if (orderCriteria.getLockPartner() != null) {
+                    predicate.getExpressions().add(cb.like(r.get("lockPartner").get("name"), "%" + orderCriteria.getLockPartner().getName() + "%"));
                 }
                 LeJiaUser lejiaUser = orderCriteria.getLejiaUser();
-                if(lejiaUser!=null) {
-                    if(lejiaUser.getUserName()!=null) {
-                        predicate.getExpressions().add(cb.like(r.get("offLineOrder").get("leJiaUser").get("name"),"%"+orderCriteria.getLockPartner().getName()+"%"));
+                if (lejiaUser != null) {
+                    if (lejiaUser.getUserName() != null) {
+                        predicate.getExpressions().add(cb.like(r.get("offLineOrder").get("leJiaUser").get("name"), "%" + orderCriteria.getLockPartner().getName() + "%"));
                     }
-                    if(lejiaUser.getPhoneNumber()!=null) {
-                        predicate.getExpressions().add(cb.like(r.get("offLineOrder").get("leJiaUser").get("phoneNumber"),"%"+orderCriteria.getLockPartner().getName()+"%"));
+                    if (lejiaUser.getPhoneNumber() != null) {
+                        predicate.getExpressions().add(cb.like(r.get("offLineOrder").get("leJiaUser").get("phoneNumber"), "%" + orderCriteria.getLockPartner().getName() + "%"));
                     }
                 }
                 return predicate;
             }
         };
     }
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Map findOtherData(OrderShareCriteria managerCriteria) {
         Date start = null;
         Date end = null;
-        if(managerCriteria.getStartDate()==null) {
+        if (managerCriteria.getStartDate() == null) {
             start = new Date();
             end = new Date();
-        }else {
+        } else {
             start = new Date(managerCriteria.getStartDate());
             end = new Date(managerCriteria.getEndDate());
         }
-        List<Object[]> otherData = offLineOrderShareRepository.findOtherData(managerCriteria.getPartnerManager().getId(),start,end);
+        List<Object[]> otherData = offLineOrderShareRepository.findOtherData(managerCriteria.getPartnerManager().getId(), start, end);
         Map map = new HashMap();
-        map.put("bind_merchants",otherData.get(0)[0]==null?0L:otherData.get(0)[0]);
-        map.put("bind_partner_manager",otherData.get(0)[1]==null?0L:otherData.get(0)[1]);
-        map.put("total_price",otherData.get(0)[2]==null?0L:otherData.get(0)[2]);
+        map.put("bind_merchants", otherData.get(0)[0] == null ? 0L : otherData.get(0)[0]);
+        map.put("bind_partner_manager", otherData.get(0)[1] == null ? 0L : otherData.get(0)[1]);
+        map.put("total_price", otherData.get(0)[2] == null ? 0L : otherData.get(0)[2]);
         return map;
     }
 
@@ -475,14 +490,14 @@ public class OffLineOrderService {
     }
 
     /**
-     *  查看门店每日订单总额(线下)
+     * 查看门店每日订单总额(线下)
      */
-    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Long countOffLineOrder(List<Merchant> merchants) {
         Long offLineDailyCount = 0L;
         for (Merchant merchant : merchants) {
             Long totalPrice = offLineOrderRepository.countTotalPrice(merchant.getId());
-            offLineDailyCount += totalPrice==null?0L:totalPrice;
+            offLineDailyCount += totalPrice == null ? 0L : totalPrice;
         }
         return offLineDailyCount;
     }
@@ -593,14 +608,13 @@ public class OffLineOrderService {
      *
      * @param codeOrderCriteria 商户查询信息
      * @return 商户旗下门店 扫码订单信息
-     *
      */
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public CodeOrderCriteria findCodeOrderByMerchantUser222(CodeOrderCriteria codeOrderCriteria) {
 
         if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 0) {
             codeOrderCriteria.setPayWay(1);//微信
-        }else if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 1){
+        } else if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 1) {
             codeOrderCriteria.setPayWay(2);//红包
         }
         /**
@@ -610,8 +624,8 @@ public class OffLineOrderService {
 
         StringBuffer sql = new StringBuffer();
         sql.append("select olo.order_sid,  m.name,  olo.pay_way_id,  olo.lepay_code,  olo.complete_date,  olo.total_price,  olo.true_score,  olo.rebate_way, "
-                   + " olo.transfer_money_from_true_pay,  (olo.transfer_money - olo.transfer_money_from_true_pay),  ifnull(m.lj_commission,0),  olo.lj_commission, 222  "
-                   + " from off_line_order olo INNER JOIN merchant m ON olo.merchant_id = m.id  where  ");
+            + " olo.transfer_money_from_true_pay,  (olo.transfer_money - olo.transfer_money_from_true_pay),  ifnull(m.lj_commission,0),  olo.lj_commission, 222  "
+            + " from off_line_order olo INNER JOIN merchant m ON olo.merchant_id = m.id  where  ");
         if (codeOrderCriteria.getStoreIds() != null) {
             sql.append(" olo.merchant_id in (");
 //            for(int i =0;i<codeOrderCriteria.getStoreIds().length;i++){
@@ -634,7 +648,7 @@ public class OffLineOrderService {
             sql.append(" and olo.order_sid=");
             sql.append(codeOrderCriteria.getOrderSid());
         }
-        if(codeOrderCriteria.getState()!=null){
+        if (codeOrderCriteria.getState() != null) {
             sql.append(" and olo.state=");
             sql.append(codeOrderCriteria.getState());
         }
@@ -660,9 +674,9 @@ public class OffLineOrderService {
          */
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT sum(o.total_price) as totalPrice , sum(o.true_pay) as truePay , sum(o.true_score) as trueScore , \n" +
-                  "sum(o.transfer_money_from_true_pay) as transferMoneyFromTruePay , \n" +
-                  "(sum(o.transfer_money)-sum(o.transfer_money_from_true_pay)) as transferMoneyHB, count(o.id) \n" +
-                  "from off_line_order as o where");
+            "sum(o.transfer_money_from_true_pay) as transferMoneyFromTruePay , \n" +
+            "(sum(o.transfer_money)-sum(o.transfer_money_from_true_pay)) as transferMoneyHB, count(o.id) \n" +
+            "from off_line_order as o where");
         if (codeOrderCriteria.getStoreIds() != null) {
             sb.append(" o.merchant_id in (");
 //            for(int i =0;i<codeOrderCriteria.getStoreIds().length;i++){
@@ -693,7 +707,7 @@ public class OffLineOrderService {
             sb.append(codeOrderCriteria.getEndDate());
             sb.append("'");
         }
-        if(codeOrderCriteria.getState()!=null){
+        if (codeOrderCriteria.getState() != null) {
             sb.append(" and o.state=");
             sb.append(codeOrderCriteria.getState());
         }
@@ -710,9 +724,9 @@ public class OffLineOrderService {
         Integer listCount = Integer.valueOf(details.get(0)[5] == null ? "0" : details.get(0)[5].toString());
         codeOrderCriteria.setTotalCount(listCount);
         Integer pageSize = codeOrderCriteria.getPageSize();
-        if (listCount <= pageSize){
+        if (listCount <= pageSize) {
             codeOrderCriteria.setTotalPages(1);
-        }else {
+        } else {
             codeOrderCriteria.setTotalPages(listCount % pageSize == 0 ? listCount / pageSize : (listCount / pageSize) + 1);
         }
 
@@ -721,6 +735,7 @@ public class OffLineOrderService {
 
     /**
      * 根据门店ID查询二维码收款金额
+     *
      * @param merchantId
      * @return
      */
@@ -730,7 +745,8 @@ public class OffLineOrderService {
     }
 
     /**
-     *  查询 线下 佣金明细
+     * 查询 线下 佣金明细
+     *
      * @param commissionDetailsCriteria
      * @return
      */
@@ -741,15 +757,15 @@ public class OffLineOrderService {
 
         StringBuffer sql = new StringBuffer();
         sql.append("select  olo_olos.complete_date, wxu.nickname, wxu.head_image_url, merchant.name, olo_olos.total_price, olo_olos.true_pay, olo_olos.share_ from "
-                   + " (select olo.complete_date as complete_date,  olo.le_jia_user_id as user_id,  olos.lock_merchant_id as merchant_id, "
-                   + " olo.total_price as total_price,  olo.true_pay as true_pay,  olos.to_lock_merchant as share_ "
-                   + " from off_line_order olo, off_line_order_share olos where olo.id = olos.off_line_order_id and olo.state = 1 ");
+            + " (select olo.complete_date as complete_date,  olo.le_jia_user_id as user_id,  olos.lock_merchant_id as merchant_id, "
+            + " olo.total_price as total_price,  olo.true_pay as true_pay,  olos.to_lock_merchant as share_ "
+            + " from off_line_order olo, off_line_order_share olos where olo.id = olos.off_line_order_id and olo.state = 1 ");
         if (commissionDetailsCriteria.getStoreIds() != null) {
             sql.append(" and olos.lock_merchant_id in (");
-            for(int i =0;i<commissionDetailsCriteria.getStoreIds().length;i++){
-                sql.append(commissionDetailsCriteria.getStoreIds()[i]+",");
+            for (int i = 0; i < commissionDetailsCriteria.getStoreIds().length; i++) {
+                sql.append(commissionDetailsCriteria.getStoreIds()[i] + ",");
             }
-            sql.deleteCharAt(sql.length()-1);
+            sql.deleteCharAt(sql.length() - 1);
             sql.append(")");
         }
         if (commissionDetailsCriteria.getStartDate() != null && commissionDetailsCriteria.getStartDate() != "") {
@@ -772,7 +788,8 @@ public class OffLineOrderService {
     }
 
     /**
-     *  查询 线下 佣金明细count
+     * 查询 线下 佣金明细count
+     *
      * @param commissionDetailsCriteria
      * @return
      */
@@ -781,13 +798,13 @@ public class OffLineOrderService {
 
         StringBuffer sql = new StringBuffer();
         sql.append(" select count(olo.id), sum(olos.to_lock_merchant) "
-                   + " from off_line_order olo, off_line_order_share olos where olo.id = olos.off_line_order_id and olo.state = 1 ");
+            + " from off_line_order olo, off_line_order_share olos where olo.id = olos.off_line_order_id and olo.state = 1 ");
         if (commissionDetailsCriteria.getStoreIds() != null) {
             sql.append(" and olos.lock_merchant_id in (");
-            for(int i =0;i<commissionDetailsCriteria.getStoreIds().length;i++){
-                sql.append(commissionDetailsCriteria.getStoreIds()[i]+",");
+            for (int i = 0; i < commissionDetailsCriteria.getStoreIds().length; i++) {
+                sql.append(commissionDetailsCriteria.getStoreIds()[i] + ",");
             }
-            sql.deleteCharAt(sql.length()-1);
+            sql.deleteCharAt(sql.length() - 1);
             sql.append(")");
         }
         if (commissionDetailsCriteria.getStartDate() != null && commissionDetailsCriteria.getStartDate() != "") {
@@ -802,5 +819,41 @@ public class OffLineOrderService {
         return details;
     }
 
-}
 
+    /***
+     *  乐加结算详情 - 数据概览
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List<Object[]> findOfflineOrderStatistic(OLOrderCriteria olOrderCriteria) {
+         /***
+         *  根据条件查询订单流水和入账 - 交易记录【到账详情】
+         */
+            String base = " select count(1),IFNULL(sum(ol.transfer_money),0),IFNULL(sum(ol.transfer_money_from_true_pay),0)  from off_line_order ol,pay_way p where ol.pay_way_id = p.id  ";
+            StringBuffer sql = new StringBuffer(base);
+            if(olOrderCriteria.getMerchant()!=null && olOrderCriteria.getMerchant().getId()!=null) {
+                sql.append(" and ol.merchant_id = "+olOrderCriteria.getMerchant().getId());
+            }else {
+                return null;
+            }
+            if(olOrderCriteria.getOrderType()!=null && olOrderCriteria.getOrderType()==0) {        // 订单类型
+                sql.append(" and (ol.rebate_way=0 or ol.rebate_way=2 or ol.rebate_way=4 or ol.rebate_way=5 or ol.rebate_way=6) ");
+            }else if(olOrderCriteria.getOrderType()!=null && olOrderCriteria.getOrderType()==1){
+                sql.append(" and (ol.rebate_way=1 or ol.rebate_way=3) ");
+            }
+            if(olOrderCriteria.getPayWay()!=null) {                 // 支付类型
+                sql.append(" and p.id = "+olOrderCriteria.getPayWay());
+            }
+            if(olOrderCriteria.getOrderSid()!=null) {               // SID
+                sql.append(" and ol.order_sid = "+olOrderCriteria.getOrderSid());
+            }
+            if(olOrderCriteria.getState()!=null) {                  // state
+                sql.append(" and ol.state = "+olOrderCriteria.getState());
+            }
+            if(olOrderCriteria.getStartDate()!=null && olOrderCriteria.getEndDate()!=null) {
+                sql.append(" and ol.complete_date between '"+olOrderCriteria.getStartDate()+"' and '"+olOrderCriteria.getEndDate()+"'");
+            }
+            Query query_count = em.createNativeQuery(sql.toString());
+            List<Object[]> details = query_count.getResultList();
+            return details;
+    }
+}

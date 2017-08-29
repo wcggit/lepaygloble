@@ -15,12 +15,7 @@ angular.module('lepayglobleApp')
         HomePage.getMerchantsInfo().then(function (response) {
             var data = response.data;
             $scope.merchants = data;
-            if($stateParams.mid!=null) {
-                $scope.defaultId = $stateParams.mid;
-            }else {
-                $scope.topDisplay = true;
-                $scope.defaultId = data[0].id;
-            }
+            $scope.defaultId = data[0].id;
             var merchant = {};
             merchant.id = $scope.defaultId;
             financialCriteria.merchant = merchant;
@@ -58,7 +53,7 @@ angular.module('lepayglobleApp')
                 var posTransfer = [];
                 var appTransfer = [];
                 for (var i = 0; i < page.content.length; i++) {
-                    dates[i] = page.content[i].balanceDate.substring(0,10);
+                    dates[i] = page.content[i].balanceDate.substring(0, 10);
                     transferPrice[i] = page.content[i].transferPrice / 100.0;
                     posTransfer[i] = page.content[i].posTransfer / 100.0;
                     appTransfer[i] = page.content[i].appTransfer / 100.0;
@@ -101,10 +96,10 @@ angular.module('lepayglobleApp')
             //  门店
             var merchant = {};
             var mid = $("#selMerchant").val();
-            if(mid!=-1) {
+            if (mid != -1) {
                 merchant.id = mid;
                 financialCriteria.merchant = merchant;
-            }else {
+            } else {
                 var deftId = $scope.defaultId;
                 $("#selMerchant").val(deftId);
                 merchant.id = deftId;
@@ -140,24 +135,24 @@ angular.module('lepayglobleApp')
             switch ($scope.currentState) {
                 case 0:
                     $scope.currentTab0 = true;
-                    financialCriteria.state=null;
+                    financialCriteria.state = null;
                     $scope.searchByDate();
                     break;
                 case 1:
                     $scope.currentTab1 = true;
                     $scope.ttlWarn1 = false;
-                    financialCriteria.state=0;
+                    financialCriteria.state = 0;
                     $scope.searchByDate();
                     break;
                 case 2:
                     $scope.currentTab2 = true;
-                    financialCriteria.state=1;
+                    financialCriteria.state = 1;
                     $scope.searchByDate();
                     break;
                 default:
                     $scope.currentTab3 = true;
                     $scope.ttlWarn2 = false;
-                    financialCriteria.state=2;
+                    financialCriteria.state = 2;
                     $scope.searchByDate();
                     break;
             }

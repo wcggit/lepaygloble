@@ -13,39 +13,31 @@
         <form class="form-inline list-check">
             <div class="row">
                 <div class="form-group col-md-4">
-                    <label>交易门店</label>
-                    <div class="input-group col-md-6 select-style">
-                        <select class="form-control" id="selMerchant">
-                            <option value="-1">请选择</option>
-                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
-                        </select>
-                        <span class="select-jiao"></span>
-                    </div>
-                </div>
-                <div class="form-group col-md-4">
                     <label for="orderType">订单类型</label>
                     <div class="input-group col-md-6 select-style">
                         <select class="form-control" id="orderType">
                             <option value="-1">请选择</option>
+                            <option value="0">普通订单</option>
+                            <option value="1">乐加订单</option>
                             <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
                         </select>
                         <span class="select-jiao"></span>
                     </div>
                 </div>
-                <button type="button" class="btn btn-warning btn-check2" ng-click="searchByDate()">查询</button>
+                <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
             </div>
         </form>
         <!--表格信息总结-->
         <p class="ttl-add table-title">
-            所选条件下，共有<span class="font-yellow">258</span>条交易记录，
-            总流水<span class="font-yellow">￥111111</span>，
-            总入账<span class="font-yellow">￥111111</span>。<br>
-            普通订单<span class="font-yellow">128</span>笔，
-            总流水<span class="font-yellow">￥111111</span>，
-            总入账<span class="font-yellow">￥111111</span>。
-            乐加订单<span class="font-yellow">128</span>笔，
-            总流水<span class="font-yellow">￥111111</span>，
-            总入账<span class="font-yellow">￥111111</span>。
+            所选条件下，共有<span class="font-yellow" ng-bind="totalData[0][0]"></span>条交易记录，
+            总流水<span class="font-yellow" ng-bind="'￥'+totalData[0][1]/100.0"></span>，
+            总入账<span class="font-yellow" ng-bind="'￥'+totalData[0][2]/100.0"></span>。<br>
+            普通订单<span class="font-yellow" ng-show="commonData!=null">{{commonData[0][0]}}</span><span class="font-yellow" ng-show="commonData==null">0</span>笔，
+            总流水<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][1]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>，
+            总入账<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][2]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>。
+            乐加订单<span class="font-yellow" ng-show="lejiaData!=null">{{lejiaData[0][0]}}</span><span class="font-yellow" ng-show="lejiaData==null">0</span>笔，
+            总流水<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][1]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>，
+            总入账<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][2]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>。
         </p>
         <!--表格-->
         <div class="panel panel-default">
@@ -59,74 +51,33 @@
                     <td>确认码</td>
                     <td>交易完成时间</td>
                     <td>订单金额</td>
-                    <td>订单类型</td>
                     <td>费率</td>
                     <td>实际入账</td>
                 </tr>
                 </thead>
                 <tbody>
                 <tr class="tr-empty"><td class="text-center" colspan="10" ng-show="pulls==null">暂无数据！</td></tr>
-                <tr>
-                    <td>2142343</td>
-                    <td><h4>棉花糖KTV</h4><h4>（朝阳）</h4></td>
-                    <td>非会员</td>
-                    <td>微信</td>
-                    <td>1133</td>
-                    <td><h4>2012.23.34</h4><h4>05:48</h4></td>
-                    <td>￥324.43</td>
-                    <td>普通订单</td>
-                    <td>￥0.5</td>
-                    <td>￥324.43</td>
-                </tr>
-                <tr>
-                    <td>2142343</td>
-                    <td><h4>棉花糖KTV</h4><h4>（朝阳）</h4></td>
-                    <td><span class="wx-faceImg"><img src="../../../../../../assets/images/head/logo.png" alt=""></span><span>王尼玛</span></td>
-                    <td>微信</td>
-                    <td>1133</td>
-                    <td><h4>2012.23.34</h4><h4>05:48</h4></td>
-                    <td>￥324.43</td>
-                    <td>普通订单</td>
-                    <td>9折</td>
-                    <td>￥324.43</td>
+                <tr ng-repeat="x in pulls">
+                    <td ng-bind="x.orderSid"></td>
+                    <td ng-bind="x.merchant.name"></td>
+                    <td ng-show="x.leJiaUser==null||(x.leJiaUser!=null&&x.leJiaUser.name==null)">非会员</td>
+                    <td ng-show="x.leJiaUser!=null&&x.leJiaUser.name!=null">{{x.leJiaUser.id}}</td>
+                    <td ng-bind="x.lepayCode"></td>
+                    <td ng-bind="x.payWay.payWay"></td>
+                    <td>
+                        <p ng-bind="x.completeDate|date:'yyyy-MM-dd'"></p>
+                        <p ng-bind="x.completeDate|date:'HH:mm:ss'"></p>
+                    </td>
+                    <td ng-bind="'¥'+x.totalPrice/100.0"></td>
+                    <td ng-show="x.rebateWay==0||x.rebateWay==2||x.rebateWay==4||x.rebateWay==5||x.rebateWay==6">普通订单</td>
+                    <td ng-show="x.rebateWay==3||x.rebateWay==1">乐加订单</td>
+                    <td ng-show="x.rebateWay>6||x.rebateWay<1">{{x.rebateWay}}</td>
+                    <td ng-bind="'¥'+x.ljCommission/100.0"></td>
+                    <td ng-bind="'¥'+x.transferMoney/100.0"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <div class="panel panel-default">
-            <table class="table ol-tab">
-                <thead class="active">
-                <tr>
-                    <td>订单号</td>
-                    <td>交易门店</td>
-                    <td>支付方式</td>
-                    <td>交易完成时间</td>
-                    <td>退款完成时间</td>
-                    <td>订单金额</td>
-                    <td>退款金额</td>
-                    <td>订单类型</td>
-                    <td>费率</td>
-                    <td>实际少入账</td></td>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="tr-empty"><td class="text-center" colspan="10" ng-show="pulls==null">暂无数据！</td></tr>
-                <tr>
-                    <td>2142343</td>
-                    <td><h4>棉花糖KTV</h4><h4>（朝阳）</h4></td>
-                    <td>微信</td>
-                    <td><h4>2012.23.34</h4><h4>05:48</h4></td>
-                    <td><h4>2012.23.34</h4><h4>05:48</h4></td>
-                    <td>￥324.43</td>
-                    <td>￥324.43</td>
-                    <td>普通订单</td>
-                    <td>￥0.5</td>
-                    <td>￥324.43</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
         <!--分页-->
         <div class=" clearfix">
             <nav class="pull-right">

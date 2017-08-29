@@ -76,4 +76,24 @@ public class OLOrderCriteria {
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
     }
+
+    private Long payWay;
+
+    private Integer orderType;
+
+    public Long getPayWay() {
+        return payWay;
+    }
+
+    public void setPayWay(Long payWay) {
+        this.payWay = payWay;
+    }
+
+    public Integer getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
+    }
 }

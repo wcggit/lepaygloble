@@ -5,7 +5,7 @@
 
 
 angular.module('lepayglobleApp')
-    .controller('yiBaoCodeTradeController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, HomePage) {
+    .controller('yiBaoCodeTradeController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, $stateParams,Trade) {
         var currentPage = null;
         var settlementCriteria = {};
         settlementCriteria.offset = 1;
@@ -26,20 +26,10 @@ angular.module('lepayglobleApp')
                     loadContent();
                     loadMerchantLedger($scope.defaultId);
                 }else {                         // 乐加
-                    $state.go("yiBaoHistoryTrade", {mid: $scope.defaultId});
+                    $state.go("lePlusCodeTrade", {mid: $scope.defaultId});
                 }
             });
         }
-        /*HomePage.getMerchantsInfo().then(function (response) {
-            var data = response.data;
-            $scope.merchants = data;
-            $scope.defaultId = data[0].id;
-            var merchant = {};
-            merchant.id = $scope.defaultId;
-            settlementCriteria.merchant = merchant;
-            loadContent();
-            loadMerchantLedger($scope.defaultId);
-        });*/
 
         // 加载易宝商户数,同子商户门店
         function loadMerchantLedger(mid) {
@@ -107,13 +97,14 @@ angular.module('lepayglobleApp')
                 merchant.id = deftId;
                 settlementCriteria.merchant = merchant;
             }
+            // alert(JSON.stringify(settlementCriteria));
             settlementCriteria.offset = 1;
             currentPage = 1;
             var payWay = $scope.payway["merchant-"+mid];    // 根据支付通道选择页面
             if(payWay==3) {                 // 易宝
                 loadContent();
             }else {                         // 乐加
-                $state.go("yiBaoHistoryTrade", {mid: mid});
+                $state.go("lePlusCodeTrade", {mid: mid});
             }
         }
         // 跳转到详情页面
@@ -201,6 +192,27 @@ angular.module('lepayglobleApp')
             loadContent();
         };
 
+
+        $('#timePicker1')
+        // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' +
+        // moment().format('YYYY/MM/DD HH:mm:59'))
+            .daterangepicker({
+                timePicker: true, //是否显示小时和分钟
+                timePickerIncrement: 1, //时间的增量，单位为分钟
+                opens: 'right', //日期选择框的弹出位置
+                startDate: moment().format('YYYY/MM/DD HH:mm:00'),
+                endDate: moment().format('YYYY/MM/DD HH:mm:59'),
+                format: 'YYYY/MM/DD HH:mm:ss', //控件中from和to 显示的日期格式
+                ranges: {
+                    '最近1小时': [moment().subtract('hours', 1), moment()],
+                    '今日': [moment().startOf('day'), moment()],
+                    '昨日': [moment().subtract('days', 1).startOf('day'),
+                        moment().subtract('days', 1).endOf('day')],
+                    '最近7日': [moment().subtract('days', 6), moment()],
+                    '最近30日': [moment().subtract('days', 29), moment()]
+                },
+            }, function (start, end, label) {
+            });
 
     });
 

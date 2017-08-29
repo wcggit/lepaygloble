@@ -56,10 +56,11 @@ public class LedgerSettlementController {
         if (settlementCriteria.getOffset() == null) {
             settlementCriteria.setOffset(1);
         }
-        Merchant merchant = settlementCriteria.getMerchant();
-        if (merchant == null) {
+        Long merchantId = settlementCriteria.getMerchant().getId();
+        if (merchantId == null) {
             return LejiaResult.build(400, "无门店信息");
         }
+        Merchant merchant = merchantService.findMerchantById(merchantId);
         MerchantLedger merchantLedger = merchantLedgerService.findMerchantLedgerByMerchant(merchant);
         MerchantUserLedger merchantUserLedger = merchantLedger.getMerchantUserLedger();
         settlementCriteria.setLedgerNo(merchantUserLedger.getLedgerNo());               //  获取子商户号

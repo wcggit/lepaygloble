@@ -26,6 +26,8 @@ angular.module('lepayglobleApp')
                 url: '/lePlusCodeTrade',
                 data: {
                     authorities: ["merchant"]
+                },params: {
+                    mid: null
                 },
                 views: {
                     'lePlusJieSuanTab@lePlusJieSuan': {

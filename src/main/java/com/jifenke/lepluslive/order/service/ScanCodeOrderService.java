@@ -195,10 +195,10 @@ public class ScanCodeOrderService {
                     predicate.getExpressions().add(
                         cb.equal(r.<Merchant>get("merchant").get("id"), orderCriteria.getMerchantId()));
                 }
-                if (orderCriteria.getState() != null && !""
-                    .equals(orderCriteria.getState())) { //门店ID
+                if (orderCriteria.getOrderSid() != null && !""
+                    .equals(orderCriteria.getOrderSid())) { //OrderSID
                     predicate.getExpressions().add(
-                        cb.equal(r.<Merchant>get("merchant").get("id"), orderCriteria.getMerchantId()));
+                        cb.equal(r.<Merchant>get("orderSid"), orderCriteria.getOrderSid()));
                 }
                 if (orderCriteria.getOrderType() != null) {                     //订单类型
                     if (orderCriteria.getOrderType() == 1) {
@@ -215,6 +215,10 @@ public class ScanCodeOrderService {
                                 cb.equal(r.<Category>get("orderType"), "12006"))
                         );
                     }
+                }
+                if(orderCriteria.getPayment()!=null&&!"".equals(orderCriteria.getPayment())) {
+                    predicate.getExpressions().add(
+                        cb.equal(r.<Merchant>get("scanCodeOrderExt").get("payment"), orderCriteria.getPayment()));
                 }
                 if(orderCriteria.getPayType()!=null && !"".equals(orderCriteria.getPayType())) {
                     predicate.getExpressions().add(cb.equal(r.<Category>get("scanCodeOrderExt").get("payType"),orderCriteria.getPayType()));
@@ -243,6 +247,12 @@ public class ScanCodeOrderService {
         }
         if(scanCodeOrderCriteria.getPayType()!=null) {          // 支付类型
             sql.append(" and se.pay_type = "+scanCodeOrderCriteria.getPayType());
+        }
+        if(scanCodeOrderCriteria.getState()!=null) {
+            sql.append(" and so.state = "+scanCodeOrderCriteria.getState());
+        }
+        if(scanCodeOrderCriteria.getPayment()!=null) {          // 支付类型
+            sql.append(" and se.payment = "+scanCodeOrderCriteria.getPayment());
         }
         if(scanCodeOrderCriteria.getStartDate()!=null && scanCodeOrderCriteria.getEndDate()!=null) {
             sql.append(" and so.complete_date between '"+scanCodeOrderCriteria.getStartDate()+"' and '"+scanCodeOrderCriteria.getEndDate()+"'");
