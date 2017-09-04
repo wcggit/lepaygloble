@@ -50,55 +50,24 @@ angular.module('lepayglobleApp')
                 var data = response.data;
                 $scope.loginInfo = data;
                 $scope.merchantType = data.type;
-                if (data.type == 8) {
-                    $("#ios").show();
-                    $("#iosTab").show();
-                    $("#home").show();
-                    $("#homeTab").show();
-                }
             });
         }
         $scope.getCurrentLogin();
 
 
         $scope.shopOwnerAccount = function () {
-            $http.get("/api/merchantUser/owerAccount").success(function (response) {
+            $http.get("/api/merchantUser/userAccount").success(function (response) {
                 var data = response.data;
-                var acccount = document.getElementById("account");
-                var content = "";
-                if (data == null || data == '') {
-                    content += '<tr class="tr-empty"><td class="text-center" colspan="4">暂无数据！</td></tr>';
-                } else {
-                    for (var i = 0; i < data.length; i++) {
-                        content += '<tr class="tr-noEmpty"><td>店主</td>' +
-                            '<td><span>' + data[i].name + '</span></td>' +
-                            '<td>********</td>' +
-                            '<td><a class="a-btn">解除绑定</a></td></tr>';
-                    }
-                }
-                content += '</tbody></table>';
-                acccount.innerHTML = content;
+                $scope.accounts = data;
             });
         };
         $scope.shopOwnerAccount();
+
         $scope.cashierAccount = function () {
             $http.get("/api/merchantUser/cashierAccount").success(function (response) {
                 var data = response.data;
-                console.log(JSON.stringify(response));
-                var crasher = document.getElementById("crasher");
-                var content = "";
-                if (data == null || data == '') {
-                    content += '<tr class="tr-empty"><td class="text-center" colspan="3">暂无数据！</td></tr>';
-                } else {
-                    for (var i = 0; i < data.length; i++) {
-                        content += '<tr class="tr-noEmpty"><td>收银员</td>' +
-                            '<td><span>' + data[i].name + '</span></td>' +
-                            '<td>********</td>' +
-                            '<td><a class="a-btn">解除绑定</a></td></tr>';
-                    }
-                }
-                content += '</tbody></table>';
-                crasher.innerHTML = content;
+                console.log(JSON.stringify(data));
+                $scope.cashiers = data;
             });
         };
 
@@ -114,7 +83,7 @@ angular.module('lepayglobleApp')
         $scope.saveAccount = function () {
             var merchantUser = {};
             var username = $("#accountName").val();
-            var accountType = $("input[name=accountType]:checked").val();
+            var accountType = 0;
             var passwd = $("#accountPwd").val();
             var repasswd = $("#rePwd").val();
             var checkMerchant = "";              // 获取所有选中的门店
@@ -137,12 +106,13 @@ angular.module('lepayglobleApp')
                 alert("请输入用户名");
                 return;
             }
-            if (accountType != null && accountType != '') {
+            /*if (accountType != null && accountType != '') {
                 merchantUser.type = accountType;
             } else {
                 alert("请选择账户类型");
                 return;
-            }
+            }*/
+            merchantUser.type = accountType;
             if (passwd != null && passwd != '') {
                 merchantUser.password = passwd;
             } else {
@@ -157,24 +127,26 @@ angular.module('lepayglobleApp')
                 alert("两次输入的密码不一致");
                 return;
             }
-            if (!$scope.checkInfo()) {
-                alert("您输入的管理员密码有误，请重新输入。");
-                return;
-            }
             if (!$scope.checkNameRepeat()) {
                 alert("名称已存在，换个试试吧～")
                 return;
             }
             console.log(JSON.stringify(merchantUser));
-            $http.post('api/merchantUser/createAccount', merchantUser).success(function (response) {
-                console.log(JSON.stringify(response));
-                if (response.status == 200) {
-                    alert("账号保存成功！");
-                    window.location.reload();
-                } else {
-                    alert("账号创建失败 ！");
-                }
-            })
+            if (!$scope.checkInfo()) {
+                alert("您输入的管理员密码有误，请重新输入。");
+                $("#thisPwd").val('');
+                return;
+            }else {
+                $http.post('api/merchantUser/createAccount', merchantUser).success(function (response) {
+                    console.log(JSON.stringify(response));
+                    if (response.status == 200) {
+                        alert("账号保存成功！");
+                        window.location.reload();
+                    } else {
+                        alert("账号创建失败 ！");
+                    }
+                })
+            }
         }
 
         // 校验当前用户
@@ -183,7 +155,6 @@ angular.module('lepayglobleApp')
             var flag = true;
             $http.post('api/merchantUser/checkInfo', data).success(function (response) {
                 if (response.status == 400) {
-                    alert("当前账号密码不正确,请重新输入！");
                     $("#thisPwd").val('');
                     flag = false;
                 }
@@ -276,4 +247,21 @@ angular.module('lepayglobleApp')
                 $(this).attr('checked', $("#checkAll").is(':checked'));
             });
         }
+
+        // 解除绑定
+        $scope.unbindAccount = function (id) {
+            var result = confirm("是否解除该账号的权限?")
+            if(result) {
+                $http.get("/api/merchantUser/accountUnbind/"+id).success(function (response) {
+                    if(response.status==200) {
+                        alert("已解除该账号绑定！");
+                        window.location.reload();
+                    }else {
+                        alert(response.msg);
+                    }
+                });
+            }
+        }
+
+
     })

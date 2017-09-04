@@ -3,9 +3,12 @@ package com.jifenke.lepluslive.merchant.service;
 import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserResource;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserShop;
 import com.jifenke.lepluslive.merchant.repository.MerchantRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository;
+import com.jifenke.lepluslive.merchant.repository.MerchantUserShopRepository;
 import com.jifenke.lepluslive.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -32,6 +35,8 @@ public class MerchantUserService {
     private MerchantRepository merchantRepository;
     @Inject
     private LeJiaUserRepository lejiaUserRepository;
+    @Inject
+    private MerchantUserShopRepository merchantUserShopRepository;
 
     public MerchantUser getUserWithAuthorities() {
         return  merchantUserRepository.findMerchantUserByMerchantSid(SecurityUtils.getCurrentUserLogin()).get();
@@ -86,13 +91,24 @@ public class MerchantUserService {
     }
 
     /**
+     *  获取商户下所有账号
+     */
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public List<MerchantUser> findUserAccount(Long merchantUserId) {
+        return merchantUserRepository.findUserAccount(merchantUserId);
+    }
+
+    /**
      *  根据用户名查询商户
      */
     @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
     public MerchantUser findByName(String username) {
         return merchantUserRepository.findByUserName(username);
     }
-
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public MerchantUser findByMerchantSid(String sid) {
+        return merchantUserRepository.findByMerchantSid(sid);
+    }
 
     /**
      *  修改商户账号密码 17/05/08
@@ -110,5 +126,33 @@ public class MerchantUserService {
         }else {
             return false;
         }
+    }
+
+    /**
+     *  账号解绑
+     */
+    @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
+    public boolean unbindAccount(MerchantUser merchantUser) {
+        if(merchantUser.getType()==8) {
+            return false;
+        }
+        // 清空PC平台关联
+        List<MerchantUserResource> merchantUserResources = merchantUserResourceRepository.findByMerchantUser(merchantUser.getId());
+        if(merchantUserResources!=null&&merchantUserResources.size()>0) {
+            for (MerchantUserResource merchantUserResource : merchantUserResources) {
+                merchantUserResourceRepository.delete(merchantUserResource);
+            }
+        }
+        // 清空公众号关联
+        List<MerchantUserShop> userShops = merchantUserShopRepository.findByMerchantUser(merchantUser);
+        if(userShops!=null&&userShops.size()>0) {
+            for (MerchantUserShop userShop : userShops) {
+                merchantUserShopRepository.delete(userShop);
+            }
+        }
+        // 解除商户关系
+        merchantUser.setCreateUserId(merchantUser.getId());
+        merchantUserRepository.save(merchantUser);
+        return true;
     }
 }

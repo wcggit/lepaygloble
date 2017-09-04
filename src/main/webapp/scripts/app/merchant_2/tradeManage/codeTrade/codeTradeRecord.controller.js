@@ -171,4 +171,8 @@ angular.module('lepayglobleApp')
             location.href = "/api/codeTradeList/export" + data;
         }
 
+        $scope.historyTradeRecord = function () {
+            $state.go("historyTradeRecord");
+        }
+
     })

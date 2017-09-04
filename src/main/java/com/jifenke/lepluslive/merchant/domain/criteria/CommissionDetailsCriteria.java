@@ -13,6 +13,8 @@ public class CommissionDetailsCriteria {
      */
     private List<Object[]> commissionDetails;
 
+    private Long merchantId;
+
     /**
      * 佣金明细 数量
      */
@@ -115,4 +117,11 @@ public class CommissionDetailsCriteria {
         this.totalPages = totalPages;
     }
 
+    public Long getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
+    }
 }

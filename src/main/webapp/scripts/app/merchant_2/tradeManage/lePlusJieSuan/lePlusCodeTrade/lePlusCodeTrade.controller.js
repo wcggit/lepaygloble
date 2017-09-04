@@ -110,6 +110,7 @@ angular.module('lepayglobleApp')
             var merchant = {};
             var mid = $("#selMerchant").val();
             if (mid != -1) {
+                $scope.defaultId = mid;
                 merchant.id = mid;
                 financialCriteria.merchant = merchant;
             } else {

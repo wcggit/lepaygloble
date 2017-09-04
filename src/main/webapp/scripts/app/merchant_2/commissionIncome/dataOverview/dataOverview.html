@@ -91,47 +91,11 @@
                 <div class="col-md-2 progress-text"><span>{{x[1]}}</span>/{{x[2]}}</div>
                 <div class="col-md-2 progress-text1">
                     <h4>累计收入</h4>
-                    <h4>￥322342344.23</h4>
+                    <h4>￥{{totalCommissions[$index]/100.0}}</h4>
                 </div>
                 <div class="col-md-2 progress-text2">
                     <h4>门店余额</h4>
-                    <h4>￥32242342.34</h4>
-                </div>
-                <div class="col-md-2 progress-btn text-center"><div class="btn btn-warning btn-long">提现</div></div>
-            </div>
-            <div class="col-md-12" ng-repeat="x in merchants">
-                <div class="col-md-4">
-                    <p>{{x[0]}}</p>
-                    <div class="progress">
-                        <div style="width:{{x[1]/x[2]*100}}%" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-                <div class="col-md-2 progress-text"><span>{{x[1]}}</span>/{{x[2]}}</div>
-                <div class="col-md-2 progress-text1">
-                    <h4>累计收入</h4>
-                    <h4>￥322342344.23</h4>
-                </div>
-                <div class="col-md-2 progress-text2">
-                    <h4>门店余额</h4>
-                    <h4>￥32242342.34</h4>
-                </div>
-                <div class="col-md-2 progress-btn text-center"><div class="btn btn-warning btn-long">提现</div></div>
-            </div>
-            <div class="col-md-12" ng-repeat="x in merchants">
-                <div class="col-md-4">
-                    <p>{{x[0]}}</p>
-                    <div class="progress">
-                        <div style="width:{{x[1]/x[2]*100}}%" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-                <div class="col-md-2 progress-text"><span>{{x[1]}}</span>/{{x[2]}}</div>
-                <div class="col-md-2 progress-text1">
-                    <h4>累计收入</h4>
-                    <h4>￥322342344.23</h4>
-                </div>
-                <div class="col-md-2 progress-text2">
-                    <h4>门店余额</h4>
-                    <h4>￥32242342.34</h4>
+                    <h4>￥{{availableCommissions[$index]/100.0}}</h4>
                 </div>
                 <div class="col-md-2 progress-btn text-center"><div class="btn btn-warning btn-long">提现</div></div>
             </div>

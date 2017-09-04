@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import java.util.Date;
 
 /**
  * Created by wcg on 16/5/13.
@@ -32,6 +33,8 @@ public class MerchantWallet {
 
     @Version
     private Long version = 0L;
+
+    private Date lastUpdate;  //最后更新时间
 
     public Long getAvailableBalance() {
         return availableBalance;
@@ -99,5 +102,13 @@ public class MerchantWallet {
 
     public void setMerchantUserId(Long merchantUserId) {
         this.merchantUserId = merchantUserId;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

@@ -139,9 +139,15 @@ public class WithdrawController {
          try {
              Double amount = new Double(request.getParameter("amount"));
              MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
-             List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
-             withdrawService.createWithDrawBill(merchants,merchantUser,amount);
-             return LejiaResult.ok();
+             if(merchantUser==null||merchantUser.getType()!=8) {
+                 return LejiaResult.build(400, "无权限 ^_^! ");
+             }
+             boolean result = withdrawService.createWithDrawBill(merchantUser, amount);
+             if(result) {
+                 return LejiaResult.ok();
+             }else {
+                 return LejiaResult.build(400, "提现失败 ^_^! ");
+             }
          } catch (Exception e) {
              String msg = "提现订单生成失败:" + e.getMessage();
              LOG.error(msg);

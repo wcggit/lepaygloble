@@ -39,10 +39,17 @@ public interface MerchantUserRepository extends JpaRepository<MerchantUser, Long
     @Query(value="SELECT * FROM merchant_user WHERE type = 1 and create_user_id = ?1 ",nativeQuery = true)
     List<MerchantUser> findOwerAccount(Long merchantUserId);
 
+    @Query(value="SELECT * FROM merchant_user WHERE type!=8 and create_user_id = ?1 ",nativeQuery = true)
+    List<MerchantUser> findUserAccount(Long merchantUserId);
+
     /**
      *  根据名称查询用户
      */
     @Query(value="SELECT * FROM merchant_user WHERE name=?1 ",nativeQuery = true)
     MerchantUser findByUserName(String userName);
+
+    @Query(value="SELECT * FROM merchant_user WHERE merchant_sid=?1 ",nativeQuery = true)
+    MerchantUser findByMerchantSid(String sid);
+
 }
 

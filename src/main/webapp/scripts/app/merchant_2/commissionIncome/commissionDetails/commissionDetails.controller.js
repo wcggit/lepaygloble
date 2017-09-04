@@ -6,15 +6,13 @@
 
 angular.module('lepayglobleApp')
     .controller('commissionDetailsController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http) {
-
+        var commissionDetailsCriteria = {};
         var array = new Array();
         $http.get("/api/merchantUser/merchantsInfo").success(function (response) {
-            /*$http.get("api/codeTrade/getMerchants").success(function (response) {*/
             if (response.status == 200) {
                 var data = response.data;
-
                 $scope.myStore = data;
-
+                $scope.defaultId = data[0][0];
                 angular.forEach(data, function (data, index) {
                     array[index] = data[0];
                 });
@@ -26,18 +24,19 @@ angular.module('lepayglobleApp')
 
         var currentPage = 1;
         $scope.loadCommissionDetailsInfo = function () {
-            var commissionDetailsCriteria = {};
-            var a = $("#selectStore").val();
-            if (a != "") {
-                commissionDetailsCriteria.storeIds = $.makeArray(a);
+            var mid = $("#selectStore").val();
+            if (mid != "") {
+                commissionDetailsCriteria.merchantId = mid;
             } else {
-                commissionDetailsCriteria.storeIds = array;
+                commissionDetailsCriteria.merchantId = $scope.defaultId;
             }
             var completeDate = $("#completeDate").val().split("-");
             commissionDetailsCriteria.startDate = completeDate[0];
             commissionDetailsCriteria.endDate = completeDate[1];
             commissionDetailsCriteria.currentPage = currentPage;
-            commissionDetailsCriteria.consumeType = $("#consumeType").val();
+            if(commissionDetailsCriteria.consumeType == null || commissionDetailsCriteria.consumeType =='') {
+                commissionDetailsCriteria.consumeType = 1;
+            }
             $http.post("/api/commissionDetails/commissionDetailsByMerchantUser", commissionDetailsCriteria).success(function (response) {
                 if (response.status == 200) {
                     $scope.commissionDetailsCriteria = response.data.commissionDetails;
@@ -45,16 +44,10 @@ angular.module('lepayglobleApp')
                     $scope.totalPages = $scope.commissionDetailsData.totalPages;
                     $scope.consumeType = $scope.commissionDetailsData.consumeType;
                     $scope.page = currentPage;
-                    if ($scope.commissionDetailsCriteria.length > 0) {
-                        $("#notData").hide();
-                    } else {
-                        $("#notData").show();
-                    }
-
                 } else {
                     alert('加载佣金明细数据错误...');
                 }
-                console.log(response);
+                console.log(JSON.stringify(response));
             });
         };
 
@@ -123,21 +116,18 @@ angular.module('lepayglobleApp')
             switch ($scope.currentState) {
                 case 0:
                     $scope.currentTab0 = true;
-                    $state.go(stateArr[0]);
+                    commissionDetailsCriteria.consumeType = 1;
+                    $scope.searchByCriteria();
                     break;
                 case 1:
                     $scope.currentTab1 = true;
                     $scope.ttlWarn1 = false;
-                    $state.go(stateArr[1]);
-                    break;
-                case 2:
-                    $scope.currentTab2 = true;
-                    $state.go(stateArr[2]);
+                    commissionDetailsCriteria.consumeType = 2;
+                    $scope.searchByCriteria();
                     break;
                 default:
-                    $scope.currentTab3 = true;
-                    $scope.ttlWarn2 = false;
-                    $state.go(stateArr[3]);
+                    $scope.currentTab0 = true;
+                    commissionDetailsCriteria.consumeType = 1;
                     break;
             }
         };

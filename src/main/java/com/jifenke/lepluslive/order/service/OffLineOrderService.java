@@ -760,15 +760,10 @@ public class OffLineOrderService {
             + " (select olo.complete_date as complete_date,  olo.le_jia_user_id as user_id,  olos.lock_merchant_id as merchant_id, "
             + " olo.total_price as total_price,  olo.true_pay as true_pay,  olos.to_lock_merchant as share_ "
             + " from off_line_order olo, off_line_order_share olos where olo.id = olos.off_line_order_id and olo.state = 1 ");
-        if (commissionDetailsCriteria.getStoreIds() != null) {
-            sql.append(" and olos.lock_merchant_id in (");
-            for (int i = 0; i < commissionDetailsCriteria.getStoreIds().length; i++) {
-                sql.append(commissionDetailsCriteria.getStoreIds()[i] + ",");
-            }
-            sql.deleteCharAt(sql.length() - 1);
-            sql.append(")");
+        if (commissionDetailsCriteria.getMerchantId() != null) {
+            sql.append(" and olos.lock_merchant_id = "+commissionDetailsCriteria.getMerchantId());
         }
-        if (commissionDetailsCriteria.getStartDate() != null && commissionDetailsCriteria.getStartDate() != "") {
+        if (commissionDetailsCriteria.getStartDate() != null&& !"".equals(commissionDetailsCriteria.getStartDate())) {
             sql.append(" and olo.complete_date between '");
             sql.append(commissionDetailsCriteria.getStartDate());
             sql.append("' and '");
@@ -799,15 +794,10 @@ public class OffLineOrderService {
         StringBuffer sql = new StringBuffer();
         sql.append(" select count(olo.id), sum(olos.to_lock_merchant) "
             + " from off_line_order olo, off_line_order_share olos where olo.id = olos.off_line_order_id and olo.state = 1 ");
-        if (commissionDetailsCriteria.getStoreIds() != null) {
-            sql.append(" and olos.lock_merchant_id in (");
-            for (int i = 0; i < commissionDetailsCriteria.getStoreIds().length; i++) {
-                sql.append(commissionDetailsCriteria.getStoreIds()[i] + ",");
-            }
-            sql.deleteCharAt(sql.length() - 1);
-            sql.append(")");
+        if (commissionDetailsCriteria.getMerchantId() != null) {
+            sql.append(" and olos.lock_merchant_id = "+commissionDetailsCriteria.getMerchantId());
         }
-        if (commissionDetailsCriteria.getStartDate() != null && commissionDetailsCriteria.getStartDate() != "") {
+        if (commissionDetailsCriteria.getStartDate() != null && !"".equals(commissionDetailsCriteria.getStartDate())) {
             sql.append(" and olo.complete_date between '");
             sql.append(commissionDetailsCriteria.getStartDate());
             sql.append("' and '");
@@ -828,7 +818,7 @@ public class OffLineOrderService {
          /***
          *  根据条件查询订单流水和入账 - 交易记录【到账详情】
          */
-            String base = " select count(1),IFNULL(sum(ol.transfer_money),0),IFNULL(sum(ol.transfer_money_from_true_pay),0)  from off_line_order ol,pay_way p where ol.pay_way_id = p.id  ";
+            String base = " select count(1),IFNULL(sum(ol.total_price),0),IFNULL(sum(ol.transfer_money_from_true_pay),0),IFNULL(sum(ol.lj_commission),0)  from off_line_order ol,pay_way p where ol.pay_way_id = p.id  ";
             StringBuffer sql = new StringBuffer(base);
             if(olOrderCriteria.getMerchant()!=null && olOrderCriteria.getMerchant().getId()!=null) {
                 sql.append(" and ol.merchant_id = "+olOrderCriteria.getMerchant().getId());

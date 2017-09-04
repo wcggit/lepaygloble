@@ -91,7 +91,14 @@
                                 </tr>
                                 </thead>
                                 <tbody id="account">
-
+                                    <tr ng-repeat="account in accounts">
+                                        <td ng-if="account.type==0">收银员</td>
+                                        <td ng-if="account.type==1">店主</td>
+                                        <td><span ng-bind="account.name"></span></td>
+                                        <td>********</td>
+                                        <td><a class="a-btn" ng-click="unbindAccount(account.merchantSid)">解除绑定</a></td>
+                                    </tr>
+                                    <tr class="tr-empty" ng-show="accounts==null"><td class="text-center" colspan="3">暂无数据！</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -104,10 +111,18 @@
                                 <tr>
                                     <td>账号类型</td>
                                     <td>用户名</td>
+                                    <td>密码</td>
                                     <td>操作</td>
                                 </tr>
                                 </thead>
                                 <tbody id="crasher">
+                                    <tr ng-repeat="cs in cashiers">
+                                        <td>收银员</td>
+                                        <td><span ng-bind="cs.name"></span></td>
+                                        <td>********</td>
+                                        <td><a class="a-btn" ng-click="unbindAccount(account.merchantSid)">解除绑定</a></td>
+                                    </tr>
+                                    <tr class="tr-empty" ng-show="cashiers==null"><td class="text-center" colspan="3">暂无数据！</td></tr>
                                 </tbody>
                             </table>
                         </div>

@@ -38,6 +38,8 @@ angular.module('lepayglobleApp')
                         $scope.userTotalLockLimit = totaUserLockLimit;
                         $scope.merchantUserLockLimit = userLockLimit;
                         dataOverviewCriteria.merchants = $scope.merchants;
+                        $scope.availableCommissions = response.data.availableCommissions;
+                        $scope.totalCommissions =  response.data.totalCommissions;
                         dataOverviewCriteria.offset = dataOverviewCriteria.offset+1;
                     }
                     if(response.data.merchants!=null && response.data.merchants.length<6){

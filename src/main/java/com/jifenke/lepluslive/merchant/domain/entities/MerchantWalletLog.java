@@ -4,15 +4,16 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * 商户线上钱包记录 Created by zhangwen on 16/11/05.
+ * Created by wcg on 16/5/13.
  */
 @Entity
-@Table(name = "MERCHANT_WALLET_ONLINE_LOG")
-public class MerchantWalletOnlineLog {
+@Table(name = "MERCHANT_WALLET_LOG")
+public class MerchantWalletLog {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
+
 
   private String orderSid;
 
@@ -22,9 +23,7 @@ public class MerchantWalletOnlineLog {
 
   private Long afterChangeMoney; //改变后的金额
 
-  private Long changeMoney;   //线上钱包改变金额 理论=beforeChangeMoney-afterChangeMoney
-
-  private Long type; //如果为1代表app线上订单分润  2代表公众号线上订单分润  3 提现
+  private Long type; //如果为1代表线下支付订单分润 2 pos机订单分润 3 提现 4 转账 5=线下订单退款
 
   private Date createDate = new Date();
 
@@ -70,14 +69,6 @@ public class MerchantWalletOnlineLog {
 
   public Long getAfterChangeMoney() {
     return afterChangeMoney;
-  }
-
-  public Long getChangeMoney() {
-    return changeMoney;
-  }
-
-  public void setChangeMoney(Long changeMoney) {
-    this.changeMoney = changeMoney;
   }
 
   public void setAfterChangeMoney(Long afterChangeMoney) {

@@ -96,6 +96,11 @@ public class MerchantService {
     @Inject
     private LejiaResourceRepository lejiaResourceRepository;
 
+    @Inject
+    private MerchantWalletOnlineRepository merchantWalletOnlineRepository;
+
+    @Inject
+    private MerchantUserShopService merchantUserShopService;
     /**
      * 获取商家详情
      */
@@ -116,14 +121,16 @@ public class MerchantService {
         Long available = 0L;
         Long totalCommission = 0L;
         for (Merchant merchant : merchants) {                                                                           // 门店钱包
-            MerchantWallet merchantWallet = merchantWalletRepository.findByMerchant(merchant);
-            available += merchantWallet.getAvailableBalance()==null ? 0L:merchantWallet.getAvailableBalance();
-            totalCommission += merchantWallet.getTotalMoney()==null ? 0L:merchantWallet.getTotalMoney();
-        }
-        MerchantUser merchantUser = findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
-        MerchantWallet merchantUserWallet = merchantWalletRepository.findByMerchantUser(merchantUser.getId());          //  商户钱包
-        if(merchantUserWallet!=null) {
-            available+= merchantUserWallet.getAvailableBalance();
+            MerchantWallet merchantWallet = merchantWalletRepository.findByMerchantId(merchant.getId());
+            MerchantWalletOnline merchantWalletOnline = merchantWalletOnlineRepository.findByMerchantId(merchant.getId());
+            if (merchantWallet != null) {
+                available += merchantWallet.getAvailableBalance()==null ? 0L:merchantWallet.getAvailableBalance();
+                totalCommission += merchantWallet.getTotalMoney()==null ? 0L:merchantWallet.getTotalMoney();
+            }
+            if (merchantWalletOnline != null) {
+                available += merchantWalletOnline.getAvailableBalance()==null ? 0L:merchantWalletOnline.getAvailableBalance();
+                totalCommission += merchantWalletOnline.getTotalMoney()==null ? 0L:merchantWalletOnline.getTotalMoney();
+            }
         }
         map.put("available",available);
         map.put("totalCommission",totalCommission);
@@ -377,22 +384,29 @@ public class MerchantService {
     public void saveUserAccount(MerchantUser merchantUser,List<Merchant> merchants) {
         // 设置 PassWord
         merchantUser.setPassword(MD5Util.MD5Encode(merchantUser.getPassword(),null));
-        merchantUser.setMerchantSid(MvUtil.getMerchantUserSid());
         merchantUserRepository.save(merchantUser);
         // 设置门店
         if(merchants!=null&&merchants.size()>0) {
             for (Merchant merchant : merchants) {
+                //  PC 后台关联
                 LejiaResource lejiaResource = lejiaResourceRepository.findByResourceIdAndResourceType(merchant.getId(), 0);
                 if(lejiaResource==null) {
                     lejiaResource = new LejiaResource();
                     lejiaResource.setResourceId(merchant.getId());
                     lejiaResource.setResourceType(0);
+                    lejiaResourceRepository.save(lejiaResource);
                 }
                 MerchantUserResource merchantUserResource = new MerchantUserResource();
                 merchantUserResource.setMerchantUser(merchantUser);
                 merchantUserResource.setLeJiaResource(lejiaResource);
                 merchantUserResource.setResourceType(0);
                 merchantUserResourceRepository.save(merchantUserResource);
+                // 乐加支付公众号
+                MerchantUserShop merchantUserShop = new MerchantUserShop();
+                merchantUserShop.setMerchantUser(merchantUser);
+                merchantUserShop.setMerchant(merchant);
+                merchantUserShop.setCreateDate(new Date());
+                merchantUserShopService.saveShop(merchantUserShop);
             }
         }
 

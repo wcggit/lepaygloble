@@ -35,6 +35,11 @@ angular.module('lepayglobleApp')
             }, function (start, end, label) {
             });
 
+        //  查看详情
+        $scope.showDetail = function(tradeDate,mid) {
+            $state.go("lePlusOrderDetail", {tradeDate:tradeDate,mid: mid});
+        }
+
 
         //  展示到账记录
         function loadContent() {

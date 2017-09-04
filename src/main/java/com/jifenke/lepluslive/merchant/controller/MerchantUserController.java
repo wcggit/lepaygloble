@@ -179,6 +179,19 @@ public class MerchantUserController {
         return LejiaResult.ok(cashierAccount);
     }
 
+    /***
+     * 当前账户下所有账号
+     */
+    @RequestMapping(value="/merchantUser/userAccount")
+    public LejiaResult getUserAccount() {
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        if(merchantUser.getType()!=8) {
+            return LejiaResult.build(400,"无权限");
+        }
+        List<MerchantUser> userAccount = merchantUserService.findUserAccount(merchantUser.getId());
+        return LejiaResult.ok(userAccount);
+    }
+
     /**
      *  根据门店获取银行信息
      */
@@ -210,7 +223,7 @@ public class MerchantUserController {
         try{
             MerchantUser user = merchantUserService.findByName(merchantUser.getName());
             MerchantUser currentUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
-            if(user!=null) {
+            if(user!=null||currentUser==null||currentUser.getType()!=8) {
                 return LejiaResult.build(400,"保存失败 ！");
             }
             String idStr = merchantUser.getLinkMan();         //  该账号所拥有的门店
@@ -236,6 +249,20 @@ public class MerchantUserController {
         }catch (Exception e) {
             e.printStackTrace();
             return LejiaResult.build(400,"保存失败 ！");
+        }
+    }
+    @RequestMapping(value="/merchantUser/accountUnbind/{sid}",method = RequestMethod.GET)
+    public LejiaResult unbindAccount(@PathVariable String sid) {
+        MerchantUser currentUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        MerchantUser user = merchantUserService.findByMerchantSid(sid);
+        if(user==null||currentUser==null||currentUser.getType()!=8) {
+            return LejiaResult.build(400,"解绑失败 ！");
+        }
+        boolean result = merchantUserService.unbindAccount(user);
+        if(result) {
+            return LejiaResult.ok();
+        }else {
+            return LejiaResult.build(400,"解绑失败 ！");
         }
     }
 

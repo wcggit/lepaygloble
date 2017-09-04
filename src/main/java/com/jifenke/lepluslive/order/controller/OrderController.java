@@ -675,26 +675,26 @@ public class OrderController {
             scanCodeOrderCriteria.setStartDate(codeOrderCriteria.getStartDate());
             scanCodeOrderCriteria.setEndDate(codeOrderCriteria.getEndDate());
             Map map = new HashMap();
-            if(scanCodeOrderCriteria.getOrderType()!=null && scanCodeOrderCriteria.getOrderType()==0) {
+            if (scanCodeOrderCriteria.getOrderType() != null && scanCodeOrderCriteria.getOrderType() == 0) {
                 List<Object[]> commonData = scanCodeOrderService.findTotalDailyTransferAndIncome(scanCodeOrderCriteria);
-                map.put("totalData",commonData);
-                map.put("commonData",commonData);
-                map.put("lejiaData",null);
-            }else if(scanCodeOrderCriteria.getOrderType()!=null && scanCodeOrderCriteria.getOrderType()==1) {
+                map.put("totalData", commonData);
+                map.put("commonData", commonData);
+                map.put("lejiaData", null);
+            } else if (scanCodeOrderCriteria.getOrderType() != null && scanCodeOrderCriteria.getOrderType() == 1) {
                 List<Object[]> lejiaData = scanCodeOrderService.findTotalDailyTransferAndIncome(scanCodeOrderCriteria);
-                map.put("totalData",lejiaData);
-                map.put("lejiaData",lejiaData);
-                map.put("commonData",null);
-            }else {
+                map.put("totalData", lejiaData);
+                map.put("lejiaData", lejiaData);
+                map.put("commonData", null);
+            } else {
                 scanCodeOrderCriteria.setOrderType(null);
                 List<Object[]> totalData = scanCodeOrderService.findTotalDailyTransferAndIncome(scanCodeOrderCriteria);
                 scanCodeOrderCriteria.setOrderType(0);
                 List<Object[]> commonData = scanCodeOrderService.findTotalDailyTransferAndIncome(scanCodeOrderCriteria);
                 scanCodeOrderCriteria.setOrderType(1);
                 List<Object[]> lejiaData = scanCodeOrderService.findTotalDailyTransferAndIncome(scanCodeOrderCriteria);
-                map.put("totalData",totalData);
-                map.put("commonData",commonData);
-                map.put("lejiaData",lejiaData);
+                map.put("totalData", totalData);
+                map.put("commonData", commonData);
+                map.put("lejiaData", lejiaData);
             }
             return LejiaResult.ok(map);
         } else {
@@ -714,27 +714,50 @@ public class OrderController {
             olOrderCriteria.setStartDate(codeOrderCriteria.getStartDate());
             olOrderCriteria.setEndDate(codeOrderCriteria.getEndDate());
             Map map = new HashMap();
-            if(olOrderCriteria.getOrderType()!=null && olOrderCriteria.getOrderType()==0) {
+            if (olOrderCriteria.getOrderType() != null && olOrderCriteria.getOrderType() == 0) {
                 List<Object[]> commonData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
-                map.put("totalData",commonData);
-                map.put("commonData",commonData);
-                map.put("lejiaData",null);
-            }else if(olOrderCriteria.getOrderType()!=null && olOrderCriteria.getOrderType()==1) {
+                map.put("totalData", commonData);
+                map.put("commonData", commonData);
+                map.put("lejiaData", null);
+            } else if (olOrderCriteria.getOrderType() != null && olOrderCriteria.getOrderType() == 1) {
                 List<Object[]> lejiaData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
-                map.put("totalData",lejiaData);
-                map.put("lejiaData",lejiaData);
-                map.put("commonData",null);
-            }else {
+                map.put("totalData", lejiaData);
+                map.put("lejiaData", lejiaData);
+                map.put("commonData", null);
+            } else {
                 olOrderCriteria.setOrderType(null);
                 List<Object[]> totalData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
                 olOrderCriteria.setOrderType(0);
-                List<Object[]> commonData= offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+                List<Object[]> commonData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
                 olOrderCriteria.setOrderType(1);
                 List<Object[]> lejiaData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
-                map.put("totalData",totalData);
-                map.put("commonData",commonData);
-                map.put("lejiaData",lejiaData);
+                map.put("totalData", totalData);
+                map.put("commonData", commonData);
+                map.put("lejiaData", lejiaData);
             }
+            return LejiaResult.ok(map);
+        }
+    }
+
+    /***
+     *  历史记录
+     */
+    @RequestMapping(value = "/codeTrade/orderHistoryByCriteria", method = RequestMethod.POST)
+    @ResponseBody
+    public LejiaResult orderHistoryByCriteria(@RequestBody OLOrderCriteria olOrderCriteria) {
+        if (olOrderCriteria.getMerchant() == null) {
+            return LejiaResult.build(400, "无数据");
+        } else {
+            // 乐加结算
+            olOrderCriteria.setState(1);
+            if (olOrderCriteria.getOffset() == null) {
+                olOrderCriteria.setOffset(1);
+            } else {
+                olOrderCriteria.setOffset(olOrderCriteria.getOffset());
+            }
+            Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 10);
+            Map map = new HashMap();
+            map.put("page", page);
             return LejiaResult.ok(map);
         }
     }
@@ -743,30 +766,30 @@ public class OrderController {
     @RequestMapping(value = "/offLineOrder/olOrderStatistic", method = RequestMethod.POST)
     @ResponseBody
     public LejiaResult codeOrderStatistic(@RequestBody OLOrderCriteria olOrderCriteria) {
-            // 乐加结算
-            olOrderCriteria.setState(1);
-            Map map = new HashMap();
-            if(olOrderCriteria.getOrderType()!=null && olOrderCriteria.getOrderType()==0) {
-                List<Object[]> commonData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
-                map.put("totalData",commonData);
-                map.put("commonData",commonData);
-                map.put("lejiaData",null);
-            }else if(olOrderCriteria.getOrderType()!=null && olOrderCriteria.getOrderType()==1) {
-                List<Object[]> lejiaData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
-                map.put("totalData",lejiaData);
-                map.put("lejiaData",lejiaData);
-                map.put("commonData",null);
-            }else {
-                olOrderCriteria.setOrderType(null);
-                List<Object[]> totalData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
-                olOrderCriteria.setOrderType(0);
-                List<Object[]> commonData= offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
-                olOrderCriteria.setOrderType(1);
-                List<Object[]> lejiaData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
-                map.put("totalData",totalData);
-                map.put("commonData",commonData);
-                map.put("lejiaData",lejiaData);
-            }
-            return LejiaResult.ok(map);
+        // 乐加结算
+        olOrderCriteria.setState(1);
+        Map map = new HashMap();
+        if (olOrderCriteria.getOrderType() != null && olOrderCriteria.getOrderType() == 0) {
+            List<Object[]> commonData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+            map.put("totalData", commonData);
+            map.put("commonData", commonData);
+            map.put("lejiaData", null);
+        } else if (olOrderCriteria.getOrderType() != null && olOrderCriteria.getOrderType() == 1) {
+            List<Object[]> lejiaData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+            map.put("totalData", lejiaData);
+            map.put("lejiaData", lejiaData);
+            map.put("commonData", null);
+        } else {
+            olOrderCriteria.setOrderType(null);
+            List<Object[]> totalData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+            olOrderCriteria.setOrderType(0);
+            List<Object[]> commonData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+            olOrderCriteria.setOrderType(1);
+            List<Object[]> lejiaData = offLineOrderService.findOfflineOrderStatistic(olOrderCriteria);
+            map.put("totalData", totalData);
+            map.put("commonData", commonData);
+            map.put("lejiaData", lejiaData);
+        }
+        return LejiaResult.ok(map);
     }
 }

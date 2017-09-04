@@ -156,11 +156,9 @@ public class MerchantCodeTradeController {
     @RequestMapping(value = "/commissionDetails/commissionDetailsByMerchantUser")
     @ResponseBody
     public LejiaResult findCommissionDetailsByMerchantUser(@RequestBody CommissionDetailsCriteria commissionDetailsCriteria){
-
-//        //测试
-//        Object[] o = {1,3,9};
-//        commissionDetailsCriteria.setStoreIds(o);
-
+        if(commissionDetailsCriteria.getMerchantId()==null) {
+            return LejiaResult.build(400,"无数据");
+        }
         Integer consumeType = commissionDetailsCriteria.getConsumeType();
         if (consumeType != null && consumeType == 1){//线下消费
             List<Object[]> off_line = offLineOrderService.getCommissionDetailsList_off_line(commissionDetailsCriteria);

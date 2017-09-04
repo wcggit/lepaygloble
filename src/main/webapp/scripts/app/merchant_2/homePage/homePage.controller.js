@@ -1,11 +1,11 @@
- /**
+/**
  * Created by recoluan on 2016/11/16.
  */
- 'use strict';
+'use strict';
 
 
 angular.module('lepayglobleApp')
-    .controller('homePageController', function ($scope, $state, $rootScope, $location,Principal,Auth,$http,Commission,HomePage,Tracker) {
+    .controller('homePageController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, Commission, HomePage, Tracker) {
         $("[data-toggle='tooltip']").tooltip();
         $scope.tsContentShow = false;
 
@@ -15,7 +15,7 @@ angular.module('lepayglobleApp')
             if (isNaN(f)) {
                 return false;
             }
-            var f = Math.round(x*100)/100;
+            var f = Math.round(x * 100) / 100;
             var s = f.toString();
             var rs = s.indexOf('.');
             if (rs < 0) {
@@ -37,7 +37,7 @@ angular.module('lepayglobleApp')
             $scope.loginName = response.data.name;
         });
 
-        HomePage.getMerchantsInfo().then(function(response) {
+        HomePage.getMerchantsInfo().then(function (response) {
             var data = response.data;
             $scope.merchants = data;
             // 默认门店
@@ -50,8 +50,8 @@ angular.module('lepayglobleApp')
         //  基本信息
         HomePage.getMerchantCommissionDetail().then(function (response) {
             var data = response.data;
-            $scope.available = $scope.toDecimal(data.available*0.01);
-            $scope.totalCommission = $scope.toDecimal(data.totalCommission*0.01);
+            $scope.available = $scope.toDecimal(data.available * 0.01);
+            $scope.totalCommission = $scope.toDecimal(data.totalCommission * 0.01);
             if (data.currentBind == 0 && data.totalCommission == 0) {
                 $scope.per = 0;
             } else {
@@ -60,59 +60,62 @@ angular.module('lepayglobleApp')
         });
 
         //  首页 - 商户数据
-        HomePage.getMerchantData().then(function(data){
+        HomePage.getMerchantData().then(function (data) {
             var data = data.data;
             $scope.srgl = {
-                firNum:  data.transfering / 100.0,                      // 今日入账
-                secNum:  data.totalTransfering / 100.0,                 // 总共入账
+                firNum: data.transfering / 100.0,                      // 今日入账
+                secNum: data.totalTransfering / 100.0,                 // 总共入账
                 thirNum: data.totalSales / 100.0,                       // 会员消费
                 fouNum: data.totalCount,                                // 会员消费次数
-                fifNum:  data.totalRebate / 100.0                       // 红包总额
+                fifNum: data.totalRebate / 100.0                       // 红包总额
             };
         });
 
         //  首页 - 交易看板 (默认门店)
-        $scope.findAll = function(p) {
+        $scope.findAll = function (p) {
             // 交易看板
             $scope.changeStore($scope.firstSid);
         }
 
         // 按钮绑定事件 - 查看更多
-        $scope.findMore = function(){
-            $scope.offset=$scope.offset+1;
+        $scope.findMore = function () {
+            $scope.offset = $scope.offset + 1;
             var p = $scope.offset;
             var selMerchant = $("#selMerchant").val();
-            if(selMerchant==''||selMerchant==null) {
-                   $("#selMerchant").val($scope.firstSid);
-                   return;
-            }else {
-                HomePage.siglOpraBoardList(selMerchant,p).then(function (data) {  // 指定门店
+            if (selMerchant == '' || selMerchant == null) {
+                $("#selMerchant").val($scope.firstSid);
+                return;
+            } else {
+                HomePage.siglOpraBoardList(selMerchant, p).then(function (data) {  // 指定门店
                     var data = data.data;
                     $scope.orderList = data;
+                    if (data == null) {
+                        $scope.tsContentShow = true;
+                    }
                 });
             }
         }
 
 
         // 首页 - 切换门店时进行查询
-        $scope.changeStore = function(id) {
-            $scope.offset=0;
+        $scope.changeStore = function (id) {
+            $scope.offset = 0;
             // 查询所有
-            if(id==""||id==null) {
+            if (id == "" || id == null) {
                 return;
             }
             // 门店交易信息
-            HomePage.siglOpraBoardInfo(id).then(function(data) {
+            HomePage.siglOpraBoardInfo(id).then(function (data) {
                 var data = data.data;
                 $scope.obinfo = {
-                    firNum: data.offLineDailyCount/100.0,
-                    secNum: data.posDailyCount/100.0,
-                    thirNum: data.dailySales/100.0,
+                    firNum: data.offLineDailyCount / 100.0,
+                    secNum: data.posDailyCount / 100.0,
+                    thirNum: data.dailySales / 100.0,
                     fouNum: data.dailyCount
                 };
             });
             // 门店订单列表
-            HomePage.siglOpraBoardList(id,$scope.offset).then(function (data) {
+            HomePage.siglOpraBoardList(id, $scope.offset).then(function (data) {
                 var data = data.data;
                 $scope.orderList = data;
             });
@@ -128,43 +131,55 @@ angular.module('lepayglobleApp')
         $scope.getCurrentLogin();
 
 
-        $scope.tx=function () {
+        $scope.tx = function () {
             $("#tx").modal("toggle");
             $("#tx-success").modal("toggle");
         };
 
         //  提现
         $scope.withDraw = function () {
-            /*var amount = $("#withDrawInput").val();
+            var amount = $("#withDrawInput").val();
             var available = $scope.available;
-            if(amount > available) {
+            if (amount > available) {
                 alert("余额不足！");
                 return;
-            }else if(amount<200) {
+            } else if (amount < 200) {
                 alert("提现金额不小于 200 元。");
                 return;
             }
             var data = 'amount='
-                + encodeURIComponent(amount.trim());*/
-            /*$http.post('/withdraw/merchant_user_withdraw', data, {
+                + encodeURIComponent(amount.trim());
+            $http.post('/withdraw/merchant_user_withdraw', data, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).success(function (response) {
-                if(response.status==400){
+                if (response.status == 400) {
                     alert("服务繁忙,请稍后尝试!");
-                }else{
+                } else {
                     alert("提现申请成功 !");
                     $("#withDrawInput").val('');
                     $scope.tx();
                 }
-            })*/
-            $scope.tx();
+            })
+            // $scope.tx();
         }
+
+        // 页面跳转
+        $scope.toOrderList = function () {
+            $state.go("codeTrade");
+        }
+        $scope.toTradeList = function () {
+            $state.go("lePlusCodeTrade");
+        }
+        $scope.refresh = function () {
+            window.location.reload();
+        }
+
         /**********上拉加载**********/
 
         var list = document.querySelector('.list-out-div');
-        var pageNum = 1,pageAllNum = 3;
+        var pageNum = 1, pageAllNum = 3;
 
         list.addEventListener('scroll', function (e) {
             var outHeight = list.clientHeight;
@@ -172,14 +187,16 @@ angular.module('lepayglobleApp')
             var scrollHeight = e.path[0].scrollTop;
 
 
-            if(inHeight-outHeight-scrollHeight < 2) {
-                pageNum ++
-                console.log(pageNum > pageAllNum)
-                if(pageNum > pageAllNum) {
-                    pageNum = pageAllNum;
-                    $scope.tsContentShow = true;
-                    return;
-                }
+            if (inHeight - outHeight - scrollHeight < 2) {
+                pageNum++
+                /*
+                 console.log(pageNum > pageAllNum)
+                 if (pageNum > pageAllNum) {
+                 pageNum = pageAllNum;
+                 $scope.tsContentShow = true;
+                 return;
+                 }
+                 */
 
                 /********根据pageNum加载相应的数据添加到list-in-div的底部*********/
             }
@@ -189,7 +206,7 @@ angular.module('lepayglobleApp')
 
 
         /***********************************************local Variables**********************************************************/
-        // 语音播放
+            // 语音播放
 
         var HINT_SPEAK = "乐加支付成功,欢迎下次光临!";
         var audioPalyUrl = "http://h5.xf-yun.com/audioStream/";
@@ -201,29 +218,34 @@ angular.module('lepayglobleApp')
          * reconnectionDelay   重连支持的延迟时间
          */
         var session = new IFlyTtsSession({
-            'url'                : 'ws://h5.xf-yun.com/tts.do',
-            'reconnection'       : true,
-            'reconnectionDelay'  : 30000
+            'url': 'ws://h5.xf-yun.com/tts.do',
+            'reconnection': true,
+            'reconnectionDelay': 30000
         });
 
 
-        function play(content, vcn){
+        function play(content, vcn) {
             var player = document.getElementById("voicePlayer")
-            var ssb_param = {"appid": '585b74af', "appkey":"ea5b9c830cea7e90", "synid":"12345", "params" : "ent=aisound,aue=lame,vcn="+vcn};
-            session.start(ssb_param, content, function (err, obj)
-            {
+            var ssb_param = {
+                "appid": '585b74af',
+                "appkey": "ea5b9c830cea7e90",
+                "synid": "12345",
+                "params": "ent=aisound,aue=lame,vcn=" + vcn
+            };
+            session.start(ssb_param, content, function (err, obj) {
                 var audio_url = audioPalyUrl + obj.audio_url;
-                if( audio_url != null && audio_url != undefined )
-                {
+                if (audio_url != null && audio_url != undefined) {
                     player.src = audio_url;
                     player.play();
                 }
             });
         };
 
-        function play_xiaoqi(){play(HINT_SPEAK, 'xiaoqi')};
+        function play_xiaoqi() {
+            play(HINT_SPEAK, 'xiaoqi')
+        };
 
         Tracker.receiveMerchantVoice().then(null, null, function (data) {//等待websocket发送消息
-              play_xiaoqi();
+            play_xiaoqi();
         });
     });

@@ -17,7 +17,11 @@ angular.module('lepayglobleApp')
                 var data = response.data;
                 $scope.payway = data;
                 $scope.merchants = data.merchants;
-                $scope.defaultId = data.merchants[0][0];
+                if($stateParams.mid!=null && $stateParams.mid!="") {
+                    $scope.defaultId = $stateParams.mid;
+                }else {
+                    $scope.defaultId = data.merchants[0][0];
+                }
                 var merchant = {};
                 merchant.id = $scope.defaultId;
                 settlementCriteria.merchant = merchant;
@@ -89,6 +93,7 @@ angular.module('lepayglobleApp')
             var merchant = {};
             var mid = $("#selMerchant").val();
             if(mid!=-1) {
+                $scope.defaultId = mid;
                 merchant.id = mid;
                 settlementCriteria.merchant = merchant;
             }else {
@@ -97,14 +102,13 @@ angular.module('lepayglobleApp')
                 merchant.id = deftId;
                 settlementCriteria.merchant = merchant;
             }
-            // alert(JSON.stringify(settlementCriteria));
             settlementCriteria.offset = 1;
             currentPage = 1;
-            var payWay = $scope.payway["merchant-"+mid];    // 根据支付通道选择页面
+            var payWay = $scope.payway["merchant-"+$scope.defaultId];    // 根据支付通道选择页面
             if(payWay==3) {                 // 易宝
                 loadContent();
             }else {                         // 乐加
-                $state.go("lePlusCodeTrade", {mid: mid});
+                $state.go("lePlusCodeTrade", {mid: $scope.defaultId});
             }
         }
         // 跳转到详情页面

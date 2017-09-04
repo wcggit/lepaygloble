@@ -27,6 +27,9 @@ angular.module('lepayglobleApp')
                 data: {
                     authorities: ["merchant"]
                 },
+                params: {
+                    mid: null
+                },
                 views: {
                     'yiBaoJieSuanTab@yiBaoJieSuan': {
                         templateUrl: 'scripts/app/merchant_2/tradeManage/yiBaoJieSuan/yiBaoCodeTrade/yiBaoCodeTrade.html',

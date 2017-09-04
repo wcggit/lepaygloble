@@ -1,10 +1,13 @@
 package com.jifenke.lepluslive.withdraw.service;
 
 import com.jifenke.lepluslive.global.util.MvUtil;
-import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
+import com.jifenke.lepluslive.merchant.domain.entities.*;
+import com.jifenke.lepluslive.merchant.repository.MerchantWalletLogRepository;
+import com.jifenke.lepluslive.merchant.repository.MerchantWalletOnlineLogRepository;
+import com.jifenke.lepluslive.merchant.repository.MerchantWalletOnlineRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
+import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.partner.domain.criteria.PartnerManagerCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
@@ -41,6 +44,16 @@ public class WithdrawService {
     private WithdrawRepository withdrawRepository;
     @Inject
     private MerchantWalletRepository merchantWalletRepository;
+    @Inject
+    private MerchantWalletLogRepository merchantWalletLogRepository;
+    @Inject
+    private MerchantWalletOnlineRepository merchantWalletOnlineRepository;
+    @Inject
+    private MerchantWalletOnlineLogRepository merchantWalletOnlineLogRepository;
+
+
+    @Inject
+    private MerchantUserResourceService merchantUserResourceService;
 
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -98,34 +111,112 @@ public class WithdrawService {
             }
         };
     }
+
     /**
      * 2.0 提现流程
      */
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void createWithDrawBill(List<Merchant> merchants, MerchantUser merchantUser, Double amount) {
-        // 账户清算：  所有门店佣金余额转账到商户钱包下
-        Long transfer = 0L;
+    public boolean createWithDrawBill(MerchantUser merchantUser, Double amount) {
+        //  获取该商户下所有门店
+        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
+        Double dbAmount = amount * 100;
+        Long withDrawAmount = dbAmount.longValue();
+        //  判断佣金总额是否大于提现金额
+        Long available = 0L;
         for (Merchant merchant : merchants) {
-            MerchantWallet wallet = merchantWalletRepository.findByMerchant(merchant);
-            transfer += wallet.getAvailableBalance();
-            wallet.setAvailableBalance(0L);
+            MerchantWallet merchantWallet = merchantWalletRepository.findByMerchantId(merchant.getId());
+            MerchantWalletOnline merchantWalletOnline = merchantWalletOnlineRepository.findByMerchantId(merchant.getId());
+            if (merchantWallet != null) {
+                available += merchantWallet.getAvailableBalance();
+            }
+            if (merchantWalletOnline != null) {
+                available += merchantWalletOnline.getAvailableBalance();
+            }
         }
-        MerchantWallet merchantUserWallet = merchantWalletRepository.findByMerchantUser(merchantUser.getId());
-        if (merchantUserWallet == null) {
-            merchantUserWallet = new MerchantWallet();
-            merchantUserWallet.setAvailableBalance(0L);
-            merchantUserWallet.setMerchantUserId(merchantUser.getId());
-            merchantWalletRepository.save(merchantUserWallet);
+        // 如果可用金额小于提现金额 :  提现失败
+        if (available < withDrawAmount) {
+            return false;
         }
-        merchantUserWallet.setAvailableBalance(merchantUserWallet.getAvailableBalance() + transfer);
+        // 对账户可用余额进行修改
+        for (Merchant merchant : merchants) {
+            MerchantWallet merchantWallet = merchantWalletRepository.findByMerchantId(merchant.getId());
+            MerchantWalletOnline merchantWalletOnline = merchantWalletOnlineRepository.findByMerchantId(merchant.getId());
+            if (merchantWallet != null && withDrawAmount > 0) {
+                Long thisAva = merchantWallet.getAvailableBalance();
+                if (thisAva >= withDrawAmount) {                            // 如果当前余额满足
+                    thisAva = thisAva - withDrawAmount;
+                    withDrawAmount = 0L;
+                    // 创建日志
+                    MerchantWalletLog merchantWalletLog = new MerchantWalletLog();
+                    merchantWalletLog.setCreateDate(new Date());
+                    merchantWalletLog.setMerchantId(merchant.getId());
+                    merchantWalletLog.setBeforeChangeMoney(merchantWallet.getAvailableBalance());
+                    merchantWalletLog.setAfterChangeMoney(thisAva);
+                    merchantWalletLog.setType(3L);
+                    merchantWalletLogRepository.save(merchantWalletLog);
+                    // 更改金额
+                    merchantWallet.setAvailableBalance(thisAva);
+                    merchantWallet.setLastUpdate(new Date());
+                    merchantWalletRepository.save(merchantWallet);
+                } else {                                                  // 如果当前余额不足
+                    withDrawAmount -= thisAva;
+                    thisAva = 0L;
+                    MerchantWalletLog merchantWalletLog = new MerchantWalletLog();
+                    merchantWalletLog.setCreateDate(new Date());
+                    merchantWalletLog.setMerchantId(merchant.getId());
+                    merchantWalletLog.setBeforeChangeMoney(merchantWallet.getAvailableBalance());
+                    merchantWalletLog.setAfterChangeMoney(thisAva);
+                    merchantWalletLog.setType(3L);
+                    merchantWalletLogRepository.save(merchantWalletLog);
+                    merchantWallet.setAvailableBalance(thisAva);
+                    merchantWallet.setLastUpdate(new Date());
+                    merchantWalletRepository.save(merchantWallet);
+                }
+            }
+            if (merchantWalletOnline != null && withDrawAmount > 0) {
+                Long thisAva = merchantWalletOnline.getAvailableBalance();
+                if (thisAva >= withDrawAmount) {                            // 如果当前余额满足
+                    thisAva = thisAva - withDrawAmount;
+                    withDrawAmount = 0L;
+                    // 创建日志
+                    MerchantWalletOnlineLog merchantWalletOnlineLog = new MerchantWalletOnlineLog();
+                    merchantWalletOnlineLog.setCreateDate(new Date());
+                    merchantWalletOnlineLog.setMerchantId(merchant.getId());
+                    merchantWalletOnlineLog.setBeforeChangeMoney(merchantWalletOnline.getAvailableBalance());
+                    merchantWalletOnlineLog.setAfterChangeMoney(thisAva);
+                    merchantWalletOnlineLog.setChangeMoney(merchantWalletOnline.getAvailableBalance()-thisAva);
+                    merchantWalletOnlineLog.setType(3L);
+                    merchantWalletOnlineLogRepository.save(merchantWalletOnlineLog);
+                    // 更改金额
+                    merchantWalletOnline.setAvailableBalance(thisAva);
+                    merchantWalletOnline.setLastUpdate(new Date());
+                    merchantWalletOnlineRepository.save(merchantWalletOnline);
+                } else {                                                  // 如果当前余额不足
+                    withDrawAmount -= thisAva;
+                    thisAva = 0L;
+                    MerchantWalletOnlineLog merchantWalletOnlineLog = new MerchantWalletOnlineLog();
+                    merchantWalletOnlineLog.setCreateDate(new Date());
+                    merchantWalletOnlineLog.setMerchantId(merchant.getId());
+                    merchantWalletOnlineLog.setBeforeChangeMoney(merchantWalletOnline.getAvailableBalance());
+                    merchantWalletOnlineLog.setAfterChangeMoney(thisAva);
+                    merchantWalletOnlineLog.setChangeMoney(merchantWalletOnline.getAvailableBalance()-thisAva);
+                    merchantWalletOnlineLog.setType(3L);
+                    merchantWalletOnlineLogRepository.save(merchantWalletOnlineLog);
+                    // 更改金额
+                    merchantWalletOnline.setAvailableBalance(thisAva);
+                    merchantWalletOnline.setLastUpdate(new Date());
+                    merchantWalletOnlineRepository.save(merchantWalletOnline);
+                }
+            }
+        }
         //  生成提现单
         String randomBillSid = MvUtil.getOrderNumber();
         WithdrawBill withdrawBill = new WithdrawBill();
         withdrawBill.setMerchantUserId(merchantUser.getId());
         withdrawBill.setBankNumber(merchantUser.getMerchantBank().getBankNumber());
         withdrawBill.setBankName(merchantUser.getMerchantBank().getBankName());
-        withdrawBill.setBillType(2);     //0是合伙人管理员  1是合伙人 2是商户
-        withdrawBill.setState(0);        //0是申请中        1是提现完成   2已驳回
+        withdrawBill.setBillType(3);     //0是合伙人管理员  1是合伙人    2是门店  3是商户
+        withdrawBill.setState(0);        //0是申请中       1是提现完成  2已驳回
         withdrawBill.setWithdrawBillSid(randomBillSid);
         withdrawBill.setPayee(merchantUser.getPayee());
         int account = amount.intValue();
@@ -133,6 +224,6 @@ public class WithdrawService {
         withdrawBill.setTotalPrice(totalPrice);
         withdrawBill.setCreatedDate(new Date());
         withdrawRepository.save(withdrawBill);
-        merchantWalletRepository.save(merchantUserWallet);
+        return true;
     }
 }

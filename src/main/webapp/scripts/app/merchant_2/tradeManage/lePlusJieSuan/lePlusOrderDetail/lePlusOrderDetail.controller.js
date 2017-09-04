@@ -14,7 +14,7 @@ angular.module('lepayglobleApp')
         olOrderCriteria.offset = 1;
         if($stateParams.mid!=null) {
             var merchant = {};
-            merchant.id = $stateParams.mid;;
+            merchant.id = $stateParams.mid;
             olOrderCriteria.merchant = merchant;
         }
 

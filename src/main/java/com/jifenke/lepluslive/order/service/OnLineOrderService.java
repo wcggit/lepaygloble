@@ -36,19 +36,14 @@ public class OnLineOrderService {
         sql.append("select  olo_olos.complete_date, wxu.nickname, wxu.head_image_url, merchant.name, olo_olos.total_price, olo_olos.true_pay, olo_olos.share_ from "
                    + " (select olo.confirm_date as complete_date,  olo.le_jia_user_id as user_id,  olos.lock_merchant_id as merchant_id, "
                    + " olo.total_price as total_price,  olo.true_price as true_pay,  olos.to_lock_merchant as share_ "
-                   + " from on_line_order olo, on_line_order_share olos where olo.id = olos.on_line_order_id "
-                   + " and olo.state in (3) " //3已收货
+                   + " from on_line_order olo, on_line_order_share olos where olo.order_sid = olos.order_sid "
+                   + " and olo.state = 3 " //3已收货
                    + " and olo.pay_state = 1 "
                    + "");
-        if (commissionDetailsCriteria.getStoreIds() != null) {
-            sql.append(" and olos.lock_merchant_id in (");
-            for(int i =0;i<commissionDetailsCriteria.getStoreIds().length;i++){
-                sql.append(commissionDetailsCriteria.getStoreIds()[i]+",");
-            }
-            sql.deleteCharAt(sql.length()-1);
-            sql.append(")");
+        if (commissionDetailsCriteria.getMerchantId() != null) {
+            sql.append(" and olos.lock_merchant_id = "+commissionDetailsCriteria.getMerchantId());
         }
-        if (commissionDetailsCriteria.getStartDate() != null && commissionDetailsCriteria.getStartDate() != "") {
+        if (commissionDetailsCriteria.getStartDate() != null&& !"".equals(commissionDetailsCriteria.getStartDate())) {
             sql.append(" and olo.confirm_date between '");
             sql.append(commissionDetailsCriteria.getStartDate());
             sql.append("' and '");
@@ -77,18 +72,13 @@ public class OnLineOrderService {
 
         StringBuffer sql = new StringBuffer();
         sql.append(" select count(olo.id), sum(olos.to_lock_merchant) "
-                   + " from on_line_order olo, on_line_order_share olos where olo.id = olos.on_line_order_id "
-                   + " and olo.state in (3) " //3已收货
+                   + " from on_line_order olo, on_line_order_share olos where olo.order_sid = olos.order_sid "
+                   + " and olo.state = 3 " //3已收货
                    + " and olo.pay_state = 1 ");
-        if (commissionDetailsCriteria.getStoreIds() != null) {
-            sql.append(" and olos.lock_merchant_id in (");
-            for(int i =0;i<commissionDetailsCriteria.getStoreIds().length;i++){
-                sql.append(commissionDetailsCriteria.getStoreIds()[i]+",");
-            }
-            sql.deleteCharAt(sql.length()-1);
-            sql.append(")");
+        if (commissionDetailsCriteria.getMerchantId() != null) {
+            sql.append(" and olos.lock_merchant_id = "+commissionDetailsCriteria.getMerchantId());
         }
-        if (commissionDetailsCriteria.getStartDate() != null && commissionDetailsCriteria.getStartDate() != "") {
+        if (commissionDetailsCriteria.getStartDate() != null && !"".equals(commissionDetailsCriteria.getStartDate())) {
             sql.append(" and olo.confirm_date between '");
             sql.append(commissionDetailsCriteria.getStartDate());
             sql.append("' and '");

@@ -13,5 +13,7 @@ public interface MerchantWalletOnlineRepository extends JpaRepository<MerchantWa
     @Query(value="SELECT total_money from merchant_wallet_online where merchant_id=?1",nativeQuery = true)
     Long findTotalMoney(Long id);
 
+    @Query(value="SELECT * from merchant_wallet_online where merchant_id=?1",nativeQuery = true)
+    MerchantWalletOnline findByMerchantId(Long merchantId);
 
 }

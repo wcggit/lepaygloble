@@ -52,7 +52,7 @@
                     <td>状态</td>
                     <td>到账金额</td>
                     <td>结算账户</td>
-                    <!--<td>操作</td>-->
+                    <td>操作</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -67,7 +67,7 @@
                         <p>{{financial.merchant.merchantBank.bankName}}</p>
                         <p>{{financial.merchant.merchantBank.bankNumber|limitTo:4}}**** **** ***{{financial.merchant.merchantBank.bankNumber|limitTo:-4}}</p>
                     </td>
-                    <!--<td><a>查看详情</a></td>-->
+                    <td><a ui-sref="lePlusOrderDetail" ng-click="showDetail(financial.balanceDate,financial.merchant.id)">查看详情</a></td>
                 </tr>
                 </tbody>
             </table>

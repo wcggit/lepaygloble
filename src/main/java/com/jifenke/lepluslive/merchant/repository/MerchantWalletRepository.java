@@ -11,8 +11,16 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface MerchantWalletRepository extends JpaRepository<MerchantWallet, Long> {
 
-  MerchantWallet findByMerchant(Merchant merchant);
+    MerchantWallet findByMerchant(Merchant merchant);
 
-  @Query(value="SELECT * FROM  merchant_wallet where merchant_user_id = ?1 ",nativeQuery = true)
-  MerchantWallet findByMerchantUser(Long merchantUserId);
+    @Query(value = "SELECT * FROM  merchant_wallet where merchant_user_id = ?1 ", nativeQuery = true)
+    MerchantWallet findByMerchantUser(Long merchantUserId);
+
+    /**
+     * 根据门店ID获取门店钱包  17/01/03
+     *
+     * @param merchantId 门店ID
+     */
+    @Query(value = "SELECT * FROM merchant_wallet WHERE merchant_id = ?1", nativeQuery = true)
+    MerchantWallet findByMerchantId(Long merchantId);
 }
