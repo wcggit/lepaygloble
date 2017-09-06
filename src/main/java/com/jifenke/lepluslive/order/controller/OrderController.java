@@ -377,17 +377,16 @@ public class OrderController {
     @RequestMapping(value = "/leJiaOrder/message/{sid}", method = RequestMethod.GET)
     public void sendLejiaOrderMessage(@PathVariable String sid) {
         OffLineOrder offLineOrder = offLineOrderService.findByOrderSid(sid);
-        if (offLineOrder != null) {
+        if (offLineOrder != null && checkDate(new Date(),offLineOrder.getCreatedDate())) {
             Merchant merchant = offLineOrder.getMerchant();
             sendOrderMessage(merchant,"乐加支付到账" + offLineOrder.getTotalPrice() / 100.0 + "元");
         }
-
     }
 
     @RequestMapping(value = "/scanCodeOrder/message/{sid}", method = RequestMethod.GET)
     public void sendScanCodeOrderMessage(@PathVariable String sid) {
         ScanCodeOrder scanCodeOrder = scanCodeOrderService.findByOrderSid(sid);
-        if (scanCodeOrder != null) {
+        if (scanCodeOrder != null && checkDate(new Date(),scanCodeOrder.getCreatedDate())) {
             Merchant merchant = scanCodeOrder.getMerchant();
             sendOrderMessage(merchant,"乐加支付到账" + scanCodeOrder.getTotalPrice() / 100.0 + "元");
         }
@@ -403,6 +402,17 @@ public class OrderController {
                 messagingTemplate
                     .convertAndSendToUser(user.getMerchantSid(), "/reply", activityDTO);
             }
+        }
+    }
+
+    public boolean checkDate(Date today,Date crateDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String todayStr = sdf.format(today);
+        String createStr = sdf.format(crateDate);
+        if(todayStr.equals(createStr)) {
+            return true;
+        }else {
+            return false;
         }
     }
 
