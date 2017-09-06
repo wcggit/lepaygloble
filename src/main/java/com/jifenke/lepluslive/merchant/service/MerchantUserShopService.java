@@ -65,4 +65,12 @@ public class MerchantUserShopService {
     public MerchantUserShop findByMerchantAndUser(MerchantUser merchantUser, Merchant merchant) {
         return repository.findByMerchantUserAndMerchant(merchantUser, merchant);
     }
+
+    /**
+     * 根据门店查找对应记录 2017/09/06
+     */
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    public List<MerchantUserShop> findByMerchant(Merchant merchant) {
+        return repository.findByMerchant(merchant);
+    }
 }

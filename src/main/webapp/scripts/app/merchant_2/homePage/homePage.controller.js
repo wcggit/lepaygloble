@@ -8,7 +8,18 @@ angular.module('lepayglobleApp')
     .controller('homePageController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, Commission, HomePage, Tracker) {
         $("[data-toggle='tooltip']").tooltip();
         $scope.tsContentShow = false;
-
+        $scope.yuyinState = true;
+        $scope.toggleYuYin=function () {
+            $scope.yuyinState = !$scope.yuyinState;
+            var player = document.getElementById("voicePlayer")
+            if($scope.yuyinState==true){
+                player.muted=false;         // 开启静音
+                $("#voideText").text("已开启");
+            }else {
+                player.muted=true;          // 关闭静音
+                $("#voideText").text("已关闭");
+            }
+        }
         //强制保留两位小数
         $scope.toDecimal = function (x) {
             var f = parseFloat(x);
@@ -88,7 +99,7 @@ angular.module('lepayglobleApp')
             } else {
                 HomePage.siglOpraBoardList(selMerchant, p).then(function (data) {  // 指定门店
                     var data = data.data;
-                    $scope.orderList = data;
+                    $scope.map = data;
                     if (data == null) {
                         $scope.tsContentShow = true;
                     }
@@ -117,7 +128,7 @@ angular.module('lepayglobleApp')
             // 门店订单列表
             HomePage.siglOpraBoardList(id, $scope.offset).then(function (data) {
                 var data = data.data;
-                $scope.orderList = data;
+                $scope.map = data;
             });
         }
 
@@ -225,7 +236,7 @@ angular.module('lepayglobleApp')
 
 
         function play(content, vcn) {
-            var player = document.getElementById("voicePlayer")
+            var player = document.getElementById("voicePlayer");
             var ssb_param = {
                 "appid": '585b74af',
                 "appkey": "ea5b9c830cea7e90",
@@ -246,6 +257,8 @@ angular.module('lepayglobleApp')
         };
 
         Tracker.receiveMerchantVoice().then(null, null, function (data) {//等待websocket发送消息
+            HINT_SPEAK = data.body.split(",")[3].split(":")[1];
             play_xiaoqi();
         });
+
     });

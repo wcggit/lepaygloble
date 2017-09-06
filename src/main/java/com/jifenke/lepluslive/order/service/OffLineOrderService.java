@@ -223,7 +223,7 @@ public class OffLineOrderService {
         for (Merchant merchant : merchants) {
             MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
             List<Object[]> details = null;
-            if (payway == null) {
+            if (payway == null||payway.getType()==1) {
                 details = offLineOrderRepository.countMemberOrderDetail(merchant.getId());
             } else {
                 details = scanCodeOrderRepository.countScanOrderDetail(merchant.getId());
@@ -845,5 +845,13 @@ public class OffLineOrderService {
             Query query_count = em.createNativeQuery(sql.toString());
             List<Object[]> details = query_count.getResultList();
             return details;
+    }
+
+    /***
+     *  根据Sid查找
+     */
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public OffLineOrder findByOrderSid(String orderSid) {
+        return offLineOrderRepository.findByOrderSid(orderSid);
     }
 }

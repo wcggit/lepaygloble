@@ -262,4 +262,9 @@ public class ScanCodeOrderService {
         return details;
     }
 
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public ScanCodeOrder findByOrderSid(String orderSid) {
+        return repository.findByOrderSid(orderSid);
+    }
+
 }

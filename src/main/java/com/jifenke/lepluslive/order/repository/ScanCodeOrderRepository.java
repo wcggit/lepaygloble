@@ -91,4 +91,5 @@ public interface ScanCodeOrderRepository extends JpaRepository<ScanCodeOrder,Str
 
     Page findAll(Specification<ScanCodeOrder> whereClause, Pageable pageRequest);
 
+    ScanCodeOrder findByOrderSid(String orderSid);
 }

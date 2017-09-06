@@ -141,8 +141,8 @@
                 <p ng-bind="o.completeDate|date:'yyyy-MM-dd HH:mm:ss'"></p>
             </td>
             <td ng-bind="'¥'+o.totalPrice/100.0"></td>
-            <td ng-show="o.orderType==12001||o.orderType==12002||o.orderType==12003||o.orderType==12006" ng-bind="'¥'+o.commission/100.0"></td>
-            <td ng-show="o.orderType==12004||o.orderType==12005">{{(100-o.scanCodeOrderExt.merchantRate)/10}}折</td>
+            <!--<td ng-show="o.orderType==12001||o.orderType==12002||o.orderType==12003||o.orderType==12006" ng-bind="'¥'+o.commission/100.0"></td>-->
+            <!--<td ng-show="o.orderType==12004||o.orderType==12005">{{(100-o.scanCodeOrderExt.merchantRate)/10}}折</td>-->
             <td ng-show="o.orderType==12001||o.orderType==12002||o.orderType==12003||o.orderType==12006">普通订单</td>
             <td ng-show="o.orderType==12004||o.orderType==12005">乐加订单</td>
             <td>

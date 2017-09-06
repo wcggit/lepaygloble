@@ -11,6 +11,7 @@ import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.lejiauser.repository.RegisterOriginRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.repository.*;
+import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.order.repository.MerchantScanPayWayRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
@@ -367,14 +368,21 @@ public class MerchantService {
      * @return
      */
     @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
-    public List<Object[]> findOrderList(Merchant merchant,Long limit) {
+    public Map findOrderList(Merchant merchant,Long limit) {
         Long offset = limit*10;
         MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
-//        if(payway!=null&&payway.getType()==3) {                   // 返回 Pos 订单和易宝
-//            return merchantRepository.findScanOrderListByMerchant(merchant.getId(),offset);
-//        }else {                                                   // 返回 Pos 订单和乐加扫码订单
-            return merchantRepository.findOrderListByMerchant(merchant.getId(),offset);
-//        }
+        Map map = new HashMap();
+        if(payway==null||payway.getType()==1) {                    // 返回 Pos 订单和乐加扫码订单
+            List<Object[]> list = merchantRepository.findOrderListByMerchant(merchant.getId(),offset);
+            map.put("olOrders",list);
+            map.put("key","olOrders");
+            return map;
+        }else {
+            List<Object[]> scanCodeOrders = merchantRepository.findScanOrderListByMerchant(merchant.getId(), offset);
+            map.put("scanCodeOrders",scanCodeOrders);
+            map.put("key","scanCodeOrders");
+            return map;
+        }
     }
 
     /**

@@ -4,37 +4,27 @@ import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.global.websocket.dto.ActivityDTO;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
-import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantScanPayWay;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
+import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
-import com.jifenke.lepluslive.merchant.service.MerchantUserService;
+import com.jifenke.lepluslive.merchant.service.MerchantUserShopService;
 import com.jifenke.lepluslive.order.controller.view.*;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OLOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OrderShareCriteria;
+import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
+import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.service.*;
 import com.jifenke.lepluslive.security.SecurityUtils;
-
 import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
 import com.jifenke.lepluslive.withdraw.service.WithdrawService;
 import org.springframework.data.domain.Page;
-import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-
 import javax.inject.Inject;
-import javax.print.attribute.standard.MediaSize;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -57,6 +47,9 @@ public class OrderController {
 
     @Inject
     private OrderViewExcel orderViewExcel;
+
+    @Inject
+    private MerchantUserShopService merchantUserShopService;
 
     @Inject
     SimpMessageSendingOperations messagingTemplate;
@@ -381,14 +374,37 @@ public class OrderController {
     /**
      * 订单语音提示
      */
-    @RequestMapping(value = "/leJiaOrder/message/{id}", method = RequestMethod.GET)
-    public void sendLejiaOrderMessage(@PathVariable String id) {
-        ActivityDTO activityDTO = new ActivityDTO();
-        activityDTO.setPage("Hello World " + id);
-        messagingTemplate
-            .convertAndSendToUser(SecurityUtils.getCurrentUserLogin(), "/reply", activityDTO);
+    @RequestMapping(value = "/leJiaOrder/message/{sid}", method = RequestMethod.GET)
+    public void sendLejiaOrderMessage(@PathVariable String sid) {
+        OffLineOrder offLineOrder = offLineOrderService.findByOrderSid(sid);
+        if (offLineOrder != null) {
+            Merchant merchant = offLineOrder.getMerchant();
+            sendOrderMessage(merchant,"乐加支付到账" + offLineOrder.getTotalPrice() / 100.0 + "元");
+        }
+
     }
 
+    @RequestMapping(value = "/scanCodeOrder/message/{sid}", method = RequestMethod.GET)
+    public void sendScanCodeOrderMessage(@PathVariable String sid) {
+        ScanCodeOrder scanCodeOrder = scanCodeOrderService.findByOrderSid(sid);
+        if (scanCodeOrder != null) {
+            Merchant merchant = scanCodeOrder.getMerchant();
+            sendOrderMessage(merchant,"乐加支付到账" + scanCodeOrder.getTotalPrice() / 100.0 + "元");
+        }
+    }
+
+    public void sendOrderMessage(Merchant merchant,String msg) {
+        List<MerchantUserShop> userShops = merchantUserShopService.findByMerchant(merchant);
+        for (MerchantUserShop userShop : userShops) {
+            MerchantUser user = userShop.getMerchantUser();
+            if(user.getMerchantSid()!=null && (user.getType()==8||user.getType()==0)) {
+                ActivityDTO activityDTO = new ActivityDTO();
+                activityDTO.setPage(msg);
+                messagingTemplate
+                    .convertAndSendToUser(user.getMerchantSid(), "/reply", activityDTO);
+            }
+        }
+    }
 
     /**
      * 每日订单数据 (所有门店)
@@ -434,35 +450,10 @@ public class OrderController {
     }
 
     /**
-     * 每日订单列表 (所有门店)
-     */
-    @RequestMapping(value = "/order/orderList/{offset}", method = RequestMethod.GET)
-    public LejiaResult getOrderList(@PathVariable Long offset) {
-        if (offset == null) {
-            offset = 0L;
-        }
-        MerchantUser
-            merchantUser =
-            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
-        List<Merchant>
-            merchants =
-            merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
-        List<Object[]> allOrderList = new ArrayList<>();
-        for (Merchant merchant : merchants) {
-            List<Object[]> orderList = merchantService.findOrderList(merchant, offset);
-            for (Object[] objects : orderList) {
-                objects[7] = merchant.getName();
-            }
-            allOrderList.addAll(orderList);
-            // TO-DO   设置门店名称
-        }
-        return LejiaResult.ok(allOrderList);
-    }
-
-    /**
      * 每日订单列表 (指定门店)
      */
     @RequestMapping(value = "/order/orderList/merchant/{param}", method = RequestMethod.GET)
+    @ResponseBody
     public LejiaResult getOrderListByMerchant(@PathVariable String param) {
         String[] split = param.split("-");
         Long id = new Long(split[0]);
@@ -471,11 +462,23 @@ public class OrderController {
             offset = 0L;
         }
         Merchant merchant = merchantService.findMerchantById(id);
-        List<Object[]> orderList = merchantService.findOrderList(merchant, offset);
-        for (Object[] objects : orderList) {
-            objects[7] = merchant.getName();
+        Map map = merchantService.findOrderList(merchant, offset);
+        String key = (String) map.get("key");
+        if ("olOrders".equals(key)) {
+            List<Object[]> orderList = (List<Object[]>) map.get("olOrders");
+            for (Object[] objects : orderList) {
+                objects[7] = merchant.getName();
+            }
+            map.put("olOrders", orderList);
+        } else {
+            List<Object[]> orderList = (List<Object[]>) map.get("scanCodeOrders");
+            for (Object[] objects : orderList) {
+                objects[5] = merchant.getName();
+            }
+            map.put("scanCodeOrders", orderList);
         }
-        return LejiaResult.ok(orderList);
+
+        return LejiaResult.ok(map);
     }
 
     /**

@@ -43,8 +43,8 @@ angular.module('lepayglobleApp')
                                                              bindWx.notify(1);
                                                          // 产生订单时商户语音事件
                                                          }else if(account.authorities[0]=="merchant") {
-                                                             merchantVoice.notify(2);
-                                                         // 城市合伙人绑定微信号时间
+                                                             merchantVoice.notify(data);
+                                                         // 城市合伙人绑定微信号事件
                                                          } else if(account.authorities[0]=="partnerManager") {
                                                              cityBindWx.notify(3);
                                                          }

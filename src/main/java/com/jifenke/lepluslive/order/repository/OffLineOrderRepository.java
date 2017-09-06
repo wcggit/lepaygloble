@@ -133,7 +133,7 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
     List<Object[]> countCommonTransferByMerchantAndDate(Long merchantId, String startTime, String endTime);
 
 
-
+    OffLineOrder findByOrderSid(String orderSid);
 
 
 }

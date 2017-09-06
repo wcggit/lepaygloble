@@ -60,9 +60,18 @@
 <div class="row">
     <div class="col-md-10">
         <p class="ttl-add table-title">
-            所选条件下，共有<span class="font-yellow" ng-bind="totalData[0][0]"></span>条交易记录，总流水<span class="font-yellow" ng-bind="'￥'+totalData[0][1]/100.0"></span>。<br/>
-            普通订单<span class="font-yellow" ng-show="commonData!=null">{{commonData[0][0]}}</span><span class="font-yellow" ng-show="commonData==null">0</span>笔，总流水<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][1]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>。
-            乐加订单<span class="font-yellow" ng-show="lejiaData!=null">{{lejiaData[0][0]}}</span><span class="font-yellow" ng-show="lejiaData==null">0</span>笔，总流水<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][1]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>。
+            所选条件下，共有<span class="font-yellow" ng-bind="totalData[0][0]"></span>条交易记录，
+            总流水<span class="font-yellow" ng-bind="'￥'+totalData[0][1]/100.0"></span>，
+            实际到账<span class="font-yellow" ng-bind="'￥'+totalData[0][2]/100.0"></span>，
+            总手续费<span class="font-yellow" ng-bind="'￥'+totalData[0][3]/100.0"></span>。<br/>
+            普通订单<span class="font-yellow" ng-show="commonData!=null">{{commonData[0][0]}}</span><span class="font-yellow" ng-show="commonData==null">0</span>笔，
+            总流水<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][1]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>，
+            实际到账<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][2]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>，
+            手续费<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][3]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>。<br/>
+            乐加订单<span class="font-yellow" ng-show="lejiaData!=null">{{lejiaData[0][0]}}</span><span class="font-yellow" ng-show="lejiaData==null">0</span>笔，
+            总流水<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][1]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>，
+            实际到账<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][2]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>，
+            手续费<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][3]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>。
         </p>
     </div>
 </div>
@@ -79,7 +88,7 @@
             <td>确认码</td>
             <td>交易完成时间</td>
             <td>订单金额</td>
-            <td>费率</td>
+            <!--<td>费率</td>-->
             <td>订单类型</td>
             <td>订单状态</td>
         </tr>
@@ -100,9 +109,9 @@
                 <p ng-bind="o.completeDate|date:'yyyy-MM-dd HH:mm:ss'"></p>
             </td>
             <td ng-bind="'¥'+o.totalPrice/100.0"></td>
-            <td ng-show="o.rebateWay==0||o.rebateWay==2||o.rebateWay==4||o.rebateWay==5||o.rebateWay==6"><p ng-bind="'¥'+o.wxCommission/100.0"></p>
+            <!--<td ng-show="o.rebateWay==0||o.rebateWay==2||o.rebateWay==4||o.rebateWay==5||o.rebateWay==6"><p ng-bind="'¥'+o.wxCommission/100.0"></p>
             </td>
-            <td ng-show="o.rebateWay==3||o.rebateWay==1"><p>{{(100-o.merchant.ljCommission)/10}}折</p></td>
+            <td ng-show="o.rebateWay==3||o.rebateWay==1"><p>{{(100-o.merchant.ljCommission)/10}}折</p></td>-->
             <td ng-show="o.rebateWay==0||o.rebateWay==2||o.rebateWay==4||o.rebateWay==5||o.rebateWay==6"><p>普通订单</p>
             </td>
             <td ng-show="o.rebateWay==3||o.rebateWay==1"><p>乐加订单</p></td>

@@ -75,8 +75,12 @@
                 </select>
                 <!--<span>门店今日扫码52笔，总流水￥234234</span>-->
             </div>
-            <!--<span class="pull-right" style="line-height: 34px">语音提醒 <i ng-click="toggleYuYin()" class="iconfont2 icon2-shanghukaiqiyuyin"></i><i class="iconfont2 icon2-shanghuguanbiyuyin"></i></span>-->
-            <!--<a href="#" class="pull-right refresh">刷新</a>-->
+            <span class="pull-right" style="line-height: 34px" ng-click="toggleYuYin()">
+                <span id="voideText">语音提醒</span>
+                <i class="iconfont2 icon2-shanghukaiqiyuyin" ng-show="yuyinState"></i>
+                <i class="iconfont2 icon2-shanghuguanbiyuyin"  ng-show="!yuyinState"></i>
+            </span>
+            <a class="pull-right refresh" onclick="window.location.reload()">刷新</a>
             <!--播放器-->
             <audio id="voicePlayer" src=""></audio>
         </div>
@@ -86,8 +90,9 @@
             <p class="text-center ttl-list">门店今日流水￥<span class="color-origin">{{obinfo.firNum+obinfo.secNum}}</span>，
                 扫码流水￥<span class="color-origin">{{obinfo.firNum}}</span>，POS机流水￥<span class="color-origin">
                 {{obinfo.secNum}}</span>，乐加会员消费￥<span class="color-origin">{{obinfo.thirNum}}/{{obinfo.fouNum}}</span>次</p>
-            <div class="container-fluid clearfix dd-list">
-                <div class="list pull-right" ng-repeat="arr in orderList">
+            <!--乐加订单-->
+            <div class="container-fluid clearfix dd-list" ng-show="map.key=='olOrders'">
+                <div class="list pull-right" ng-repeat="arr in map.olOrders">
                     <!--扫码订单-->
                     <div class="list-detail pull-right"  ng-show="{{arr[6]==0}}">
                         <div class="list-info1 clearfix">
@@ -115,17 +120,32 @@
                         </div>
                         <div class="left-icon"></div>
                     </div>
-
                     <div class="ddIcon hyIcon"  ng-show="{{arr[6]==1}}"></div>
                     <div class="ddIcon dlIcon"  ng-show="{{arr[6]==0}}"></div>
                     <div class="dd-time text-right">{{arr[1]|date:'yyyy-MM-dd'}}<br><span>{{arr[1]|date:'HH:mm:ss'}}</span></div>
                 </div>
-                <!---->
-                <!--<div class="list pull-right">-->
-                <!---->
-                <!--<div class="ddIcon dlIcon"></div>-->
-                <!--<div class="dd-time text-right">2016-11-20<br><span>16:16:16</span></div>-->
-                <!--</div>-->
+            </div>
+            <!--通道订单-->
+            <div class="container-fluid clearfix dd-list" ng-show="map.key=='scanCodeOrders'">
+                <div class="list pull-right" ng-repeat="arr in map.scanCodeOrders">
+                    <!--扫码订单-->
+                    <div class="list-detail pull-right">
+                        <div class="list-info1 clearfix">
+                            订单编号：{{arr[0]}}（确认码：{{arr[2]}}）
+                            <span class="pull-right dldd-font" ng-show="arr[1]==12004||arr[1]==12005">乐加订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[1]==12001||arr[1]==12002||arr[1]==12003||arr[1]==12006">普通订单</span>
+                        </div>
+                        <div class="list-info2 clearfix">
+                            <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
+                            <span class="pull-left nickname">{{arr[5]}}</span>
+                            <span class="pull-right pay-detail">交易金额:{{arr[3]/100.0}}元</span>
+                        </div>
+                        <div class="left-icon"></div>
+                    </div>
+                    <!--<div class="ddIcon hyIcon ng-show=""></div>-->
+                    <div class="ddIcon dlIcon"></div>
+                    <div class="dd-time text-right">{{arr[4]|date:'yyyy-MM-dd'}}<br><span>{{arr[4]|date:'HH:mm:ss'}}</span></div>
+                </div>
             </div>
         </div>
         <div class="text-center" ng-show="tsContentShow">没有更多了，亲！</div>

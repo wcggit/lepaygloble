@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.merchant.repository;
 
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,13 +57,11 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
         "    ) r order by r.complete_date desc limit ?2,10", nativeQuery = true)
     List<Object[]> findOrderListByMerchant(Long merchantId, Long offSet);
 
+
     /***
-     * 根据门店查询数据 (掌富)
+     * 根据门店查询数据 (易宝)
      */
-    @Query(value = "select * from (" +
-        "SELECT o.order_sid,o.complete_date,le_pay_code ,true_pay,true_score,o.order_type_id rebate_way,0 order_type,1 merchant_name FROM scan_code_order o where o.state=1 and  o.merchant_id=?1 " +
-        "UNION  " +
-        "SELECT p.order_sid,p.complete_date,null le_pay_code,true_pay,true_score,p.rebate_way rebate_way,1 order_type,1 merchant_name FROM pos_order p where  p.state=1 and p.merchant_id =?1) r order by r.complete_date desc limit ?2,10", nativeQuery = true)
+    @Query(value="select order_sid,order_type,le_pay_code,total_price,complete_date,1 from scan_code_order where state=1 and merchant_id=?1 order by complete_date desc limit ?2,10",nativeQuery = true)
     List<Object[]> findScanOrderListByMerchant(Long merchantId, Long offSet);
 
 

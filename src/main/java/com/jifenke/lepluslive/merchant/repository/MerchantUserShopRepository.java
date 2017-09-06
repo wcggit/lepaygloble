@@ -20,4 +20,6 @@ public interface MerchantUserShopRepository extends JpaRepository<MerchantUserSh
     List<MerchantUserShop> findByMerchantUser(MerchantUser merchantUser);
 
     MerchantUserShop findByMerchantUserAndMerchant(MerchantUser merchantUser, Merchant merchant);
+
+    List<MerchantUserShop> findByMerchant(Merchant merchant);
 }
