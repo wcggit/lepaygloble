@@ -2,6 +2,7 @@ package com.jifenke.lepluslive.order.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.global.websocket.dto.ActivityDTO;
+import com.jifenke.lepluslive.jhipster.service.UserService;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.*;
@@ -19,6 +20,8 @@ import com.jifenke.lepluslive.order.service.*;
 import com.jifenke.lepluslive.security.SecurityUtils;
 import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
 import com.jifenke.lepluslive.withdraw.service.WithdrawService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +38,7 @@ import java.util.*;
 @RequestMapping("/api")
 public class OrderController {
 
+    private final Logger log = LoggerFactory.getLogger(OrderController.class);
 
     @Inject
     private OffLineOrderService offLineOrderService;
@@ -377,6 +381,7 @@ public class OrderController {
     @RequestMapping(value = "/leJiaOrder/message/{sid}", method = RequestMethod.GET)
     public void sendLejiaOrderMessage(@PathVariable String sid) {
         OffLineOrder offLineOrder = offLineOrderService.findByOrderSid(sid);
+        log.error("乐加订单到账： ------- * ------- * ------- 订单号 = "+sid);
         if (offLineOrder != null && checkDate(new Date(),offLineOrder.getCreatedDate())) {
             Merchant merchant = offLineOrder.getMerchant();
             sendOrderMessage(merchant,"乐加支付到账" + offLineOrder.getTotalPrice() / 100.0 + "元");
@@ -386,6 +391,7 @@ public class OrderController {
     @RequestMapping(value = "/scanCodeOrder/message/{sid}", method = RequestMethod.GET)
     public void sendScanCodeOrderMessage(@PathVariable String sid) {
         ScanCodeOrder scanCodeOrder = scanCodeOrderService.findByOrderSid(sid);
+        log.error("通道订单到账：------- * ------- * ------- 订单号 = "+sid);
         if (scanCodeOrder != null && checkDate(new Date(),scanCodeOrder.getCreatedDate())) {
             Merchant merchant = scanCodeOrder.getMerchant();
             sendOrderMessage(merchant,"乐加支付到账" + scanCodeOrder.getTotalPrice() / 100.0 + "元");
@@ -399,6 +405,7 @@ public class OrderController {
             if(user.getMerchantSid()!=null && (user.getType()==8||user.getType()==0)) {
                 ActivityDTO activityDTO = new ActivityDTO();
                 activityDTO.setPage(msg);
+                log.error("发送消息中： 用户名称 = "+user.getName());
                 messagingTemplate
                     .convertAndSendToUser(user.getMerchantSid(), "/reply", activityDTO);
             }
@@ -406,6 +413,7 @@ public class OrderController {
     }
 
     public boolean checkDate(Date today,Date crateDate) {
+        log.error("当前日期："+today+" 订单创建日期:"+crateDate);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String todayStr = sdf.format(today);
         String createStr = sdf.format(crateDate);

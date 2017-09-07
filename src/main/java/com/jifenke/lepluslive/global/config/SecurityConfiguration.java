@@ -154,6 +154,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/merchant/**").hasAuthority(AuthoritiesConstants.MERCHANT)
             .antMatchers("/api/partner/bind_wx_user/**").permitAll()
             .antMatchers("/api/leJiaOrder/message/**").permitAll()
+            .antMatchers("/api/scanCodeOrder/message/**").permitAll()
             .antMatchers("/api/partner/**").hasAuthority(AuthoritiesConstants.PARTNER)
             .antMatchers("/api/audits/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/api/**").authenticated()
