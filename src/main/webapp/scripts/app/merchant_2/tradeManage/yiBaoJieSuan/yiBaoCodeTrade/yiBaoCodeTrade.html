@@ -65,6 +65,7 @@
                         <td ng-if="lstl.state==1">划款成功</td>
                         <td ng-if="lstl.state==2">已退回</td>
                         <td ng-if="lstl.state==-2">划款失败退回</td>
+                        <td ng-if="lstl.state==-1">划款失败</td>
                         <td>￥{{lstl.totalTransfer/100.0}}</td>
                         <td>
                             <p>{{lstl.accountName}}</p>
