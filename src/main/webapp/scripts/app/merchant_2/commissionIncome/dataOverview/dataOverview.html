@@ -1,7 +1,7 @@
 <div class="dataOverview">
     <div class="panel panel-default page-top">
         <div class="panel-body clearfix">
-            数据概览
+            佣金管理
         </div>
     </div>
     <div class="container-fluid">
@@ -25,61 +25,7 @@
                 </div>
             </div>
         </div>
-        <p class="ttl">线上佣金收入</p>
-        <div class="row merchant-data">
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">今日佣金收入</p>
-                    <p class="text-center">{{data.onTodayTotalCommission | currency:'￥'}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">人均佣金收入</p>
-                    <p class="text-center">{{data.onPerCapita | currency:'￥'}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">今日佣金单数</p>
-                    <p class="text-center">{{data.onTodayTotalNumber}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">累计佣金单数</p>
-                    <p class="text-center">{{data.onTotalNumber}}</p>
-                </div>
-            </div>
-        </div>
-        <p class="ttl">线下佣金收入</p>
-        <div class="row merchant-data">
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">今日佣金收入</p>
-                    <p class="text-center">{{data.offTodayTotalCommission | currency:'￥'}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">人均佣金收入</p>
-                    <p class="text-center">{{data.offPerCapita | currency:'￥'}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">今日佣金单数</p>
-                    <p class="text-center">{{data.offTodayTotalNumber}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">累计佣金单数</p>
-                    <p class="text-center">{{data.offTotalNumber}}</p>
-                </div>
-            </div>
-        </div>
-        <p class="ttl">门店锁定情况</p>
+        <div class="ttl clearfix">门店锁定管理 <div class="btn btn-warning pull-right"  ui-sref="tixianDetail">查看提现详情</div></div>
         <div class="row row-margin lockStoreState">
             <div class="col-md-12" ng-repeat="x in merchants">
                 <div class="col-md-4">

@@ -11,18 +11,9 @@
                 <div class="face-img">
                     <img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt="">
                 </div>
-                <h5 class="text-center">{{loginName}}</h5>
             </div>
-            <div class="col-md-4 ttl-top">
-                <p class="money-ttl">
-                    佣金余额
-                    <span class="tooltip-problem" data-toggle="tooltip" data-placement="right" title="您店铺锁定的会员在乐加体系下的任何消费，都会给您带来佣金">?</span>
-                </p>
-                <p class="money-content clearfix">
-                    <span class="pull-left"><span>¥</span>{{available}}</span>
-                    <input type="button" class="btn btn-warning pull-left tx" data-target="#tx" data-toggle="modal" value="提现">
-                    <!--<a class="pull-left" style="text-decoration: underline;margin-top: 0" ui-sref="withdrawRecord2">提现记录</a>-->
-                </p>
+            <div class="col-md-4">
+                <h5 class="text-center" style="line-height: 75px;text-align: left;margin-left: -30px">{{loginName}}</h5>
             </div>
             <div class="col-md-5 btn-warning-group">
                 <div class="btn btn-warning" ng-click="toOrderList()">交易记录</div>
