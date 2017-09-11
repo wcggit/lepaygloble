@@ -74,7 +74,7 @@ angular.module('lepayglobleApp')
                 contentState:"1",
                 clickState:"0",
                 name:"佣金收入",
-                state:"commissionIncome",
+                state:"",
                 icon:"iconfont2 icon2-shanghuhuiyuanbianxian"
             },
             {
@@ -129,8 +129,14 @@ angular.module('lepayglobleApp')
                 contentState:"0",
             }
         ]
-        $scope.currentTab=$scope.menuList[0].state;
+        var current = $state.current;
+        if (current.parent == "merchant_2") {
+            $scope.currentTab=current.name;
+        } else {
+            $scope.currentTab=current.parent;
+        }
         $scope.onClickTab=function (tab) {
+            console.log($location)
             if(tab.state!=''){
                 $scope.currentTab=tab.state;
                 $state.go(tab.state);

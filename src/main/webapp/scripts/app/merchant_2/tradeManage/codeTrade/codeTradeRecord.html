@@ -51,32 +51,26 @@
             <input type="text" class="form-control" id="orderSid">
         </div>
         <div class="form-group col-md-2">
-            &nbsp;&nbsp;
             <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
         </div>
     </div>
 </form>
 <!--表格信息总结-->
-<div class="row">
-    <div class="col-md-10">
-        <p class="ttl-add table-title">
-        所选条件下，共有<span class="font-yellow" ng-bind="totalData[0][0]"></span>条交易记录，
-            总流水<span class="font-yellow" ng-bind="'￥'+totalData[0][1]/100.0"></span>，
-            实际到账<span class="font-yellow" ng-bind="'￥'+totalData[0][2]/100.0"></span>，
-            总手续费<span class="font-yellow" ng-bind="totalData[0][3]/100.0"></span>。<br/>
-        普通订单<span class="font-yellow" ng-show="commonData!=null">{{commonData[0][0]}}</span><span class="font-yellow" ng-show="commonData==null">0</span>笔，
-            总流水<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][1]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>,
-            实际到账<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][2]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>,
-            手续费<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][3]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>。<br/>
-        乐加订单<span class="font-yellow" ng-show="lejiaData!=null">{{lejiaData[0][0]}}</span><span class="font-yellow" ng-show="lejiaData==null">0</span>笔，
-            总流水<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][1]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>，
-            实际到账<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][2]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>，
-            手续费<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][3]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>。
-        </p>
-    </div>
-    <div class="col-md-2" ng-show="payWay==3">
-    <div class="btn btn-warning btn-long" ng-click="historyTradeRecord()">历史记录</div>
-    </div>
+<div class="container-fluid">
+    <p class="ttl-add table-title">
+    所选条件下，共有<span class="font-yellow" ng-bind="totalData[0][0]"></span>条交易记录，
+        总流水<span class="font-yellow" ng-bind="'￥'+totalData[0][1]/100.0"></span>，
+        实际到账<span class="font-yellow" ng-bind="'￥'+totalData[0][2]/100.0"></span>，
+        总手续费<span class="font-yellow" ng-bind="totalData[0][3]/100.0"></span>。&nbsp;&nbsp;&nbsp;&nbsp;
+    普通订单<span class="font-yellow" ng-show="commonData!=null">{{commonData[0][0]}}</span><span class="font-yellow" ng-show="commonData==null">0</span>笔，
+        总流水<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][1]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>,
+        实际到账<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][2]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>,
+        手续费<span class="font-yellow" ng-show="commonData!=null">￥{{commonData[0][3]/100.0}}</span><span class="font-yellow" ng-show="commonData==null">￥0</span>。&nbsp;&nbsp;&nbsp;&nbsp;
+    乐加订单<span class="font-yellow" ng-show="lejiaData!=null">{{lejiaData[0][0]}}</span><span class="font-yellow" ng-show="lejiaData==null">0</span>笔，
+        总流水<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][1]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>，
+        实际到账<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][2]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>，
+        手续费<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][3]/100.0}}</span><span class="font-yellow" ng-show="lejiaData==null">￥0</span>。
+    </p>
 </div>
 
 <!--表格-->
@@ -104,8 +98,10 @@
         <tr class="tr-noEmpty" ng-repeat="o in orderList" id="HaveData">
             <td ng-bind="o.orderSid"></td>
             <td ng-bind="o.merchant.name"></td>
-            <td ng-show="x.leJiaUser==null||(x.leJiaUser!=null&&x.leJiaUser.name==null)">非会员</td>
-            <td ng-show="x.leJiaUser!=null&&x.leJiaUser.name!=null">{{x.leJiaUser.id}}</td>
+            <td>
+                <p ng-show="x.leJiaUser==null||(x.leJiaUser!=null&&x.leJiaUser.name==null)">非会员</p>
+                <p ng-show="x.leJiaUser!=null&&x.leJiaUser.name!=null">{{x.leJiaUser.id}}</p>
+            </td>
             <td ng-bind="o.payWay.payWay"></td>
             <td ng-bind="o.lepayCode"></td>
             <td>
