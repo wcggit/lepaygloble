@@ -72,10 +72,10 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
      * @param offSet
      * @return
      */
-    @Query(value = "SELECT a.`name`,count(b.id) number, a.user_limit from merchant a " +
+    @Query(value = "SELECT a.`name`,count(b.id) number, a.user_limit,a.id from merchant a " +
         "LEFT JOIN le_jia_user b on a.id = b.bind_merchant_id " +
-        "where a.id in (?1) GROUP BY a.id ORDER BY number DESC LIMIT ?2,6", nativeQuery = true)
-    List<Object[]> findPageMerchantMemberLockNumber(List<Object> obj, Integer offSet);
+        "where a.id in (?1) GROUP BY a.id ORDER BY number ", nativeQuery = true)
+    List<Object[]> findPageMerchantMemberLockNumber(List<Object> obj);
 
     /**
      * 查询商户旗下所有的会员锁定总数

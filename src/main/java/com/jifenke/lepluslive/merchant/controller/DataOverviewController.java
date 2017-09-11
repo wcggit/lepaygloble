@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,17 +56,20 @@ public class DataOverviewController {
             MerchantWalletOnline onlineWallet = merchantWalletOnlineService.findByMerchant(mid);
             Long totalCommission = 0L;
             Long availableCommission = 0L;
-            if(offWallet!=null && onlineWallet!=null) {
-                 totalCommission = offWallet.getTotalMoney() + onlineWallet.getTotalMoney();
+            if(offWallet!=null) {
+                totalCommission = offWallet.getTotalMoney() + onlineWallet.getTotalMoney();
                 availableCommission = offWallet.getAvailableBalance()+onlineWallet.getAvailableBalance();
-            }else {
-                 totalCommission = offWallet.getTotalMoney();
+            }
+            if(onlineWallet!=null) {
+                totalCommission = offWallet.getTotalMoney();
                 availableCommission = offWallet.getAvailableBalance();
             }
             totalCommissions.add(totalCommission);
             availableCommissions.add(availableCommission);
         }
         dataOverviewCriteria.setMerchants(list);
+        Collections.reverse(availableCommissions);
+        Collections.reverse(totalCommissions);
         dataOverviewCriteria.setAvailableCommissions(availableCommissions);
         dataOverviewCriteria.setTotalCommissions(totalCommissions);
         return LejiaResult.ok(dataOverviewCriteria);

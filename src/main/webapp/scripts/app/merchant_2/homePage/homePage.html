@@ -11,56 +11,13 @@
                 <div class="face-img">
                     <img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt="">
                 </div>
-                <h5 class="text-center">{{loginName}}</h5>
             </div>
-            <div class="col-md-4 ttl-top">
-                <p class="money-ttl">
-                    佣金余额
-                    <span class="tooltip-problem" data-toggle="tooltip" data-placement="right" title="您店铺锁定的会员在乐加体系下的任何消费，都会给您带来佣金">?</span>
-                </p>
-                <p class="money-content clearfix">
-                    <span class="pull-left"><span>¥</span>{{available}}</span>
-                    <input type="button" class="btn btn-warning pull-left tx" data-target="#tx" data-toggle="modal" value="提现">
-                    <!--<a class="pull-left" style="text-decoration: underline;margin-top: 0" ui-sref="withdrawRecord2">提现记录</a>-->
-                </p>
+            <div class="col-md-4">
+                <h5 class="text-center" style="line-height: 75px;text-align: left;margin-left: -30px">{{loginName}}</h5>
             </div>
             <div class="col-md-5 btn-warning-group">
                 <div class="btn btn-warning" ng-click="toOrderList()">交易记录</div>
                 <div class="btn btn-warning" ng-click="toTradeList()">到账记录</div>
-            </div>
-        </div>
-        <p class="ttl">商户数据</p>
-        <div class="row merchant-data">
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">商户今日入账</p>
-                    <p class="text-center"><span>¥</span>{{srgl.firNum}}</p>
-                </div>
-
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">商户累计入账</p>
-                    <p class="text-center"><span>¥</span>{{srgl.secNum}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">
-                        会员消费金额/次数
-                        <span class="tooltip-problem" data-toggle="tooltip" data-placement="top" title="乐加会员到您店铺消费的交易额和消费次数">?</span>
-                    </p>
-                    <p class="text-center"><span>¥</span>{{srgl.thirNum+' / '+srgl.fouNum}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">
-                        接收红包总额
-                        <span class="tooltip-problem" data-toggle="tooltip" data-placement="top" title="乐加会员到店使用的红包总额。消费者使用的红包扣除相应手续费后，按1红包等于1元结算给商户">?</span>
-                    </p>
-                    <p class="text-center"><span>¥</span>{{srgl.fifNum}}</p>
-                </div>
             </div>
         </div>
         <p class="ttl">交易看板</p>
@@ -73,7 +30,7 @@
                     <option value="">请选择</option>
                     <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
                 </select>
-                <!--<span>门店今日扫码52笔，总流水￥234234</span>-->
+                门店今日扫码<span style="color: orange">{{storeTotalCount}}</span>笔，总流水<span style="color: orange">￥{{storeTotalPrice}}</span>
             </div>
             <span class="pull-right" style="line-height: 34px" ng-click="toggleYuYin()">
                 <span id="voideText">语音提醒</span>
@@ -87,9 +44,6 @@
     </div>
     <div class="list-out-div">
         <div class="list-in-div">
-            <p class="text-center ttl-list">门店今日流水￥<span class="color-origin">{{obinfo.firNum+obinfo.secNum}}</span>，
-                扫码流水￥<span class="color-origin">{{obinfo.firNum}}</span>，POS机流水￥<span class="color-origin">
-                {{obinfo.secNum}}</span>，乐加会员消费￥<span class="color-origin">{{obinfo.thirNum}}/{{obinfo.fouNum}}</span>次</p>
             <!--乐加订单-->
             <div class="container-fluid clearfix dd-list" ng-show="map.key=='olOrders'">
                 <div class="list pull-right" ng-repeat="arr in map.olOrders">
@@ -150,60 +104,5 @@
         </div>
         <div class="text-center" ng-show="tsContentShow">没有更多了，亲！</div>
         <input type="button" class="btn btn-warning look-more" value="查看更多" ng-click="findMore()">
-    </div>
-</div>
-<!--提现提示框-->
-<div class="modal fade" id="tx">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-warning">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">提现 <span>佣金余额：<font color="#fb991a">¥{{available}}</font>元</span></h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="withDrawInput" class="col-sm-3 col-sm-offset-1 control-label">提现金额（元）</label>
-                        <div class="col-sm-4">
-                            <input type="number" class="form-control" id="withDrawInput"  placeholder="请输入金额"  value="0"/>
-                        </div>
-                        <div class="col-sm-3"><span class="ts">至少提现200元</span></div>
-                    </div>
-                    <div class="form-group">
-                        <label  class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
-                        <div class="col-sm-7">
-                            <p class="text-muted" class="form-control">****** ******** {{loginInfo.merchantBank.bankNumber| limitTo:-4 }}</p>
-                            <p class="text-muted" class="form-control">{{loginInfo.merchantBank.bankName}}</p>
-                        </div>
-
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div class="clearfix btn-div text-center">
-                    <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="withDraw()">确认</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--提现成功提示框-->
-<div class="modal fade" id="tx-success">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="icon-success"></div>
-                <p class="text-center">提现申请成功</p>
-                <!--<p class="text-center">温馨提示</p>-->
-                <p class="text-center">佣金将会在1个工作日内后抵达您的结算账户</p>
-                <!--<p class="text-center">提现功能维护中,佣金提现请联系乐加客服人员。</p>-->
-            </div>
-            <div class="modal-footer">
-                <div class="clearfix btn-div text-center">
-                    <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="refresh()">知道了</button>
-                </div>
-            </div>
-        </div>
     </div>
 </div>

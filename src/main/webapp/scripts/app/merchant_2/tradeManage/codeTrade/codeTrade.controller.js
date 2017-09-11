@@ -12,7 +12,4 @@ angular.module('lepayglobleApp')
             $scope.currentTab0 = !$scope.currentTab0;
             $scope.currentTab1 = !$scope.currentTab1;
         };
-        /*$http.get('api/leJiaOrder/message/16052619101942339').success(function (response) {
-            $scope.merchant = response.data;
-        });*/
     })

@@ -2,10 +2,8 @@ package com.jifenke.lepluslive.withdraw.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.global.util.MvUtil;
-import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
-import com.jifenke.lepluslive.merchant.service.MerchantService;
-import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
+import com.jifenke.lepluslive.merchant.domain.entities.*;
+import com.jifenke.lepluslive.merchant.service.*;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 import com.jifenke.lepluslive.partner.service.PartnerManagerService;
@@ -15,7 +13,6 @@ import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
 import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
 import com.jifenke.lepluslive.withdraw.service.WithdrawService;
 
-import org.omg.CORBA.Object;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -48,31 +45,34 @@ public class WithdrawController {
     private MerchantUserResourceService merchantUserResourceService;
     @Inject
     private PartnerManagerService partnerManagerService;
+    @Inject
+    private MerchantWalletService merchantWalletService;
+    @Inject
+    private MerchantWalletOnlineService merchantWalletOnlineService;
+    @Inject
+    private MerchantUserService merchantUserService;
 
     @RequestMapping(value = "/merchant_withdraw", method = RequestMethod.POST)
     public LejiaResult merchantWithDraw(HttpServletRequest request) {
         try {
-            Long amount = new Long(request.getParameter("amount"));
+            Double amount = new Double(request.getParameter("amount"));
+            Long mid = new Long(request.getParameter("mid"));
+            MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+            if(merchantUser==null) {
+                return LejiaResult.build(400,"无权限");
+            }else if(merchantUser.getType()!=8 && merchantUser.getType()!=0) {
+                return LejiaResult.build(400,"无权限");
+            }
             //  获取 merchant 账户信息 , 生成随机订单号
-            Merchant
-                merchant =
-                merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
-                    .getMerchant();
-            String randomBillSid = MvUtil.getOrderNumber();
-            //  生成订单实例
-            WithdrawBill withdrawBill = new WithdrawBill();
-            withdrawBill.setMerchant(merchant);
-            withdrawBill.setBankNumber(merchant.getMerchantBank().getBankNumber());
-            withdrawBill.setBankName(merchant.getMerchantBank().getBankName());
-            withdrawBill.setBillType(2);     //0是合伙人管理员  1是合伙人 2是商户
-            withdrawBill.setState(0);        //0是申请中        1是提现完成   2已驳回
-            withdrawBill.setWithdrawBillSid(randomBillSid);
-            withdrawBill.setPayee(merchant.getPayee());
-            Long totalPrice = amount * 100;    //  RMB:积分  (比率)  1:100
-            withdrawBill.setTotalPrice(totalPrice);
-            withdrawBill.setCreatedDate(new Date());
-            withdrawService.saveWithdrawBill(withdrawBill);
-            return LejiaResult.ok();
+            Merchant merchant = merchantService.findMerchantById(mid);
+            boolean result = withdrawService.createWithDrawBill(merchant, amount);
+            if(result) {
+                return LejiaResult.ok();
+            }else {
+                String msg = "余额不足，提现订单生成失败。";
+                LOG.error(msg);
+                return LejiaResult.build(400, msg);
+            }
         } catch (Exception e) {
             String msg = "提现订单生成失败:" + e.getMessage();
             LOG.error(msg);
@@ -129,32 +129,62 @@ public class WithdrawController {
         return  new LejiaResult(page);
     }
 
-    //  2.0 版本生成提现单
-    /**
-     *  生成提现单
+    /***
+     *  提现详情
+     *   - 佣金余额
+     *   - 结算账户
      */
-     @RequestMapping(value="/merchant_user_withdraw",method = RequestMethod.POST)
-     @ResponseBody
-     public LejiaResult merchantUserWithDraw(HttpServletRequest request) {
-         try {
-             Double amount = new Double(request.getParameter("amount"));
-             MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
-             if(merchantUser==null||merchantUser.getType()!=8) {
-                 return LejiaResult.build(400, "无权限 ^_^! ");
-             }
-             boolean result = withdrawService.createWithDrawBill(merchantUser, amount);
-             if(result) {
-                 return LejiaResult.ok();
-             }else {
-                 return LejiaResult.build(400, "提现失败 ^_^! ");
-             }
-         } catch (Exception e) {
-             String msg = "提现订单生成失败:" + e.getMessage();
-             LOG.error(msg);
-             return LejiaResult.build(400, msg);
-         }
-     }
-
+    @RequestMapping(value="/merchant_with_info/findById/{mid}",method = RequestMethod.GET)
+    @ResponseBody
+    public LejiaResult findMerchantInfoById(@PathVariable Long mid) {
+        Merchant merchant = merchantService.findMerchantById(mid);
+        MerchantWallet merchantWallet = merchantWalletService.findByMerchant(merchant.getId());
+        MerchantWalletOnline merchantWalletOnline = merchantWalletOnlineService.findByMerchant(merchant.getId());
+        Long avaiWith = 0L;
+        if(merchantWallet!=null) {
+            avaiWith+=merchantWallet.getAvailableBalance();
+        }
+        if(merchantWalletOnline!=null) {
+            avaiWith+=merchantWalletOnline.getAvailableBalance();
+        }
+        MerchantBank merchantBank = merchant.getMerchantBank();
+        String bankName = merchantBank.getBankName();
+        String bankNumb = merchantBank.getBankNumber();
+        Map map = new HashMap();
+        map.put("bankName",bankName);
+        map.put("bankNumb",bankNumb);
+        map.put("avaiWith",avaiWith);
+        map.put("merchantName",merchant.getName());
+        return LejiaResult.ok(map);
+    }
+    /***
+     *  提现记录
+     */
+    @RequestMapping(value = "/merchant_withdraw/findAll", method = RequestMethod.POST)
+    @ResponseBody
+    public LejiaResult merchantWithdrawFindByCriteria(@RequestBody WithdrawCriteria withdrawCriteria) {
+        MerchantUser merchantUser = merchantUserService.findByMerchantSid(SecurityUtils.getCurrentUserLogin());
+        if(merchantUser==null) {
+            return LejiaResult.build(400,"无权限");
+        }
+        if(withdrawCriteria.getOffset()==null) {
+            withdrawCriteria.setOffset(1);
+        }
+        if(withdrawCriteria.getMerchant()==null) {
+            withdrawCriteria.setMerchantUser(merchantUser);
+        }
+        List<Object[]> list = withdrawService.findByMerchantWithDrawByCriteria(withdrawCriteria);
+        Long totalElements = withdrawService.findByMerchantWithDrawCountByCriteria(withdrawCriteria);
+        Long totalPages = 1L;
+        if(totalElements>10) {
+            Double pages = Math.ceil(new Double(totalElements) / 10.0);
+            totalPages = new Long(pages.intValue());
+        }
+        Map map = new HashMap();
+        map.put("content",list);
+        map.put("totalPages",totalPages);
+        return LejiaResult.ok(map);
+    }
     /**
      * 分页查询提现详情
      * @param withdrawCriteria
@@ -173,4 +203,6 @@ public class WithdrawController {
         Page page  = withdrawService.findPartnerWithDrawByCriteria(withdrawCriteria,10);
         return  new LejiaResult(page);
     }
+
+
 }

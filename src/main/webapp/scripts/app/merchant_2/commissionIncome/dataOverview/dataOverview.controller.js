@@ -30,8 +30,8 @@ angular.module('lepayglobleApp')
                     if(response.data.merchants!=null && response.data.merchants.length>0){
                         var totaUserLockLimit = 0;
                         var userLockLimit = 0;
+                        $scope.merchants = response.data.merchants;
                         angular.forEach(response.data.merchants,function(data){
-                            $scope.merchants.push(data);
                             totaUserLockLimit+=data[2]
                             userLockLimit+=data[1]
                         });
@@ -56,20 +56,58 @@ angular.module('lepayglobleApp')
         $scope.moreMerchant = function () {
             $scope.findPage();
         }
-
-        /*var data = 'amount='
-            + encodeURIComponent($("#inputPassword1").val().trim());
-        $http.post('/withdraw/merchant_withdraw', data, {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+        //  提现窗口展示
+        $scope.txShow = function () {
+            $("#tx").modal();
+        };
+        $scope.txHide = function () {
+            $("#tx").modal("toggle");
+            $("#tx-success").modal("toggle");
+            $scope.refresh();
+        };
+        $scope.txSuc = function () {
+            $("#tx-success").modal();
+        }
+        $scope.refresh = function () {
+            window.location.reload();
+        }
+        $scope.withDrawWindow = function (mid) {
+            $http.get('/withdraw/merchant_with_info/findById/'+mid).success(function (response) {
+                 var data = response.data;
+                 $scope.merchantName = data.merchantName;
+                 $scope.bankNumb = data.bankNumb;
+                 $scope.bankName = data.bankName;
+                 $scope.avaiWith = data.avaiWith;
+                 $scope.avaiWithId = mid;
+                 console.log(JSON.stringify(data));
+                 $scope.txShow();
+             });
+        }
+        //  提现
+        $scope.withDraw = function () {
+            var amount = $("#withDrawInput").val();
+            var available = $scope.avaiWith;
+            if (amount > available) {
+                alert("余额不足！");
+                $("#withDrawInput").val('');
+                return;
+            } else if (amount < 200) {
+                alert("提现金额不小于 200 元。");
+                $("#withDrawInput").val('');
+                return;
             }
-        }).success(function (response) {
-            if (response.status == 400) {
-                alert("服务繁忙,请稍后尝试!");
-            } else {
-                alert("提现申请成功 !");
-                $("#inputPassword1").val('');
-                $scope.tx();
-            }
-        });*/
+            var data = 'amount='+ encodeURIComponent(amount.trim())+"&mid="+encodeURIComponent($scope.avaiWithId);
+            $http.post('/withdraw/merchant_withdraw', data, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).success(function (response) {
+                if (response.status == 400) {
+                    alert("服务繁忙,请稍后尝试!");
+                } else {
+                    $("#withDrawInput").val('');
+                    $scope.txSuc();
+                }
+            })
+        }
     })

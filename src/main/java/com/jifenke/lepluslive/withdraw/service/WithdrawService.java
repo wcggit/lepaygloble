@@ -6,15 +6,11 @@ import com.jifenke.lepluslive.merchant.repository.MerchantWalletLogRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletOnlineLogRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletOnlineRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
-import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
-import com.jifenke.lepluslive.partner.domain.criteria.PartnerManagerCriteria;
-import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
+import com.jifenke.lepluslive.merchant.service.MerchantUserShopService;
 import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
 import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
 import com.jifenke.lepluslive.withdraw.repository.WithdrawRepository;
-
-import org.omg.CORBA.Object;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -24,14 +20,16 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by xf on 2016/9/18.
@@ -40,6 +38,8 @@ import java.util.Map;
 @Transactional
 public class WithdrawService {
 
+    @Inject
+    private EntityManager em;
     @Inject
     private WithdrawRepository withdrawRepository;
     @Inject
@@ -50,10 +50,10 @@ public class WithdrawService {
     private MerchantWalletOnlineRepository merchantWalletOnlineRepository;
     @Inject
     private MerchantWalletOnlineLogRepository merchantWalletOnlineLogRepository;
-
-
     @Inject
     private MerchantUserResourceService merchantUserResourceService;
+    @Inject
+    private MerchantUserShopService merchantUserShopService;
 
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -112,35 +112,31 @@ public class WithdrawService {
         };
     }
 
+
     /**
      * 2.0 提现流程
      */
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public boolean createWithDrawBill(MerchantUser merchantUser, Double amount) {
+    public boolean createWithDrawBill(Merchant merchant, Double amount) {
         //  获取该商户下所有门店
-        List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         Double dbAmount = amount * 100;
         Long withDrawAmount = dbAmount.longValue();
         //  判断佣金总额是否大于提现金额
         Long available = 0L;
-        for (Merchant merchant : merchants) {
-            MerchantWallet merchantWallet = merchantWalletRepository.findByMerchantId(merchant.getId());
-            MerchantWalletOnline merchantWalletOnline = merchantWalletOnlineRepository.findByMerchantId(merchant.getId());
-            if (merchantWallet != null) {
-                available += merchantWallet.getAvailableBalance();
-            }
-            if (merchantWalletOnline != null) {
-                available += merchantWalletOnline.getAvailableBalance();
-            }
+        MerchantWallet merchantWallet = merchantWalletRepository.findByMerchantId(merchant.getId());
+        MerchantWalletOnline merchantWalletOnline = merchantWalletOnlineRepository.findByMerchantId(merchant.getId());
+        if (merchantWallet != null) {
+            available += merchantWallet.getAvailableBalance();
+        }
+        if (merchantWalletOnline != null) {
+            available += merchantWalletOnline.getAvailableBalance();
         }
         // 如果可用金额小于提现金额 :  提现失败
         if (available < withDrawAmount) {
             return false;
         }
         // 对账户可用余额进行修改
-        for (Merchant merchant : merchants) {
-            MerchantWallet merchantWallet = merchantWalletRepository.findByMerchantId(merchant.getId());
-            MerchantWalletOnline merchantWalletOnline = merchantWalletOnlineRepository.findByMerchantId(merchant.getId());
+        //  线下钱包
             if (merchantWallet != null && withDrawAmount > 0) {
                 Long thisAva = merchantWallet.getAvailableBalance();
                 if (thisAva >= withDrawAmount) {                            // 如果当前余额满足
@@ -173,6 +169,7 @@ public class WithdrawService {
                     merchantWalletRepository.save(merchantWallet);
                 }
             }
+            //  线上钱包
             if (merchantWalletOnline != null && withDrawAmount > 0) {
                 Long thisAva = merchantWalletOnline.getAvailableBalance();
                 if (thisAva >= withDrawAmount) {                            // 如果当前余额满足
@@ -184,7 +181,7 @@ public class WithdrawService {
                     merchantWalletOnlineLog.setMerchantId(merchant.getId());
                     merchantWalletOnlineLog.setBeforeChangeMoney(merchantWalletOnline.getAvailableBalance());
                     merchantWalletOnlineLog.setAfterChangeMoney(thisAva);
-                    merchantWalletOnlineLog.setChangeMoney(merchantWalletOnline.getAvailableBalance()-thisAva);
+                    merchantWalletOnlineLog.setChangeMoney(merchantWalletOnline.getAvailableBalance() - thisAva);
                     merchantWalletOnlineLog.setType(3L);
                     merchantWalletOnlineLogRepository.save(merchantWalletOnlineLog);
                     // 更改金额
@@ -199,7 +196,7 @@ public class WithdrawService {
                     merchantWalletOnlineLog.setMerchantId(merchant.getId());
                     merchantWalletOnlineLog.setBeforeChangeMoney(merchantWalletOnline.getAvailableBalance());
                     merchantWalletOnlineLog.setAfterChangeMoney(thisAva);
-                    merchantWalletOnlineLog.setChangeMoney(merchantWalletOnline.getAvailableBalance()-thisAva);
+                    merchantWalletOnlineLog.setChangeMoney(merchantWalletOnline.getAvailableBalance() - thisAva);
                     merchantWalletOnlineLog.setType(3L);
                     merchantWalletOnlineLogRepository.save(merchantWalletOnlineLog);
                     // 更改金额
@@ -208,22 +205,94 @@ public class WithdrawService {
                     merchantWalletOnlineRepository.save(merchantWalletOnline);
                 }
             }
-        }
         //  生成提现单
         String randomBillSid = MvUtil.getOrderNumber();
         WithdrawBill withdrawBill = new WithdrawBill();
-        withdrawBill.setMerchantUserId(merchantUser.getId());
-        withdrawBill.setBankNumber(merchantUser.getMerchantBank().getBankNumber());
-        withdrawBill.setBankName(merchantUser.getMerchantBank().getBankName());
-        withdrawBill.setBillType(3);     //0是合伙人管理员  1是合伙人    2是门店  3是商户
+        withdrawBill.setBankNumber(merchant.getMerchantBank().getBankNumber());
+        withdrawBill.setBankName(merchant.getMerchantBank().getBankName());
+        withdrawBill.setBillType(2);     //0是合伙人管理员  1是合伙人    2是门店  3是商户
         withdrawBill.setState(0);        //0是申请中       1是提现完成  2已驳回
         withdrawBill.setWithdrawBillSid(randomBillSid);
-        withdrawBill.setPayee(merchantUser.getPayee());
-        int account = amount.intValue();
-        Long totalPrice = account * 100L;    //  RMB:积分  (比率)  1:100
+        withdrawBill.setPayee(merchant.getPayee());
+        Long totalPrice = amount.intValue() * 100L;    //  RMB:积分  (比率)  1:100
         withdrawBill.setTotalPrice(totalPrice);
         withdrawBill.setCreatedDate(new Date());
+        withdrawBill.setMerchant(merchant);
         withdrawRepository.save(withdrawBill);
         return true;
+    }
+
+    /***
+     *  根据门店查询提现记录
+     */
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public List<Object[]> findByMerchantWithDrawByCriteria(WithdrawCriteria withdrawCriteria) {
+        StringBuffer sql = new StringBuffer();
+        sql.append("select * from withdraw_bill where bill_type=2 ");
+        if(withdrawCriteria.getState()!=null) {
+            sql.append(" and state="+withdrawCriteria.getState());
+        }
+        if(withdrawCriteria.getMerchant()!=null) {
+            sql.append(" and merchant_id = "+withdrawCriteria.getMerchant().getId());
+        }else if(withdrawCriteria.getMerchantUser()!=null) {
+            sql.append(" and (");
+            List<MerchantUserShop> shops = merchantUserShopService.findByMerchantUser(withdrawCriteria.getMerchantUser());
+            for (int index=0;index<shops.size();index++) {
+                Merchant merchant = shops.get(index).getMerchant();
+                if(index+1==shops.size()) {
+                    sql.append("merchant_id = "+merchant.getId());
+                }else {
+                    sql.append("merchant_id = "+merchant.getId()+" or ");
+                }
+            }
+            sql.append(" ) ");
+        }
+        if(withdrawCriteria.getWithDrawStartDate()!=null && !"".equals(withdrawCriteria.getWithDrawStartDate())) {
+            Date start = new Date(withdrawCriteria.getWithDrawStartDate());
+            Date end = new Date(withdrawCriteria.getWithDrawEndDate());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String startStr = sdf.format(start);
+            String endStr = sdf.format(end);
+            sql.append(" and created_date between '"+startStr+"' and '"+endStr+"'");
+        }
+        int offset = (withdrawCriteria.getOffset()-1) * 10;
+        sql.append(" limit "+offset+",10");
+        Query query = em.createNativeQuery(sql.toString());
+        List<Object[]> details = query.getResultList();
+        return details;
+    }
+
+    public Long findByMerchantWithDrawCountByCriteria(WithdrawCriteria withdrawCriteria) {
+        StringBuffer sql = new StringBuffer();
+        sql.append("select count(*) from withdraw_bill where bill_type=2 ");
+        if(withdrawCriteria.getState()!=null) {
+            sql.append(" and state="+withdrawCriteria.getState());
+        }
+        if(withdrawCriteria.getMerchant()!=null) {
+            sql.append(" and merchant_id = "+withdrawCriteria.getMerchant().getId());
+        }else if(withdrawCriteria.getMerchantUser()!=null) {
+            sql.append(" and (");
+            List<MerchantUserShop> shops = merchantUserShopService.findByMerchantUser(withdrawCriteria.getMerchantUser());
+            for (int index=0;index<shops.size();index++) {
+                Merchant merchant = shops.get(index).getMerchant();
+                if(index+1==shops.size()) {
+                    sql.append("merchant_id = "+merchant.getId());
+                }else {
+                    sql.append("merchant_id = "+merchant.getId()+" or ");
+                }
+            }
+            sql.append(") ");
+        }
+        if(withdrawCriteria.getWithDrawStartDate()!=null && !"".equals(withdrawCriteria.getWithDrawStartDate())) {
+            Date start = new Date(withdrawCriteria.getWithDrawStartDate());
+            Date end = new Date(withdrawCriteria.getWithDrawEndDate());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String startStr = sdf.format(start);
+            String endStr = sdf.format(end);
+            sql.append(" and created_date between '"+startStr+"' and '"+endStr+"'");
+        }
+        Query query = em.createNativeQuery(sql.toString());
+        List<BigInteger> details = query.getResultList();
+        return (long) Math.ceil(details.get(0).doubleValue() / 10.0);
     }
 }

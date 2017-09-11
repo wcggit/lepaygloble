@@ -3,7 +3,6 @@ package com.jifenke.lepluslive.order.service;
 import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.CommissionDetailsCriteria;
-import com.jifenke.lepluslive.merchant.domain.entities.LejiaResource;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.domain.criteria.FinancialCriteria;
@@ -12,10 +11,8 @@ import com.jifenke.lepluslive.order.domain.criteria.OrderShareCriteria;
 import com.jifenke.lepluslive.order.domain.entities.FinancialStatistic;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrderShare;
-import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.repository.*;
 
-import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -24,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -281,10 +277,10 @@ public class OffLineOrderService {
         for (Merchant merchant : merchants) {
             Long transfering = null;
             MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
-            if (payway == null) {
-                transfering = offLineOrderRepository.countDailyTransferMoney(merchant.getId());
+            if (payway.getType()==null||payway.getType()==0||payway.getType()==1) {
+                transfering = offLineOrderRepository.countDailyTotalPrice(merchant.getId());
             } else {
-                transfering = scanCodeOrderRepository.countDailyScanTransferMoney(merchant.getId());
+                transfering = scanCodeOrderRepository.countDailyTotalPrice(merchant.getId());
             }
             if (transfering != null) {
                 totalTransfering += (transfering == null ? 0L : transfering);
@@ -496,8 +492,8 @@ public class OffLineOrderService {
     public Long countOffLineOrder(List<Merchant> merchants) {
         Long offLineDailyCount = 0L;
         for (Merchant merchant : merchants) {
-            Long totalPrice = offLineOrderRepository.countTotalPrice(merchant.getId());
-            offLineDailyCount += totalPrice == null ? 0L : totalPrice;
+            Long totalCount = offLineOrderRepository.countDailyOrderNum(merchant.getId());
+            offLineDailyCount += totalCount == null ? 0L : totalCount;
         }
         return offLineDailyCount;
     }

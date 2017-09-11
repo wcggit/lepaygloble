@@ -18,6 +18,9 @@ public interface PosOrderRepository extends JpaRepository<PosOrder, Long>, JpaSp
     @Query(value = "select sum(total_price) from pos_order where merchant_id = ?1 and to_days(complete_date) = to_days(now())", nativeQuery = true)
     Long countTotalPrice(Long merchantId);
 
+    @Query(value = "select count(*) from pos_order where merchant_id = ?1 and to_days(complete_date) = to_days(now())", nativeQuery = true)
+    Long countDailyNum(Long merchantId);
+
     /**
      * 指定商户pos订单最近七天入账总金额 (不包括现金结算)
      */

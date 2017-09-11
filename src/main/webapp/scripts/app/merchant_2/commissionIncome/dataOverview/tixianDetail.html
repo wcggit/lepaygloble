@@ -1,37 +1,43 @@
-<div class="withdrawRecord">
+<div class="yiBaoJieSuanTrade lePlusOrderDetail">
     <div class="panel panel-default page-top">
-        <div class="panel-body clearfix">
-            <span class="left-icon pull-left" ui-sref="homePage" ui-sref-opts="{reload:true}"></span>
-            <span ui-sref="homePage" ui-sref-opts="{reload:true}">首页 / </span>
+        <div class="panel-body clearfix ">
+            <span class="left-icon pull-left" ui-sref="dataOverview"></span>
+            <span ui-sref="dataOverview">返回 / </span>
             <span class="current-page">提现记录</span>
         </div>
     </div>
     <div class="container-fluid">
+
         <!--查询表单-->
         <form class="form-inline list-check">
             <div class="row">
-                <div class="form-group col-md-7">
-                    <label>创建时间</label>
-                    <date-choice class="input-group timePicker col-md-8"></date-choice>
+                <div class="form-group col-md-5">
+                    <label>提现时间</label>
+                    <input type="text" id="timePicker1" class="form-control">
                 </div>
                 <div class="form-group col-md-4">
-                    <label>会员锁定状态</label>
-                    <div class="input-group col-md-6">
-                        <select class="form-control" id="userBindState">
-                            <option value="-1">全部</option>
-                            <option value="0">未锁定</option>
-                            <option value="1">即将锁满</option>
-                            <option value="2">已锁满</option>
+                    <label>提现状态</label>
+                    <div class="input-group col-md-6 select-style">
+                        <select class="form-control" id="selState">
+                            <option value="-1">请选择</option>
+                            <option value="0">转账中</option>
+                            <option value="1">已完成</option>
+                            <option value="2">已驳回</option>
                         </select>
                         <span class="select-jiao"></span>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-5">
-                    <label></label>
-                    <button type="button" class="btn btn-warning btn-check2">查询</button>
+                <div class="form-group col-md-4">
+                    <label>选择门店</label>
+                    <div class="input-group col-md-6 select-style">
+                        <select class="form-control" id="selMerchant">
+                            <option value="-1">请选择</option>
+                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                        </select>
+                        <span class="select-jiao"></span>
+                    </div>
                 </div>
+                <button type="button" class="btn btn-warning btn-check2" ng-click="findByCriteria()">查询</button>
             </div>
         </form>
         <!--表格-->
@@ -40,7 +46,7 @@
                 <thead class="active">
                 <tr>
                     <td>提现时间</td>
-                    <td>状态</td>
+                    <td>提现状态</td>
                     <td>提现金额</td>
                     <td>结算账号</td>
                     <td>收款人</td>
@@ -48,21 +54,23 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr class="tr-empty"><td class="text-center" colspan="6">暂无数据！</td></tr>
-                    <tr class="tr-noEmpty">
-                        <td class="td-date">
-                            <p>2016-05-05 </p>
-                            <p>11:30</p>
-                        </td>
-                        <td>转账中</td>
-                        <td>￥1234.45</td>
-                        <td class="td-bank">
-                            <p>建设银行</p>
-                            <p>xxxxxxxxxxxxxxxxxxx1234</p>
-                        </td>
-                        <td>孙天奇</td>
-                        <td>---------</td>
-                    </tr>
+                <tr class="tr-empty"><td class="text-center" colspan="6" ng-show="pulls==null||pulls.length==0">暂无数据！</td></tr>
+                <tr ng-repeat="arr in pulls">
+                    <td>
+                        <p ng-bind="arr[5]|date:'yyyy-MM-dd'"></p>
+                        <p ng-bind="arr[5]|date:'HH:mm:ss'"></p>
+                    </td>
+                    <td ng-show="arr[8]==0">转账中</td>
+                    <td ng-show="arr[8]==1">已完成</td>
+                    <td ng-show="arr[8]==2">已驳回</td>
+                    <td>￥{{arr[9]/100.0}}</td>
+                    <td>
+                        <p ng-bind="arr[1]"></p>
+                        <p ng-bind="arr[2]"></p>
+                    </td>
+                    <td ng-bind="arr[7]"></td>
+                    <td>-</td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -91,6 +99,7 @@
                         ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
                 </ul>
             </nav>
+            <!--<a class="pull-right dcbg" href="#">导出表格</a>-->
         </div>
     </div>
 

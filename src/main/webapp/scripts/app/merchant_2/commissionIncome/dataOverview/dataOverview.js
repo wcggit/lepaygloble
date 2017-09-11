@@ -18,4 +18,19 @@ angular.module('lepayglobleApp')
                 resolve: {
                 }
             })
+            .state('tixianDetail', {
+                parent: 'merchant_2',
+                url: '/tixianDetail',
+                data: {
+                    authorities: ["merchant"]
+                },
+                views: {
+                    'right-content@merchant_2': {
+                        templateUrl: 'scripts/app/merchant_2/commissionIncome/dataOverview/tixianDetail.html',
+                        controller: 'tixianDetailController'
+                    }
+                },
+                resolve: {
+                }
+            })
     });

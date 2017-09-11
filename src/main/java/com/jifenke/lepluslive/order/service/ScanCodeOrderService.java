@@ -3,6 +3,8 @@ package com.jifenke.lepluslive.order.service;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantWalletOnline;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.repository.ScanCodeOrderRepository;
@@ -55,11 +57,6 @@ public class ScanCodeOrderService {
                    + " from scan_code_order olo INNER JOIN merchant m ON olo.merchant_id = m.id INNER JOIN category c ON olo.order_type_id = c.id  where  ");
         if (codeOrderCriteria.getStoreIds() != null) {
             sql.append(" olo.merchant_id in (");
-//            for(int i =0;i<codeOrderCriteria.getStoreIds().length;i++){
-//                sql.append(codeOrderCriteria.getStoreIds()[i]+",");
-//            }
-//            sql.deleteCharAt(sql.length()-1);
-
             sql.append(codeOrderCriteria.getStoreIds()[0]);//改为单门店查询
             sql.append(")");
         }
@@ -107,11 +104,6 @@ public class ScanCodeOrderService {
                   " from scan_code_order as o  INNER JOIN category c ON o.order_type_id = c.id where ");
         if (codeOrderCriteria.getStoreIds() != null) {
             sb.append(" o.merchant_id in (");
-//            for(int i =0;i<codeOrderCriteria.getStoreIds().length;i++){
-//                sb.append(codeOrderCriteria.getStoreIds()[i]+",");
-//            }
-//            sb.deleteCharAt(sb.length()-1);
-
             sb.append(codeOrderCriteria.getStoreIds()[0]);//改为单门店查询
             sb.append(")");
         }
@@ -267,4 +259,15 @@ public class ScanCodeOrderService {
         return repository.findByOrderSid(orderSid);
     }
 
+    /**
+     *  根据门店统计订单金额
+     */
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public Long countScanOrder(List<Merchant> merchants) {
+        Long ledgerDailyCount = 0L;
+        for (Merchant merchant : merchants) {
+            ledgerDailyCount+= repository.countDailyCount(merchant.getId());
+        }
+        return ledgerDailyCount;
+    }
 }

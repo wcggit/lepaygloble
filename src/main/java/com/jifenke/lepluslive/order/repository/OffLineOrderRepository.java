@@ -50,7 +50,10 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
      *  门店下:  今日订单流水(线下)
      */
     @Query(value = "select sum(total_price) from off_line_order where merchant_id = ?1 and to_days(complete_date) = to_days(now())",nativeQuery = true)
-    Long countTotalPrice(Long merchantId);
+    Long countDailyTotalPrice(Long merchantId);
+
+    @Query(value = "select count(*) from off_line_order where merchant_id = ?1 and to_days(complete_date) = to_days(now())",nativeQuery = true)
+    Long countDailyOrderNum(Long merchantId);
 
 
     /**

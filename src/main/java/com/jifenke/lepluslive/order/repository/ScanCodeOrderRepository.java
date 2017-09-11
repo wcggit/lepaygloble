@@ -20,6 +20,14 @@ public interface ScanCodeOrderRepository extends JpaRepository<ScanCodeOrder,Str
      */
     @Query(value = "select sum(transfer_money) from scan_code_order where merchant_id =?1  and to_days(complete_date) = to_days(now()) ", nativeQuery = true)
     Long countDailyScanTransferMoney(Long merchantId);
+    /**
+     *  门店下:  今日订单流水
+     */
+    @Query(value = "select IFNULL(sum(total_price),0) from scan_code_order where merchant_id =?1  and to_days(complete_date) = to_days(now()) ", nativeQuery = true)
+    Long countDailyTotalPrice(Long merchantId);
+
+    @Query(value = "select count(*) from scan_code_order where merchant_id =?1  and to_days(complete_date) = to_days(now()) ", nativeQuery = true)
+    Long countDailyCount(Long merchantId);
 
     /**
      *  门店下:  统计订单详情

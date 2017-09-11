@@ -70,17 +70,6 @@ angular.module('lepayglobleApp')
             }
         });
 
-        //  首页 - 商户数据
-        HomePage.getMerchantData().then(function (data) {
-            var data = data.data;
-            $scope.srgl = {
-                firNum: data.transfering / 100.0,                      // 今日入账
-                secNum: data.totalTransfering / 100.0,                 // 总共入账
-                thirNum: data.totalSales / 100.0,                       // 会员消费
-                fouNum: data.totalCount,                                // 会员消费次数
-                fifNum: data.totalRebate / 100.0                       // 红包总额
-            };
-        });
 
         //  首页 - 交易看板 (默认门店)
         $scope.findAll = function (p) {
@@ -118,12 +107,8 @@ angular.module('lepayglobleApp')
             // 门店交易信息
             HomePage.siglOpraBoardInfo(id).then(function (data) {
                 var data = data.data;
-                $scope.obinfo = {
-                    firNum: data.offLineDailyCount / 100.0,
-                    secNum: data.posDailyCount / 100.0,
-                    thirNum: data.dailySales / 100.0,
-                    fouNum: data.dailyCount
-                };
+                $scope.storeTotalCount = data.totalCount;
+                $scope.storeTotalPrice = data.totalPrice / 100.0;
             });
             // 门店订单列表
             HomePage.siglOpraBoardList(id, $scope.offset).then(function (data) {
@@ -140,41 +125,6 @@ angular.module('lepayglobleApp')
             });
         }
         $scope.getCurrentLogin();
-
-
-        $scope.tx = function () {
-            $("#tx").modal("toggle");
-            $("#tx-success").modal("toggle");
-        };
-
-        //  提现
-        $scope.withDraw = function () {
-            var amount = $("#withDrawInput").val();
-            var available = $scope.available;
-            if (amount > available) {
-                alert("余额不足！");
-                return;
-            } else if (amount < 200) {
-                alert("提现金额不小于 200 元。");
-                return;
-            }
-            var data = 'amount='
-                + encodeURIComponent(amount.trim());
-            $http.post('/withdraw/merchant_user_withdraw', data, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }).success(function (response) {
-                if (response.status == 400) {
-                    alert("服务繁忙,请稍后尝试!");
-                } else {
-                    alert("提现申请成功 !");
-                    $("#withDrawInput").val('');
-                    $scope.tx();
-                }
-            })
-            // $scope.tx();
-        }
 
         // 页面跳转
         $scope.toOrderList = function () {

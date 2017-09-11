@@ -37,17 +37,9 @@ public class MerchantUserShopService {
     /**
      * 获取某个账户的管理门店信息  2017/02/08
      */
-    public List<MerchantUserShop> countByMerchantUser(MerchantUser merchantUser) {
+    public List<MerchantUserShop> findByMerchantUser(MerchantUser merchantUser) {
 
         return repository.findByMerchantUser(merchantUser);
-    }
-
-    /**
-     * 删除某个账号对应的门店 2017/02/09
-     */
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void deleteShop(MerchantUserShop shop) {
-        repository.delete(shop);
     }
 
     /**

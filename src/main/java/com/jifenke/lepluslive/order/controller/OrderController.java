@@ -6,9 +6,7 @@ import com.jifenke.lepluslive.jhipster.service.UserService;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.*;
-import com.jifenke.lepluslive.merchant.service.MerchantService;
-import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
-import com.jifenke.lepluslive.merchant.service.MerchantUserShopService;
+import com.jifenke.lepluslive.merchant.service.*;
 import com.jifenke.lepluslive.order.controller.view.*;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OLOrderCriteria;
@@ -84,6 +82,12 @@ public class OrderController {
 
     @Inject
     private ScanCodeOrderExcel scanCodeOrderExcel;
+
+    @Inject
+    private MerchantWalletService merchantWalletService;
+
+    @Inject
+    private MerchantWalletOnlineService merchantWalletOnlineService;
 
     @RequestMapping(value = "/order/todayOrderDetail", method = RequestMethod.GET)
     public LejiaResult getTodayOrderDetail() {
@@ -302,10 +306,14 @@ public class OrderController {
         MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<Merchant> merchants = merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
         for (Merchant merchant : merchants) {
-            MerchantWallet
-                merchantWallet =
-                merchantService.findMerchantWalletByMerchant(merchant);
-            available += merchantWallet.getAvailableBalance();
+            MerchantWallet merchantWallet = merchantWalletService.findByMerchant(merchant.getId());
+            MerchantWalletOnline merchantWalletOnline = merchantWalletOnlineService.findByMerchant(merchant.getId());
+            if(merchantWallet!=null) {
+                available+=merchantWallet.getAvailableBalance();
+            }
+            if(merchantWalletOnline!=null) {
+                available+=merchantWalletOnline.getAvailableBalance();
+            }
             totalCommission += merchantWallet.getTotalMoney();
         }
         Map map = new HashMap<>();
@@ -381,71 +389,49 @@ public class OrderController {
     @RequestMapping(value = "/leJiaOrder/message/{sid}", method = RequestMethod.GET)
     public void sendLejiaOrderMessage(@PathVariable String sid) {
         OffLineOrder offLineOrder = offLineOrderService.findByOrderSid(sid);
-        log.error("乐加订单到账： ------- * ------- * ------- 订单号 = "+sid);
-        if (offLineOrder != null && checkDate(new Date(),offLineOrder.getCreatedDate())) {
+        log.error("乐加订单到账： ------- * ------- * ------- 订单号 = " + sid);
+        if (offLineOrder != null && checkDate(new Date(), offLineOrder.getCreatedDate())) {
             Merchant merchant = offLineOrder.getMerchant();
-            sendOrderMessage(merchant,"乐加支付到账" + offLineOrder.getTotalPrice() / 100.0 + "元");
+            sendOrderMessage(merchant, "乐加支付到账" + offLineOrder.getTotalPrice() / 100.0 + "元");
         }
     }
 
     @RequestMapping(value = "/scanCodeOrder/message/{sid}", method = RequestMethod.GET)
     public void sendScanCodeOrderMessage(@PathVariable String sid) {
         ScanCodeOrder scanCodeOrder = scanCodeOrderService.findByOrderSid(sid);
-        log.error("通道订单到账：------- * ------- * ------- 订单号 = "+sid);
-        if (scanCodeOrder != null && checkDate(new Date(),scanCodeOrder.getCreatedDate())) {
+        log.error("通道订单到账：------- * ------- * ------- 订单号 = " + sid);
+        if (scanCodeOrder != null && checkDate(new Date(), scanCodeOrder.getCreatedDate())) {
             Merchant merchant = scanCodeOrder.getMerchant();
-            sendOrderMessage(merchant,"乐加支付到账" + scanCodeOrder.getTotalPrice() / 100.0 + "元");
+            sendOrderMessage(merchant, "乐加支付到账" + scanCodeOrder.getTotalPrice() / 100.0 + "元");
         }
     }
 
-    public void sendOrderMessage(Merchant merchant,String msg) {
+    public void sendOrderMessage(Merchant merchant, String msg) {
         List<MerchantUserShop> userShops = merchantUserShopService.findByMerchant(merchant);
         for (MerchantUserShop userShop : userShops) {
             MerchantUser user = userShop.getMerchantUser();
-            if(user.getMerchantSid()!=null && (user.getType()==8||user.getType()==0)) {
+            if (user.getMerchantSid() != null && (user.getType() == 8 || user.getType() == 0)) {
                 ActivityDTO activityDTO = new ActivityDTO();
                 activityDTO.setPage(msg);
-                log.error("发送消息中： 用户名称 = "+user.getName());
+                log.error("发送消息中： 用户名称 = " + user.getName());
                 messagingTemplate
                     .convertAndSendToUser(user.getMerchantSid(), "/reply", activityDTO);
             }
         }
     }
 
-    public boolean checkDate(Date today,Date crateDate) {
-        log.error("当前日期："+today+" 订单创建日期:"+crateDate);
+    public boolean checkDate(Date today, Date crateDate) {
+        log.error("当前日期：" + today + " 订单创建日期:" + crateDate);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String todayStr = sdf.format(today);
         String createStr = sdf.format(crateDate);
-        if(todayStr.equals(createStr)) {
+        if (todayStr.equals(createStr)) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
-    /**
-     * 每日订单数据 (所有门店)
-     */
-    @RequestMapping(value = "/order/dailyOrder", method = RequestMethod.GET)
-    public LejiaResult getDailyOrderData() {
-        MerchantUser
-            merchantUser =
-            merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
-        List<Merchant>
-            merchants =
-            merchantUserResourceService.findMerchantsByMerchantUser(merchantUser);
-        Long offLineDailyCount = offLineOrderService.countOffLineOrder(merchants);          //  线下订单
-        Long
-            posDailyCount =
-            posOrderSerivce.countPosOrder(merchants);                      //  pos 订单
-        Map<String, Long>
-            map =
-            offLineOrderService.countMemberDailyOrdersDetail(merchants);     //  会员消费
-        map.put("offLineDailyCount", offLineDailyCount);
-        map.put("posDailyCount", posDailyCount);
-        return LejiaResult.ok(map);
-    }
 
     /**
      * 每日订单数据 (指定门店)
@@ -453,17 +439,20 @@ public class OrderController {
     @RequestMapping(value = "/order/dailyOrder/merchant/{id}", method = RequestMethod.GET)
     public LejiaResult getDailyOrderData(@PathVariable Long id) {
         Merchant merchant = merchantService.findMerchantById(id);
+        MerchantScanPayWay payWay = merchantScanPayWayService.findByMerchant(merchant.getId());
         List<Merchant> merchants = new ArrayList<>();
         merchants.add(merchant);
-        Long offLineDailyCount = offLineOrderService.countOffLineOrder(merchants);          //  线下订单
-        Long
-            posDailyCount =
-            posOrderSerivce.countPosOrder(merchants);                      //  pos 订单
-        Map<String, Long>
-            map =
-            offLineOrderService.countMemberDailyOrdersDetail(merchants);     //  会员消费
-        map.put("offLineDailyCount", offLineDailyCount == null ? 0L : offLineDailyCount);
-        map.put("posDailyCount", posDailyCount == null ? 0L : posDailyCount);
+        Map<String, Long> map = new HashMap<>();
+        if(payWay.getType()==null||payWay.getType()==0||payWay.getType()==1) {
+            Long offLineDailyCount = offLineOrderService.countOffLineOrder(merchants);          //  线下订单
+            Long posDailyCount = posOrderSerivce.countPosOrder(merchants);                      //  pos 订单
+            map.put("totalCount", (offLineDailyCount == null ? 0L : offLineDailyCount)+ (posDailyCount == null ? 0L : posDailyCount));
+        }else {
+            Long ledgerDailyCount = scanCodeOrderService.countScanOrder(merchants);             //  通道订单
+            map.put("totalCount", ledgerDailyCount == null ? 0L : ledgerDailyCount);
+        }
+        Long totalPrice = offLineOrderService.countDailyTransfering(merchants);
+        map.put("totalPrice", totalPrice == null ? 0L : totalPrice);
         return LejiaResult.ok(map);
     }
 

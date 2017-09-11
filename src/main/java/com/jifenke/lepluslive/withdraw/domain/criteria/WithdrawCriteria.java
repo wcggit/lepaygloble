@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.withdraw.domain.criteria;
 
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 
@@ -19,7 +20,7 @@ public class WithdrawCriteria {
     private Partner partner;            //  合伙人
     private Merchant merchant;          //  商户
     private PartnerManager partnerManager;  // 城市合伙人
-
+    private MerchantUser merchantUser;
 
     public Integer getOffset() {
         return offset;
@@ -99,5 +100,13 @@ public class WithdrawCriteria {
 
     public void setPartnerManager(PartnerManager partnerManager) {
         this.partnerManager = partnerManager;
+    }
+
+    public MerchantUser getMerchantUser() {
+        return merchantUser;
+    }
+
+    public void setMerchantUser(MerchantUser merchantUser) {
+        this.merchantUser = merchantUser;
     }
 }
