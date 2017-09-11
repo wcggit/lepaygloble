@@ -75,7 +75,9 @@ angular.module('lepayglobleApp')
         $scope.findAll = function (p) {
             // 交易看板
             $scope.changeStore($scope.firstSid);
+            // $scope.x = $scope.firstSid;
         }
+
 
         // 按钮绑定事件 - 查看更多
         $scope.findMore = function () {
@@ -89,8 +91,34 @@ angular.module('lepayglobleApp')
                 HomePage.siglOpraBoardList(selMerchant, p).then(function (data) {  // 指定门店
                     var data = data.data;
                     $scope.map = data;
-                    if (data == null) {
-                        $scope.tsContentShow = true;
+                    if($scope.map.key=='olOrders') {
+                        if($scope.olOrders==null) {
+                            $scope.olOrders = $scope.map.olOrders;
+                        }else {
+                            angular.forEach($scope.map.olOrders,function(order){
+                                $scope.olOrders.push(order);
+                            });
+                            if ($scope.map.olOrders == null) {
+                                $scope.tsContentShow = true;
+                            }else {
+                                $scope.tsContentShow = false;
+                            }
+                        }
+                        // console.log("olOrders size: "+$scope.olOrders.length);
+                    }else if($scope.map.key=='scanCodeOrders'){
+                        if($scope.scanCodeOrders==null) {
+                            $scope.scanCodeOrders = $scope.map.scanCodeOrders;
+                        }else {
+                            angular.forEach($scope.map.scanCodeOrders,function(order){
+                                $scope.scanCodeOrders.push(order);
+                            });
+                            if ($scope.map.scanCodeOrders == null) {
+                                $scope.tsContentShow = true;
+                            }else {
+                                $scope.tsContentShow = false;
+                            }
+                        }
+                        // console.log("scanCodeOrders size: "+$scope.olOrders.length);
                     }
                 });
             }
@@ -114,8 +142,22 @@ angular.module('lepayglobleApp')
             HomePage.siglOpraBoardList(id, $scope.offset).then(function (data) {
                 var data = data.data;
                 $scope.map = data;
+                $scope.olOrders = $scope.map.olOrders;
+                $scope.scanCodeOrders = $scope.map.scanCodeOrders;
             });
         }
+
+        //  刷新列表
+        $scope.refreshOrderList = function () {
+            var mid = $("#selMerchant").val();
+            if (mid == '' || mid == null) {
+                $("#selMerchant").val($scope.firstSid);
+                $scope.changeStore(mid);
+            }else {
+                $scope.changeStore(mid);
+            }
+        }
+
 
         //  获取当前账户信息
         $scope.getCurrentLogin = function () {
@@ -146,20 +188,14 @@ angular.module('lepayglobleApp')
             var outHeight = list.clientHeight;
             var inHeight = document.querySelector('.list-in-div').clientHeight;
             var scrollHeight = e.path[0].scrollTop;
-
-
+            /*pageNum++
+            console.log(pageNum > pageAllNum)*/
             if (inHeight - outHeight - scrollHeight < 2) {
-                pageNum++
-                /*
-                 console.log(pageNum > pageAllNum)
-                 if (pageNum > pageAllNum) {
-                 pageNum = pageAllNum;
-                 $scope.tsContentShow = true;
-                 return;
+                 if ($scope.tsContentShow) {
+                     return;
                  }
-                 */
-
                 /********根据pageNum加载相应的数据添加到list-in-div的底部*********/
+                $scope.findMore();
             }
         }, false)
 
@@ -209,6 +245,7 @@ angular.module('lepayglobleApp')
         Tracker.receiveMerchantVoice().then(null, null, function (data) {//等待websocket发送消息
             HINT_SPEAK = data.body.split(",")[3].split(":")[1];
             play_xiaoqi();
+            $scope.refreshOrderList();
         });
 
     });

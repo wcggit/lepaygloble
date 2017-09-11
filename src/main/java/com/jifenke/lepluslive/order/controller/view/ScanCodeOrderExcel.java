@@ -79,7 +79,7 @@ public class ScanCodeOrderExcel extends AbstractExcelView {
             excelRow.createCell(6)
                 .setCellValue(order.getTotalPrice() / 100.0);
             if (order.getOrderType()==12004L||order.getOrderType()==12005L) {
-                double result = (100-order.getScanCodeOrderExt().getMerchantRate().intValue())/10;
+                double result = (100-order.getScanCodeOrderExt().getMerchantRate().intValue())/10.0;
                 excelRow.createCell(7).setCellValue(result+"折");
             } else {
                 excelRow.createCell(7).setCellValue(order.getCommission()/100.0);

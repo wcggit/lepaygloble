@@ -27,7 +27,7 @@ angular.module('lepayglobleApp')
                     $scope.loadLockMembersInfo = function (){
                         var lockMembersCriteria = {};
                         var a =$("#selectStore").val();
-                        if(a!=""){
+                        if(a!=""&&a!=null){
                             lockMembersCriteria.storeIds = $.makeArray(a);
                         }else{
                             lockMembersCriteria.storeIds = array;

@@ -100,7 +100,7 @@
                     <tr>
                         <td>订单号</td>
                         <td>交易门店</td>
-                        <td>消费者</td>
+                        <!--<td>消费者</td>-->
                         <td>支付方式</td>
                         <td>确认码</td>
                         <td>交易完成时间</td>
@@ -115,8 +115,8 @@
                     <tr ng-repeat="order in tradeList">
                         <td>{{order.orderSid}}</td>
                         <td><h4>{{order.merchant.name}}</h4><h4>（{{order.merchant.area.name}}）</h4></td>
-                        <td ng-show="order.leJiaUser!=null">{{order.leJiaUser.userName}}</td>
-                        <td ng-show="order.leJiaUser==null">非会员</td>
+                        <!--<td ng-show="order.leJiaUser!=null">{{order.leJiaUser.userName}}</td>
+                        <td ng-show="order.leJiaUser==null">非会员</td>-->
                         <td ng-show="order.scanCodeOrderExt.payType==0">微信</td>
                         <td ng-show="order.scanCodeOrderExt.payType==1">支付宝</td>
                         <td>{{order.lePayCode}}</td>
@@ -124,9 +124,9 @@
                         <td>￥{{order.totalPrice/100.0}}</td>
                         <td ng-show="order.orderType==12001||order.orderType==12002||order.orderType==12003||order.orderType==12006">普通订单</td>
                         <td ng-show="order.orderType==12004||order.orderType==12005">乐加订单</td>
-                        <td ng-show="order.orderType==12001||order.orderType==12002||order.orderType==12003||order.orderType==12006">({{order.scanCodeOrderExt.merchantRate/100.0}}折)</td>
+                        <td ng-show="order.orderType==12004||order.orderType==12005">{{(100-order.scanCodeOrderExt.merchantRate)/10.0}}折</td>
                         <!--<td ng-show="order.orderType==12004||order.orderType==12005">(￥{{order.scanCodeOrderExt.merchantRate/100.0}})</td>-->
-                        <td ng-show="order.orderType==12004||order.orderType==12005">￥{{order.commission/100.0}}</td>
+                        <td ng-show="order.orderType==12001||order.orderType==12002||order.orderType==12003||order.orderType==12006">￥{{order.commission/100.0}}</td>
                         <td>￥{{order.transferMoneyFromTruePay/100.0}}</td>
                     </tr>
                     </tbody>
@@ -206,7 +206,7 @@
                         ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
                 </ul>
             </nav>
-            <!--<a class="pull-right dcbg" href="#">导出表格</a>-->
+            <a class="pull-right dcbg" ng-click="exportExcel()">导出表格</a>
         </div>
     </div>
 

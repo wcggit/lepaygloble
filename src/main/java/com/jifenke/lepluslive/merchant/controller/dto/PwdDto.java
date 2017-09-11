@@ -6,6 +6,7 @@ package com.jifenke.lepluslive.merchant.controller.dto;
 public class PwdDto {
     private String oldPwd;      // 原密码
     private String newPwd;      // 新密码
+    private String userSid;
 
     public String getOldPwd() {
         return oldPwd;
@@ -21,5 +22,13 @@ public class PwdDto {
 
     public void setNewPwd(String newPwd) {
         this.newPwd = newPwd;
+    }
+
+    public String getUserSid() {
+        return userSid;
+    }
+
+    public void setUserSid(String userSid) {
+        this.userSid = userSid;
     }
 }

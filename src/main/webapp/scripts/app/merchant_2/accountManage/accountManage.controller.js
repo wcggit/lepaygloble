@@ -21,19 +21,24 @@ angular.module('lepayglobleApp')
 
 
         // 加载门店
-        HomePage.getMerchantsInfo().then(function (response) {
-            var data = response.data;
-            $scope.merchants = data;
-            var firstSid = data[0].sid;
-            $scope.firstSid = firstSid;
-            $scope.getBankByMerchant();
+        var array = new Array();
+        $http.get("/api/merchantUser/merchantsInfo").success(function (response) {
+            if (response.status == 200) {
+                var data = response.data;
+                $scope.merchants = data;
+                $scope.defaultId = data[0][0];
+                $scope.getBankByMerchant($scope.defaultId);
+            } else {
+                alert("加载门店错误...");
+            }
         });
 
+
         // 加载门店对应的银行信息
-        $scope.getBankByMerchant = function () {
+        $scope.getBankByMerchant = function (mid) {
             var selMerchant = $("#selMerchant").val();
-            if (selMerchant == null || selMerchant == '') {
-                selMerchant = $scope.firstSid;
+            if (mid != null && mid != '') {
+                selMerchant = $scope.defaultId;
             }
             $http.get("/api/merchantUser/merchantBankInfo?id=" + selMerchant).success(function (response) {
                 var data = response.data;
@@ -131,14 +136,12 @@ angular.module('lepayglobleApp')
                 alert("名称已存在，换个试试吧～")
                 return;
             }
-            console.log(JSON.stringify(merchantUser));
             if (!$scope.checkInfo()) {
                 alert("您输入的管理员密码有误，请重新输入。");
                 $("#thisPwd").val('');
                 return;
             }else {
                 $http.post('api/merchantUser/createAccount', merchantUser).success(function (response) {
-                    console.log(JSON.stringify(response));
                     if (response.status == 200) {
                         alert("账号保存成功！");
                         window.location.reload();
@@ -190,35 +193,41 @@ angular.module('lepayglobleApp')
         }
 
         // 修改密码功能
+        $scope.changePwd = function (sid) {
+            $("#currEditId").val(sid);
+            $("#changePassword").modal();
+        }
         $scope.updatePwd = function () {
+            var sid = $("#currEditId").val();
             var pwdDto = {};
-            var oldPwd = $("#inputPassword1").val();
-            var newPwd1 = $("#inputPassword2").val();
-            var newPwd2 = $("#inputPassword3").val();
+            pwdDto.userSid = sid;
+            var newPwd1 = $("#inputPassword1").val();
+            var newPwd2= $("#inputPassword2").val();
+            var oldPwd= $("#inputPassword3").val();
             // 校验
-            if (oldPwd == '' || oldPwd == null) {
-                alert("当前密码不能为空～")
-                return;
-            } else {
-                pwdDto.oldPwd = oldPwd;
-            }
             if (newPwd1 == '' || newPwd1 == null) {
-                alert("请输入新密码～")
+                alert("新密码不能为空～")
                 return;
             } else {
                 pwdDto.newPwd = newPwd1;
             }
             if (newPwd2 == '' || newPwd2 == null) {
-                alert("请输入确认密码～")
+                alert("请再次输入新密码～")
                 return;
             }
-            if (oldPwd.length < 6 || newPwd1.length < 6) {
+            if (oldPwd == '' || oldPwd == null) {
+                alert("请输入管理员密码～")
+                return;
+            }else {
+                pwdDto.oldPwd = oldPwd;
+            }
+            if (newPwd1.length < 6 || newPwd2.length < 6) {
                 alert("密码长度不少于6位")
                 return;
             }
             if (newPwd1 != newPwd2) {
                 alert("两次输入的新密码不一致！");
-                $("inputPassword3").val('');
+                $("inputPassword2").val('');
                 return;
             }
             var r1 = /[0-9]/;
@@ -230,11 +239,14 @@ angular.module('lepayglobleApp')
             }
             $http.post('api/merchantUser/updatePwd', pwdDto).success(function (response) {
                 if (response.status == 400) {
-                    alert("您输入的当前密码不正确,请重新输入！");
+                    $("inputPassword1").val('');
+                    $("inputPassword2").val('');
+                    $("inputPassword3").val('');
+                    alert(response.msg);
                     return;
                 } else {
-                    alert("密码已修改成功,请重新登录 ～");
-                    Auth.logout();
+                    alert("密码已修改成功 ^_^ !");
+                    // Auth.logout();
                     $('#changePassword').modal('hide');
                     location.reload();
                 }

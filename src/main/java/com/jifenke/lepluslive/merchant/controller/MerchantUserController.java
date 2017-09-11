@@ -285,12 +285,12 @@ public class MerchantUserController {
     @RequestMapping(value="/merchantUser/updatePwd",method = RequestMethod.POST)
     @ResponseBody
     public LejiaResult updatePwd(@RequestBody PwdDto pwdDto) {
-        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(pwdDto.getUserSid());
         boolean result = merchantUserService.updatePwd(merchantUser,pwdDto.getOldPwd(),pwdDto.getNewPwd());
         if(result) {
             return LejiaResult.ok();
         }else {
-            return LejiaResult.build(400,"原密码错误！");
+            return LejiaResult.build(400,"管理员密码错误！");
         }
     }
 

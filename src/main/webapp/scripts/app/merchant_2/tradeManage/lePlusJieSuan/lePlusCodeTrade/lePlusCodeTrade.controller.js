@@ -109,7 +109,7 @@ angular.module('lepayglobleApp')
             //  门店
             var merchant = {};
             var mid = $("#selMerchant").val();
-            if (mid != -1) {
+            if (mid!=null && mid!="") {
                 $scope.defaultId = mid;
                 merchant.id = mid;
                 financialCriteria.merchant = merchant;
