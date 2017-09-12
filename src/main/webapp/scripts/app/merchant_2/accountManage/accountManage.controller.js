@@ -71,8 +71,9 @@ angular.module('lepayglobleApp')
         $scope.cashierAccount = function () {
             $http.get("/api/merchantUser/cashierAccount").success(function (response) {
                 var data = response.data;
-                console.log(JSON.stringify(data));
-                $scope.cashiers = data;
+                $scope.cashiers = data.cashiers;
+                $scope.cashierAccount = data.cashierAccount;
+                // console.log(JSON.stringify(data));
             });
         };
 
@@ -260,8 +261,8 @@ angular.module('lepayglobleApp')
             });
         }
 
-        // 解除绑定
-        $scope.unbindAccount = function (id) {
+        // 解除绑定 - 删除关系
+        /*$scope.unbindAccount = function (id) {
             var result = confirm("是否解除该账号的权限?")
             if(result) {
                 $http.get("/api/merchantUser/accountUnbind/"+id).success(function (response) {
@@ -273,7 +274,25 @@ angular.module('lepayglobleApp')
                     }
                 });
             }
+        }*/
+        // 解除绑定 - 解除微信绑定
+        $scope.unbindWx = function (wxUser) {
+            $scope.currWxUser = wxUser;
+            $("#unbind").modal();
+        }
+        $scope.unbindAccount = function (id) {
+                $http.get("/api/merchant/unBindWeiXinUser/"+id).success(function (response) {
+                    if(response.status==200) {
+                        $("#jb-success").modal();
+                    }else {
+                        alert(response.msg);
+                    }
+                });
+        }
+        // 刷新页面
+        $scope.refresh =function () {
+            window.location.reload();
         }
 
-
     })
+

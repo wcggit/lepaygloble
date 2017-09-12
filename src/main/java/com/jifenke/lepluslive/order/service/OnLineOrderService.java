@@ -34,7 +34,7 @@ public class OnLineOrderService {
 
         StringBuffer sql = new StringBuffer();
         sql.append("select  olo_olos.complete_date, wxu.nickname, wxu.head_image_url, merchant.name, olo_olos.total_price, olo_olos.true_pay, olo_olos.share_ from "
-                   + " (select olo.confirm_date as complete_date,  olo.le_jia_user_id as user_id,  olos.lock_merchant_id as merchant_id, "
+                   + " (select olos.create_date as complete_date,  olo.le_jia_user_id as user_id,  olos.lock_merchant_id as merchant_id, "
                    + " olo.total_price as total_price,  olo.true_price as true_pay,  olos.to_lock_merchant as share_ "
                    + " from on_line_order olo, on_line_order_share olos where olo.order_sid = olos.order_sid "
                    + " and olo.state = 3 " //3已收货

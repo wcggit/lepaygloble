@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -26,6 +28,9 @@ public class MerchantWeiXinUserService {
     @Inject
     private MerchantWeiXinUserRepository merchantWeiXinUserRepository;
 
+    @Inject
+    private MerchantUserService merchantUserService;
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void unBindMerchantUser(MerchantUser merchantUser) {
         List<MerchantWeiXinUser>
@@ -37,4 +42,25 @@ public class MerchantWeiXinUserService {
         }
 
     }
+
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void unBindMerchantWeiXinUser(Long id) {
+        MerchantWeiXinUser merchantWeiXinUser = merchantWeiXinUserRepository.findOne(id);
+        merchantWeiXinUser.setMerchantUser(null);
+        merchantWeiXinUserRepository.save(merchantWeiXinUser);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List<MerchantWeiXinUser> findMerchantWeixinUserByMerchanUsers(
+        List<MerchantUser> merchantUsers) {
+        List<MerchantWeiXinUser> results = new ArrayList<>();
+        merchantUsers.stream().map(merchantUser -> {
+            List<MerchantWeiXinUser> merchantWeiXinUsers = merchantWeiXinUserRepository.findAllByMerchantUser(merchantUser);
+            results.addAll(merchantWeiXinUsers);
+            return merchantUser;
+        }).collect(Collectors.toList());
+        return results;
+    }
+
 }
