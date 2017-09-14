@@ -58,7 +58,7 @@
                         <p>{{financial.merchant.merchantBank.bankName}}</p>
                         <p>{{financial.merchant.merchantBank.bankNumber|limitTo:4}}**** **** ***{{financial.merchant.merchantBank.bankNumber|limitTo:-4}}</p>
                     </td>
-                    <td><a ui-sref="lePlusOrderDetail" ng-click="showDetail(financial.balanceDate,financial.merchant.id)">查看详情</a></td>
+                    <td><a ng-click="showDetail(financial.balanceDate,financial.merchant.id)">查看详情</a></td>
                 </tr>
                 </tbody>
             </table>
