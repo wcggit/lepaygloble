@@ -17,7 +17,6 @@
                     <div class="col-md-4">{{loginInfo.name}}</div>
                     <div class="col-md-2">登陆密码</div>
                     <div class="col-md-4">**********
-                        <a class="changePassword a-btn" data-target="#changePassword" data-toggle="modal">修改</a>
                     </div>
                 </div>
                 <div class="row">
@@ -46,8 +45,8 @@
                     <span class="select-style">
                         <select class="form-control select-inline-block" ng-model="x" id="selMerchant"
                                 ng-change="getBankByMerchant()">
-                            <option value="">门店选择</option>
-                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                                <option value="{{m[0]}}" ng-repeat="m in merchants">{{m[1]}}</option>
+                                <option value="" hidden></option>
                         </select>
                     </span>
                 </p>
@@ -96,7 +95,8 @@
                                         <td ng-if="account.type==1">店主</td>
                                         <td><span ng-bind="account.name"></span></td>
                                         <td>********</td>
-                                        <td><a class="a-btn" ng-click="unbindAccount(account.merchantSid)">解除绑定</a></td>
+                                        <!--<td><a class="a-btn" ng-click="unbindAccount(account.merchantSid)">解除绑定</a></td>-->
+                                        <td><a class="a-btn" ng-click="changePwd(account.merchantSid)">修改密码</a></td>
                                     </tr>
                                     <tr class="tr-empty" ng-show="accounts==null"><td class="text-center" colspan="4">暂无数据！</td></tr>
                                 </tbody>
@@ -110,17 +110,18 @@
                                 <thead class="active">
                                 <tr>
                                     <td>账号类型</td>
-                                    <td>用户名</td>
-                                    <td>密码</td>
+                                    <td>账号名</td>
+                                    <td>微信名</td>
                                     <td>操作</td>
                                 </tr>
                                 </thead>
                                 <tbody id="crasher">
                                     <tr ng-repeat="cs in cashiers">
                                         <td>收银员</td>
-                                        <td><span ng-bind="cs.name"></span></td>
-                                        <td>********</td>
-                                        <td><a class="a-btn" ng-click="unbindAccount(account.merchantSid)">解除绑定</a></td>
+                                        <td><span ng-bind="cashierAccount[$index].name"></span></td>
+                                        <td ng-bind="cs.nickname"></td>
+                                        <td><a class="a-btn" ng-click="unbindWx(cs)">解除绑定</a></td>
+                                        <!--<td><a class="a-btn" ng-click="changePwd(account.merchantSid)">修改密码</a></td>-->
                                     </tr>
                                     <tr class="tr-empty" ng-show="cashiers==null"><td class="text-center" colspan="4">暂无数据！</td></tr>
                                 </tbody>
@@ -164,7 +165,7 @@
                                     <br>
                                     <div class="radio-inline" ng-repeat="m in merchants">
                                         <label>
-                                            <input type="checkbox" name="checkMerchant" value="{{m.id}}"><span ng-bind="m.name"></span>
+                                            <input type="checkbox" name="checkMerchant" value="{{m[0]}}"><span ng-bind="m[1]"></span>
                                         </label>
                                         <span ng-show="$index%2!=0"><div></div></span>
                                     </div>
@@ -217,21 +218,21 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label for="inputPassword1" class="col-sm-2 col-sm-offset-1 control-label">当前密码</label>
+                            <input type="hidden" id="currEditId"/>
+                            <label for="inputPassword1" class="col-sm-2 col-sm-offset-1 control-label">新密码</label>
                             <div class="col-sm-7">
                                 <input type="password" class="form-control" id="inputPassword1" placeholder="密码由数字和字母组合，不少于6位">
-                                <p class="text-muted small" style="visibility: hidden;color: #ff0000">密码不正确</p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputPassword2" class="col-sm-2 col-sm-offset-1 control-label">新密码</label>
+                            <label for="inputPassword2" class="col-sm-2 col-sm-offset-1 control-label">确认新密码</label>
                             <div class="col-sm-7">
                                 <input type="password" class="form-control" id="inputPassword2">
                                 <p class="text-muted small tishi"></p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputPassword3" class="col-sm-2 col-sm-offset-1 control-label">确认新密码</label>
+                            <label for="inputPassword3" class="col-sm-2 col-sm-offset-1 control-label">管理员密码</label>
                             <div class="col-sm-7">
                                 <input type="password" class="form-control" id="inputPassword3">
                                 <p class="text-muted small tishi">输入管理员登陆密码进行操作</p>
@@ -298,13 +299,13 @@
                 <div class="modal-body">
                     <p class="text-center">确认要将该账号解除绑定吗？</p>
                     <div>
-                        <span class="icon-success wx-faceImg"><img src="../../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
+                        <span class="icon-success wx-faceImg"><img src="{{currWxUser.headImageUrl}}" alt=""></span>
                     </div>
-                    <p class="text-center wx-nickname fontSize14">夜空中最亮的那颗星星</p>
+                    <p class="text-center wx-nickname fontSize14" ng-bind="currWxUser.nickname"></p>
                 </div>
                 <div class="modal-footer">
                     <div class="clearfix btn-div text-center">
-                        <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="withDraw()">确认</button>
+                        <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="unbindAccount(currWxUser.id)">确认</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     </div>
                 </div>
@@ -325,7 +326,7 @@
                  </div>
                  <div class="modal-footer">
                      <div class="clearfix btn-div text-center">
-                         <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
+                         <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="refresh()">知道了</button>
                      </div>
                  </div>
              </div>

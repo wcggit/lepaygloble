@@ -118,8 +118,9 @@ public class MerchantUserService {
      */
     @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
     public boolean updatePwd(MerchantUser merchantUser,String oldPwd, String newPwd) {
-        String currPwd = merchantUser.getPassword();
-        if(currPwd.equals(MD5Util.MD5Encode(oldPwd,null))) {
+        MerchantUser manager = merchantUserRepository.findOne(merchantUser.getCreateUserId());
+        String managerPwd = manager.getPassword();
+        if(managerPwd.equals(MD5Util.MD5Encode(oldPwd,null))) {
             merchantUser.setPassword(MD5Util.MD5Encode(newPwd,null));
             merchantUserRepository.save(merchantUser);
             return true;

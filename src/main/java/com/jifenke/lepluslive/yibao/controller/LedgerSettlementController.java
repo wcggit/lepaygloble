@@ -21,8 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 /**
  * 通道结算单 Controller
@@ -60,12 +59,27 @@ public class LedgerSettlementController {
         if (merchantId == null) {
             return LejiaResult.build(400, "无门店信息");
         }
+        if(settlementCriteria.getStartDate()!=null&&!"".equals(settlementCriteria.getStartDate())) {
+            String startAfter = getDateStrAfter(settlementCriteria.getStartDate()); //  结算单差异天数
+            String endAfter = getDateStrAfter(settlementCriteria.getEndDate());
+            settlementCriteria.setStartDate(getDateStrBefore(startAfter));          //  数据偏移处理 between end
+            settlementCriteria.setEndDate(getDateStrAfter(endAfter));
+        }
         Merchant merchant = merchantService.findMerchantById(merchantId);
         MerchantLedger merchantLedger = merchantLedgerService.findMerchantLedgerByMerchant(merchant);
         MerchantUserLedger merchantUserLedger = merchantLedger.getMerchantUserLedger();
         settlementCriteria.setLedgerNo(merchantUserLedger.getLedgerNo());               //  获取子商户号
+        Map map = new HashMap<>();
         Page<LedgerSettlement> page = ledgerSettlementService.findByCriteria(settlementCriteria, 10);
-        return LejiaResult.ok(page);
+        List<String> dateBefores = new ArrayList<>();
+        List<LedgerSettlement> content = page.getContent();
+        for (LedgerSettlement settlement : content) {
+            String dateBefore = getTradeDateStrBefore(settlement.getTradeDate());
+            dateBefores.add(dateBefore);
+        }
+        map.put("page",page);
+        map.put("dateBefores",dateBefores);
+        return LejiaResult.ok(map);
     }
 
     /***
@@ -108,4 +122,35 @@ public class LedgerSettlementController {
         }
     }
 
+    public String getDateStrBefore(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = sdf.parse(dateStr);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DATE, -1);
+            date = calendar.getTime();
+            return sdf.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getDateStrAfter(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = sdf.parse(dateStr);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DATE, 1);
+            date = calendar.getTime();
+            return sdf.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

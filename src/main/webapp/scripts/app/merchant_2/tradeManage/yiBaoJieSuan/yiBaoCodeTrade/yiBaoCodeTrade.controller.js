@@ -51,7 +51,9 @@ angular.module('lepayglobleApp')
                     'Content-Type': 'application/json'
                 }
             }).success(function (response) {
-                var page = response.data;
+                var page = response.data.page;
+                var dateBefores = response.data.dateBefores;
+                $scope.dateBefores = dateBefores;
                 $scope.pulls = page.content;
                 $scope.page = currentPage;
                 $scope.totalPages = page.totalPages;

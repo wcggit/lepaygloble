@@ -145,6 +145,32 @@ angular.module('lepayglobleApp')
             loadRefundList();
         }
 
+        // 导出表格
+        $scope.exportExcel = function () {
+            var data = "?";
+            if (detailCriteria.startDate != null) {
+                data += "startDate=" + detailCriteria.startDate + "&";
+                data += "endDate=" + detailCriteria.endDate;
+            }else {
+                data += "tradeDate=" + $stateParams.tradeDate + "&";
+            }
+            if (detailCriteria.orderSid != null) {
+                data += "&orderSid=" + detailCriteria.orderSid;
+            }
+            if (detailCriteria.orderType != null) {
+                data += "&orderType=" + detailCriteria.orderType;
+            }
+            if (detailCriteria.payType != null) {
+                data += "&payWay=" + detailCriteria.payType;
+            }
+            if ($("#selectStore").val() != null && $("#selectStore").val() != '') {
+                data += "&merchantId=" + $("#selectStore").val();
+            } else if ($scope.defaultId != null && $scope.defaultId != '') {
+                data += "&merchantId=" + $scope.defaultId;
+            }
+            location.href = "/api/codeTradeList/export" + data;
+        }
+
         var stateArr = ['yiBaoTradeRecord', 'yiBaoReturnRecord'];
         $scope.currentTab0 = true;
         $scope.currentTab1 = false;

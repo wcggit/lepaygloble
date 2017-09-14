@@ -27,8 +27,8 @@
             <div class="pull-left">
                 当前门店
                 <select name="" id="selMerchant" class="current-store form-control" ng-change="changeStore(x)" ng-model="x">
-                    <option value="">请选择</option>
                     <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                    <option value="" hidden></option>
                 </select>
                 门店今日扫码<span style="color: orange">{{storeTotalCount}}</span>笔，总流水<span style="color: orange">￥{{storeTotalPrice}}</span>
             </div>
@@ -37,7 +37,7 @@
                 <i class="iconfont2 icon2-shanghukaiqiyuyin" style="color: #777" ng-show="yuyinState"></i>
                 <i class="iconfont2 icon2-shanghuguanbiyuyin" style="color: #777"  ng-show="!yuyinState"></i>
             </span>
-            <a class="pull-right refresh" onclick="window.location.reload()">刷新</a>
+            <a class="pull-right refresh" ng-click="refreshOrderList()">刷新</a>
             <!--播放器-->
             <audio id="voicePlayer" src=""></audio>
         </div>
@@ -46,7 +46,7 @@
         <div class="list-in-div">
             <!--乐加订单-->
             <div class="container-fluid clearfix dd-list" ng-show="map.key=='olOrders'">
-                <div class="list pull-right" ng-repeat="arr in map.olOrders">
+                <div class="list pull-right" ng-repeat="arr in olOrders">
                     <!--扫码订单-->
                     <div class="list-detail pull-right"  ng-show="{{arr[6]==0}}">
                         <div class="list-info1 clearfix">
@@ -81,7 +81,7 @@
             </div>
             <!--通道订单-->
             <div class="container-fluid clearfix dd-list" ng-show="map.key=='scanCodeOrders'">
-                <div class="list pull-right" ng-repeat="arr in map.scanCodeOrders">
+                <div class="list pull-right" ng-repeat="arr in scanCodeOrders">
                     <!--扫码订单-->
                     <div class="list-detail pull-right">
                         <div class="list-info1 clearfix">
@@ -103,6 +103,6 @@
             </div>
         </div>
         <div class="text-center" ng-show="tsContentShow">没有更多了，亲！</div>
-        <input type="button" class="btn btn-warning look-more" value="查看更多" ng-click="findMore()">
+        <!--<input type="button" class="btn btn-warning look-more" value="查看更多" ng-click="findMore()">-->
     </div>
 </div>

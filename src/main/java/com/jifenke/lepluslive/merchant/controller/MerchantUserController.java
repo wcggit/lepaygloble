@@ -5,17 +5,16 @@ import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.merchant.controller.dto.PwdDto;
 import com.jifenke.lepluslive.merchant.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
-import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantBank;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantScanPayWay;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
+import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserService;
+import com.jifenke.lepluslive.merchant.service.MerchantWeiXinUserService;
 import com.jifenke.lepluslive.order.service.MerchantScanPayWayService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +39,8 @@ public class MerchantUserController {
     private MerchantUserService merchantUserService;
     @Inject
     private MerchantScanPayWayService merchantScanPayWayService;
-
+    @Inject
+    private MerchantWeiXinUserService merchantWeiXinUserService;
     /**
      *  获取当前登录用户信息
      * */
@@ -170,13 +170,30 @@ public class MerchantUserController {
     }
 
     /**
-     *  获取当前商户下的收银员账号
+     *  获取当前商户下的收银员账号及绑定微信号
+     *
      */
     @RequestMapping(value="/merchantUser/cashierAccount")
     public LejiaResult getCashierAccount() {
+        Map map = new HashMap();
         MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         List<MerchantUser> cashierAccount = merchantUserService.findCashierAccount(merchantUser.getId());
-        return LejiaResult.ok(cashierAccount);
+        List<MerchantWeiXinUser> merchantWeiXinUsers = merchantWeiXinUserService.findMerchantWeixinUserByMerchanUsers(cashierAccount);
+        map.put("cashierAccount",cashierAccount);
+        map.put("cashiers",merchantWeiXinUsers);
+        return LejiaResult.ok(map);
+    }
+
+    /**
+     * 解除登录账号与微信号的绑定关系
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/merchant/unBindWeiXinUser/{id}")
+    public @ResponseBody
+    LejiaResult unBindMerchantWeiXinUser(@PathVariable Long id) {
+        merchantWeiXinUserService.unBindMerchantWeiXinUser(id);
+        return LejiaResult.ok("成功解绑用户");
     }
 
     /***
@@ -285,12 +302,12 @@ public class MerchantUserController {
     @RequestMapping(value="/merchantUser/updatePwd",method = RequestMethod.POST)
     @ResponseBody
     public LejiaResult updatePwd(@RequestBody PwdDto pwdDto) {
-        MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        MerchantUser merchantUser = merchantService.findMerchantUserBySid(pwdDto.getUserSid());
         boolean result = merchantUserService.updatePwd(merchantUser,pwdDto.getOldPwd(),pwdDto.getNewPwd());
         if(result) {
             return LejiaResult.ok();
         }else {
-            return LejiaResult.build(400,"原密码错误！");
+            return LejiaResult.build(400,"管理员密码错误！");
         }
     }
 

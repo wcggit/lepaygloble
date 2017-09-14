@@ -308,11 +308,11 @@ public class OrderController {
         for (Merchant merchant : merchants) {
             MerchantWallet merchantWallet = merchantWalletService.findByMerchant(merchant.getId());
             MerchantWalletOnline merchantWalletOnline = merchantWalletOnlineService.findByMerchant(merchant.getId());
-            if(merchantWallet!=null) {
-                available+=merchantWallet.getAvailableBalance();
+            if (merchantWallet != null) {
+                available += merchantWallet.getAvailableBalance();
             }
-            if(merchantWalletOnline!=null) {
-                available+=merchantWalletOnline.getAvailableBalance();
+            if (merchantWalletOnline != null) {
+                available += merchantWalletOnline.getAvailableBalance();
             }
             totalCommission += merchantWallet.getTotalMoney();
         }
@@ -443,11 +443,11 @@ public class OrderController {
         List<Merchant> merchants = new ArrayList<>();
         merchants.add(merchant);
         Map<String, Long> map = new HashMap<>();
-        if(payWay.getType()==null||payWay.getType()==0||payWay.getType()==1) {
+        if (payWay.getType() == null || payWay.getType() == 0 || payWay.getType() == 1) {
             Long offLineDailyCount = offLineOrderService.countOffLineOrder(merchants);          //  线下订单
             Long posDailyCount = posOrderSerivce.countPosOrder(merchants);                      //  pos 订单
-            map.put("totalCount", (offLineDailyCount == null ? 0L : offLineDailyCount)+ (posDailyCount == null ? 0L : posDailyCount));
-        }else {
+            map.put("totalCount", (offLineDailyCount == null ? 0L : offLineDailyCount) + (posDailyCount == null ? 0L : posDailyCount));
+        } else {
             Long ledgerDailyCount = scanCodeOrderService.countScanOrder(merchants);             //  通道订单
             map.put("totalCount", ledgerDailyCount == null ? 0L : ledgerDailyCount);
         }
@@ -626,7 +626,8 @@ public class OrderController {
 
     @RequestMapping(value = "/codeTradeList/export", method = RequestMethod.GET)
     public ModelAndView exporeExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = true) Long merchantId,
-                                    @RequestParam(required = false) Integer payWay, @RequestParam(required = false) Integer orderType, @RequestParam(required = false) String orderSid) {
+                                    @RequestParam(required = false) Integer payWay, @RequestParam(required = false) Integer orderType, @RequestParam(required = false) String orderSid,
+                                    @RequestParam(required = false) String tradeDate) {
         MerchantScanPayWay scanPayWay = merchantScanPayWayService.findByMerchant(merchantId);
         if (scanPayWay.getType() == 3) {
             // 易宝结算
@@ -636,8 +637,20 @@ public class OrderController {
             scanCodeOrderCriteria.setPayment(payWay);
             scanCodeOrderCriteria.setOrderSid(orderSid);
             scanCodeOrderCriteria.setOrderType(orderType);
-            scanCodeOrderCriteria.setStartDate(startDate);
-            scanCodeOrderCriteria.setEndDate(endDate);
+            if (tradeDate != null && !"".equals(tradeDate)) {
+                try{
+                    Date tradeDateBefore = getTradeDateStrBefore(tradeDate);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+                    String tradeDateStr = sdf.format(tradeDateBefore);
+                    scanCodeOrderCriteria.setStartDate(tradeDateStr+" 00:00:00");
+                    scanCodeOrderCriteria.setEndDate(tradeDateStr+" 23:59:59");
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                scanCodeOrderCriteria.setStartDate(startDate);
+                scanCodeOrderCriteria.setEndDate(endDate);
+            }
             scanCodeOrderCriteria.setOffset(1);
             Page page = scanCodeOrderService.findOrderByPage(scanCodeOrderCriteria, 1000);
             Map map = new HashMap();
@@ -802,4 +815,21 @@ public class OrderController {
         }
         return LejiaResult.ok(map);
     }
+
+    public Date getTradeDateStrBefore(String tradeDateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date tradeDate = null;
+        try {
+            tradeDate = sdf.parse(tradeDateStr);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(tradeDate);
+            calendar.add(Calendar.DATE, -1);
+            tradeDate = calendar.getTime();
+            return tradeDate;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

@@ -50,26 +50,24 @@ public class DataOverviewController {
         List<Long> totalCommissions = new ArrayList<>();
         List<Long> availableCommissions = new ArrayList<>();
         List<Object> merchantIds = dataOverviewCriteria.getMerchantIds();
-        for (Object merchantId : merchantIds) {
-            Long mid = new Long(merchantId.toString());
+        for (Object[] merchantId : list) {
+            Long mid = new Long(merchantId[3].toString());
             MerchantWallet offWallet = merchantWalletService.findByMerchant(mid);
             MerchantWalletOnline onlineWallet = merchantWalletOnlineService.findByMerchant(mid);
             Long totalCommission = 0L;
             Long availableCommission = 0L;
             if(offWallet!=null) {
-                totalCommission = offWallet.getTotalMoney() + onlineWallet.getTotalMoney();
-                availableCommission = offWallet.getAvailableBalance()+onlineWallet.getAvailableBalance();
+                totalCommission += offWallet.getTotalMoney()==null?0:offWallet.getTotalMoney();
+                availableCommission = offWallet.getAvailableBalance()==null?0:offWallet.getAvailableBalance();
             }
             if(onlineWallet!=null) {
-                totalCommission = offWallet.getTotalMoney();
-                availableCommission = offWallet.getAvailableBalance();
+                totalCommission += onlineWallet.getTotalMoney()==null?0:onlineWallet.getTotalMoney();
+                availableCommission += onlineWallet.getAvailableBalance()==null?0:onlineWallet.getAvailableBalance();
             }
             totalCommissions.add(totalCommission);
             availableCommissions.add(availableCommission);
         }
         dataOverviewCriteria.setMerchants(list);
-        Collections.reverse(availableCommissions);
-        Collections.reverse(totalCommissions);
         dataOverviewCriteria.setAvailableCommissions(availableCommissions);
         dataOverviewCriteria.setTotalCommissions(totalCommissions);
         return LejiaResult.ok(dataOverviewCriteria);

@@ -80,7 +80,7 @@
         <tr>
             <td>订单号</td>
             <td>交易门店</td>
-            <td>消费者</td>
+            <!--<td>消费者</td>-->
             <td>支付方式</td>
             <td>确认码</td>
             <td>交易完成时间</td>
@@ -98,10 +98,15 @@
         <tr class="tr-noEmpty" ng-repeat="o in orderList" id="HaveData">
             <td ng-bind="o.orderSid"></td>
             <td ng-bind="o.merchant.name"></td>
+<<<<<<< HEAD
             <td>
                 <p ng-show="x.leJiaUser==null||(x.leJiaUser!=null&&x.leJiaUser.name==null)">非会员</p>
                 <p ng-show="x.leJiaUser!=null&&x.leJiaUser.name!=null">{{x.leJiaUser.id}}</p>
             </td>
+=======
+            <!--<td ng-show="x.leJiaUser==null||(x.leJiaUser!=null&&x.leJiaUser.name==null)">非会员</td>
+            <td ng-show="x.leJiaUser!=null&&x.leJiaUser.name!=null">{{x.leJiaUser.id}}</td>-->
+>>>>>>> a47e532d0dc42af0ef3a50aaaee2a458bc485cee
             <td ng-bind="o.payWay.payWay"></td>
             <td ng-bind="o.lepayCode"></td>
             <td>
@@ -128,8 +133,8 @@
         <tr class="tr-noEmpty" ng-repeat="o in orderList">
             <td ng-bind="o.orderSid"></td>
             <td ng-bind="o.merchant.name"></td>
-            <td ng-show="x.leJiaUser==null||(x.leJiaUser!=null&&x.leJiaUser.name==null)">非会员</td>
-            <td ng-show="x.leJiaUser!=null&&x.leJiaUser.name!=null">{{x.leJiaUser.id}}</td>
+            <!--<td ng-show="x.leJiaUser==null||(x.leJiaUser!=null&&x.leJiaUser.name==null)">非会员</td>
+            <td ng-show="x.leJiaUser!=null&&x.leJiaUser.name!=null">{{x.leJiaUser.id}}</td>-->
             <td ng-show="o.scanCodeOrderExt.payType==0">微信</td>
             <td ng-show="o.scanCodeOrderExt.payType==1">支付宝</td>
             <td ng-bind="o.lePayCode"></td>
