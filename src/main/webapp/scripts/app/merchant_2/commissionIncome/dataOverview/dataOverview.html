@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div class="ttl clearfix">门店锁定管理 <div class="btn btn-warning pull-right"  ui-sref="tixianDetail">查看提现详情</div></div>
+        <div class="ttl clearfix">门店锁定管理 <div class="btn btn-warning pull-right"  ui-sref="tixianDetail" style="padding: 5px 14px">提现详情</div></div>
         <div class="row row-margin lockStoreState">
             <div class="col-md-12" ng-repeat="x in merchants">
                 <div class="col-md-4">
@@ -43,7 +43,7 @@
                     <h4>门店余额</h4>
                     <h4>￥{{availableCommissions[$index]/100.0}}</h4>
                 </div>
-                <div class="col-md-2 progress-btn text-center"><div class="btn btn-warning btn-long" ng-click="withDrawWindow(x[3])">提现</div></div>
+                <div class="col-md-1 progress-btn text-center"><div class="btn btn-warning btn-long" ng-click="withDrawWindow(x[3])">提现</div></div>
             </div>
             <!--<div class="col-md-10 col-md-offset-1" id="seeMore">
                 <input type="button" class="btn btn-warning look-more" value="查看更多" ng-click="moreMerchant()">

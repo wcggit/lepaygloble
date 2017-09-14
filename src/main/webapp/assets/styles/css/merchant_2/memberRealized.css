@@ -13,16 +13,21 @@
 .dataOverview .col-md-12 {
     margin-top: 30px;
 }
+.dataOverview .col-md-12:not(:last-child){
+    border: 1px solid #e1e1e1;
+}
 .dataOverview .progress-text{
     font-size: 20px;
     color: #646464;
     padding-top: 16px;
+    margin-right: 32px;
+    border-right: 1px solid #e1e1e1;
 }
 .dataOverview .progress-text span{
     font-size: 32px;
 }
 .dataOverview .progress-text2{
-    padding: 0 15px 0 33px;
+    padding: 0 15px 0 0px;
 }
 .dataOverview .progress-text1 h4, .dataOverview .progress-text2 h4{
     font-size: 16px;

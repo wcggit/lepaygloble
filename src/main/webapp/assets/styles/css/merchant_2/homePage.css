@@ -86,7 +86,7 @@
 }
 
 .homePage .dd-list {
-    padding-top: 15px;
+    padding-top: 40px;
 }
 
 .homePage .list {
@@ -102,7 +102,7 @@
     width: 95%;
     padding: 15px 20px;
     border-radius: 5px;
-    margin-top: -16px;
+    margin-top: -14px;
 }
 
 .homePage .list .list-info1 {
@@ -171,7 +171,7 @@
     width: 32px;
     height: 32px;
     left: -16px;
-    top: -16px;
+    top: -14px;
 }
 
 .homePage .list .hyIcon {

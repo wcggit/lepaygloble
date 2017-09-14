@@ -1,7 +1,7 @@
 .denglu-header .navbar-brand img{width: 250px}
 .denglu-header{height: 68px}
-.banner-merchant{background: url(../images/denglu/banner_merchant.jpg) no-repeat center center;min-width: 1263px;max-width: 1920px;height: 500px;position: relative}
-.banner-partner{background: url(../images/denglu/banner_partner.jpg) no-repeat center center;min-width: 1263px;max-width: 1920px;height: 500px;position: relative}
+.banner-merchant{background: url(../images/denglu/banner_merchant.jpg) no-repeat center center;min-width: 1263px;width: 100%; height:25.94vw;position: relative}
+.banner-partner{background: url(../images/denglu/banner_partner.jpg) no-repeat center center;min-width: 1263px;width: 100%; height:25.94vw;position: relative}
 
 .denglu form{width: 320px;height:280px;position: absolute;top: 0;bottom:0;margin:auto;left:62.5%;background-color: rgba(0,0,0,0.5);padding: 10px 30px 30px}
 .denglu-partner form{height:310px;}

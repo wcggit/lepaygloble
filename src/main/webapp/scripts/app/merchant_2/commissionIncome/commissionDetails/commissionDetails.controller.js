@@ -47,7 +47,6 @@ angular.module('lepayglobleApp')
                 } else {
                     alert('加载佣金明细数据错误...');
                 }
-                // console.log(JSON.stringify(response));
             });
         };
 
