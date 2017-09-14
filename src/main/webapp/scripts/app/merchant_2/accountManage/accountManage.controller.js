@@ -24,6 +24,7 @@ angular.module('lepayglobleApp')
         var array = new Array();
         $http.get("/api/merchantUser/merchantsInfo").success(function (response) {
             if (response.status == 200) {
+                console.log(JSON.stringify(response));
                 var data = response.data;
                 $scope.merchants = data;
                 $scope.defaultId = data[0][0];

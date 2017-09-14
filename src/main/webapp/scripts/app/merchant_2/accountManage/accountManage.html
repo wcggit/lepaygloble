@@ -165,7 +165,7 @@
                                     <br>
                                     <div class="radio-inline" ng-repeat="m in merchants">
                                         <label>
-                                            <input type="checkbox" name="checkMerchant" value="{{m.id}}"><span ng-bind="m.name"></span>
+                                            <input type="checkbox" name="checkMerchant" value="{{m[0]}}"><span ng-bind="m[1]"></span>
                                         </label>
                                         <span ng-show="$index%2!=0"><div></div></span>
                                     </div>
