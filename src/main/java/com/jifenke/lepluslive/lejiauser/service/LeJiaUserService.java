@@ -297,15 +297,19 @@ public class LeJiaUserService {
         StringBuffer sql = new StringBuffer();
         sql.append("select  lju2.lju_id, lju2.bind_date, lju2.phone, ifnull(counts.total,0) as count, lju2.nickname, lju2.image, merchant.name from "
             + " (select lju1.id lju_id, lju1.bind_merchant_date bind_date, lju1.phone_number phone, wxu1.nickname nickname, wxu1.head_image_url image, lju1.bind_merchant_id bind_merchant_id from le_jia_user lju1,wei_xin_user wxu1 where ");
-        if (lockMemberCriteria.getStoreIds() != null) {
-            sql.append(" lju1.bind_merchant_id in (");
-            for(int i =0;i<lockMemberCriteria.getStoreIds().length;i++){
-                sql.append(lockMemberCriteria.getStoreIds()[i]+",");
-            }
-            sql.deleteCharAt(sql.length()-1);
-            sql.append(") and ");
+        if (lockMemberCriteria.getMerchantId() != null) {
+            sql.append(" lju1.bind_merchant_id = "+lockMemberCriteria.getMerchantId());
+            sql.append(" and ");
         }
-        if (lockMemberCriteria.getStartDate() != null && lockMemberCriteria.getStartDate() != "") {
+        if(lockMemberCriteria.getNickName()!=null && !"".equals(lockMemberCriteria.getNickName())) {
+            sql.append(" wxu1.nickname like '%"+lockMemberCriteria.getNickName()+"%'");
+            sql.append(" and ");
+        }
+        if(lockMemberCriteria.getPhoneNumber()!=null && !"".equals(lockMemberCriteria.getPhoneNumber())) {
+            sql.append(" lju1.phone_number like '%"+lockMemberCriteria.getPhoneNumber()+"%'");
+            sql.append(" and ");
+        }
+        if (lockMemberCriteria.getStartDate() != null && !"".equals(lockMemberCriteria.getStartDate())) {
             sql.append(" lju1.bind_merchant_date between '");
             sql.append(lockMemberCriteria.getStartDate());
             sql.append("' and '");
@@ -319,13 +323,8 @@ public class LeJiaUserService {
         sql.append(" ) as lju2 left join "
                    + "(select sum(off_line_order_share.to_lock_merchant) as total,off_line_order.le_jia_user_id as id from off_line_order,off_line_order_share where off_line_order.id = off_line_order_share.off_line_order_id ");
 
-        if (lockMemberCriteria.getStoreIds() != null) {
-            sql.append(" and off_line_order_share.lock_merchant_id in (");
-            for(int i =0;i<lockMemberCriteria.getStoreIds().length;i++){
-                sql.append(lockMemberCriteria.getStoreIds()[i]+",");
-            }
-            sql.deleteCharAt(sql.length()-1);
-            sql.append(")");
+        if (lockMemberCriteria.getMerchantId() != null) {
+            sql.append(" and off_line_order_share.lock_merchant_id = "+lockMemberCriteria.getMerchantId());
         }
         sql.append(" group by off_line_order.le_jia_user_id) as counts  on  lju2.lju_id = counts.id ");
         sql.append(" left join merchant on lju2.bind_merchant_id = merchant.id");
@@ -348,15 +347,19 @@ public class LeJiaUserService {
         StringBuffer sql = new StringBuffer();
         sql.append("select  count(lju2.lju_id) , sum(counts.total)  from "
                    + " (select lju1.id lju_id from le_jia_user lju1,wei_xin_user wxu1 where ");
-        if (lockMemberCriteria.getStoreIds() != null) {
-            sql.append(" lju1.bind_merchant_id in (");
-            for(int i =0;i<lockMemberCriteria.getStoreIds().length;i++){
-                sql.append(lockMemberCriteria.getStoreIds()[i]+",");
-            }
-            sql.deleteCharAt(sql.length()-1);
-            sql.append(") and ");
+        if (lockMemberCriteria.getMerchantId() != null) {
+            sql.append(" lju1.bind_merchant_id = "+lockMemberCriteria.getMerchantId());
+            sql.append(" and ");
         }
-        if (lockMemberCriteria.getStartDate() != null && lockMemberCriteria.getStartDate() != "") {
+        if(lockMemberCriteria.getNickName()!=null && !"".equals(lockMemberCriteria.getNickName())) {
+            sql.append(" wxu1.nickname like '%"+lockMemberCriteria.getNickName()+"%'");
+            sql.append(" and ");
+        }
+        if(lockMemberCriteria.getPhoneNumber()!=null && !"".equals(lockMemberCriteria.getPhoneNumber())) {
+            sql.append(" lju1.phone_number like '%"+lockMemberCriteria.getPhoneNumber()+"%'");
+            sql.append(" and ");
+        }
+        if (lockMemberCriteria.getStartDate() != null && !"".equals(lockMemberCriteria.getStartDate())) {
             sql.append(" lju1.bind_merchant_date between '");
             sql.append(lockMemberCriteria.getStartDate());
             sql.append("' and '");
@@ -367,13 +370,8 @@ public class LeJiaUserService {
         sql.append(" ) as lju2 left join "
                    + "(select sum(off_line_order_share.to_lock_merchant) as total,off_line_order.le_jia_user_id as id from off_line_order,off_line_order_share where off_line_order.id = off_line_order_share.off_line_order_id ");
 
-        if (lockMemberCriteria.getStoreIds() != null) {
-            sql.append(" and off_line_order_share.lock_merchant_id in (");
-            for(int i =0;i<lockMemberCriteria.getStoreIds().length;i++){
-                sql.append(lockMemberCriteria.getStoreIds()[i]+",");
-            }
-            sql.deleteCharAt(sql.length()-1);
-            sql.append(")");
+        if (lockMemberCriteria.getMerchantId() != null) {
+            sql.append(" and off_line_order_share.lock_merchant_id = "+lockMemberCriteria.getMerchantId());
         }
         sql.append(" group by off_line_order.le_jia_user_id ) as counts  on  lju2.lju_id = counts.id ");
 

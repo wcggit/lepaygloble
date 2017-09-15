@@ -11,12 +11,8 @@ angular.module('lepayglobleApp')
                         /*$http.get("api/codeTrade/getMerchants").success(function (response) {*/
                         if(response.status == 200){
                             var data = response.data;
-
                             $scope.myStore = data;
-
-                            angular.forEach(data,function (data,index) {
-                                array[index] = data[0];
-                            });
+                            $scope.defaultId = data[0][0];
                             $scope.loadLockMembersInfo();
                         }else{
                             alert("加载门店错误...");
@@ -26,11 +22,23 @@ angular.module('lepayglobleApp')
                     var currentPage = 1;
                     $scope.loadLockMembersInfo = function (){
                         var lockMembersCriteria = {};
-                        var a =$("#selectStore").val();
-                        if(a!=""&&a!=null){
-                            lockMembersCriteria.storeIds = $.makeArray(a);
+                        var mid =$("#selectStore").val();
+                        var nickName =$("#nickName").val();
+                        var phoneNumber =$("#phoneNumber").val();
+                        if(mid!=""&&mid!=null){
+                            lockMembersCriteria.merchantId = mid;
                         }else{
-                            lockMembersCriteria.storeIds = array;
+                            lockMembersCriteria.merchantId = $scope.defaultId;
+                        }
+                        if(nickName!=""&&nickName!=null){
+                            lockMembersCriteria.nickName = nickName;
+                        }else{
+                            lockMembersCriteria.nickName = null;
+                        }
+                        if(phoneNumber!=""&&phoneNumber!=null){
+                            lockMembersCriteria.phoneNumber = phoneNumber;
+                        }else{
+                            lockMembersCriteria.phoneNumber = null;
                         }
                         var completeDate = $("#completeDate").val().split("-");
                         lockMembersCriteria.startDate = completeDate[0];
@@ -38,20 +46,13 @@ angular.module('lepayglobleApp')
                         lockMembersCriteria.currentPage = currentPage;
                         $http.post("/api/lockMenber/lockMenberByMerchantUser",lockMembersCriteria).success(function (response) {
                             if(response.status == 200){
-                                $scope.lockMembersCriteria = response.data.lockMembers;
+                                $scope.content = response.data.lockMembers;
                                 $scope.lockMembersData = response.data;
                                 $scope.page = currentPage;
                                 $scope.totalPages = $scope.lockMembersData.totalPages;
-                                if($scope.lockMembersCriteria.length>0){
-                                    $("#notData").hide();
-                                }else{
-                                    $("#notData").show();
-                                }
-
                             }else{
                                 alert('加载绑定会员数据错误...');
                             }
-                            console.log(response);
                         });
                     };
 

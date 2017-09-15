@@ -126,11 +126,6 @@ public class MerchantCodeTradeController {
     @RequestMapping(value = "/lockMenber/lockMenberByMerchantUser")
     @ResponseBody
     public LejiaResult findLockMenberByMerchantUser(@RequestBody LockMemberCriteria lockMemberCriteria){
-
-//        //测试
-//        Object[] o = {1,3,9};
-//        lockMemberCriteria.setStoreIds(o);
-
         List<Object[]> listMembers = leJiaUserService.getMerchantLockMemberList(lockMemberCriteria);
         lockMemberCriteria.setLockMembers(listMembers);
 

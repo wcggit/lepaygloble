@@ -50,9 +50,10 @@ public class ScanCodeOrderExcel extends AbstractExcelView {
         excelHeader.createCell(4).setCellValue("确认码");
         excelHeader.createCell(5).setCellValue("交易完成时间");
         excelHeader.createCell(6).setCellValue("订单金额");
-        excelHeader.createCell(7).setCellValue("订单费率");
-        excelHeader.createCell(8).setCellValue("订单类型");
-        excelHeader.createCell(9).setCellValue("订单状态");
+        excelHeader.createCell(7).setCellValue("实际入账");
+        excelHeader.createCell(8).setCellValue("手续费率");
+        excelHeader.createCell(9).setCellValue("订单类型");
+        excelHeader.createCell(10).setCellValue("订单状态");
     }
 
     public void setExcelRows(HSSFSheet excelSheet, List<ScanCodeOrder> orderList) {
@@ -78,23 +79,24 @@ public class ScanCodeOrderExcel extends AbstractExcelView {
                 .format(order.getCompleteDate()));
             excelRow.createCell(6)
                 .setCellValue(order.getTotalPrice() / 100.0);
+            excelRow.createCell(7).setCellValue(order.getTruePay()/100.0);
             if (order.getOrderType()==12004L||order.getOrderType()==12005L) {
                 double result = (100-order.getScanCodeOrderExt().getMerchantRate().intValue())/10.0;
-                excelRow.createCell(7).setCellValue(result+"折");
+                excelRow.createCell(8).setCellValue(result+"折");
             } else {
-                excelRow.createCell(7).setCellValue(order.getCommission()/100.0);
+                excelRow.createCell(8).setCellValue(order.getCommission()/100.0);
             }
             if (order.getOrderType()==12004L||order.getOrderType()==12005L) {
-                excelRow.createCell(8).setCellValue("乐加订单");
+                excelRow.createCell(9).setCellValue("乐加订单");
             } else {
-                excelRow.createCell(8).setCellValue("普通订单");
+                excelRow.createCell(9).setCellValue("普通订单");
             }
             if(order.getState()==1) {
-                excelRow.createCell(9).setCellValue("已完成");
+                excelRow.createCell(10).setCellValue("已完成");
             }else if(order.getState()==0) {
-                excelRow.createCell(9).setCellValue("未完成");
+                excelRow.createCell(10).setCellValue("未完成");
             }else {
-                excelRow.createCell(9).setCellValue("已退回");
+                excelRow.createCell(10).setCellValue("已退回");
             }
         }
     }

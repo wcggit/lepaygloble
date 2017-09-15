@@ -36,7 +36,9 @@ public class LockMemberCriteria {
     private Integer pageSize = 10;//每页size
     private Integer totalPages;//总页数
 
-
+    private Long merchantId;
+    private String nickName;
+    private String phoneNumber;
 
     public Double getCommissionIncome() {
         return commissionIncome;
@@ -108,5 +110,29 @@ public class LockMemberCriteria {
 
     public void setTotalPages(Integer totalPages) {
         this.totalPages = totalPages;
+    }
+
+    public Long getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
