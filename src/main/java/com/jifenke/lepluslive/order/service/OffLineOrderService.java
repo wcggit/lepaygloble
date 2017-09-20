@@ -814,7 +814,7 @@ public class OffLineOrderService {
          /***
          *  根据条件查询订单流水和入账 - 交易记录【到账详情】
          */
-            String base = " select count(1),IFNULL(sum(ol.total_price),0),IFNULL(sum(ol.transfer_money_from_true_pay),0),IFNULL(sum(ol.lj_commission),0)  from off_line_order ol,pay_way p where ol.pay_way_id = p.id  ";
+            String base = " select count(1),IFNULL(sum(ol.total_price),0),IFNULL(sum(ol.transfer_money),0),IFNULL(sum(ol.lj_commission),0)  from off_line_order ol,pay_way p where ol.pay_way_id = p.id  ";
             StringBuffer sql = new StringBuffer(base);
             if(olOrderCriteria.getMerchant()!=null && olOrderCriteria.getMerchant().getId()!=null) {
                 sql.append(" and ol.merchant_id = "+olOrderCriteria.getMerchant().getId());

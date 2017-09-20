@@ -91,12 +91,10 @@
         <tr>
             <td>订单号</td>
             <td>交易门店</td>
-            <!--<td>消费者</td>-->
             <td>支付方式</td>
             <td>确认码</td>
             <td>交易完成时间</td>
             <td>订单金额</td>
-            <!--<td>费率</td>-->
             <td>订单类型</td>
             <td>订单状态</td>
         </tr>
@@ -109,19 +107,12 @@
         <tr class="tr-noEmpty" ng-repeat="o in orderList" id="HaveData">
             <td ng-bind="o.orderSid"></td>
             <td ng-bind="o.merchant.name"></td>
-            <td>
-                <p ng-show="x.leJiaUser==null||(x.leJiaUser!=null&&x.leJiaUser.name==null)">非会员</p>
-                <p ng-show="x.leJiaUser!=null&&x.leJiaUser.name!=null">{{x.leJiaUser.id}}</p>
-            </td>
             <td ng-bind="o.payWay.payWay"></td>
             <td ng-bind="o.lepayCode"></td>
             <td>
                 <p ng-bind="o.completeDate|date:'yyyy-MM-dd HH:mm:ss'"></p>
             </td>
             <td ng-bind="'¥'+o.totalPrice/100.0"></td>
-            <!--<td ng-show="o.rebateWay==0||o.rebateWay==2||o.rebateWay==4||o.rebateWay==5||o.rebateWay==6"><p ng-bind="'¥'+o.wxCommission/100.0"></p>
-            </td>
-            <td ng-show="o.rebateWay==3||o.rebateWay==1"><p>{{(100-o.merchant.ljCommission)/10}}折</p></td>-->
             <td ng-show="o.rebateWay==0||o.rebateWay==2||o.rebateWay==4||o.rebateWay==5||o.rebateWay==6"><p>普通订单</p>
             </td>
             <td ng-show="o.rebateWay==3||o.rebateWay==1"><p>乐加订单</p></td>
@@ -139,8 +130,6 @@
         <tr class="tr-noEmpty" ng-repeat="o in orderList">
             <td ng-bind="o.orderSid"></td>
             <td ng-bind="o.merchant.name"></td>
-            <!--<td ng-show="x.leJiaUser==null||(x.leJiaUser!=null&&x.leJiaUser.name==null)">非会员</td>
-            <td ng-show="x.leJiaUser!=null&&x.leJiaUser.name!=null">{{x.leJiaUser.id}}</td>-->
             <td ng-show="o.scanCodeOrderExt.payType==0">微信</td>
             <td ng-show="o.scanCodeOrderExt.payType==1">支付宝</td>
             <td ng-bind="o.lePayCode"></td>
@@ -148,8 +137,6 @@
                 <p ng-bind="o.completeDate|date:'yyyy-MM-dd HH:mm:ss'"></p>
             </td>
             <td ng-bind="'¥'+o.totalPrice/100.0"></td>
-            <!--<td ng-show="o.orderType==12001||o.orderType==12002||o.orderType==12003||o.orderType==12006" ng-bind="'¥'+o.commission/100.0"></td>-->
-            <!--<td ng-show="o.orderType==12004||o.orderType==12005">{{(100-o.scanCodeOrderExt.merchantRate)/10}}折</td>-->
             <td ng-show="o.orderType==12001||o.orderType==12002||o.orderType==12003||o.orderType==12006">普通订单</td>
             <td ng-show="o.orderType==12004||o.orderType==12005">乐加订单</td>
             <td>

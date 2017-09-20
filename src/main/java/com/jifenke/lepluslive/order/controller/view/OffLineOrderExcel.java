@@ -75,7 +75,7 @@ public class OffLineOrderExcel extends AbstractExcelView {
                 .format(order.getCompleteDate()));
             excelRow.createCell(6)
                 .setCellValue(order.getTotalPrice() / 100.0);
-            excelRow.createCell(7).setCellValue(order.getTruePay()/100.0);
+            excelRow.createCell(7).setCellValue(order.getTransferMoney()/100.0);
             if (order.getRebateWay() == 1 || order.getRebateWay() == 3) {
                 double result = (100-order.getMerchant().getLjCommission().intValue())/10;
                 excelRow.createCell(8).setCellValue((result)+"折");

@@ -127,7 +127,7 @@
                         <td ng-show="order.orderType==12004||order.orderType==12005">{{(100-order.scanCodeOrderExt.merchantRate)/10.0}}折</td>
                         <!--<td ng-show="order.orderType==12004||order.orderType==12005">(￥{{order.scanCodeOrderExt.merchantRate/100.0}})</td>-->
                         <td ng-show="order.orderType==12001||order.orderType==12002||order.orderType==12003||order.orderType==12006">￥{{order.commission/100.0}}</td>
-                        <td>￥{{order.transferMoneyFromTruePay/100.0}}</td>
+                        <td>￥{{order.transferMoney/100.0}}</td>
                     </tr>
                     </tbody>
                 </table>

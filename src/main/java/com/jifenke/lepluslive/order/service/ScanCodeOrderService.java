@@ -225,7 +225,7 @@ public class ScanCodeOrderService {
      */
     @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
     public List<Object[]> findTotalDailyTransferAndIncome(ScanCodeOrderCriteria scanCodeOrderCriteria) {
-        String base = "select count(1),IFNULL(sum(so.total_price),0),IFNULL(sum(so.transfer_money_from_true_pay),0),IFNULL(sum(so.commission),0) from scan_code_order so,scan_code_order_ext se where so.scan_code_order_ext_id = se.id ";
+        String base = "select count(1),IFNULL(sum(so.total_price),0),IFNULL(sum(so.transfer_money),0),IFNULL(sum(so.commission),0) from scan_code_order so,scan_code_order_ext se where so.scan_code_order_ext_id = se.id ";
         StringBuffer sql = new StringBuffer(base);
         if(scanCodeOrderCriteria.getMerchantId()!=null) {
             sql.append(" and so.merchant_id = "+scanCodeOrderCriteria.getMerchantId());
