@@ -28,7 +28,8 @@ angular.module('lepayglobleApp')
                 var data = response.data;
                 $scope.merchants = data;
                 $scope.defaultId = data[0][0];
-                $scope.getBankByMerchant($scope.defaultId);
+                $scope.selectDefault = data[0][0];
+                    $scope.getBankByMerchant($scope.defaultId);
             } else {
                 alert("加载门店错误...");
             }

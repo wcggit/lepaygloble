@@ -26,8 +26,7 @@
         <div class="panel-body clearfix">
             <div class="pull-left">
                 当前门店
-                <select name="" id="selMerchant" class="current-store form-control" ng-change="changeStore(x)" ng-model="x">
-                    <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                <select name="" id="selMerchant" class="current-store form-control" ng-change="changeStore(selectDefault)" ng-model="selectDefault" ng-options="m.id as m.name for m in merchants">
                     <option value="" hidden></option>
                 </select>
                 门店今日扫码<span style="color: orange">{{storeTotalCount}}</span>笔，总流水<span style="color: orange">￥{{storeTotalPrice}}</span>
