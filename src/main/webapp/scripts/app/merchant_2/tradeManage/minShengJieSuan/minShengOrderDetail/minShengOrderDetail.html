@@ -1,0 +1,324 @@
+<div class="minShengJieSuanTrade minShengOrderDetail">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">
+            <span class="left-icon pull-left" ui-sref="minShengJieSuan"></span>
+            <span ui-sref="minShengJieSuan">乐加结算 / </span>
+            <span class="current-page">到账详情</span>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="show-wrapper">
+            <div class="show-item">
+                <h4 class="text-center">总入账</h4>
+                <h4 class="text-center">￥1000.00</h4>
+                <h4 class="text-right">已到账</h4>
+            </div>
+            <div class="show-item">
+                <h4>普通订单34笔交易成功，2笔退款</h4>
+                <h4>总金额￥300，手续费：￥0.32，应入账￥12.34</h4>
+                <h4>(普通订单分两笔入账，微信入账￥23.44，支付宝入账￥34.44)</h4>
+            </div>
+            <div class="show-item">
+                <h4>乐加订单34笔交易成功，0笔退款</h4>
+                <h4>总金额￥300，乐加折扣：￥0.32，应入账￥12.34</h4>
+                <h4>(乐加订单只有一笔入账)</h4>
+            </div>
+        </div>
+    </div>
+    <div class="topTab-wrapper">
+        <div class="topTab-item" ng-class="{active:currentTopTapState == 0}" ng-click="topTabClick(0)">微信渠道入账（普通订单）：￥299.99</div>
+        <div class="topTab-item" ng-class="{active:currentTopTapState == 1}" ng-click="topTabClick(1)">支付宝渠道入账（普通订单）：￥299.99</div>
+        <div class="topTab-item" ng-class="{active:currentTopTapState == 2}" ng-click="topTabClick(2)">乐加订单入账：￥299.99</div>
+    </div>
+    <!--tab-->
+    <div class=" top-style1">
+        <div class="panel panel-default page-top">
+            <div class="panel-body">
+                <ul class="nav nav-style">
+                    <li role="presentation" ng-class="{active:currentState == 0}" ng-click="onClickTab(0)"><a>交易记录</a></li>
+                    <li role="presentation" ng-class="{active:currentState == 1}" ng-click="onClickTab(1)"><a>退款记录</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <!--乐加订单-消费订单-->
+        <div ng-show="currentTopTapState == 2 && currentState == 0">
+            <form class="form-inline list-check">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>交易门店</label>
+                        <div class="input-group col-md-6 select-style">
+                            <select class="form-control">
+                                <option value="-1">请选择</option>
+                                <option value="{{m[2]}}" ng-repeat="m in mlist">{{m[0]}}</option>
+                            </select>
+                            <span class="select-jiao"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+                </div>
+            </form>
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>订单金额</td>
+                        <td>乐加折扣</td>
+                        <td>实际入账</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="tr-empty"><td class="text-center" colspan="6" ng-show="tradeList==null">暂无数据！</td></tr>
+                    <tr>
+                        <td><h4>2017-09-11</h4><h4>12:20:32</h4></td>
+                        <td><h4>棉花糖KTV</h4><h4>(朝阳路店)</h4></td>
+                        <td>11111111</td>
+                        <td>￥100.0</td>
+                        <td>95折</td>
+                        <td>￥100.0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--乐加订单-退款记录-->
+        <div ng-show="currentTopTapState == 2 && currentState == 1">
+            <form class="form-inline list-check">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>交易门店</label>
+                        <div class="input-group col-md-6 select-style">
+                            <select class="form-control">
+                                <option value="-1">请选择</option>
+                                <option value="{{m[2]}}" ng-repeat="m in mlist">{{m[0]}}</option>
+                            </select>
+                            <span class="select-jiao"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+                </div>
+            </form>
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>退款金额</td>
+                        <td>乐加折扣</td>
+                        <td>实际少入账</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="tr-empty"><td class="text-center" colspan="10" ng-show="tradeList==null">暂无数据！</td></tr>
+                    <tr ng-repeat="order in tradeList">
+                        <td><h4>2017-09-11</h4><h4>12:20:32</h4></td>
+                        <td><h4>棉花糖KTV</h4><h4>(朝阳路店)</h4></td>
+                        <td>11111111</td>
+                        <td>￥100.0</td>
+                        <td>95折</td>
+                        <td>￥100.0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--普通订单(微信)-消费订单-->
+        <div ng-show="currentTopTapState == 0 && currentState == 0">
+            <form class="form-inline list-check">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>交易门店</label>
+                        <div class="input-group col-md-6 select-style">
+                            <select class="form-control">
+                                <option value="-1">请选择</option>
+                                <option value="{{m[2]}}" ng-repeat="m in mlist">{{m[0]}}</option>
+                            </select>
+                            <span class="select-jiao"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+                </div>
+            </form>
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>订单金额</td>
+                        <td>手续费</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="tr-empty"><td class="text-center" colspan="6" ng-show="tradeList==null">暂无数据！</td></tr>
+                    <tr>
+                        <td><h4>2017-09-11</h4><h4>12:20:32</h4></td>
+                        <td><h4>棉花糖KTV</h4><h4>(朝阳路店)</h4></td>
+                        <td>11111111</td>
+                        <td>￥100.0</td>
+                        <td>￥100.0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--普通订单（微信）-退款记录-->
+        <div ng-show="currentTopTapState == 0 && currentState == 1">
+            <form class="form-inline list-check">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>交易门店</label>
+                        <div class="input-group col-md-6 select-style">
+                            <select class="form-control">
+                                <option value="-1">请选择</option>
+                                <option value="{{m[2]}}" ng-repeat="m in mlist">{{m[0]}}</option>
+                            </select>
+                            <span class="select-jiao"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+                </div>
+            </form>
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>退款金额</td>
+                        <td>退还商户手续费</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="tr-empty"><td class="text-center" colspan="6" ng-show="tradeList==null">暂无数据！</td></tr>
+                    <tr>
+                        <td><h4>2017-09-11</h4><h4>12:20:32</h4></td>
+                        <td><h4>棉花糖KTV</h4><h4>(朝阳路店)</h4></td>
+                        <td>11111111</td>
+                        <td>￥100.0</td>
+                        <td>￥100.0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--普通订单(支付宝)-消费订单-->
+        <div ng-show="currentTopTapState == 1 && currentState == 0">
+            <form class="form-inline list-check">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>交易门店</label>
+                        <div class="input-group col-md-6 select-style">
+                            <select class="form-control">
+                                <option value="-1">请选择</option>
+                                <option value="{{m[2]}}" ng-repeat="m in mlist">{{m[0]}}</option>
+                            </select>
+                            <span class="select-jiao"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+                </div>
+            </form>
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>订单金额</td>
+                        <td>手续费</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="tr-empty"><td class="text-center" colspan="6" ng-show="tradeList==null">暂无数据！</td></tr>
+                    <tr>
+                        <td><h4>2017-09-11</h4><h4>12:20:32</h4></td>
+                        <td><h4>棉花糖KTV</h4><h4>(朝阳路店)</h4></td>
+                        <td>11111111</td>
+                        <td>￥100.0</td>
+                        <td>￥100.0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--普通订单（支付宝）-退款记录-->
+        <div ng-show="currentTopTapState == 1 && currentState == 1">
+            <form class="form-inline list-check">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>交易门店</label>
+                        <div class="input-group col-md-6 select-style">
+                            <select class="form-control">
+                                <option value="-1">请选择</option>
+                                <option value="{{m[2]}}" ng-repeat="m in mlist">{{m[0]}}</option>
+                            </select>
+                            <span class="select-jiao"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+                </div>
+            </form>
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>退款金额</td>
+                        <td>退还商户手续费</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="tr-empty"><td class="text-center" colspan="6" ng-show="tradeList==null">暂无数据！</td></tr>
+                    <tr>
+                        <td><h4>2017-09-11</h4><h4>12:20:32</h4></td>
+                        <td><h4>棉花糖KTV</h4><h4>(朝阳路店)</h4></td>
+                        <td>11111111</td>
+                        <td>￥100.0</td>
+                        <td>￥100.0</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+            <a class="pull-right dcbg" ng-click="exportExcel()">导出表格</a>
+        </div>
+    </div>
+
+</div>
