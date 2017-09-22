@@ -30,6 +30,17 @@
         <div class="topTab-item" ng-class="{active:currentTopTapState == 1}" ng-click="topTabClick(1)">支付宝渠道入账（普通订单）：￥299.99</div>
         <div class="topTab-item" ng-class="{active:currentTopTapState == 2}" ng-click="topTabClick(2)">乐加订单入账：￥299.99</div>
     </div>
+    <!--乐加订单描述信息-->
+    <div class="desc container-fluid" ng-show="currentTopTapState == 2">
+        <h4>乐加订单中，消费订单12笔，订单金额￥400.00；退款2b笔，退款金额￥12.00。</h4>
+        <h4>扎差后，商户应入账￥21.00</h4>
+    </div>
+    <!--普通订单描述信息-->
+    <div class="desc container-fluid" ng-show="currentTopTapState != 2">
+        <h4>微信渠道下，消费订单12笔，订单金额￥400.00，手续费￥400.00；退款2笔，退款金额￥12.00，手续费￥400.00。</h4>
+        <h4>扎差后，商户应入账￥21.00 = (￥22.00 ) - (￥20.00 )</h4>
+        <h4><span>*</span>微信渠道应入账 = (微信订单总金额-退款总金额) - (消费总手续费-退款订单总手续费)，公式计算得到的值，小数点后两位直接舍去。</h4>
+    </div>
     <!--tab-->
     <div class=" top-style1">
         <div class="panel panel-default page-top">

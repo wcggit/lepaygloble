@@ -372,3 +372,15 @@
 .minShengJieSuanTrade .show-wrapper h4:nth-of-type(2){
     line-height: 80px;
 }
+.minShengJieSuanTrade .desc {
+    margin-top: 20px;
+}
+.minShengJieSuanTrade .desc h4 {
+    font-size: 14px;
+    color: #666;
+    line-height: 25px;
+}
+.minShengJieSuanTrade .desc h4 span{
+    margin-right: 10px;
+    color: #fb991a;
+}
