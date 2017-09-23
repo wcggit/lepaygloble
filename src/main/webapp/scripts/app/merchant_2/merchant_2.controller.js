@@ -53,6 +53,13 @@ angular.module('lepayglobleApp')
                 state:"lePlusCodeTrade",
                 icon:""
             },
+            ,{
+                contentState:"1",
+                clickState:"1",
+                name:"民生结算",
+                state:"minShengCodeTrade",
+                icon:""
+            },
             {
                 contentState:"1",
                 clickState:"1",

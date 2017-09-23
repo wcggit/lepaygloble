@@ -43,9 +43,8 @@
                 <hr>
                 <p class="ttl2">门店结算账户
                     <span class="select-style">
-                        <select class="form-control select-inline-block" ng-model="x" id="selMerchant"
-                                ng-change="getBankByMerchant()">
-                                <option value="{{m[0]}}" ng-repeat="m in merchants">{{m[1]}}</option>
+                        <select class="form-control select-inline-block" ng-model="selectDefault" id="selMerchant"
+                                ng-change="getBankByMerchant()" ng-options="m[0] as m[1] for m in merchants">
                                 <option value="" hidden></option>
                         </select>
                     </span>
