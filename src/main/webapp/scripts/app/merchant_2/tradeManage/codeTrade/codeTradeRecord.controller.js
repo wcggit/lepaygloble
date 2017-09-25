@@ -120,6 +120,7 @@ angular.module('lepayglobleApp')
             var payWay = $("#payWay").val();
             var orderType = $("#orderType").val();
             var orderSid = $("#orderSid").val();
+            var state = $("#orderState").val();
             if (payWay != null && payWay != '') {
                 codeOrderCriteria.payWay = payWay;
             } else {
@@ -134,6 +135,11 @@ angular.module('lepayglobleApp')
                 codeOrderCriteria.orderSid = orderSid;
             } else {
                 codeOrderCriteria.orderSid = null;
+            }
+            if (state != null && state != '') {
+                codeOrderCriteria.state = state;
+            } else {
+                codeOrderCriteria.state = null;
             }
             if ($("#completeDate").val() != null && $("#completeDate").val() != '') {
                 var completeDate = $("#completeDate").val().split("-");
@@ -162,6 +168,9 @@ angular.module('lepayglobleApp')
             }
             if (codeOrderCriteria.payWay != null) {
                 data += "&payWay=" + codeOrderCriteria.payWay;
+            }
+            if (codeOrderCriteria.state != null) {
+                data += "&state=" + codeOrderCriteria.state;
             }
             if ($("#selectStore").val() != null && $("#selectStore").val() != '') {
                 data += "&merchantId=" + $("#selectStore").val();

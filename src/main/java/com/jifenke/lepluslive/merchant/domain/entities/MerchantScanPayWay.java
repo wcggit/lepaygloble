@@ -1,14 +1,8 @@
 package com.jifenke.lepluslive.merchant.domain.entities;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  * 门店扫码支付方式 Created by zhangwen on 16/11/25.
@@ -22,7 +16,7 @@ public class MerchantScanPayWay {
     private Long id;
 
     @Column(nullable = false)
-    private Integer type = 1;  //扫码支付方式  0=富友结算|1=乐加结算|2=暂不开通|3=易宝结算
+    private Integer type = 1;  //扫码支付方式  0=富友结算|1=乐加结算|2=暂不开通|3=易宝结算|4=民生结算
 
     private Date createDate;
 

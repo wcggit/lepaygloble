@@ -6,7 +6,6 @@
                 <label>选择门店</label>
                 <div class="input-group col-md-6 select-style">
                     <select class="form-control" id="selMerchant">
-                        <option value="-1"></option>
                         <option value="{{m[0]}}" ng-repeat="m in merchants">{{m[1]}}</option>
                     </select>
                     <span class="select-jiao"></span>
@@ -22,15 +21,11 @@
     <hr>
     <!--表格信息总结-->
     <p class="ttl-add table-title">
-        以下<span style="color: #fb991a">3</span>家门店将合并到账，如需查看到账详情，可点击下方[查看详情]按钮
+        以下<span style="color: #fb991a">{{ledgerCount}}</span>家门店将合并到账，如需查看到账详情，可点击下方[查看详情]按钮
     </p>
     <p style="background-color: rgba(251, 153, 26, .2);padding: 12px 8px;color: #333;font-size: 14px">
-        一品江南时尚餐厅、温泉印象休闲洗浴中心、铝盒子健康时尚蒸饺
-    </p>
-    <p style="background-color: rgba(251, 153, 26, .2);padding: 12px 8px;color: #333" ng-show="ledgerCount>1">
         <span ng-repeat="name in ledgerNames">{{name}} / </span>
     </p>
-
     <!--tab-->
     <div class=" top-style1">
         <div class="panel panel-default page-top">
@@ -63,16 +58,18 @@
                 </thead>
                 <tbody>
                 <tr class="tr-empty"><td class="text-center" colspan="8" ng-show="pulls==null">暂无数据！</td></tr>
-                <tr>
-                    <td>{{dateBefores[$index]|date:'yyyy.MM.dd'}}</td>
-                    <td>待划款</td>
-                    <td>￥1.22</td>
-                    <td>￥1.22</td>
-                    <td>￥1.22</td>
-                    <td>￥1.22</td>
+                <tr ng-repeat="stl in pulls">
+                    <td>{{stl.settleDate}}</td>
+                    <td ng-if="stl.state==0">待划款</td>
+                    <td ng-if="stl.state==1">划款成功</td>
+                    <td ng-if="stl.state==2">已退回</td>
+                    <td>￥{{stl.wxActual/100.0}}</td>
+                    <td>￥{{stl.aliActual/100.0}}</td>
+                    <td>￥{{stl.leActual/100.0}}</td>
+                    <td>￥{{stl.totalActual/100.0}}</td>
                     <td>
-                        <p>{{lstl.accountName}}</p>
-                        <p>{{lstl.bankAccountNumber|limitTo:4}}**** **** ***{{lstl.bankAccountNumber|limitTo:-4}}</p>
+                        <p>{{stl.accName}}</p>
+                        <p>{{stl.accNo|limitTo:4}}**** **** ***{{stl.accNo|limitTo:-4}}</p>
                     </td>
                     <td><a ng-click="goDetail(lstl.ledgerNo,lstl.tradeDate,lstl.totalTransfer,lstl.state)">查看详情</a></td>
                 </tr>

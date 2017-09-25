@@ -1,10 +1,7 @@
 package com.jifenke.lepluslive.order.service;
 
-import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantWalletOnline;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.repository.ScanCodeOrderRepository;
@@ -175,7 +172,6 @@ public class ScanCodeOrderService {
                 if (orderCriteria.getState() != null) { //订单状态
                     predicate.getExpressions().add(cb.equal(r.get("state"), orderCriteria.getState()));
                 }
-
                 if (orderCriteria.getStartDate() != null && !""
                     .equals(orderCriteria.getStartDate())) {//交易完成时间
                     predicate.getExpressions().add(
@@ -193,19 +189,8 @@ public class ScanCodeOrderService {
                         cb.equal(r.<Merchant>get("orderSid"), orderCriteria.getOrderSid()));
                 }
                 if (orderCriteria.getOrderType() != null) {                     //订单类型
-                    if (orderCriteria.getOrderType() == 1) {
-                        predicate.getExpressions().add(
-                            cb.or(cb.equal(r.<Category>get("orderType"), "12004"),
-                                cb.equal(r.<Category>get("orderType"), "12005"))
-                        );
-                    }
-                    if (orderCriteria.getOrderType() == 0) {
-                        predicate.getExpressions().add(
-                            cb.or(cb.equal(r.<Category>get("orderType"), "12001"),
-                                cb.equal(r.<Category>get("orderType"), "12002"),
-                                cb.equal(r.<Category>get("orderType"), "12003"),
-                                cb.equal(r.<Category>get("orderType"), "12006"))
-                        );
+                    if (orderCriteria.getOrderType() == 1||orderCriteria.getOrderType() == 0) {
+                        predicate.getExpressions().add(cb.equal(r.<Category>get("scanCodeOrderExt").get("basicType"), orderCriteria.getOrderType()));
                     }
                 }
                 if(orderCriteria.getPayment()!=null&&!"".equals(orderCriteria.getPayment())) {
@@ -233,9 +218,9 @@ public class ScanCodeOrderService {
             return null;
         }
         if(scanCodeOrderCriteria.getOrderType()!=null && scanCodeOrderCriteria.getOrderType()==0) {        // 订单类型
-            sql.append(" and (so.order_type = 12001 or so.order_type = 12002 or so.order_type = 12003 or so.order_type = 12006) ");
+            sql.append(" and se.basic_type = 0 ");
         }else if(scanCodeOrderCriteria.getOrderType()!=null && scanCodeOrderCriteria.getOrderType()==1){
-            sql.append(" and (so.order_type = 12004 or so.order_type = 12005) ");
+            sql.append(" and se.basic_type = 1 ");
         }
         if(scanCodeOrderCriteria.getPayType()!=null) {          // 支付类型
             sql.append(" and se.pay_type = "+scanCodeOrderCriteria.getPayType());

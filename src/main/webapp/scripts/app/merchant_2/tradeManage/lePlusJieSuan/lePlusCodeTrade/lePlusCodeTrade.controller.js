@@ -19,9 +19,9 @@ angular.module('lepayglobleApp')
                 var data = response.data;
                 $scope.payway = data;
                 $scope.merchants = data.merchants;
-                if($stateParams.mid!=null) {
+                if ($stateParams.mid != null) {
                     $scope.defaultId = $stateParams.mid;
-                }else {
+                } else {
                     $scope.defaultId = data.merchants[0][0];
                 }
                 var merchant = {};
@@ -30,6 +30,8 @@ angular.module('lepayglobleApp')
                 var payWay = data["merchant-" + $scope.defaultId];    // 根据支付通道选择页面
                 if (payWay == 3) {                 // 易宝
                     $state.go("yiBaoCodeTrade", {mid: $scope.defaultId});
+                } else if (payWay == 4) {
+                    $state.go("minShengCodeTrade", {mid: $scope.defaultId});
                 } else {                           // 乐加
                     loadContent();
                 }
@@ -109,7 +111,7 @@ angular.module('lepayglobleApp')
             //  门店
             var merchant = {};
             var mid = $("#selMerchant").val();
-            if (mid!=null && mid!="") {
+            if (mid != null && mid != "") {
                 $scope.defaultId = mid;
                 merchant.id = mid;
                 financialCriteria.merchant = merchant;
@@ -156,32 +158,32 @@ angular.module('lepayglobleApp')
                 //  全部状态
                 case 0:
                     $scope.currentTab0 = true;
-                    financialCriteria.state=null;
+                    financialCriteria.state = null;
                     $scope.searchByDate();
                     break;
                 //  待划款
                 case 1:
                     $scope.currentTab1 = true;
                     $scope.ttlWarn1 = false;
-                    financialCriteria.state=0;
+                    financialCriteria.state = 0;
                     $scope.searchByDate();
                     break;
                 //  划款成功
                 case 2:
                     $scope.currentTab2 = true;
-                    financialCriteria.state=1;
+                    financialCriteria.state = 1;
                     $scope.searchByDate();
                     break;
                 //  已退回
                 default:
                     $scope.currentTab3 = true;
-                    financialCriteria.state=2;
+                    financialCriteria.state = 2;
                     $scope.searchByDate();
             }
         };
 
-        $scope.showDetail = function(tradeDate,mid) {
-            $state.go("lePlusOrderDetail", {tradeDate:tradeDate,mid: mid});
+        $scope.showDetail = function (tradeDate, mid) {
+            $state.go("lePlusOrderDetail", {tradeDate: tradeDate, mid: mid});
         }
 
 
