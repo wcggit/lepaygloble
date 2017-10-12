@@ -1,0 +1,163 @@
+<div class="yinshangDetail">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">
+            <span class="left-icon pull-left" ui-sref="POSBilling"></span>
+            <span ui-sref="POSBilling">银商POS结算记录 / </span>
+            <span class="current-page">银商结算详情</span>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="container detail">
+            <div class="row">
+                <div class="col-md-3">银商商户号：242423424</div>
+                <div class="col-md-3">商户名称：二二二二二二</div>
+                <div class="col-md-3">结算日期：2017-09-09</div>
+                <div class="col-md-3">交易日期：2017-09-09</div>
+                <div class="col-md-6">银行卡渠道<span>26</span>笔，交易余额<span>￥10000.00</span>，应到帐<span>￥1000.00</span></div>
+                <div class="col-md-6">微信支付宝渠道<span>26</span>笔，交易余额<span>￥10000.00</span>，应到帐<span>￥1000.00</span></div>
+            </div>
+        </div>
+        <!--查询表单-->
+        <form class="form-inline list-check">
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label>终端号</label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="form-group col-md-5">
+                    <label>流水号</label>
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label>订单类型</label>
+                    <div class="input-group col-md-5">
+                        <select class="form-control" id="payWay">
+                            <option value="">请选择</option>
+                            <option value="0">现金</option>
+                            <option value="1">鼓励金</option>
+                            <option value="2">现金+鼓励金</option>
+                        </select>
+                        <span class="select-jiao"></span>
+                    </div>
+                </div>
+                <div class="form-group col-md-5">
+                    <label>交易类型</label>
+                    <div class="input-group col-md-5">
+                        <select class="form-control">
+                            <option value="">请选择</option>
+                            <option value="0">现金</option>
+                            <option value="1">鼓励金</option>
+                            <option value="2">现金+鼓励金</option>
+                        </select>
+                        <span class="select-jiao"></span>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-check2" style="margin-left: 20px" ng-click="searchByCriteria()">查询</button>
+                </div>
+            </div>
+        </form>
+        <!--tab-->
+        <div class=" top-style1">
+            <div class="panel panel-default page-top">
+                <div class="panel-body">
+                    <ul class="nav nav-style">
+                        <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab(0)"><a>银行卡</a></li>
+                        <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab(1)"><a>微信支付宝</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--表格-->
+        <div class="panel panel-default" style="margin-top: 20px">
+            <table class="table ol-tab" ng-show="currentTab0">
+                <thead class="active">
+                <tr>
+                    <td>交易日期</td>
+                    <td>终端号</td>
+                    <td>流水号</td>
+                    <td>交易金额</td>
+                    <td>清算金额</td>
+                    <td>手续费</td>
+                    <td>交易类型</td>
+                    <td>卡号</td>
+                    <td>订单类型</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="tr-empty"><td class="text-center" colspan="9">暂无数据！</td></tr>
+                <tr>
+                    <td>
+                        <p>2017-08-08</p>
+                        <p>12:12:12</p>
+                    </td>
+                    <td>234234235</td>
+                    <td>234234235</td>
+                    <td>￥20.00</td>
+                    <td>￥20.00</td>
+                    <td>￥20.00</td>
+                    <td>消费</td>
+                    <td>1231*****1311</td>
+                    <td>普通订单</td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table ol-tab" ng-show="currentTab1">
+                <thead class="active">
+                <tr>
+                    <td>交易日期</td>
+                    <td>乐加订单号</td>
+                    <td>终端号</td>
+                    <td>流水号</td>
+                    <td>交易金额</td>
+                    <td>使用鼓励金</td>
+                    <td>结算金额</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="tr-empty"><td class="text-center" colspan="9">暂无数据！</td></tr>
+                <tr>
+                    <td>
+                        <p>2017-08-08</p>
+                        <p>12:12:12</p>
+                    </td>
+                    <td>234234235</td>
+                    <td>234234235</td>
+                    <td>234234235</td>
+                    <td>￥20.00</td>
+                    <td>￥20.00</td>
+                    <td>￥20.00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+            <a class="pull-right dcbg" href="#">导出表格</a>
+        </div>
+    </div>
+
+</div>

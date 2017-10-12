@@ -75,6 +75,13 @@ angular.module('lepayglobleApp')
             //     icon:""
             // },
             {
+                contentState:"1",
+                clickState:"1",
+                name:"POS账单",
+                state:"POSBilling",
+                icon:""
+            },
+            {
                 contentState:"0",
             },
             {
