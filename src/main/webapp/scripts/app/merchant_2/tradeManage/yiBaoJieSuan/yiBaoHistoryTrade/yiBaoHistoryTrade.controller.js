@@ -40,7 +40,6 @@ angular.module('lepayglobleApp')
             $state.go("lePlusOrderDetail", {tradeDate:tradeDate,mid: mid});
         }
 
-
         //  展示到账记录
         function loadContent() {
             $http.post('/api/financial', financialCriteria, {
@@ -162,5 +161,25 @@ angular.module('lepayglobleApp')
                     break;
             }
         };
+
+
+        //  导出表格
+        $scope.exportExcel = function() {
+            var data = "?";
+            if (financialCriteria.startDate != null) {
+                data += "startDate=" + financialCriteria.startDate + "&";
+                data += "endDate=" + financialCriteria.endDate;
+            }
+            if (financialCriteria.state != null) {
+                data += "&state=" + financialCriteria.state;
+            }
+            if ($("#selMerchant").val() != null && $("#selMerchant").val()!="") {
+                data += "&mid=" + $("#selMerchant").val();
+            } else if ($scope.defaultId != null && $scope.defaultId != '') {
+                data += "&mid=" + $scope.defaultId;
+            }
+            location.href = "/api/financial/export" + data;
+        }
+
     });
 

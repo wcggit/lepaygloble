@@ -27,7 +27,7 @@ public class ScanCodeOrderExt {
 
     private String merchantNum;  //该订单使用的通道子商户号
 
-    private Integer gatewayType; //通道类型 0 富有 1 易宝
+    private Integer gatewayType; //通道类型 0 富有 1 易宝 2=民生
 
     private Integer basicType = 0; //订单基础类型  0=普通订单|1=乐加订单
 

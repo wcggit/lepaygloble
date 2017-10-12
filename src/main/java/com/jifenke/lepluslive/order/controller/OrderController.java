@@ -12,7 +12,7 @@ import com.jifenke.lepluslive.order.domain.criteria.OLOrderCriteria;
 import com.jifenke.lepluslive.order.domain.criteria.OrderShareCriteria;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
-import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
+import com.jifenke.lepluslive.order.domain.criteria.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.service.*;
 import com.jifenke.lepluslive.security.SecurityUtils;
 import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
@@ -696,6 +696,37 @@ public class OrderController {
         }
     }
 
+
+    @RequestMapping(value = "/historyCodeTradeList/export", method = RequestMethod.GET)
+    public ModelAndView exporeHistoryExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = true) Long merchantId,
+                                           @RequestParam(required = false) Integer payWay, @RequestParam(required = false) Integer orderType, @RequestParam(required = false) String orderSid,
+                                           @RequestParam(required = false) String tradeDate,@RequestParam(required = false) Integer state) {
+        // 乐加结算
+        OLOrderCriteria olOrderCriteria = new OLOrderCriteria();
+        Merchant merchant = merchantService.findMerchantById(merchantId);
+        olOrderCriteria.setMerchant(merchant);
+        if (payWay != null && payWay == 0) {
+            olOrderCriteria.setPayWay(1L);
+        } else if (payWay != null && payWay == 1) {
+            olOrderCriteria.setPayWay(2L);
+        } else {
+            olOrderCriteria.setPayWay(null);
+        }
+        if(state==null) {
+            olOrderCriteria.setState(1);
+        }else {
+            olOrderCriteria.setState(state);
+        }
+        olOrderCriteria.setOrderSid(orderSid);
+        olOrderCriteria.setOrderType(orderType);
+        olOrderCriteria.setStartDate(startDate);
+        olOrderCriteria.setEndDate(endDate);
+        olOrderCriteria.setOffset(1);
+        Page page = offLineOrderService.findOrderByPage(olOrderCriteria, 1000);
+        Map map = new HashMap();
+        map.put("olOrderList", page.getContent());
+        return new ModelAndView(offLineOrderExcel, map);
+    }
     /***
      *  订单数据统计
      */

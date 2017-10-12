@@ -220,5 +220,23 @@ angular.module('lepayglobleApp')
             }, function (start, end, label) {
             });
 
+
+        $scope.exportExcel = function() {
+            var data = "?";
+            if (settlementCriteria.startDate != null) {
+                data += "startDate=" + settlementCriteria.startDate + "&";
+                data += "endDate=" + settlementCriteria.endDate;
+            }
+            if (settlementCriteria.state != null) {
+                data += "&state=" + settlementCriteria.state;
+            }
+            if ($("#selMerchant").val() != null && $("#selMerchant").val()!="") {
+                data += "&mid=" + $("#selMerchant").val();
+            } else if ($scope.defaultId != null && $scope.defaultId != '') {
+                data += "&mid=" + $scope.defaultId;
+            }
+            location.href = "/api/ledgerSettlement/export" + data;
+        }
+
     });
 

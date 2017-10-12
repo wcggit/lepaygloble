@@ -1,4 +1,4 @@
-package com.jifenke.lepluslive.order.domain.entities;
+package com.jifenke.lepluslive.order.domain.criteria;
 
 /**
  * 通道订单查询条件 Created by zhangwen on 16/12/19.
@@ -9,6 +9,8 @@ public class ScanCodeOrderCriteria {
 
     private String endDate;
 
+    private String settleDate;  //第三方支付完成时间(入账时间[第二天结算]：易宝格式：yyyy-MM-dd,富友：yyyyMMdd)
+
     private Integer payment;  ////付款方式  0=纯现金|1=纯红包|2=混合
 
     private String userSid; //消费者TOKEN
@@ -18,6 +20,17 @@ public class ScanCodeOrderCriteria {
     private String merchantName;  //门店名称=Merchant.name
 
     private Long merchantUserId;  //商户ID=MerchantUser.id
+
+    private Long merchantId;    //  门店ID
+
+    private String tradeDate;   //  交易日期
+
+    private Integer payType;    //  支付方式
+
+    private Integer gatewayType; //通道类型 0 富有 1 易宝 2=民生
+
+    private Integer basicType = 0; //订单基础类型  0=普通订单|1=乐加订单
+
 
     private Integer orderType; //订单类型6种=Category.id(12001~12006)
 
@@ -135,9 +148,6 @@ public class ScanCodeOrderCriteria {
         this.offset = offset;
     }
 
-    private Long merchantId;    //  门店ID
-    private String tradeDate;   //  交易日期
-    private Integer payType;    //  支付方式
 
     public Long getMerchantId() {
         return merchantId;
@@ -161,5 +171,29 @@ public class ScanCodeOrderCriteria {
 
     public void setPayType(Integer payType) {
         this.payType = payType;
+    }
+
+    public String getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(String settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    public Integer getGatewayType() {
+        return gatewayType;
+    }
+
+    public void setGatewayType(Integer gatewayType) {
+        this.gatewayType = gatewayType;
+    }
+
+    public Integer getBasicType() {
+        return basicType;
+    }
+
+    public void setBasicType(Integer basicType) {
+        this.basicType = basicType;
     }
 }

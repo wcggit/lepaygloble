@@ -24,14 +24,25 @@ public class CmbcSettlement {
     private long wxTotal;                   //微信订单总额
     private long wxCommision;               //微信订单总手续费
     private long wxActual;                  //微信订单入账
+    private long wxCount;                   //微信入账笔数
+    private long wxRefundCount;             //微信退款笔数
+    private long wxRefundTotal;             //微信退款总额
+    private long wxRefundCommision;         //微信退款总手续费
 
     private long aliTotal;                  //支付宝订单总额
     private long aliCommision;              //支付宝订单总手续费
     private long aliActual;                 //支付宝订单入账
+    private long aliCount;                  //支付宝入账笔数
+    private long aliRefundCount;            //支付宝退款笔数
+    private long aliRefundTotal;            //支付宝退款总额
+    private long aliRefundCommision;        //支付宝退款总手续费
 
     private long leTotal;                   //乐加通道交易总额
     private long leCommision;               //乐加通道交易总手续费
     private long leActual;                  //乐加通道交易总入账
+    private long leCount;                   //乐加通道入账笔数
+    private long leRefundCount;             //乐加通道退款笔数
+    private long leRefundTotal;             //乐加通道退款总额
 
     private long scoreTotal;                //使用红包总额
     private long scoreCommision;            //使用红包包总手续费
@@ -136,6 +147,50 @@ public class CmbcSettlement {
         this.state = state;
     }
 
+    public long getWxCount() {
+        return wxCount;
+    }
+
+    public long getWxRefundCount() {
+        return wxRefundCount;
+    }
+
+    public long getWxRefundTotal() {
+        return wxRefundTotal;
+    }
+
+    public long getWxRefundCommision() {
+        return wxRefundCommision;
+    }
+
+    public long getAliCount() {
+        return aliCount;
+    }
+
+    public long getAliRefundCount() {
+        return aliRefundCount;
+    }
+
+    public long getAliRefundTotal() {
+        return aliRefundTotal;
+    }
+
+    public long getAliRefundCommision() {
+        return aliRefundCommision;
+    }
+
+    public long getLeCount() {
+        return leCount;
+    }
+
+    public long getLeRefundCount() {
+        return leRefundCount;
+    }
+
+    public long getLeRefundTotal() {
+        return leRefundTotal;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -168,6 +223,22 @@ public class CmbcSettlement {
         this.wxActual = wxActual;
     }
 
+    public void setWxCount(long wxCount) {
+        this.wxCount = wxCount;
+    }
+
+    public void setWxRefundCount(long wxRefundCount) {
+        this.wxRefundCount = wxRefundCount;
+    }
+
+    public void setWxRefundTotal(long wxRefundTotal) {
+        this.wxRefundTotal = wxRefundTotal;
+    }
+
+    public void setWxRefundCommision(long wxRefundCommision) {
+        this.wxRefundCommision = wxRefundCommision;
+    }
+
     public void setAliTotal(long aliTotal) {
         this.aliTotal = aliTotal;
     }
@@ -180,6 +251,22 @@ public class CmbcSettlement {
         this.aliActual = aliActual;
     }
 
+    public void setAliCount(long aliCount) {
+        this.aliCount = aliCount;
+    }
+
+    public void setAliRefundCount(long aliRefundCount) {
+        this.aliRefundCount = aliRefundCount;
+    }
+
+    public void setAliRefundTotal(long aliRefundTotal) {
+        this.aliRefundTotal = aliRefundTotal;
+    }
+
+    public void setAliRefundCommision(long aliRefundCommision) {
+        this.aliRefundCommision = aliRefundCommision;
+    }
+
     public void setLeTotal(long leTotal) {
         this.leTotal = leTotal;
     }
@@ -190,6 +277,18 @@ public class CmbcSettlement {
 
     public void setLeActual(long leActual) {
         this.leActual = leActual;
+    }
+
+    public void setLeCount(long leCount) {
+        this.leCount = leCount;
+    }
+
+    public void setLeRefundCount(long leRefundCount) {
+        this.leRefundCount = leRefundCount;
+    }
+
+    public void setLeRefundTotal(long leRefundTotal) {
+        this.leRefundTotal = leRefundTotal;
     }
 
     public void setScoreTotal(long scoreTotal) {

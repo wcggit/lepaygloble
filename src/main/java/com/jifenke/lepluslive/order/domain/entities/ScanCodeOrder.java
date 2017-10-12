@@ -285,10 +285,6 @@ public class ScanCodeOrder {
         this.trueScore = trueScore;
     }
 
-    public Long getScoreB() {
-        return null;
-    }
-
     public Long getRebate() {
         return rebate;
     }

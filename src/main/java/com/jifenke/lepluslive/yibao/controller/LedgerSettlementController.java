@@ -3,6 +3,7 @@ package com.jifenke.lepluslive.yibao.controller;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.yibao.controller.view.LedgerSettlementExcel;
 import com.jifenke.lepluslive.yibao.domain.criteria.LedgerSettlementCriteria;
 import com.jifenke.lepluslive.yibao.domain.criteria.StoreSettlementCriteria;
 import com.jifenke.lepluslive.yibao.domain.entities.LedgerSettlement;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
@@ -44,6 +46,8 @@ public class LedgerSettlementController {
     @Inject
     private StoreSettlementService storeSettlementService;
 
+    @Inject
+    private LedgerSettlementExcel ledgerSettlementExcel;
 
     /***
      *  根据门店查询通道结算单  [到账记录]
@@ -152,5 +156,20 @@ public class LedgerSettlementController {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * 导出 Excel
+     * Created by xf on 2017-07-14.
+     */
+    @RequestMapping(value = "/ledgerSettlement/export", method = RequestMethod.POST)
+    public ModelAndView export(LedgerSettlementCriteria settlementCriteria) {
+        if (settlementCriteria.getOffset() == null) {
+            settlementCriteria.setOffset(1);
+        }
+        Page<LedgerSettlement> page = ledgerSettlementService.findByCriteria(settlementCriteria, 10000);
+        Map map = new HashMap();
+        map.put("ledgerSettlementList", page.getContent());
+        return new ModelAndView(ledgerSettlementExcel, map);
     }
 }

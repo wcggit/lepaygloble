@@ -49,9 +49,9 @@ public class CmbcSettlementService {
     }
 
 
-    public List<Map<String, Object>> listByCriteria(CmbcSettlementCriteria criteria) {
+    public List<Map<String, Object>> listByCriteria(CmbcSettlementCriteria criteria,Integer limit) {
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT id AS id,settle_date AS settleDate,wx_actual AS wxActual,ali_actual AS aliActual,total_actual AS totalActual,le_actual AS leActual,state AS state,acc_name AS accName,acc_no AS accNo FROM cmbc_settlement ");
+        sql.append("SELECT id AS id,settle_date AS settleDate,wx_actual AS wxActual,ali_actual AS aliActual,total_actual AS totalActual,le_actual AS leActual,state AS state,acc_name AS accName,acc_no AS accNo,cmbc_merchant_no AS cmbcMerchantNo FROM cmbc_settlement ");
         sql.append(" WHERE cmbc_merchant_no = '"+criteria.getCmbcMerchantNo()+"' ");
         if(criteria.getStartDate()!=null && !"".equals(criteria.getStartDate())) {
             String startDate = criteria.getStartDate().replace("/","-");
@@ -61,7 +61,7 @@ public class CmbcSettlementService {
         if(criteria.getState()!=null) {
             sql.append(" AND state = "+criteria.getState());
         }
-        sql.append(" ORDER BY id DESC LIMIT ").append((criteria.getOffset() - 1) * 10).append(",10");
+        sql.append(" ORDER BY id DESC LIMIT ").append((criteria.getOffset() - 1) * 10).append(","+limit);
         return sqlService.listBySql(sql.toString());
     }
 

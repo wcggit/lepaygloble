@@ -5,7 +5,7 @@
 
 
 angular.module('lepayglobleApp')
-    .controller('minShengCodeTradeController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, $stateParams,Trade) {
+    .controller('minShengCodeTradeController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, $stateParams) {
         var currentPage = null;
         var settlementCriteria = {};
         settlementCriteria.offset = 1;
@@ -49,7 +49,7 @@ angular.module('lepayglobleApp')
                     'Content-Type': 'application/json'
                 }
             }).success(function (response) {
-                console.log(JSON.stringify(response));
+                // console.log(JSON.stringify(response));
                 var page = response.data;
                 $scope.pulls = page.content;
                 $scope.page = currentPage;
@@ -113,9 +113,12 @@ angular.module('lepayglobleApp')
             }
         }
         // 跳转到详情页面
-        $scope.goDetail = function (ledgerNo,tradeDate,totalTransfer,transferState) {
+        $scope.goDetail = function (orderId,cmbcMerNo,settleDate,totalActual,transState) {
             $scope.$parent.currentTab = "minShengOrderDetail";
-            $state.go("minShengOrderDetail", {ledgerNo: ledgerNo,tradeDate:tradeDate,totalTransfer:totalTransfer,transferState:transferState});
+            $state.go("minShengOrderDetail", {orderId:orderId,cmbcMerNo: cmbcMerNo,settleDate:settleDate,totalActual:totalActual,transState:transState});
+        }
+        $scope.lookHistoryTrade = function () {
+            $state.go('yiBaoHistoryTrade');
         }
 
         $('#timePicker1')
@@ -142,6 +145,24 @@ angular.module('lepayglobleApp')
             }
             loadContent();
         };
+
+        $scope.exportExcel = function() {
+            var data = "?";
+            if (settlementCriteria.startDate != null) {
+                data += "startDate=" + settlementCriteria.startDate + "&";
+                data += "endDate=" + settlementCriteria.endDate;
+            }
+            if (settlementCriteria.state != null) {
+                data += "&state=" + settlementCriteria.state;
+            }
+            if ($("#selMerchant").val() != null && $("#selMerchant").val()!="") {
+                data += "&mid=" + $("#selMerchant").val();
+            } else if ($scope.defaultId != null && $scope.defaultId != '') {
+                data += "&mid=" + $scope.defaultId;
+            }
+            location.href = "/api/cmbcSettlement/export" + data;
+        }
+
 
     });
 

@@ -10,10 +10,11 @@ angular.module('lepayglobleApp')
                     authorities: ["merchant"]
                 },
                 params: {
-                    ledgerNo: null,
-                    tradeDate: null,
-                    totalTransfer:null,
-                    transferState:null
+                    orderId:null,
+                    cmbcMerNo: null,
+                    settleDate: null,
+                    totalActual:null,
+                    transState:null
                 },
                 views: {
                     'right-content@merchant_2': {

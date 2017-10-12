@@ -100,4 +100,12 @@ public interface ScanCodeOrderRepository extends JpaRepository<ScanCodeOrder,Str
     Page findAll(Specification<ScanCodeOrder> whereClause, Pageable pageRequest);
 
     ScanCodeOrder findByOrderSid(String orderSid);
+
+    /***
+     *  根据子商户号和日期统计订单数量
+     */
+    @Query(value=" SELECT COUNT(*) FROM scan_code_order so,scan_code_order_ext se " +
+        " WHERE so.scan_code_order_ext_id = se.id AND so.settle_date = ?1 AND  se.real_mer_num = ?2 and basic_type = ?3 ",nativeQuery = true)
+    Long countOrderByDateAndMerchantNo(String settleDate,String realMerNum,Integer basicType);
+
 }
