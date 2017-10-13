@@ -188,7 +188,7 @@ public class ScanCodeOrderService {
                         cb.equal(r.<Merchant>get("merchant").get("id"), orderCriteria.getMerchantId()));
                 }
                 if(orderCriteria.getGatewayType()!=null) {  // 通道方
-//                    predicate.getExpressions().add(cb.equal(r.<Merchant>get("scanCodeOrderExt").get("gatewayType"), orderCriteria.getGatewayType()));
+                    predicate.getExpressions().add(cb.equal(r.<Merchant>get("scanCodeOrderExt").get("gatewayType"), orderCriteria.getGatewayType()));
                 }
                 if (orderCriteria.getOrderSid() != null && !""
                     .equals(orderCriteria.getOrderSid())) { //OrderSID

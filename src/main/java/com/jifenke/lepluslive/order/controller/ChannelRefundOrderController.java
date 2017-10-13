@@ -36,7 +36,6 @@ public class ChannelRefundOrderController {
         }else {
             return LejiaResult.build(400, "无相关数据");
         }
-        refundCriteria.setTradeDate("2017-09-19");
         Page page = channelRefundOrderService.findByCriteria(refundCriteria, 50);
         return LejiaResult.ok(page);
     }

@@ -38,11 +38,12 @@
                 </ul>
             </div>
         </div>
-        <p class="ttl-add table-title">
+        <div class="ttl-add table-title" style="position: relative;line-height: 30px">
             每笔结算记录，对应三笔到账，分别是微信渠道普通订单、支付宝渠道普通订单、乐加订单，请注意查收。
-        </p>
+        <div class="btn btn-warning" ng-click="lookHistoryTrade()" style="position: absolute;top: 0;bottom: 0;right: 0;z-index:10;margin: auto">历史记录</div>
+        </div>
         <!--表格-->
-        <div class="panel panel-default"  style="margin-top: 20px">
+        <div class="panel panel-default">
             <table class="table ol-tab">
                 <thead class="active">
                 <tr>
@@ -76,8 +77,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="btn btn-warning" ng-click="lookHistoryTrade()">历史到账记录</div>
-        <a class="pull-right dcbg" ng-click="exportExcel()">导出表格</a>
+
         <!--分页-->
         <div class=" clearfix">
             <nav class="pull-right">
@@ -103,6 +103,7 @@
                         ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
                 </ul>
             </nav>
+            <a class="pull-right dcbg" ng-click="exportExcel()">导出表格</a>
         </div>
     </div>
 </div>

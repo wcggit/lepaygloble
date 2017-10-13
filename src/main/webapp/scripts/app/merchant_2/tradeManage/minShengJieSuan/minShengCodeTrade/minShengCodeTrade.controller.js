@@ -51,7 +51,11 @@ angular.module('lepayglobleApp')
             }).success(function (response) {
                 // console.log(JSON.stringify(response));
                 var page = response.data;
-                $scope.pulls = page.content;
+                if(page.content.length>0) {
+                    $scope.pulls = page.content;
+                }else {
+                    $scope.pulls = null;
+                }
                 $scope.page = currentPage;
                 $scope.totalPages = page.totalPages;
             });
