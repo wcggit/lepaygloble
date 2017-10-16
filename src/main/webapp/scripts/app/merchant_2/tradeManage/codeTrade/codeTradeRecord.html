@@ -67,7 +67,7 @@
 </form>
 <!--表格信息总结-->
 <div class="container-fluid row">
-    <p class="ttl-add table-title col-md-10">
+    <p class="ttl-add table-title">
         所选条件下，共有<span class="font-yellow" ng-bind="totalData[0][0]"></span>条交易记录，
         总流水<span class="font-yellow" ng-bind="'￥'+totalData[0][1]/100.0"></span>，
         实际到账<span class="font-yellow" ng-bind="'￥'+totalData[0][2]/100.0"></span>，
@@ -101,6 +101,7 @@
         <tr>
             <td>订单号</td>
             <td>交易门店</td>
+            <td>会员类型</td>
             <!--<td>消费者</td>-->
             <td>支付方式</td>
             <td>确认码</td>

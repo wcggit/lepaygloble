@@ -351,7 +351,7 @@
 .minShengJieSuanTrade .show-wrapper .show-item {
     flex: 1;
     -webkit-flex: 1;
-    padding: 10px;
+    padding: 20px 10px;
 }
 .minShengJieSuanTrade .show-wrapper .show-item:first-child{
     flex: 0 0 180px;
@@ -370,7 +370,7 @@
     color: #fb991a;
 }
 .minShengJieSuanTrade .show-wrapper h4:nth-of-type(2){
-    line-height: 80px;
+    line-height: 60px;
 }
 .minShengJieSuanTrade .desc {
     margin-top: 20px;
