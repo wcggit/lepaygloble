@@ -29,6 +29,8 @@ angular.module('lepayglobleApp')
                 if(payWay==3) {                 // 易宝
                     loadContent();
                     loadMerchantLedger($scope.defaultId);
+                }else if (payWay == 4) {
+                    $state.go("minShengCodeTrade", {mid: $scope.defaultId});
                 }else {                         // 乐加
                     $state.go("lePlusCodeTrade", {mid: $scope.defaultId});
                 }
@@ -109,6 +111,8 @@ angular.module('lepayglobleApp')
             var payWay = $scope.payway["merchant-"+$scope.defaultId];    // 根据支付通道选择页面
             if(payWay==3) {                 // 易宝
                 loadContent();
+            }else if (payWay == 4) {
+                $state.go("minShengCodeTrade", {mid: $scope.defaultId});
             }else {                         // 乐加
                 $state.go("lePlusCodeTrade", {mid: $scope.defaultId});
             }

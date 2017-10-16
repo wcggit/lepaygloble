@@ -126,6 +126,8 @@ angular.module('lepayglobleApp')
             var payWay = $scope.payway["merchant-" + mid];    // 根据支付通道选择页面
             if (payWay == 3) {                 // 易宝
                 $state.go("yiBaoCodeTrade", {mid: $scope.defaultId});
+            }else if (payWay == 4) {
+                $state.go("minShengCodeTrade", {mid: $scope.defaultId});
             } else {                           // 乐加
                 loadContent();
             }

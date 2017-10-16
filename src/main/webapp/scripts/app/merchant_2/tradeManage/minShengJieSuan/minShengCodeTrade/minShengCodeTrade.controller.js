@@ -27,6 +27,8 @@ angular.module('lepayglobleApp')
                 if(payWay==4) {                 // 易宝
                     loadContent();
                     loadMerchantLedger($scope.defaultId);
+                }else if(payWay==3) {
+                    $state.go("yiBaoCodeTrade", {mid: $scope.defaultId});
                 }else {                         // 乐加
                     $state.go("lePlusCodeTrade", {mid: $scope.defaultId});
                 }
