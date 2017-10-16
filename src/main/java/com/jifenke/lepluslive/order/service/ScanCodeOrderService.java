@@ -1,12 +1,9 @@
 package com.jifenke.lepluslive.order.service;
 
-import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantWalletOnline;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
-import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
+import com.jifenke.lepluslive.order.domain.criteria.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.repository.ScanCodeOrderRepository;
 import com.jifenke.lepluslive.weixin.domain.entities.Category;
 import org.springframework.data.domain.Page;
@@ -42,7 +39,8 @@ public class ScanCodeOrderService {
     private EntityManager em;
 
     /**
-     *  查询 扫码订单 富友结算
+     * 查询 扫码订单 富友结算
+     *
      * @param codeOrderCriteria
      * @return
      */
@@ -53,8 +51,8 @@ public class ScanCodeOrderService {
 
         StringBuffer sql = new StringBuffer();
         sql.append("select olo.order_sid,  m.name,  olo.payment,  olo.le_pay_code,  olo.complete_date,  olo.total_price,  olo.true_score,  c.type, "
-                   + " olo.transfer_money_from_true_pay,  olo.transfer_money_from_score,  ifnull(m.lj_commission,0),  olo.commission,  111  "
-                   + " from scan_code_order olo INNER JOIN merchant m ON olo.merchant_id = m.id INNER JOIN category c ON olo.order_type_id = c.id  where  ");
+            + " olo.transfer_money_from_true_pay,  olo.transfer_money_from_score,  ifnull(m.lj_commission,0),  olo.commission,  111  "
+            + " from scan_code_order olo INNER JOIN merchant m ON olo.merchant_id = m.id INNER JOIN category c ON olo.order_type_id = c.id  where  ");
         if (codeOrderCriteria.getStoreIds() != null) {
             sql.append(" olo.merchant_id in (");
             sql.append(codeOrderCriteria.getStoreIds()[0]);//改为单门店查询
@@ -72,7 +70,7 @@ public class ScanCodeOrderService {
             sql.append(" and olo.order_sid=");
             sql.append(codeOrderCriteria.getOrderSid());
         }
-        if(codeOrderCriteria.getState()!=null){
+        if (codeOrderCriteria.getState() != null) {
             sql.append(" and olo.state=");
             sql.append(codeOrderCriteria.getState());
         }
@@ -99,9 +97,9 @@ public class ScanCodeOrderService {
          */
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT sum(o.total_price) as totalPrice , sum(o.true_pay) as truePay , sum(o.true_score) as trueScore , \n" +
-                  " sum(o.transfer_money_from_true_pay) as transferMoneyFromTruePay , \n" +
-                  " sum(o.transfer_money_from_score) as transferMoneyHB, count(o.id) \n" +
-                  " from scan_code_order as o  INNER JOIN category c ON o.order_type_id = c.id where ");
+            " sum(o.transfer_money_from_true_pay) as transferMoneyFromTruePay , \n" +
+            " sum(o.transfer_money_from_score) as transferMoneyHB, count(o.id) \n" +
+            " from scan_code_order as o  INNER JOIN category c ON o.order_type_id = c.id where ");
         if (codeOrderCriteria.getStoreIds() != null) {
             sb.append(" o.merchant_id in (");
             sb.append(codeOrderCriteria.getStoreIds()[0]);//改为单门店查询
@@ -119,7 +117,7 @@ public class ScanCodeOrderService {
             sb.append(" and o.order_sid=");
             sb.append(codeOrderCriteria.getOrderSid());
         }
-        if(codeOrderCriteria.getState()!=null){
+        if (codeOrderCriteria.getState() != null) {
             sb.append(" and o.state=");
             sb.append(codeOrderCriteria.getState());
         }
@@ -143,9 +141,9 @@ public class ScanCodeOrderService {
         Integer listCount = Integer.valueOf(details.get(0)[5] == null ? "0" : details.get(0)[5].toString());
         codeOrderCriteria.setTotalCount(listCount);
         Integer pageSize = codeOrderCriteria.getPageSize();
-        if (listCount <= pageSize){
+        if (listCount <= pageSize) {
             codeOrderCriteria.setTotalPages(1);
-        }else {
+        } else {
             codeOrderCriteria.setTotalPages(listCount % pageSize == 0 ? listCount / pageSize : (listCount / pageSize) + 1);
         }
 
@@ -175,7 +173,9 @@ public class ScanCodeOrderService {
                 if (orderCriteria.getState() != null) { //订单状态
                     predicate.getExpressions().add(cb.equal(r.get("state"), orderCriteria.getState()));
                 }
-
+                if(orderCriteria.getSettleDate()!=null&&!"".equals(orderCriteria.getSettleDate())) {    // 结算时间
+                    predicate.getExpressions().add(cb.equal(r.get("settleDate"),orderCriteria.getSettleDate()));
+                }
                 if (orderCriteria.getStartDate() != null && !""
                     .equals(orderCriteria.getStartDate())) {//交易完成时间
                     predicate.getExpressions().add(
@@ -187,33 +187,25 @@ public class ScanCodeOrderService {
                     predicate.getExpressions().add(
                         cb.equal(r.<Merchant>get("merchant").get("id"), orderCriteria.getMerchantId()));
                 }
+                if(orderCriteria.getGatewayType()!=null) {  // 通道方
+//                    predicate.getExpressions().add(cb.equal(r.<Merchant>get("scanCodeOrderExt").get("gatewayType"), orderCriteria.getGatewayType()));
+                }
                 if (orderCriteria.getOrderSid() != null && !""
                     .equals(orderCriteria.getOrderSid())) { //OrderSID
                     predicate.getExpressions().add(
                         cb.equal(r.<Merchant>get("orderSid"), orderCriteria.getOrderSid()));
                 }
                 if (orderCriteria.getOrderType() != null) {                     //订单类型
-                    if (orderCriteria.getOrderType() == 1) {
-                        predicate.getExpressions().add(
-                            cb.or(cb.equal(r.<Category>get("orderType"), "12004"),
-                                cb.equal(r.<Category>get("orderType"), "12005"))
-                        );
-                    }
-                    if (orderCriteria.getOrderType() == 0) {
-                        predicate.getExpressions().add(
-                            cb.or(cb.equal(r.<Category>get("orderType"), "12001"),
-                                cb.equal(r.<Category>get("orderType"), "12002"),
-                                cb.equal(r.<Category>get("orderType"), "12003"),
-                                cb.equal(r.<Category>get("orderType"), "12006"))
-                        );
+                    if (orderCriteria.getOrderType() == 1 || orderCriteria.getOrderType() == 0) {
+                        predicate.getExpressions().add(cb.equal(r.<Category>get("scanCodeOrderExt").get("basicType"), orderCriteria.getOrderType()));
                     }
                 }
-                if(orderCriteria.getPayment()!=null&&!"".equals(orderCriteria.getPayment())) {
+                if (orderCriteria.getPayment() != null && !"".equals(orderCriteria.getPayment())) {
                     predicate.getExpressions().add(
                         cb.equal(r.<Merchant>get("scanCodeOrderExt").get("payment"), orderCriteria.getPayment()));
                 }
-                if(orderCriteria.getPayType()!=null && !"".equals(orderCriteria.getPayType())) {
-                    predicate.getExpressions().add(cb.equal(r.<Category>get("scanCodeOrderExt").get("payType"),orderCriteria.getPayType()));
+                if (orderCriteria.getPayType() != null && !"".equals(orderCriteria.getPayType())) {
+                    predicate.getExpressions().add(cb.equal(r.<Category>get("scanCodeOrderExt").get("payType"), orderCriteria.getPayType()));
                 }
                 return predicate;
             }
@@ -223,51 +215,61 @@ public class ScanCodeOrderService {
     /***
      *  根据条件查询订单流水和入账 - 交易记录【到账详情】
      */
-    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     public List<Object[]> findTotalDailyTransferAndIncome(ScanCodeOrderCriteria scanCodeOrderCriteria) {
-        String base = "select count(1),IFNULL(sum(so.total_price),0),IFNULL(sum(so.transfer_money_from_true_pay),0),IFNULL(sum(so.commission),0) from scan_code_order so,scan_code_order_ext se where so.scan_code_order_ext_id = se.id ";
+        String base = "select count(1),IFNULL(sum(so.total_price),0),IFNULL(sum(so.transfer_money),0),IFNULL(sum(so.commission),0) from scan_code_order so,scan_code_order_ext se where so.scan_code_order_ext_id = se.id ";
         StringBuffer sql = new StringBuffer(base);
-        if(scanCodeOrderCriteria.getMerchantId()!=null) {
-            sql.append(" and so.merchant_id = "+scanCodeOrderCriteria.getMerchantId());
-        }else {
+        if (scanCodeOrderCriteria.getMerchantId() != null) {
+            sql.append(" and so.merchant_id = " + scanCodeOrderCriteria.getMerchantId());
+        } else {
             return null;
         }
-        if(scanCodeOrderCriteria.getOrderType()!=null && scanCodeOrderCriteria.getOrderType()==0) {        // 订单类型
-            sql.append(" and (so.order_type = 12001 or so.order_type = 12002 or so.order_type = 12003 or so.order_type = 12006) ");
-        }else if(scanCodeOrderCriteria.getOrderType()!=null && scanCodeOrderCriteria.getOrderType()==1){
-            sql.append(" and (so.order_type = 12004 or so.order_type = 12005) ");
+        if (scanCodeOrderCriteria.getOrderType() != null && scanCodeOrderCriteria.getOrderType() == 0) {        // 订单类型
+            sql.append(" and se.basic_type = 0 ");
+        } else if (scanCodeOrderCriteria.getOrderType() != null && scanCodeOrderCriteria.getOrderType() == 1) {
+            sql.append(" and se.basic_type = 1 ");
         }
-        if(scanCodeOrderCriteria.getPayType()!=null) {          // 支付类型
-            sql.append(" and se.pay_type = "+scanCodeOrderCriteria.getPayType());
+        if (scanCodeOrderCriteria.getPayType() != null) {          // 支付类型
+            sql.append(" and se.pay_type = " + scanCodeOrderCriteria.getPayType());
         }
-        if(scanCodeOrderCriteria.getState()!=null) {
-            sql.append(" and so.state = "+scanCodeOrderCriteria.getState());
+        if (scanCodeOrderCriteria.getState() != null) {
+            sql.append(" and so.state = " + scanCodeOrderCriteria.getState());
         }
-        if(scanCodeOrderCriteria.getPayment()!=null) {          // 支付类型
-            sql.append(" and se.payment = "+scanCodeOrderCriteria.getPayment());
+        if (scanCodeOrderCriteria.getPayment() != null) {          // 支付类型
+            sql.append(" and se.payment = " + scanCodeOrderCriteria.getPayment());
         }
-        if(scanCodeOrderCriteria.getStartDate()!=null && scanCodeOrderCriteria.getEndDate()!=null) {
-            sql.append(" and so.complete_date between '"+scanCodeOrderCriteria.getStartDate()+"' and '"+scanCodeOrderCriteria.getEndDate()+"'");
+        if (scanCodeOrderCriteria.getStartDate() != null && scanCodeOrderCriteria.getEndDate() != null) {
+            sql.append(" and so.complete_date between '" + scanCodeOrderCriteria.getStartDate() + "' and '" + scanCodeOrderCriteria.getEndDate() + "'");
         }
         Query query_count = em.createNativeQuery(sql.toString());
         List<Object[]> details = query_count.getResultList();
         return details;
     }
 
-    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     public ScanCodeOrder findByOrderSid(String orderSid) {
         return repository.findByOrderSid(orderSid);
     }
 
     /**
-     *  根据门店统计订单金额
+     * 根据门店统计订单金额
      */
-    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     public Long countScanOrder(List<Merchant> merchants) {
         Long ledgerDailyCount = 0L;
         for (Merchant merchant : merchants) {
-            ledgerDailyCount+= repository.countDailyCount(merchant.getId());
+            ledgerDailyCount += repository.countDailyCount(merchant.getId());
         }
         return ledgerDailyCount;
     }
+
+    /**
+     * 根据日期和子商户号统计订单数量
+     */
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    public Long countOrderByDateAndMerchantNo(String settleDate, String realMerNum, Integer basicType) {
+        settleDate.replaceAll("-", "");
+        return repository.countOrderByDateAndMerchantNo(settleDate, realMerNum, basicType);
+    }
+
 }

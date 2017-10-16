@@ -79,14 +79,14 @@ public class ScanCodeOrderExcel extends AbstractExcelView {
                 .format(order.getCompleteDate()));
             excelRow.createCell(6)
                 .setCellValue(order.getTotalPrice() / 100.0);
-            excelRow.createCell(7).setCellValue(order.getTruePay()/100.0);
-            if (order.getOrderType()==12004L||order.getOrderType()==12005L) {
+            excelRow.createCell(7).setCellValue(order.getTransferMoney()/100.0);
+            if (order.getScanCodeOrderExt().getBasicType()==1) {
                 double result = (100-order.getScanCodeOrderExt().getMerchantRate().intValue())/10.0;
                 excelRow.createCell(8).setCellValue(result+"折");
             } else {
                 excelRow.createCell(8).setCellValue(order.getCommission()/100.0);
             }
-            if (order.getOrderType()==12004L||order.getOrderType()==12005L) {
+            if (order.getScanCodeOrderExt().getBasicType()==1) {
                 excelRow.createCell(9).setCellValue("乐加订单");
             } else {
                 excelRow.createCell(9).setCellValue("普通订单");

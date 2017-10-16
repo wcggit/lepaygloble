@@ -167,6 +167,6 @@ angular.module('lepayglobleApp')
             } else if ($scope.defaultId != null && $scope.defaultId != '') {
                 data += "&merchantId=" + $scope.defaultId;
             }
-            location.href = "/api/codeTradeList/export" + data;
+            location.href = "/api/historyCodeTradeList/export" + data;
         }
     })

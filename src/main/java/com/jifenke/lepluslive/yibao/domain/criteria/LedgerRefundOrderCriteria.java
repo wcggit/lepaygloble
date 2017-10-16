@@ -11,6 +11,7 @@ public class LedgerRefundOrderCriteria {
     private String completeEnd;    // 退款完成时间 - 结束
     private String merchantId;     // 交易门店ID
     private Integer orderType;     // 订单类型
+    private Integer payType;       // 支付方式 0-微信 1-支付宝
     private Integer state;         //退款状态 0=待退款，1=未开始退款，2=退款成功，3=退款失败，其他为通道返回码
     private String refundOrderSid; //己方退款单号
 
@@ -78,5 +79,13 @@ public class LedgerRefundOrderCriteria {
 
     public void setTradeDate(String tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+    public Integer getPayType() {
+        return payType;
+    }
+
+    public void setPayType(Integer payType) {
+        this.payType = payType;
     }
 }

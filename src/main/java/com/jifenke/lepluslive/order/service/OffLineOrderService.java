@@ -12,7 +12,6 @@ import com.jifenke.lepluslive.order.domain.entities.FinancialStatistic;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrderShare;
 import com.jifenke.lepluslive.order.repository.*;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,13 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -35,6 +27,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.*;
 
 /**
  * Created by wcg on 16/5/5.
@@ -814,7 +807,7 @@ public class OffLineOrderService {
          /***
          *  根据条件查询订单流水和入账 - 交易记录【到账详情】
          */
-            String base = " select count(1),IFNULL(sum(ol.total_price),0),IFNULL(sum(ol.transfer_money_from_true_pay),0),IFNULL(sum(ol.lj_commission),0)  from off_line_order ol,pay_way p where ol.pay_way_id = p.id  ";
+            String base = " select count(1),IFNULL(sum(ol.total_price),0),IFNULL(sum(ol.transfer_money),0),IFNULL(sum(ol.lj_commission),0)  from off_line_order ol,pay_way p where ol.pay_way_id = p.id  ";
             StringBuffer sql = new StringBuffer(base);
             if(olOrderCriteria.getMerchant()!=null && olOrderCriteria.getMerchant().getId()!=null) {
                 sql.append(" and ol.merchant_id = "+olOrderCriteria.getMerchant().getId());

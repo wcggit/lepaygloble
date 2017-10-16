@@ -1,12 +1,7 @@
 package com.jifenke.lepluslive.partner.domain.entities;
 
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  * Created by wcg on 16/6/22.
@@ -27,7 +22,7 @@ public class PartnerWalletLog {
 
   private Long afterChangeMoney; //改变后的金额
 
-  private Long type; //如果为1代表线下支付订单
+  private Long type; //如果为1代表线下支付订单 // 2 提现
 
   private Date createDate = new Date();
 

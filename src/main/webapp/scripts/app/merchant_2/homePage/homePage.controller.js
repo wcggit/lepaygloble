@@ -245,8 +245,8 @@ angular.module('lepayglobleApp')
 
         Tracker.receiveMerchantVoice().then(null, null, function (data) {//等待websocket发送消息
             HINT_SPEAK = data.body.split(",")[3].split(":")[1];
-            play_xiaoqi();
             $scope.refreshOrderList();
+            play_xiaoqi();
         });
 
     });

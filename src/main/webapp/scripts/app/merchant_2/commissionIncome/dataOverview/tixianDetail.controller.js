@@ -14,9 +14,13 @@ angular.module('lepayglobleApp')
         HomePage.getMerchantsInfo().then(function (response) {
             var data = response.data;
             $scope.merchants = data;
+            $scope.defaultId = data[0].id;
+            var merchant = {};
+            merchant.id = $scope.defaultId;
+            withDrawCriteria.merchant = merchant;
+            loadContent();
         });
 
-        loadContent();
 
         function loadContent() {
             $http.post('/withdraw/merchant_withdraw/findAll',withDrawCriteria).success(function(response){
@@ -49,7 +53,8 @@ angular.module('lepayglobleApp')
                 merchant.id = mid;
                 withDrawCriteria.merchant = merchant;
             }else {
-                withDrawCriteria.merchant = null;
+                merchant.id = $scope.defaultId;
+                withDrawCriteria.merchant = merchant;
             }
             // 状态
             var state = $("#selState").val();

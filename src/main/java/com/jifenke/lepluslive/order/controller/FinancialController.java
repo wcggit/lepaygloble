@@ -3,7 +3,6 @@ package com.jifenke.lepluslive.order.controller;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserResource;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.order.controller.view.FinancialViewExcel;
@@ -12,24 +11,12 @@ import com.jifenke.lepluslive.order.domain.entities.FinancialStatistic;
 import com.jifenke.lepluslive.order.service.FinanicalStatisticService;
 import com.jifenke.lepluslive.order.service.OffLineOrderService;
 import com.jifenke.lepluslive.security.SecurityUtils;
-
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.inject.Inject;
+import java.util.*;
 
 /**
  * Created by wcg on 16/6/17.
@@ -90,23 +77,25 @@ public class FinancialController {
     }*/
 
     @RequestMapping(value = "/financial/export", method = RequestMethod.GET)
-    public ModelAndView exporeExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) {
+    public ModelAndView exporeExcel(@RequestParam Long mid,@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) {
         FinancialCriteria financialCriteria = new FinancialCriteria();
         financialCriteria.setStartDate(startDate);
         financialCriteria.setEndDate(endDate);
         if (financialCriteria.getOffset() == null) {
             financialCriteria.setOffset(1);
         }
-        MerchantUser
-            merchantUserByName =
-            merchantService
-                .findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
-        financialCriteria.setMerchant(merchantUserByName.getMerchant());
+        if(mid!=null) {
+            Merchant merchant = merchantService.findMerchantById(mid);
+            financialCriteria.setMerchant(merchant);
+        }else {
+            return null;
+        }
         Page page = offLineOrderService.findFinancialByCirterial(financialCriteria, 10000);
         Map map = new HashMap();
         map.put("financialList", page.getContent());
         return new ModelAndView(financialViewExcel, map);
     }
+
 
     @RequestMapping(value = "/financial/dayTrade", method = RequestMethod.GET)
     public LejiaResult dayTrade(@RequestParam(required = false) String startDate,

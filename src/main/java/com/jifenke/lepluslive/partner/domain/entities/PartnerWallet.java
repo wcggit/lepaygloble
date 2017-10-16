@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import java.util.Date;
 
 /**
  * Created by wcg on 16/6/21.
@@ -15,107 +16,127 @@ import javax.persistence.Version;
 @Table(name = "PARTNER_WALLET")
 public class PartnerWallet {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  private Long availableBalance = 0L;
+    private Long availableBalance = 0L;
 
-  private Long totalMoney = 0L; //获取的总佣金
+    private Long totalMoney = 0L; //获取的总佣金
 
-  private Long totalWithdrawals = 0L;//已经提现总额
+    private Long totalWithdrawals = 0L;//已经提现总额
 
-  private Long availableScoreA = 0L; //可用红包
+    private Long availableScoreA = 0L; //可用红包
 
-  private Long availableScoreB = 0L;//可用积分
+    private Long availableScoreB = 0L;//可用积分
 
-  private Long totalScoreA = 0L; //累计红包
+    private Long totalScoreA = 0L; //累计红包
 
-  private Long totalScoreB = 0L;//累计积分
+    private Long totalScoreB = 0L;//累计积分
 
-  @OneToOne
-  private Partner partner;
+    private Date createDate = new Date();
 
-  @Version
-  private Long version = 0L;
+    private Date lastUpdate;  //最后更新时间
 
-  public Long getAvailableScoreA() {
-    return availableScoreA;
-  }
+    @OneToOne
+    private Partner partner;
 
-  public void setAvailableScoreA(Long availableScoreA) {
-    this.availableScoreA = availableScoreA;
-  }
+    @Version
+    private Long version = 0L;
 
-  public Long getAvailableScoreB() {
-    return availableScoreB;
-  }
+    public Long getAvailableScoreA() {
+        return availableScoreA;
+    }
 
-  public void setAvailableScoreB(Long availableScoreB) {
-    this.availableScoreB = availableScoreB;
-  }
+    public void setAvailableScoreA(Long availableScoreA) {
+        this.availableScoreA = availableScoreA;
+    }
 
-  public Long getTotalScoreA() {
-    return totalScoreA;
-  }
+    public Long getAvailableScoreB() {
+        return availableScoreB;
+    }
 
-  public void setTotalScoreA(Long totalScoreA) {
-    this.totalScoreA = totalScoreA;
-  }
+    public void setAvailableScoreB(Long availableScoreB) {
+        this.availableScoreB = availableScoreB;
+    }
 
-  public Long getTotalScoreB() {
-    return totalScoreB;
-  }
+    public Long getTotalScoreA() {
+        return totalScoreA;
+    }
 
-  public void setTotalScoreB(Long totalScoreB) {
-    this.totalScoreB = totalScoreB;
-  }
+    public void setTotalScoreA(Long totalScoreA) {
+        this.totalScoreA = totalScoreA;
+    }
 
-  public Partner getPartner() {
-    return partner;
-  }
+    public Long getTotalScoreB() {
+        return totalScoreB;
+    }
 
-  public void setPartner(Partner partner) {
-    this.partner = partner;
-  }
+    public void setTotalScoreB(Long totalScoreB) {
+        this.totalScoreB = totalScoreB;
+    }
 
-  public Long getVersion() {
-    return version;
-  }
+    public Partner getPartner() {
+        return partner;
+    }
 
-  public void setVersion(Long version) {
-    this.version = version;
-  }
+    public void setPartner(Partner partner) {
+        this.partner = partner;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Long getVersion() {
+        return version;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setVersion(Long version) {
+        this.version = version;
+    }
 
-  public Long getAvailableBalance() {
-    return availableBalance;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setAvailableBalance(Long availableBalance) {
-    this.availableBalance = availableBalance;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public Long getTotalMoney() {
-    return totalMoney;
-  }
+    public Long getAvailableBalance() {
+        return availableBalance;
+    }
 
-  public void setTotalMoney(Long totalMoney) {
-    this.totalMoney = totalMoney;
-  }
+    public void setAvailableBalance(Long availableBalance) {
+        this.availableBalance = availableBalance;
+    }
 
-  public Long getTotalWithdrawals() {
-    return totalWithdrawals;
-  }
+    public Long getTotalMoney() {
+        return totalMoney;
+    }
 
-  public void setTotalWithdrawals(Long totalWithdrawals) {
-    this.totalWithdrawals = totalWithdrawals;
-  }
+    public void setTotalMoney(Long totalMoney) {
+        this.totalMoney = totalMoney;
+    }
+
+    public Long getTotalWithdrawals() {
+        return totalWithdrawals;
+    }
+
+    public void setTotalWithdrawals(Long totalWithdrawals) {
+        this.totalWithdrawals = totalWithdrawals;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 }

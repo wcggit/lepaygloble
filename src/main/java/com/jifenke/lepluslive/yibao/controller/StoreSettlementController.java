@@ -3,14 +3,12 @@ package com.jifenke.lepluslive.yibao.controller;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
-import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
-import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrderCriteria;
+import com.jifenke.lepluslive.order.domain.criteria.ScanCodeOrderCriteria;
+import com.jifenke.lepluslive.order.service.ChannelRefundOrderService;
 import com.jifenke.lepluslive.order.service.ScanCodeOrderService;
 import com.jifenke.lepluslive.yibao.domain.criteria.LedgerRefundOrderCriteria;
-import com.jifenke.lepluslive.yibao.domain.entities.LedgerRefundOrder;
 import com.jifenke.lepluslive.yibao.domain.entities.MerchantLedger;
 import com.jifenke.lepluslive.yibao.domain.entities.MerchantUserLedger;
-import com.jifenke.lepluslive.yibao.domain.entities.StoreSettlement;
 import com.jifenke.lepluslive.yibao.service.LedgerRefundOrderService;
 import com.jifenke.lepluslive.yibao.service.MerchantLedgerService;
 import com.jifenke.lepluslive.yibao.service.StoreSettlementService;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.*;
 
 /**
@@ -43,6 +40,9 @@ public class StoreSettlementController {
 
     @Inject
     private MerchantLedgerService merchantLedgerService;
+
+    @Inject
+    private ChannelRefundOrderService channelRefundOrderService;
     /**
      *  根据门店查询子商户，及子商户下其他门店
      */
@@ -94,7 +94,6 @@ public class StoreSettlementController {
             return LejiaResult.build(400, "无相关数据");
         }
         Page page = scanCodeOrderService.findOrderByPage(detailCriteria, 10);
-
         return LejiaResult.ok(page);
     }
 
@@ -141,6 +140,9 @@ public class StoreSettlementController {
         if (refundCriteria.getMerchantId() == null) {
             return LejiaResult.build(400, "无相关数据");
         }
+        if(refundCriteria.getState()==null) {
+            refundCriteria.setState(2);
+        }
         // 设置前一天
         if(refundCriteria.getTradeDate()!=null && !"".equals(refundCriteria.getTradeDate())) {
             String tradeBefore = getTradeDateStrBefore(refundCriteria.getTradeDate());
@@ -149,13 +151,12 @@ public class StoreSettlementController {
             return LejiaResult.build(400, "无相关数据");
         }
         Map map = new HashMap();
-        Page page = ledgerRefundOrderService.findByCriteria(refundCriteria, 10);
+        Page page = channelRefundOrderService.findByCriteria(refundCriteria, 50);
         map.put("page",page);
-        Long dailyTotal = ledgerRefundOrderService.sumDailyTotalRefund(refundCriteria.getMerchantId(), refundCriteria.getTradeDate());
+        Long dailyTotal = channelRefundOrderService.sumDailyTotalRefund(refundCriteria.getMerchantId(), refundCriteria.getTradeDate());
         map.put("dailyTotal",dailyTotal==null?0:dailyTotal);
         map.put("dailyCount",page.getTotalElements());
         return LejiaResult.ok(map);
-
     }
 
 

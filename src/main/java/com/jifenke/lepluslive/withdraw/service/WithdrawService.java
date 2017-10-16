@@ -8,6 +8,13 @@ import com.jifenke.lepluslive.merchant.repository.MerchantWalletOnlineRepository
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletRepository;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserShopService;
+import com.jifenke.lepluslive.partner.domain.entities.*;
+import com.jifenke.lepluslive.partner.repository.PartnerWalletLogRepository;
+import com.jifenke.lepluslive.partner.repository.PartnerWalletOnlineLogRepository;
+import com.jifenke.lepluslive.partner.repository.PartnerWalletOnlineRepository;
+import com.jifenke.lepluslive.partner.repository.PartnerWalletRepository;
+import com.jifenke.lepluslive.partner.service.PartnerWalletOnlineService;
+import com.jifenke.lepluslive.partner.service.PartnerWalletService;
 import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
 import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
 import com.jifenke.lepluslive.withdraw.repository.WithdrawRepository;
@@ -54,7 +61,18 @@ public class WithdrawService {
     private MerchantUserResourceService merchantUserResourceService;
     @Inject
     private MerchantUserShopService merchantUserShopService;
-
+    @Inject
+    private PartnerWalletService partnerWalletService;
+    @Inject
+    private PartnerWalletLogRepository partnerWalletLogRepository;
+    @Inject
+    private PartnerWalletOnlineService partnerWalletOnlineService;
+    @Inject
+    private PartnerWalletOnlineLogRepository partnerWalletOnlineLogRepository;
+    @Inject
+    private PartnerWalletRepository partnerWalletRepository;
+    @Inject
+    private PartnerWalletOnlineRepository partnerWalletOnlineRepository;
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<WithdrawBill> findByMerchantId(Long id) {
@@ -222,6 +240,109 @@ public class WithdrawService {
         return true;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public boolean createPartnerWithDrawBill(Partner partner, Double amount) {
+        Double dbAmount = amount * 100;
+        Long withDrawAmount = dbAmount.longValue();
+        //  判断佣金总额是否大于提现金额
+        Long available = 0L;
+        PartnerWallet offWallet = partnerWalletService.findByPartner(partner);
+        PartnerWalletOnline onWallet = partnerWalletOnlineService.findByPartner(partner);
+        if (offWallet != null) {
+            available += offWallet.getAvailableBalance();
+        }
+        if (onWallet != null) {
+            available += onWallet.getAvailableBalance();
+        }
+        if (available < withDrawAmount) {
+            return false;
+        }
+        // 对账户可用余额进行修改
+        //  线下钱包
+        if (offWallet != null && withDrawAmount > 0) {
+            Long thisAva = offWallet.getAvailableBalance();
+            if (thisAva >= withDrawAmount) {                            // 如果当前余额满足
+                thisAva = thisAva - withDrawAmount;
+                withDrawAmount = 0L;
+                // 创建日志
+                PartnerWalletLog partnerWalletLog = new PartnerWalletLog();
+                partnerWalletLog.setCreateDate(new Date());
+                partnerWalletLog.setPartnerId(partner.getId());
+                partnerWalletLog.setBeforeChangeMoney(offWallet.getAvailableBalance());
+                partnerWalletLog.setAfterChangeMoney(thisAva);
+                partnerWalletLog.setType(15003L);
+                partnerWalletLogRepository.save(partnerWalletLog);
+                // 更改金额
+                offWallet.setAvailableBalance(thisAva);
+                offWallet.setLastUpdate(new Date());
+                partnerWalletRepository.save(offWallet);
+            } else {                                                  // 如果当前余额不足
+                withDrawAmount -= thisAva;
+                thisAva = 0L;
+                PartnerWalletLog partnerWalletLog = new PartnerWalletLog();
+                partnerWalletLog.setCreateDate(new Date());
+                partnerWalletLog.setPartnerId(partner.getId());
+                partnerWalletLog.setBeforeChangeMoney(offWallet.getAvailableBalance());
+                partnerWalletLog.setAfterChangeMoney(thisAva);
+                partnerWalletLog.setType(15003L);                   // 线下合伙人提现
+                partnerWalletLogRepository.save(partnerWalletLog);
+                offWallet.setAvailableBalance(thisAva);
+                offWallet.setLastUpdate(new Date());
+                partnerWalletRepository.save(offWallet);
+            }
+        }
+        //  线上钱包
+        if (onWallet != null && withDrawAmount > 0) {
+            Long thisAva = onWallet.getAvailableBalance();
+            if (thisAva >= withDrawAmount) {                            // 如果当前余额满足
+                thisAva = thisAva - withDrawAmount;
+                withDrawAmount = 0L;
+                // 创建日志
+                PartnerWalletOnlineLog partnerWalletOnlineLog = new PartnerWalletOnlineLog();
+                partnerWalletOnlineLog.setCreateDate(new Date());
+                partnerWalletOnlineLog.setPartnerId(partner.getId());
+                partnerWalletOnlineLog.setBeforeChangeMoney(onWallet.getAvailableBalance());
+                partnerWalletOnlineLog.setAfterChangeMoney(thisAva);
+                partnerWalletOnlineLog.setChangeMoney(onWallet.getAvailableBalance() - thisAva);
+                partnerWalletOnlineLog.setType(15003L);
+                partnerWalletOnlineLogRepository.save(partnerWalletOnlineLog);
+                // 更改金额
+                onWallet.setAvailableBalance(thisAva);
+                onWallet.setLastUpdate(new Date());
+                partnerWalletOnlineRepository.save(onWallet);
+            } else {                                                  // 如果当前余额不足
+                withDrawAmount -= thisAva;
+                thisAva = 0L;
+                PartnerWalletOnlineLog partnerWalletOnlineLog = new PartnerWalletOnlineLog();
+                partnerWalletOnlineLog.setCreateDate(new Date());
+                partnerWalletOnlineLog.setPartnerId(partner.getId());
+                partnerWalletOnlineLog.setBeforeChangeMoney(onWallet.getAvailableBalance());
+                partnerWalletOnlineLog.setAfterChangeMoney(thisAva);
+                partnerWalletOnlineLog.setChangeMoney(onWallet.getAvailableBalance() - thisAva);
+                partnerWalletOnlineLog.setType(15003L);
+                partnerWalletOnlineLogRepository.save(partnerWalletOnlineLog);
+                // 更改金额
+                onWallet.setAvailableBalance(thisAva);
+                onWallet.setLastUpdate(new Date());
+                partnerWalletOnlineRepository.save(onWallet);
+            }
+        }
+        //  生成订单实例
+        String randomBillSid = MvUtil.getOrderNumber();
+        WithdrawBill withdrawBill = new WithdrawBill();
+        withdrawBill.setPartner(partner);
+        withdrawBill.setBankNumber(partner.getBankNumber());
+        withdrawBill.setBankName(partner.getBankName());
+        withdrawBill.setBillType(1);
+        withdrawBill.setState(0);
+        withdrawBill.setWithdrawBillSid(randomBillSid);
+        withdrawBill.setPayee(partner.getPayee());
+        Long totalPrice = amount.intValue() * 100L;    //  RMB:积分  (比率)  1:100
+        withdrawBill.setTotalPrice(totalPrice);
+        withdrawBill.setCreatedDate(new Date());
+        withdrawRepository.save(withdrawBill);
+        return true;
+    }
     /***
      *  根据门店查询提现记录
      */
@@ -234,18 +355,8 @@ public class WithdrawService {
         }
         if(withdrawCriteria.getMerchant()!=null) {
             sql.append(" and merchant_id = "+withdrawCriteria.getMerchant().getId());
-        }else if(withdrawCriteria.getMerchantUser()!=null) {
-            sql.append(" and (");
-            List<MerchantUserShop> shops = merchantUserShopService.findByMerchantUser(withdrawCriteria.getMerchantUser());
-            for (int index=0;index<shops.size();index++) {
-                Merchant merchant = shops.get(index).getMerchant();
-                if(index+1==shops.size()) {
-                    sql.append("merchant_id = "+merchant.getId());
-                }else {
-                    sql.append("merchant_id = "+merchant.getId()+" or ");
-                }
-            }
-            sql.append(" ) ");
+        }else {
+            return null;
         }
         if(withdrawCriteria.getWithDrawStartDate()!=null && !"".equals(withdrawCriteria.getWithDrawStartDate())) {
             Date start = new Date(withdrawCriteria.getWithDrawStartDate());
@@ -270,18 +381,8 @@ public class WithdrawService {
         }
         if(withdrawCriteria.getMerchant()!=null) {
             sql.append(" and merchant_id = "+withdrawCriteria.getMerchant().getId());
-        }else if(withdrawCriteria.getMerchantUser()!=null) {
-            sql.append(" and (");
-            List<MerchantUserShop> shops = merchantUserShopService.findByMerchantUser(withdrawCriteria.getMerchantUser());
-            for (int index=0;index<shops.size();index++) {
-                Merchant merchant = shops.get(index).getMerchant();
-                if(index+1==shops.size()) {
-                    sql.append("merchant_id = "+merchant.getId());
-                }else {
-                    sql.append("merchant_id = "+merchant.getId()+" or ");
-                }
-            }
-            sql.append(") ");
+        }else {
+            return null;
         }
         if(withdrawCriteria.getWithDrawStartDate()!=null && !"".equals(withdrawCriteria.getWithDrawStartDate())) {
             Date start = new Date(withdrawCriteria.getWithDrawStartDate());

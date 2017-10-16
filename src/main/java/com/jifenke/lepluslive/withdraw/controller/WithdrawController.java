@@ -1,30 +1,26 @@
 package com.jifenke.lepluslive.withdraw.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
-import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.service.*;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 import com.jifenke.lepluslive.partner.service.PartnerManagerService;
 import com.jifenke.lepluslive.partner.service.PartnerService;
+import com.jifenke.lepluslive.partner.service.PartnerWalletService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
-import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
 import com.jifenke.lepluslive.withdraw.service.WithdrawService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by xf on 2016/9/18.
@@ -51,6 +47,8 @@ public class WithdrawController {
     private MerchantWalletOnlineService merchantWalletOnlineService;
     @Inject
     private MerchantUserService merchantUserService;
+    @Inject
+    private PartnerWalletService partnerWalletService;
 
     @RequestMapping(value = "/merchant_withdraw", method = RequestMethod.POST)
     public LejiaResult merchantWithDraw(HttpServletRequest request) {
@@ -83,30 +81,20 @@ public class WithdrawController {
     @RequestMapping(value = "/partner_withdraw", method = RequestMethod.POST)
     public LejiaResult partnerWithdraw(HttpServletRequest request) {
         try {
-            Long amount = new Long(request.getParameter("amount"));
+            Double amount = new Double(request.getParameter("amount"));
             //  查询合伙人信息 ，生成随机订单号
             Partner partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-            String randomBillSid = MvUtil.getOrderNumber();
-            //  生成订单实例
-            WithdrawBill withdrawBill = new WithdrawBill();
-            withdrawBill.setPartner(partner);
-            withdrawBill.setBankNumber(partner.getBankNumber());
-            withdrawBill.setBankName(partner.getBankName());
-            withdrawBill.setBillType(1);
-            withdrawBill.setState(0);
-            withdrawBill.setWithdrawBillSid(randomBillSid);
-            withdrawBill.setPayee(partner.getPayee());
-            Long totalPrice = amount * 100;
-            withdrawBill.setTotalPrice(totalPrice);
-            withdrawBill.setCreatedDate(new Date());
-            withdrawService.saveWithdrawBill(withdrawBill);
-            return LejiaResult.ok();
+            boolean result = withdrawService.createPartnerWithDrawBill(partner, amount);
+            if(result) {
+                return LejiaResult.ok();
+            }else {
+                return LejiaResult.build(400, "佣金余额不足！");
+            }
         } catch (Exception e) {
             String msg = "提现订单生成失败:" + e.getMessage();
             LOG.error(msg);
             return LejiaResult.build(400, msg);
         }
-
     }
 
     /**

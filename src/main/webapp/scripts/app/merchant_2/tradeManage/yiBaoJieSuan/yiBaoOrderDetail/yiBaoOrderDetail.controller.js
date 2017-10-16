@@ -73,12 +73,19 @@ angular.module('lepayglobleApp')
         }
         // 加载退款记录
         function loadRefundList() {
+            var refundMerchant =  $("#refundMerchant").val();
+            if(refundMerchant==null||refundMerchant=='') {
+                refundCriteria.merchantId = $scope.defaultId;
+            }else {
+                refundCriteria.merchantId = refundMerchant;
+            }
             $http.post('/api/settlement/refundList', refundCriteria, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }).success(function (response) {
                 var page = response.data.page;
+                console.log(JSON.stringify(page));
                 $scope.refundList = page.content;
                 $scope.page = currentPage;
                 $scope.totalPages = page.totalPages;
