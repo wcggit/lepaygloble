@@ -18,7 +18,7 @@ angular.module('lepayglobleApp')
                 });
                 $scope.loadCommissionDetailsInfo();
             } else {
-                alert("加载门店错误...");
+                // alert("加载门店错误...");
             }
         });
 
@@ -39,13 +39,17 @@ angular.module('lepayglobleApp')
             }
             $http.post("/api/commissionDetails/commissionDetailsByMerchantUser", commissionDetailsCriteria).success(function (response) {
                 if (response.status == 200) {
-                    $scope.commissionDetailsCriteria = response.data.commissionDetails;
+                    if(response.data.commissionDetails.length>0){
+                        $scope.commissionDetailsCriteria = response.data.commissionDetails;
+                    }else {
+                        $scope.commissionDetailsCriteria = null;
+                    }
                     $scope.commissionDetailsData = response.data;
                     $scope.totalPages = $scope.commissionDetailsData.totalPages;
                     $scope.consumeType = $scope.commissionDetailsData.consumeType;
                     $scope.page = currentPage;
                 } else {
-                    alert('加载佣金明细数据错误...');
+                    // alert('加载佣金明细数据错误...');
                 }
             });
         };

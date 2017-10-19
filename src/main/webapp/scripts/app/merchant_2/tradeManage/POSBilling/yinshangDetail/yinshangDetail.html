@@ -8,25 +8,25 @@
     </div>
     <div class="container-fluid">
         <div class="container detail">
-            <div class="row">
+           <!-- <div class="row">
                 <div class="col-md-3">银商商户号：242423424</div>
                 <div class="col-md-3">商户名称：二二二二二二</div>
                 <div class="col-md-3">结算日期：2017-09-09</div>
                 <div class="col-md-3">交易日期：2017-09-09</div>
                 <div class="col-md-6">银行卡渠道<span>26</span>笔，交易余额<span>￥10000.00</span>，应到帐<span>￥1000.00</span></div>
                 <div class="col-md-6">微信支付宝渠道<span>26</span>笔，交易余额<span>￥10000.00</span>，应到帐<span>￥1000.00</span></div>
-            </div>
+            </div>-->
         </div>
         <!--查询表单-->
         <form class="form-inline list-check">
-            <div class="row">
+           <!-- <div class="row">
                 <div class="form-group col-md-5">
                     <label>终端号</label>
-                    <input type="text" class="form-control">
+                    <input type="text" id="terminalNum" class="form-control">
                 </div>
                 <div class="form-group col-md-5">
                     <label>流水号</label>
-                    <input type="text" class="form-control">
+                    <input type="text" id="serialNum" class="form-control">
                 </div>
             </div>
             <div class="row">
@@ -55,7 +55,7 @@
                     </div>
                     <button type="button" class="btn btn-warning btn-check2" style="margin-left: 20px" ng-click="searchByCriteria()">查询</button>
                 </div>
-            </div>
+            </div>-->
         </form>
         <!--tab-->
         <div class=" top-style1">
@@ -84,21 +84,25 @@
                     <td>订单类型</td>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody ng-show="bankOrders==null">
                 <tr class="tr-empty"><td class="text-center" colspan="9">暂无数据！</td></tr>
-                <tr>
+                </tbody>
+                <tbody ng-show="bankOrders!=null">
+                <tr ng-repeat="order in bankOrders">
                     <td>
-                        <p>2017-08-08</p>
-                        <p>12:12:12</p>
+                        <p>{{order.createdAt|date:'yyyy-MM-dd'}}</p>
+                        <p>{{order.createdAt|date:'HH:mm:ss'}}</p>
                     </td>
-                    <td>234234235</td>
-                    <td>234234235</td>
-                    <td>￥20.00</td>
-                    <td>￥20.00</td>
-                    <td>￥20.00</td>
-                    <td>消费</td>
-                    <td>1231*****1311</td>
-                    <td>普通订单</td>
+                    <td>{{order.data.terminalNum}}</td>
+                    <td>{{order.data.serialNum}}</td>
+                    <td>￥{{order.data.tradeAmount}}</td>
+                    <td>￥{{order.data.settleAmount}}</td>
+                    <td>￥{{order.data.charge}}</td>
+                    <td ng-show="tradeType==0">消费</td>
+                    <td ng-show="tradeType==1">消费</td>
+                    <td>{{order.data.cardNum|limitTo:4}}*****{{order.data.cardNum|limitTo:-4}}</td>
+                    <td ng-show="order.orderType==0">普通订单</td>
+                    <td ng-show="order.orderType==1">乐加订单</td>
                 </tr>
                 </tbody>
             </table>
@@ -114,19 +118,21 @@
                     <td>结算金额</td>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody ng-show="importOrders==null">
                 <tr class="tr-empty"><td class="text-center" colspan="9">暂无数据！</td></tr>
-                <tr>
+                </tbody>
+                <tbody ng-show="importOrders!=null">
+                <tr ng-repeat="importOrder in importOrders">
                     <td>
-                        <p>2017-08-08</p>
-                        <p>12:12:12</p>
+                        <p>{{importOrder.createdAt|date:'yyyy-MM-dd'}}</p>
+                        <p>{{importOrder.createdAt|date:'HH:mm:ss'}}</p>
                     </td>
-                    <td>234234235</td>
-                    <td>234234235</td>
-                    <td>234234235</td>
-                    <td>￥20.00</td>
-                    <td>￥20.00</td>
-                    <td>￥20.00</td>
+                    <td>{{importOrder.data.id}}</td>
+                    <td>{{importOrder.data.terminalNum}}</td>
+                    <td>{{importOrder.data.serialNum}}</td>
+                    <td>￥{{importOrder.data.tradeAmount}}</td>
+                    <td>￥{{importOrder.data.charge}}</td>
+                    <td>￥{{importOrder.data.settleAmount}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -156,7 +162,7 @@
                         ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
                 </ul>
             </nav>
-            <a class="pull-right dcbg" href="#">导出表格</a>
+            <!--<a class="pull-right dcbg" href="#">导出表格</a>-->
         </div>
     </div>
 

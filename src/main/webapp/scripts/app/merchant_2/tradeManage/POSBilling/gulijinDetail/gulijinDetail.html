@@ -8,19 +8,20 @@
     </div>
     <div class="container-fluid">
         <div class="container detail">
-            <div class="row">
+           <!-- <div class="row">
                 <div class="col-md-4">商户名称：二二二二二二</div>
                 <div class="col-md-4">结算日期：2017-09-09</div>
                 <div class="col-md-4">交易日期：2017-09-09</div>
                 <div class="col-md-6">总到账<span>￥10000.00</span> 状态：未到账</div>
-            </div>
+            </div>-->
         </div>
         <!--tab-->
         <div class=" top-style1">
             <div class="panel panel-default page-top">
                 <div class="panel-body">
                     <ul class="nav nav-style">
-                        <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab(0)"><a>银商POS</a></li>
+                        <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab(0)"><a>银商POS</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -39,19 +40,23 @@
                     <td>结算金额</td>
                 </tr>
                 </thead>
-                <tbody>
-                <tr class="tr-empty"><td class="text-center" colspan="9">暂无数据！</td></tr>
-                <tr>
+                <tbody ng-show="posOrders==null">
+                <tr class="tr-empty">
+                    <td class="text-center" colspan="9">暂无数据！</td>
+                </tr>
+                </tbody>
+                <tbody ng-show="posOrders!=null">
+                <tr ng-repeat="order in posOrders">
                     <td>
-                        <p>2017-08-08</p>
-                        <p>12:12:12</p>
+                        <p>{{order.tradeDate|date:'yyyy-MM-dd'}}</p>
+                        <p>{{order.tradeDate|date:'HH:mm:ss'}}</p>
                     </td>
-                    <td>234234235</td>
-                    <td>234234235</td>
-                    <td>234234235</td>
-                    <td>￥20.00</td>
-                    <td>￥20.00</td>
-                    <td>￥20.00</td>
+                    <td>{{order.data.id}}</td>
+                    <td>{{order.data.terminalNum}}</td>
+                    <td>{{order.data.serialNum}}</td>
+                    <td>￥{{order.data.tradeAmount}}</td>
+                    <td>￥{{order.tradeAmount}}</td>
+                    <td>￥{{order.settleAmount}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -81,7 +86,7 @@
                         ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
                 </ul>
             </nav>
-            <a class="pull-right dcbg" href="#">导出表格</a>
+            <!--<a class="pull-right dcbg" href="#">导出表格</a>-->
         </div>
     </div>
 

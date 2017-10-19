@@ -10,8 +10,8 @@ angular.module('lepayglobleApp')
                     authorities: ["merchant"]
                 },
                 params: {
-                    mid: null,
-                    tradeDate: null
+                    merNum: null,
+                    settleDate: null
                 },
                 views: {
                     'right-content@merchant_2': {

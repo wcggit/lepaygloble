@@ -5,23 +5,19 @@ import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.merchant.controller.dto.PwdDto;
 import com.jifenke.lepluslive.merchant.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
-import com.jifenke.lepluslive.merchant.domain.entities.*;
-import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository;
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantScanPayWay;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantWeiXinUser;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserService;
 import com.jifenke.lepluslive.merchant.service.MerchantWeiXinUserService;
 import com.jifenke.lepluslive.order.service.MerchantScanPayWayService;
 import com.jifenke.lepluslive.security.SecurityUtils;
-import org.springframework.data.repository.query.RepositoryQuery;
-import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -52,6 +48,7 @@ public class MerchantUserController {
         merchantInfo.setMerchantName(merchantUser.getMerchantName());
         merchantInfo.setLinkMan(merchantUser.getLinkMan());
         merchantInfo.setCity(merchantUser.getCity());
+        merchantInfo.setId(merchantUser.getId());
         return LejiaResult.ok(merchantInfo);
     }
 

@@ -8,9 +8,9 @@
             <div class="row">
                 <div class="form-group col-md-5">
                     <label>结算日期</label>
-                    <input type="text" id="timePicker1" class="form-control" style="width:200px">
+                    <input type="text" id="settleDate" class="form-control" style="width:200px">
                 </div>
-                <button type="button" class="btn btn-warning btn-check2" ng-click="searchByDate()">查询</button>
+                <button type="button" class="btn btn-warning btn-check2" ng-click="searchSettlementByCriteria()">查询</button>
             </div>
         </form>
         <!--tab-->
@@ -40,18 +40,21 @@
                     <td>操作</td>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody ng-show="importSettlements==null">
                 <tr class="tr-empty"><td class="text-center" colspan="9">暂无数据！</td></tr>
-                <tr>
-                    <td>2017.08.08</td>
-                    <td>23423423534534534534</td>
-                    <td>王小二砂锅麻辣烫</td>
-                    <td>￥20.00</td>
-                    <td>￥20.00</td>
-                    <td>￥20.00</td>
-                    <td>￥20.00</td>
-                    <td>￥20.00</td>
-                    <td><a ng-click="yinshangshowDetail(financial.balanceDate,financial.merchant.id)">查看详情</a></td>
+                </tbody>
+                <tbody ng-show="importSettlements!=null">
+                <tr ng-repeat="imsel in importSettlements">
+                    <td>{{imsel.settleDate|limitTo:4}}-{{imsel.settleDate|limitTo:2:4}}-{{imsel.settleDate|limitTo:-2}}</td>
+                    <td>{{imsel.merNum}}</td>
+                    <td>{{imsel.merName}}</td>
+                    <td>{{imsel.pastNon}}</td>
+                    <td>￥{{imsel.tradeTransfer}}</td>
+                    <td>￥{{imsel.currentTransfer}}</td>
+                    <td>￥{{imsel.currentNon}}</td>
+                    <td>￥{{imsel.currentPay}}</td>
+                    <td>￥{{imsel.merchantUserId}}</td>
+                    <td><a ng-click="yinshangshowDetail(imsel.settleDate,imsel.merNum)">查看详情</a></td>
                 </tr>
                 </tbody>
             </table>
@@ -60,26 +63,30 @@
                 <tr>
                     <td>结算日期</td>
                     <td>门店名称</td>
-                    <td>银商POS鼓励金结算</td>
+                    <!--<td>银商POS鼓励金结算</td>-->
                     <td>总结算款</td>
                     <td>结算账户</td>
                     <td>状态</td>
                     <td>操作</td>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody ng-show="settlements==null">
                 <tr class="tr-empty"><td class="text-center" colspan="7">暂无数据！</td></tr>
-                <tr>
-                    <td>2017.08.08</td>
-                    <td>王小二砂锅麻辣烫</td>
-                    <td>￥20.00</td>
-                    <td>￥20.00</td>
+                </tbody>
+                <tbody ng-show="settlements!=null">
+                <tr ng-repeat="sel in settlements">
+                    <td>{{sel.tradeDate}}</td>
+                    <td>{{sel.merchantName}}</td>
+                    <!--<td>{{sel.trueScore}}</td>-->
+                    <td>{{sel.transferMoney}}</td>
                     <td>
-                        <p>王**</p>
-                        <p>1234**** **** ***5678</p>
+                        <p>{{sel.payee|limitTo:1}}**</p>
+                        <p>{{sel.bankNumber|limitTo:4}}**** **** ***{{sel.bankNumber|limitTo:-4}}</p>
                     </td>
-                    <td>未到账</td>
-                    <td><a ng-click="gulijinshowDetail(financial.balanceDate,financial.merchant.id)">查看详情</a></td>
+                    <td ng-show="sel.state==1">待转账</td>
+                    <td ng-show="sel.state==2">已转账</td>
+                    <td ng-show="sel.state==3">已挂账</td>
+                    <td><a ng-click="gulijinshowDetail(sel.tradeDate,sel.merchant.id)">查看详情</a></td>
                 </tr>
                 </tbody>
             </table>

@@ -59,9 +59,10 @@
                     <td>佣金收入</td>
                 </tr>
                 </thead>
-                <tbody>
-
-                <tr class="tr-empty"><td class="text-center" colspan="5" ng-show="commissionDetailsCriteria==null">暂无数据！</td></tr>
+                <tbody ng-show="commissionDetailsCriteria==null">
+                <tr class="tr-empty"><td class="text-center" colspan="5">暂无数据！</td></tr>
+                </tbody>
+                <tbody ng-show="commissionDetailsCriteria!=null">
                 <tr class="tr-noEmpty" ng-repeat="x in commissionDetailsCriteria" id="HaveData">
                     <td class="td-date">
                         <p ng-bind="x[0]|date:'yyyy-MM-dd'"></p>

@@ -6,7 +6,16 @@
 
 angular.module('lepayglobleApp')
     .controller('POSBillingController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http) {
-        $('#timePicker1').daterangepicker({
+        //  加载用户ID
+        var settlementCriteria = {};
+        var currentPage = 1;
+        $http.get('api/merchantUser').success(function (response) {
+            $scope.merchantUserId = response.data.id;
+            settlementCriteria.merchantUserId = $scope.merchantUserId;
+            loadImportSettlement()
+        });
+
+        $('#settleDate').daterangepicker({
             opens: 'right', //日期选择框的弹出位置
             format: 'YYYY/MM/DD', //控件中from和to 显示的日期格式
             ranges: {
@@ -15,11 +24,78 @@ angular.module('lepayglobleApp')
                 '最近30日': [moment().subtract('days', 29), moment()]
             },
         }, function (start, end, label) {
+
         });
 
+        $scope.searchSettlementByCriteria = function () {
+            var settleDate = $("#settleDate").val().split("-");
+            if (settleDate != null && settleDate.length > 0) {
+                var settleDate = $("#settleDate").val().split("-");
+                if (settleDate != null && settleDate.length > 0) {
+                    settlementCriteria.startDate = settleDate[0];
+                    settlementCriteria.endDate = settleDate[1];
+                }
+            }
+            currentPage=1;
+            settlementCriteria.offset=1;
+            if($scope.currentState==0) {
+                loadImportSettlement();
+            }else {
+                loadSettlement();
+            }
+        }
+
+        function loadSettlement() {
+            $http.post('/api/unionSettlement/findByCriteria', settlementCriteria, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function (response) {
+                var page = response.data;
+                $scope.page = currentPage;
+                $scope.totalPages = page.totalPages;
+                if(page.content.length>0)
+                $scope.settlements = page.content;
+            });
+        }
+
+        function loadImportSettlement() {
+            $http.post('/api/unionImportSettlement/findByCriteria', settlementCriteria, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function (response) {
+                var page = response.data;
+                $scope.page = currentPage;
+                $scope.totalPages = page.totalPages;
+                if(page.content.length>0)
+                $scope.importSettlements = page.content;
+            });
+        }
+
+        $scope.loadPage = function (page) {
+            if (page == 0) {
+                return;
+            }
+            if (page > $scope.totalPages) {
+                return;
+            }
+            if (currentPage == $scope.totalPages && page == $scope.totalPages) {
+                return;
+            }
+            if (currentPage == 1 && page == 1) {
+                return;
+            }
+            currentPage = page;
+            if($scope.currentState==0) {
+                loadImportSettlement();
+            }else {
+                loadSettlement();
+            }
+        };
 
         $scope.currentTab0 = true;
-        $scope.currentTab1 = $scope.currentTab2 = $scope.currentTab3 = false;
+        $scope.currentTab1 = false;
         $scope.priviousState = 0;
         $scope.currentState = 0;
         $scope.onClickTab = function (index) {
@@ -33,37 +109,19 @@ angular.module('lepayglobleApp')
                 case 1:
                     $scope.currentTab1 = false;
                     break;
-                case 2:
-                    $scope.currentTab2 = false;
-                    break;
-                default:
-                    $scope.currentTab3 = false;
             }
             switch ($scope.currentState) {
                 //  全部状态
                 case 0:
                     $scope.currentTab0 = true;
-                    financialCriteria.state = null;
-                    $scope.searchByDate();
+                    loadImportSettlement();
                     break;
                 //  待划款
                 case 1:
                     $scope.currentTab1 = true;
                     $scope.ttlWarn1 = false;
-                    financialCriteria.state = 0;
-                    $scope.searchByDate();
+                    loadSettlement();
                     break;
-                //  划款成功
-                case 2:
-                    $scope.currentTab2 = true;
-                    financialCriteria.state = 1;
-                    $scope.searchByDate();
-                    break;
-                //  已退回
-                default:
-                    $scope.currentTab3 = true;
-                    financialCriteria.state = 2;
-                    $scope.searchByDate();
             }
         };
 
@@ -73,5 +131,6 @@ angular.module('lepayglobleApp')
         $scope.gulijinshowDetail = function (tradeDate, mid) {
             $state.go("gulijinDetail", {tradeDate: tradeDate, mid: mid});
         }
+
 
     })

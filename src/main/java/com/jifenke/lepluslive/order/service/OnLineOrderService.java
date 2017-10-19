@@ -1,16 +1,14 @@
 package com.jifenke.lepluslive.order.service;
 
 import com.jifenke.lepluslive.merchant.domain.criteria.CommissionDetailsCriteria;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.List;
 
 /**
  * Created by tqy on 2016/12/19.
@@ -37,7 +35,7 @@ public class OnLineOrderService {
                    + " (select olos.create_date as complete_date,  olo.le_jia_user_id as user_id,  olos.lock_merchant_id as merchant_id, "
                    + " olo.total_price as total_price,  olo.true_price as true_pay,  olos.to_lock_merchant as share_ "
                    + " from on_line_order olo, on_line_order_share olos where olo.order_sid = olos.order_sid "
-                   + " and olo.state = 3 " //3已收货
+//                   + " and olo.state = 3 " //3已收货
                    + " and olo.pay_state = 1 "
                    + "");
         if (commissionDetailsCriteria.getMerchantId() != null) {
@@ -73,7 +71,7 @@ public class OnLineOrderService {
         StringBuffer sql = new StringBuffer();
         sql.append(" select count(olo.id), sum(olos.to_lock_merchant) "
                    + " from on_line_order olo, on_line_order_share olos where olo.order_sid = olos.order_sid "
-                   + " and olo.state = 3 " //3已收货
+//                   + " and olo.state = 3 " //3已收货
                    + " and olo.pay_state = 1 ");
         if (commissionDetailsCriteria.getMerchantId() != null) {
             sql.append(" and olos.lock_merchant_id = "+commissionDetailsCriteria.getMerchantId());

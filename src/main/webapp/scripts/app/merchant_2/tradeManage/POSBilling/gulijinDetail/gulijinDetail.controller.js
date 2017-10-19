@@ -6,8 +6,12 @@
 
 angular.module('lepayglobleApp')
     .controller('gulijinDetailController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, Trade, $stateParams) {
+        var unionPosOrderCriteria = {};
+        var currentPage = 1;
+        unionPosOrderCriteria.mid = $stateParams.mid;
+        unionPosOrderCriteria.tradeDate = $stateParams.tradeDate;
+        loadContent();
         $scope.currentTab0 = true;
-        $scope.currentTab1 = $scope.currentTab2 = $scope.currentTab3 = false;
         $scope.priviousState = 0;
         $scope.currentState = 0;
         $scope.onClickTab = function (index) {
@@ -18,40 +22,45 @@ angular.module('lepayglobleApp')
                 case 0:
                     $scope.currentTab0 = false;
                     break;
-                case 1:
-                    $scope.currentTab1 = false;
-                    break;
-                case 2:
-                    $scope.currentTab2 = false;
-                    break;
-                default:
-                    $scope.currentTab3 = false;
             }
             switch ($scope.currentState) {
                 //  全部状态
                 case 0:
                     $scope.currentTab0 = true;
-                    financialCriteria.state = null;
-                    $scope.searchByDate();
                     break;
-                //  待划款
-                case 1:
-                    $scope.currentTab1 = true;
-                    $scope.ttlWarn1 = false;
-                    financialCriteria.state = 0;
-                    $scope.searchByDate();
-                    break;
-                //  划款成功
-                case 2:
-                    $scope.currentTab2 = true;
-                    financialCriteria.state = 1;
-                    $scope.searchByDate();
-                    break;
-                //  已退回
-                default:
-                    $scope.currentTab3 = true;
-                    financialCriteria.state = 2;
-                    $scope.searchByDate();
             }
         };
+
+
+        $scope.loadPage = function (page) {
+            if (page == 0) {
+                return;
+            }
+            if (page > $scope.totalPages) {
+                return;
+            }
+            if (currentPage == $scope.totalPages && page == $scope.totalPages) {
+                return;
+            }
+            if (currentPage == 1 && page == 1) {
+                return;
+            }
+            currentPage = page;
+            loadContent();
+        };
+
+
+        function loadContent() {
+            $http.post('/api/unionPosOrder/findByCriteria', unionPosOrderCriteria, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function (response) {
+                var page = response.data;
+                $scope.page = currentPage;
+                $scope.totalPages = page.totalPages;
+                if (page.content.length > 0)
+                    $scope.posOrders = page.content;
+            });
+        }
     });
