@@ -50,13 +50,14 @@
                     <div class="list-detail pull-right"  ng-show="{{arr[6]==0}}">
                         <div class="list-info1 clearfix">
                             订单编号：{{arr[0]}}（确认码：{{arr[2]}}）
-                            <span class="pull-right dldd-font"  ng-show="arr[5]==1||arr[5]==3">乐加订单</span>
-                            <span class="pull-right hydd-font" ng-show="arr[5]==2||arr[5]==4||arr[5]==5||arr[5]==6">普通订单</span>
+                            <span class="pull-right dldd-font"  ng-show="arr[5]==0">乐加订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[5]==1">普通订单</span>
                         </div>
                         <div class="list-info2 clearfix">
                             <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
                             <span class="pull-left nickname">{{arr[7]}}</span>
                             <span class="pull-right pay-detail">付款:{{arr[3]/100.0+arr[4]/100.0}}元<span>（微信支付{{arr[3]/100.0}}元+{{arr[4]/100.0}}元红包）</span></span>
+                            <span class="pull-right pay-detail"  ng-show="arr[8]!=null&&arr[8]!=''" style="font-size: 16px;color: #444">买单桌号: {{arr[8]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         </div>
                         <div class="left-icon"></div>
                     </div>
@@ -85,13 +86,14 @@
                     <div class="list-detail pull-right">
                         <div class="list-info1 clearfix">
                             订单编号：{{arr[0]}}（确认码：{{arr[2]}}）
-                            <span class="pull-right dldd-font" ng-show="arr[1]==12004||arr[1]==12005">乐加订单</span>
-                            <span class="pull-right hydd-font" ng-show="arr[1]==12001||arr[1]==12002||arr[1]==12003||arr[1]==12006">普通订单</span>
+                            <span class="pull-right dldd-font" ng-show="arr[1]==1">乐加订单</span>
+                            <span class="pull-right hydd-font" ng-show="arr[1]==0">普通订单</span>
                         </div>
                         <div class="list-info2 clearfix">
                             <span class="pull-left face-img"><img src="../../../../assets/styles/images/merchant_2/homePage/mechantHeadPic.png" alt=""></span>
                             <span class="pull-left nickname">{{arr[5]}}</span>
                             <span class="pull-right pay-detail">交易金额:{{arr[3]/100.0}}元</span>
+                            <span class="pull-right pay-detail"  ng-show="arr[6]!=null&&arr[6]!=''" style="font-size: 16px;color: #444">买单桌号: {{arr[6]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         </div>
                         <div class="left-icon"></div>
                     </div>

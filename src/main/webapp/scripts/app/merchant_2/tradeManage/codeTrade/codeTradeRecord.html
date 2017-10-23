@@ -48,7 +48,7 @@
     <div class="row">
         <div class="form-group col-md-5">
             <label>订单号</label>
-            <input type="text" class="form-control" id="orderSid">
+            <input type="text" class="form-control" style="width: 60% !important;" id="orderSid">
         </div>
         <div class="form-group col-md-5">
             <label>订单状态</label>
@@ -66,7 +66,7 @@
 </form>
 <!--表格信息总结-->
 <div class="container-fluid row">
-    <p class="ttl-add table-title">
+    <p class="ttl-add table-title" style="float: left;width: 80%;">
         所选条件下，共有<span class="font-yellow" ng-bind="totalData[0][0]"></span>条交易记录，
         总流水<span class="font-yellow" ng-bind="'￥'+totalData[0][1]/100.0"></span>，
         实际到账<span class="font-yellow" ng-bind="'￥'+totalData[0][2]/100.0"></span>，
@@ -88,7 +88,7 @@
         手续费<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][3]/100.0}}</span><span
         class="font-yellow" ng-show="lejiaData==null">￥0</span>。
     </p>
-    <div class="col-md-2 clearfix" ng-show="payWay==3" style="padding-right: 0">
+    <div class="col-md-2 clearfix" ng-show="payWay==3" style="width: 20%;padding-right: 0">
         <div class="btn btn-warning btn-long pull-right" ng-click="historyTradeRecord()" style="margin-top: 27px">历史记录</div>
     </div>
 </div>
@@ -100,6 +100,7 @@
         <tr>
             <td>订单号</td>
             <td>交易门店</td>
+            <td>桌号</td>
             <td>支付方式</td>
             <td>确认码</td>
             <td>交易完成时间</td>
@@ -116,15 +117,17 @@
         <tr class="tr-noEmpty" ng-repeat="o in orderList" id="HaveData">
             <td ng-bind="o.orderSid"></td>
             <td ng-bind="o.merchant.name"></td>
+            <td ng-show="o.desk!=null&&o.desk!=''">{{o.desk}}</td>
+            <td ng-show="o.desk==null||o.desk==''">无</td>
             <td ng-bind="o.payWay.payWay"></td>
             <td ng-bind="o.lepayCode"></td>
             <td>
                 <p ng-bind="o.completeDate|date:'yyyy-MM-dd HH:mm:ss'"></p>
             </td>
             <td ng-bind="'¥'+o.totalPrice/100.0"></td>
-            <td ng-show="o.rebateWay==0||o.rebateWay==2||o.rebateWay==4||o.rebateWay==5||o.rebateWay==6"><p>普通订单</p>
+            <td ng-show="o.basicType==0"><p>普通订单</p>
             </td>
-            <td ng-show="o.rebateWay==3||o.rebateWay==1"><p>乐加订单</p></td>
+            <td ng-show="o.basicType==1"><p>乐加订单</p></td>
             <td>
                 <p ng-show="o.state=1">支付成功</p>
                 <p ng-show="o.state=0">未完成</p>
@@ -139,6 +142,8 @@
         <tr class="tr-noEmpty" ng-repeat="o in orderList">
             <td ng-bind="o.orderSid"></td>
             <td ng-bind="o.merchant.name"></td>
+            <td ng-show="o.desk!=null&&o.desk!=''">{{o.desk}}</td>
+            <td ng-show="o.desk==null||o.desk==''">无</td>
             <td ng-show="o.scanCodeOrderExt.payType==0">微信</td>
             <td ng-show="o.scanCodeOrderExt.payType==1">支付宝</td>
             <td ng-bind="o.lePayCode"></td>

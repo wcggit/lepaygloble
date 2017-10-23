@@ -4,16 +4,9 @@ import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 /**
  * Created by wcg on 16/5/5.
@@ -40,6 +33,10 @@ public class OffLineOrder {
 
     @ManyToOne
     private PayWay payWay;
+
+    private int basicType;//1=乐加订单|0=普通订单
+
+    private Integer payType = 0; //0代表微信 1 代表支付宝
 
     private Long totalPrice = 0L;
 
@@ -317,5 +314,32 @@ public class OffLineOrder {
 
     public void setShareMoney(Long shareMoney) {
         this.shareMoney = shareMoney;
+    }
+
+    @Column(length = 50)
+    private String desk;//桌号
+
+    public String getDesk() {
+        return desk;
+    }
+
+    public void setDesk(String desk) {
+        this.desk = desk;
+    }
+
+    public int getBasicType() {
+        return basicType;
+    }
+
+    public void setBasicType(int basicType) {
+        this.basicType = basicType;
+    }
+
+    public Integer getPayType() {
+        return payType;
+    }
+
+    public void setPayType(Integer payType) {
+        this.payType = payType;
     }
 }

@@ -81,12 +81,12 @@
 }
 
 .codeTrade table tr td:nth-of-type(2) {
-    width: 16%;
+    width: 15%;
     word-break: break-all;
 }
 
 .codeTrade table tr td:nth-of-type(3) {
-    width: 9%;
+    width: 10%;
 }
 
 .codeTrade table tr td:nth-of-type(4) {
@@ -98,11 +98,11 @@
 }
 
 .codeTrade table tr td:nth-of-type(6) {
-    width: 13%;
+    width: 12%;
 }
 
 .codeTrade table tr td:nth-of-type(7) {
-    width: 12%;
+    width: 10%;
 }
 
 .codeTrade table tr td:nth-of-type(8) {

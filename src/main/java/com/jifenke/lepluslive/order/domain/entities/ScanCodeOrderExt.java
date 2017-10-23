@@ -41,6 +41,9 @@ public class ScanCodeOrderExt {
 
     private String aliUserid; //当为支付宝支付时的userid
 
+    @Column(length = 50)
+    private String desk;//桌号
+
     public Long getId() {
         return id;
     }
@@ -151,5 +154,13 @@ public class ScanCodeOrderExt {
 
     public void setRealMerNum(String realMerNum) {
         this.realMerNum = realMerNum;
+    }
+
+    public String getDesk() {
+        return desk;
+    }
+
+    public void setDesk(String desk) {
+        this.desk = desk;
     }
 }

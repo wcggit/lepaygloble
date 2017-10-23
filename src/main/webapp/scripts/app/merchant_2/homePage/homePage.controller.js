@@ -84,9 +84,9 @@ angular.module('lepayglobleApp')
         $scope.findMore = function () {
             $scope.offset = $scope.offset + 1;
             var p = $scope.offset;
-            var selMerchant = $("#selMerchant").val();
+            var selMerchant = $scope.selectDefault;
             if (selMerchant == '' || selMerchant == null) {
-                $("#selMerchant").val($scope.firstSid);
+                selMerchant=$scope.firstSid;
                 return;
             } else {
                 HomePage.siglOpraBoardList(selMerchant, p).then(function (data) {  // 指定门店
