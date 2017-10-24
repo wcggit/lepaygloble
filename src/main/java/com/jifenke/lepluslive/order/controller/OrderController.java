@@ -391,7 +391,12 @@ public class OrderController {
         log.error("乐加订单到账： ------- * ------- * ------- 订单号 = " + sid);
         if (offLineOrder != null && checkDate(new Date(), offLineOrder.getCreatedDate())) {
             Merchant merchant = offLineOrder.getMerchant();
-            sendOrderMessage(merchant, "乐加支付到账" + offLineOrder.getTotalPrice() / 100.0 + "元");
+            String deskNo = offLineOrder.getDesk();
+            if(deskNo!=null&&!"".equals(deskNo)) {
+                sendOrderMessage(merchant, deskNo+"桌顾客买单成功,消费" + offLineOrder.getTotalPrice() / 100.0 + "元");
+            }else {
+                sendOrderMessage(merchant, "乐加支付到账" + offLineOrder.getTotalPrice() / 100.0 + "元");
+            }
         }
     }
 
@@ -401,7 +406,12 @@ public class OrderController {
         log.error("通道订单到账：------- * ------- * ------- 订单号 = " + sid);
         if (scanCodeOrder != null && checkDate(new Date(), scanCodeOrder.getCreatedDate())) {
             Merchant merchant = scanCodeOrder.getMerchant();
-            sendOrderMessage(merchant, "乐加支付到账" + scanCodeOrder.getTotalPrice() / 100.0 + "元");
+            String deskNo = scanCodeOrder.getScanCodeOrderExt().getDesk();
+            if(deskNo!=null&&!"".equals(deskNo)) {
+                sendOrderMessage(merchant, deskNo+"桌顾客买单成功,消费" + scanCodeOrder.getTotalPrice() / 100.0 + "元");
+            }else {
+                sendOrderMessage(merchant, "乐加支付到账" + scanCodeOrder.getTotalPrice() / 100.0 + "元");
+            }
         }
     }
 
