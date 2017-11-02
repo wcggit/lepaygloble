@@ -45,6 +45,7 @@ public class MerchantUserController {
         MerchantUser merchantUser =  merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
         MerchantUser merchantInfo = new MerchantUser();
         merchantInfo.setName(merchantUser.getName());
+        merchantInfo.setMerchantSid(merchantUser.getPassword());            // 连接
         merchantInfo.setMerchantName(merchantUser.getMerchantName());
         merchantInfo.setLinkMan(merchantUser.getLinkMan());
         merchantInfo.setCity(merchantUser.getCity());

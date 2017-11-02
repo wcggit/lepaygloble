@@ -206,7 +206,7 @@ public class PartnerController {
     public
     @ResponseBody
     LejiaResult getMerchantBySid(@RequestParam String sid) {
-        Merchant merchant = merchantService.findmerchantBySid(sid);
+        Merchant merchant = merchantService.findMerchantByMerchantSid(sid);
         Partner
             partner =
             partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
@@ -220,7 +220,7 @@ public class PartnerController {
     public
     @ResponseBody
     LejiaResult getMerchantUserBySid(@RequestParam String sid) {
-        Merchant merchant = merchantService.findmerchantBySid(sid);
+        Merchant merchant = merchantService.findMerchantByMerchantSid(sid);
         Partner
             partner =
             partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
@@ -250,7 +250,7 @@ public class PartnerController {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String sid = request.getParameter("sid");
-        Merchant merchant = merchantService.findmerchantBySid(sid);
+        Merchant merchant = merchantService.findMerchantByMerchantSid(sid);
         merchantService.createMerchantUser(merchant, username, password);
         return LejiaResult.ok("创建成功");
     }

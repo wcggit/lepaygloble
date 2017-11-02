@@ -19,6 +19,7 @@ angular.module('lepayglobleApp')
         $http.get('api/merchantUser').success(function (response) {
             $scope.shopName = response.data.merchantName;
             $scope.loginName = response.data.name;
+            $scope.loginToken = response.data.merchantSid;
         });
         //  LOGOUT
         $scope.logout = function () {
@@ -159,6 +160,24 @@ angular.module('lepayglobleApp')
         }
         $scope.isActiveTab=function (tab) {
             return tab==$scope.currentTab;
+        }
+
+        // 跳转页面
+        $scope.toCouponSystem = function () {
+                var form = $("<form></form>");
+                form.attr('action', "http://b.lepluspay.com/login");//请求地址
+                form.attr('method', 'post');
+                form.attr('target', '_self');
+
+                var input1 = $("<input type='hidden' name='username' />");
+                input1.val($scope.loginName);
+                form.append(input1);
+                var input2 = $("<input type='hidden' name='password' />");
+                input2.val($scope.loginToken);
+                form.append(input2);
+                form.appendTo("body");
+                form.css('display', 'none');
+                form.submit();
         }
 
     })

@@ -11,26 +11,22 @@ import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.lejiauser.repository.RegisterOriginRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.repository.*;
-import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.order.repository.MerchantScanPayWayRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
-import com.jifenke.lepluslive.security.SecurityUtils;
 import com.jifenke.lepluslive.weixin.repository.WeiXinUserRepository;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 /**
  * Created by wcg on 16/3/17.
@@ -178,8 +174,8 @@ public class MerchantService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Merchant findmerchantBySid(String sid) {
-        return merchantRepository.findMerchantUserBySid(sid);
+    public Merchant findMerchantByMerchantSid(String sid) {
+        return merchantRepository.findByMerchantSid(sid);
     }
 
     public List<MerchantUser> findMerchantUserByMerchant(Merchant merchant) {
@@ -197,7 +193,7 @@ public class MerchantService {
         }
         merchant.setSid((int) merchantRepository.count());
         String merchantSid = MvUtil.getMerchantSid();
-        while (merchantRepository.findMerchantUserBySid(merchantSid) != null) {
+        while (merchantRepository.findByMerchantSid(merchantSid) != null) {
             merchantSid = MvUtil.getMerchantSid();
         }
         merchant.setMerchantSid(merchantSid);

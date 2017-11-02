@@ -45,7 +45,7 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
 
     Long countByPartnerAndPartnershipNot(Partner partner, Integer partnerShip);
 
-    Merchant findMerchantUserBySid(String sid);
+    Merchant findByMerchantSid(String merchantSid);
 
     /***
      * 根据门店查询数据 (乐加)
