@@ -34,9 +34,9 @@ public class OffLineOrder {
     @ManyToOne
     private PayWay payWay;
 
-    private int basicType;//1=乐加订单|0=普通订单
+    private int basicType;      // 0=普通订单  1=乐加订单
 
-    private Integer payType = 0; //0代表微信 1 代表支付宝
+    private Integer payType = 0; // 0代表微信 1 代表支付宝
 
     private Long totalPrice = 0L;
 

@@ -392,9 +392,9 @@ public class OrderController {
         if (offLineOrder != null && checkDate(new Date(), offLineOrder.getCreatedDate())) {
             Merchant merchant = offLineOrder.getMerchant();
             String deskNo = offLineOrder.getDesk();
-            if(deskNo!=null&&!"".equals(deskNo)) {
-                sendOrderMessage(merchant, deskNo+"桌顾客买单成功,消费" + offLineOrder.getTotalPrice() / 100.0 + "元");
-            }else {
+            if (deskNo != null && !"".equals(deskNo)) {
+                sendOrderMessage(merchant, deskNo + "桌顾客买单成功,消费" + offLineOrder.getTotalPrice() / 100.0 + "元");
+            } else {
                 sendOrderMessage(merchant, "乐加支付到账" + offLineOrder.getTotalPrice() / 100.0 + "元");
             }
         }
@@ -407,9 +407,9 @@ public class OrderController {
         if (scanCodeOrder != null && checkDate(new Date(), scanCodeOrder.getCreatedDate())) {
             Merchant merchant = scanCodeOrder.getMerchant();
             String deskNo = scanCodeOrder.getScanCodeOrderExt().getDesk();
-            if(deskNo!=null&&!"".equals(deskNo)) {
-                sendOrderMessage(merchant, deskNo+"桌顾客买单成功,消费" + scanCodeOrder.getTotalPrice() / 100.0 + "元");
-            }else {
+            if (deskNo != null && !"".equals(deskNo)) {
+                sendOrderMessage(merchant, deskNo + "桌顾客买单成功,消费" + scanCodeOrder.getTotalPrice() / 100.0 + "元");
+            } else {
                 sendOrderMessage(merchant, "乐加支付到账" + scanCodeOrder.getTotalPrice() / 100.0 + "元");
             }
         }
@@ -583,18 +583,19 @@ public class OrderController {
             return LejiaResult.build(400, "无数据");
         } else {
             MerchantScanPayWay scanPayWay = merchantScanPayWayService.findByMerchant(codeOrderCriteria.getMerchant().getId());
-            if (scanPayWay.getType() == 3||scanPayWay.getType()==4) {
+            if (scanPayWay.getType() == 3 || scanPayWay.getType() == 4) {
                 // 3=易宝结算  4=民生结算
                 ScanCodeOrderCriteria scanCodeOrderCriteria = new ScanCodeOrderCriteria();
                 scanCodeOrderCriteria.setMerchantId(codeOrderCriteria.getMerchant().getId());
+                scanCodeOrderCriteria.setPayType(codeOrderCriteria.getPayType());
                 scanCodeOrderCriteria.setPayment(codeOrderCriteria.getPayWay());
                 scanCodeOrderCriteria.setOrderSid(codeOrderCriteria.getOrderSid());
                 scanCodeOrderCriteria.setOrderType(codeOrderCriteria.getOrderType());
                 scanCodeOrderCriteria.setStartDate(codeOrderCriteria.getStartDate());
                 scanCodeOrderCriteria.setEndDate(codeOrderCriteria.getEndDate());
-                if(codeOrderCriteria.getState()==null) {
+                if (codeOrderCriteria.getState() == null) {
                     scanCodeOrderCriteria.setState(1);
-                }else {
+                } else {
                     scanCodeOrderCriteria.setState(codeOrderCriteria.getState());
                 }
                 if (codeOrderCriteria.getOffset() == null) {
@@ -611,18 +612,13 @@ public class OrderController {
                 // 乐加结算
                 OLOrderCriteria olOrderCriteria = new OLOrderCriteria();
                 olOrderCriteria.setMerchant(codeOrderCriteria.getMerchant());
-                if(olOrderCriteria.getState()==null) {
+                if (olOrderCriteria.getState() == null) {
                     olOrderCriteria.setState(1);
-                }else {
+                } else {
                     olOrderCriteria.setState(codeOrderCriteria.getState());
                 }
-                if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 0) {
-                    olOrderCriteria.setPayWay(1L);
-                } else if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 1) {
-                    olOrderCriteria.setPayWay(2L);
-                } else {
-                    olOrderCriteria.setPayWay(null);
-                }
+                olOrderCriteria.setPayWay(codeOrderCriteria.getPayWay());
+                olOrderCriteria.setPayType(codeOrderCriteria.getPayType());
                 olOrderCriteria.setOrderSid(codeOrderCriteria.getOrderSid());
                 olOrderCriteria.setOrderType(codeOrderCriteria.getOrderType());
                 olOrderCriteria.setStartDate(codeOrderCriteria.getStartDate());
@@ -644,7 +640,7 @@ public class OrderController {
     @RequestMapping(value = "/codeTradeList/export", method = RequestMethod.GET)
     public ModelAndView exporeExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = true) Long merchantId,
                                     @RequestParam(required = false) Integer payWay, @RequestParam(required = false) Integer orderType, @RequestParam(required = false) String orderSid,
-                                    @RequestParam(required = false) String tradeDate,@RequestParam(required = false) Integer state) {
+                                    @RequestParam(required = false) String tradeDate, @RequestParam(required = false) Integer state) {
         MerchantScanPayWay scanPayWay = merchantScanPayWayService.findByMerchant(merchantId);
         if (scanPayWay.getType() == 3) {
             // 易宝结算
@@ -654,22 +650,22 @@ public class OrderController {
             scanCodeOrderCriteria.setOrderSid(orderSid);
             scanCodeOrderCriteria.setOrderType(orderType);
             if (tradeDate != null && !"".equals(tradeDate)) {
-                try{
+                try {
                     Date tradeDateBefore = getTradeDateStrBefore(tradeDate);
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
                     String tradeDateStr = sdf.format(tradeDateBefore);
-                    scanCodeOrderCriteria.setStartDate(tradeDateStr+" 00:00:00");
-                    scanCodeOrderCriteria.setEndDate(tradeDateStr+" 23:59:59");
-                }catch (Exception e) {
+                    scanCodeOrderCriteria.setStartDate(tradeDateStr + " 00:00:00");
+                    scanCodeOrderCriteria.setEndDate(tradeDateStr + " 23:59:59");
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 scanCodeOrderCriteria.setStartDate(startDate);
                 scanCodeOrderCriteria.setEndDate(endDate);
             }
-            if(state==null) {
+            if (state == null) {
                 scanCodeOrderCriteria.setState(1);
-            }else {
+            } else {
                 scanCodeOrderCriteria.setState(state);
             }
             scanCodeOrderCriteria.setOffset(1);
@@ -682,16 +678,12 @@ public class OrderController {
             OLOrderCriteria olOrderCriteria = new OLOrderCriteria();
             Merchant merchant = merchantService.findMerchantById(merchantId);
             olOrderCriteria.setMerchant(merchant);
-            if (payWay != null && payWay == 0) {
-                olOrderCriteria.setPayWay(1L);
-            } else if (payWay != null && payWay == 1) {
-                olOrderCriteria.setPayWay(2L);
-            } else {
-                olOrderCriteria.setPayWay(null);
+            if (payWay != null) {
+                olOrderCriteria.setPayWay(payWay);
             }
-            if(state==null) {
+            if (state == null) {
                 olOrderCriteria.setState(1);
-            }else {
+            } else {
                 olOrderCriteria.setState(state);
             }
             olOrderCriteria.setOrderSid(orderSid);
@@ -710,21 +702,17 @@ public class OrderController {
     @RequestMapping(value = "/historyCodeTradeList/export", method = RequestMethod.GET)
     public ModelAndView exporeHistoryExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = true) Long merchantId,
                                            @RequestParam(required = false) Integer payWay, @RequestParam(required = false) Integer orderType, @RequestParam(required = false) String orderSid,
-                                           @RequestParam(required = false) String tradeDate,@RequestParam(required = false) Integer state) {
+                                           @RequestParam(required = false) String tradeDate, @RequestParam(required = false) Integer state) {
         // 乐加结算
         OLOrderCriteria olOrderCriteria = new OLOrderCriteria();
         Merchant merchant = merchantService.findMerchantById(merchantId);
         olOrderCriteria.setMerchant(merchant);
-        if (payWay != null && payWay == 0) {
-            olOrderCriteria.setPayWay(1L);
-        } else if (payWay != null && payWay == 1) {
-            olOrderCriteria.setPayWay(2L);
-        } else {
-            olOrderCriteria.setPayWay(null);
+        if (payWay!= null) {
+            olOrderCriteria.setPayWay(payWay);
         }
-        if(state==null) {
+        if (state == null) {
             olOrderCriteria.setState(1);
-        }else {
+        } else {
             olOrderCriteria.setState(state);
         }
         olOrderCriteria.setOrderSid(orderSid);
@@ -737,6 +725,7 @@ public class OrderController {
         map.put("olOrderList", page.getContent());
         return new ModelAndView(offLineOrderExcel, map);
     }
+
     /***
      *  订单数据统计
      */
@@ -744,16 +733,17 @@ public class OrderController {
     @ResponseBody
     public LejiaResult codeOrderStatistic(@RequestBody CodeOrderCriteria codeOrderCriteria) {
         MerchantScanPayWay scanPayWay = merchantScanPayWayService.findByMerchant(codeOrderCriteria.getMerchant().getId());
-        if (scanPayWay.getType() == 3||scanPayWay.getType()==4) {
+        if (scanPayWay.getType() == 3 || scanPayWay.getType() == 4) {
             // 易宝结算
             ScanCodeOrderCriteria scanCodeOrderCriteria = new ScanCodeOrderCriteria();
             scanCodeOrderCriteria.setMerchantId(codeOrderCriteria.getMerchant().getId());
-            if(codeOrderCriteria.getState()==null) {
+            if (codeOrderCriteria.getState() == null) {
                 scanCodeOrderCriteria.setState(1);
-            }else {
+            } else {
                 scanCodeOrderCriteria.setState(codeOrderCriteria.getState());
             }
             scanCodeOrderCriteria.setPayment(codeOrderCriteria.getPayWay());
+            scanCodeOrderCriteria.setPayType(codeOrderCriteria.getPayType());
             scanCodeOrderCriteria.setOrderSid(codeOrderCriteria.getOrderSid());
             scanCodeOrderCriteria.setStartDate(codeOrderCriteria.getStartDate());
             scanCodeOrderCriteria.setEndDate(codeOrderCriteria.getEndDate());
@@ -784,19 +774,14 @@ public class OrderController {
             // 乐加结算
             OLOrderCriteria olOrderCriteria = new OLOrderCriteria();
             olOrderCriteria.setMerchant(codeOrderCriteria.getMerchant());
-            if(codeOrderCriteria.getState()==null){
+            if (codeOrderCriteria.getState() == null) {
                 olOrderCriteria.setState(1);
-            }else {
+            } else {
                 olOrderCriteria.setState(codeOrderCriteria.getState());
             }
             olOrderCriteria.setState(1);
-            if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 0) {
-                olOrderCriteria.setPayWay(1L);
-            } else if (codeOrderCriteria.getPayWay() != null && codeOrderCriteria.getPayWay() == 1) {
-                olOrderCriteria.setPayWay(2L);
-            } else {
-                olOrderCriteria.setPayWay(null);
-            }
+            olOrderCriteria.setPayWay(codeOrderCriteria.getPayWay());
+            olOrderCriteria.setPayType(codeOrderCriteria.getPayType());
             olOrderCriteria.setOrderSid(codeOrderCriteria.getOrderSid());
             olOrderCriteria.setOrderType(codeOrderCriteria.getOrderType());
             olOrderCriteria.setStartDate(codeOrderCriteria.getStartDate());

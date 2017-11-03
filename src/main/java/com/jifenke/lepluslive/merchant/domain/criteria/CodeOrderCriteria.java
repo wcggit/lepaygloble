@@ -212,7 +212,7 @@ public class CodeOrderCriteria {
 
     private Integer payment;            // 金额类型
 
-    private Integer payType;            // 支付方式
+    private Integer payType;            // 支付方式  0=微信  1=支付宝
 
     private Integer offset;             // 页码
 

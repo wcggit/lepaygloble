@@ -101,16 +101,38 @@ public class OffLineOrderService {
 
                 }
 
+                if(orderCriteria.getPayWay()!=null) {
+                    if(orderCriteria.getPayWay()==0) {
+                        predicate.getExpressions().add(
+                            cb.equal(r.get("trueScore"), 0));
+                    }else if(orderCriteria.getPayWay()==1) {
+                        predicate.getExpressions().add(
+                            cb.equal(r.get("truePay"), 0));
+                    }else {
+                        predicate.getExpressions().add(
+                            cb.notEqual(r.get("trueScore"), 0));
+                        predicate.getExpressions().add(
+                            cb.notEqual(r.get("truePay"), 0));
+                    }
+                }
+
                 if (orderCriteria.getOrderSid() != null && !"".equals(orderCriteria.getOrderSid())) {
                     predicate.getExpressions().add(
                         cb.like(r.get("orderSid"), "%" + orderCriteria.getOrderSid() + "%"));
                 }
 
+
+                if (orderCriteria.getPayType() != null && !"".equals(orderCriteria.getPayType())) {
+                    predicate.getExpressions().add(
+                        cb.equal(r.get("payType"), orderCriteria.getPayType()));
+                }
+
+
                 if (orderCriteria.getOrderType() != null) {
                     if(orderCriteria.getOrderType()==0) {
-                        predicate.getExpressions().add(cb.or(cb.equal(r.get("rebateWay"),0),cb.equal(r.get("rebateWay"),2),cb.equal(r.get("rebateWay"),4),cb.equal(r.get("rebateWay"),5),cb.equal(r.get("rebateWay"),6)));
+                        predicate.getExpressions().add(cb.equal(r.get("basicType"),0));
                     }else if(orderCriteria.getOrderType()==1) {
-                        predicate.getExpressions().add(cb.or(cb.equal(r.get("rebateWay"),1),cb.equal(r.get("rebateWay"),3)));
+                        predicate.getExpressions().add(cb.equal(r.get("basicType"),1));
                     }
                 }
 
@@ -820,7 +842,16 @@ public class OffLineOrderService {
                 sql.append(" and (ol.rebate_way=1 or ol.rebate_way=3) ");
             }
             if(olOrderCriteria.getPayWay()!=null) {                 // 支付类型
-                sql.append(" and p.id = "+olOrderCriteria.getPayWay());
+                if(olOrderCriteria.getPayWay()==0) {
+                    sql.append(" and ol.true_score = 0 ");
+                }else if(olOrderCriteria.getPayWay()==1) {
+                    sql.append(" and ol.true_pay = 0 ");
+                }else {
+                    sql.append(" and ol.true_score!=0 and ol.true_pay!=0 ");
+                }
+            }
+            if(olOrderCriteria.getPayType()!=null) {                 // 支付类型
+                sql.append(" and ol.pay_type = "+olOrderCriteria.getPayType());
             }
             if(olOrderCriteria.getOrderSid()!=null) {               // SID
                 sql.append(" and ol.order_sid = "+olOrderCriteria.getOrderSid());

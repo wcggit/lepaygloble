@@ -118,6 +118,7 @@ angular.module('lepayglobleApp')
                 codeOrderCriteria.merchant = merchant;
             }
             var payWay = $("#payWay").val();
+            var payType = $("#payType").val();
             var orderType = $("#orderType").val();
             var orderSid = $("#orderSid").val();
             var state = $("#orderState").val();
@@ -135,6 +136,11 @@ angular.module('lepayglobleApp')
                 codeOrderCriteria.orderSid = orderSid;
             } else {
                 codeOrderCriteria.orderSid = null;
+            }
+            if (payType != null && payType != '') {
+                codeOrderCriteria.payType = payType;
+            } else {
+                codeOrderCriteria.payType = null;
             }
             if (state != null && state != '') {
                 codeOrderCriteria.state = state;
