@@ -150,7 +150,7 @@ angular.module('lepayglobleApp')
 
         //  刷新列表
         $scope.refreshOrderList = function () {
-            var mid = $("#selMerchant").val();
+            var mid = $scope.selectDefault;
             if (mid == '' || mid == null) {
                 $("#selMerchant").val($scope.firstSid);
                 $scope.changeStore(mid);
