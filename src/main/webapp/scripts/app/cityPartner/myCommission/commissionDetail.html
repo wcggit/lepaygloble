@@ -87,7 +87,8 @@
                         <p class="two-style" ng-bind="x.offLineOrder.leJiaUser.phoneNumber"></p>
                     </td>
                     <td class="icon-lock" ng-bind="x.tradeMerchant.name"></td>
-                    <td><p ng-bind="'￥'+x.offLineOrder.totalPrice/100.0">)</p></td>
+                    <td ng-show="x.offLineOrder.totalPrice!=null&&x.offLineOrder.totalPrice!=''"><p ng-bind="'￥'+x.offLineOrder.totalPrice/100.0">)</p></td>
+                    <td ng-show="x.offLineOrder.totalPrice==null||x.offLineOrder.totalPrice==''"><p ng-bind="'-'"></p></td>
                     <td>
                         <p ng-bind="x.lockMerchant.name"></p>
                     </td>

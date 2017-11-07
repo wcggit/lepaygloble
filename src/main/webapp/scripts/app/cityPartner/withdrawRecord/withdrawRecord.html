@@ -3,8 +3,10 @@
         <div class="panel-body clearfix">佣金明细</div>
         <ul class="nav nav-style">
             <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab(0)"><a>全部记录</a></li>
-            <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab(1)"><a>提现中</a><span ng-show="ttlWarn1" class="title-warn">100</span></li>
-            <li role="presentation" ng-class="{active:currentTab2}" ng-click="onClickTab(2)"><a>已驳回</a><span ng-show="ttlWarn2" class="title-warn">11</span></li>
+            <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab(1)"><a>提现中</a></li>
+            <!--<span ng-show="ttlWarn1" class="title-warn">100</span>-->
+            <li role="presentation" ng-class="{active:currentTab2}" ng-click="onClickTab(2)"><a>已驳回</a></li>
+            <!--<span ng-show="ttlWarn2" class="title-warn">11</span>-->
             <li role="presentation" ng-class="{active:currentTab3}" ng-click="onClickTab(3)"><a>已完成</a></li>
         </ul>
     </div>

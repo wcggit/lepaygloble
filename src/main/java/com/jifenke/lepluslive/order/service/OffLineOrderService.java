@@ -425,7 +425,7 @@ public class OffLineOrderService {
                 }
                 //   合伙人 -  佣金分润 - 查询条件
                 if (orderCriteria.getPartnerManager() != null) {
-                    predicate.getExpressions().add(cb.equal(r.get("toLockPartnerManager"), orderCriteria.getPartnerManager().getId()));
+                    predicate.getExpressions().add(cb.equal(r.get("lockPartnerManager"), orderCriteria.getPartnerManager()));
                 }
                 if (orderCriteria.getLockMerchant() != null) {
                     predicate.getExpressions().add(cb.like(r.get("lockMerchant").get("name"), "%" + orderCriteria.getLockMerchant().getName() + "%"));

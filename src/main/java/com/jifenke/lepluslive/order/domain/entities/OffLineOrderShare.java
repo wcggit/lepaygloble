@@ -2,16 +2,10 @@ package com.jifenke.lepluslive.order.domain.entities;
 
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 /**
  * Created by wcg on 16/6/22.
@@ -53,6 +47,10 @@ public class OffLineOrderShare {
 
     @ManyToOne
     private Partner lockPartner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PartnerManager lockPartnerManager;
+
 
 
     public Merchant getTradeMerchant() {
@@ -160,5 +158,13 @@ public class OffLineOrderShare {
 
     public void setToLockPartnerManager(Long toLockPartnerManager) {
         this.toLockPartnerManager = toLockPartnerManager;
+    }
+
+    public PartnerManager getLockPartnerManager() {
+        return lockPartnerManager;
+    }
+
+    public void setLockPartnerManager(PartnerManager lockPartnerManager) {
+        this.lockPartnerManager = lockPartnerManager;
     }
 }
