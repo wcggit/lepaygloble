@@ -8,6 +8,7 @@ angular.module('lepayglobleApp')
     .controller('yinshangDetailController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, Trade, $stateParams) {
         var importOrderCriteria = {};
         var currentPage = 1;
+        // alert($stateParams.settleDate+"-"+$stateParams.merNum);
         importOrderCriteria.settleDate = $stateParams.settleDate;
         importOrderCriteria.merNum = $stateParams.merNum;
         // $stateParams.
@@ -78,9 +79,21 @@ angular.module('lepayglobleApp')
                 $scope.totalPages = page.totalPages;
                 if(page.content.length>0){
                     if($scope.currentState==0) {
-                        $scope.bankOrders = page.content;
+                        var bankOrders = page.content;
+                        var bankOrderDatas = new Array();
+                        for(var i=0;i<bankOrders.length;i++) {
+                            bankOrderDatas.push(JSON.parse(bankOrders[i].data));
+                        }
+                        $scope.bankOrders = bankOrders;
+                        $scope.bankOrderDatas = bankOrderDatas;
                     }else {
-                        $scope.importOrders = page.content;
+                        var importOrders = page.content;
+                        var importOrderDatas = new Array();
+                        for(var i=0;i<importOrders.length;i++) {
+                            importOrderDatas.push(JSON.parse(importOrders[i].data));
+                        }
+                        $scope.importOrders = importOrders;
+                        $scope.importOrderDatas = importOrderDatas;
                     }
                 }
             });

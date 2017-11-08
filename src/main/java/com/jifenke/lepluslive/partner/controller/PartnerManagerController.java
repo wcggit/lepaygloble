@@ -1,7 +1,6 @@
 package com.jifenke.lepluslive.partner.controller;
 
 import com.jifenke.lepluslive.barcode.service.BarcodeService;
-import com.jifenke.lepluslive.global.util.ImageLoad;
 import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.global.websocket.dto.ActivityDTO;
 import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
@@ -19,25 +18,23 @@ import com.jifenke.lepluslive.partner.service.PartnerManagerService;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.partner.service.PartnerWalletService;
 import com.jifenke.lepluslive.security.SecurityUtils;
-import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -255,6 +252,11 @@ public class PartnerManagerController {
             partnerService.findByPartnerSid(partnerManagerCriteria.getPartner().getPartnerSid());
         Map map = partnerManagerService.findPartnerData(partnerManagerCriteria, partner);
         PartnerWallet partnerWallet = partnerWalletService.findByPartner(partner);
+        if(partnerWallet==null) {
+            partnerWallet = new PartnerWallet();
+            partnerWallet.setTotalMoney(0L);
+            partnerWallet.setTotalScoreA(0L);
+        }
         map.put("partnerWallet", partnerWallet);
         Long bindMerchants = merchantService.countPartnerBindMerchant(partner);
         Long bindUsers = leJiaUserService.countPartnerBindLeJiaUser(partner);

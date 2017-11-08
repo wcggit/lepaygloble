@@ -93,14 +93,14 @@
                         <p>{{order.createdAt|date:'yyyy-MM-dd'}}</p>
                         <p>{{order.createdAt|date:'HH:mm:ss'}}</p>
                     </td>
-                    <td>{{order.data.terminalNum}}</td>
-                    <td>{{order.data.serialNum}}</td>
-                    <td>￥{{order.data.tradeAmount}}</td>
-                    <td>￥{{order.data.settleAmount}}</td>
-                    <td>￥{{order.data.charge}}</td>
-                    <td ng-show="tradeType==0">消费</td>
-                    <td ng-show="tradeType==1">消费</td>
-                    <td>{{order.data.cardNum|limitTo:4}}*****{{order.data.cardNum|limitTo:-4}}</td>
+                    <td>{{bankOrderDatas[$index].terminalNum}}</td>
+                    <td>{{bankOrderDatas[$index].serialNum}}</td>
+                    <td>￥{{bankOrderDatas[$index].tradeAmount}}</td>
+                    <td>￥{{bankOrderDatas[$index].settleAmount}}</td>
+                    <td>￥{{bankOrderDatas[$index].charge}}</td>
+                    <td ng-show="order.payWay==0">刷卡消费</td>
+                    <td ng-show="order.payWay==1">其他方式</td>
+                    <td>{{bankOrderDatas[$index].cardNum|limitTo:4}}*****{{bankOrderDatas[$index].cardNum|limitTo:-4}}</td>
                     <td ng-show="order.orderType==0">普通订单</td>
                     <td ng-show="order.orderType==1">乐加订单</td>
                 </tr>
@@ -110,7 +110,7 @@
                 <thead class="active">
                 <tr>
                     <td>交易日期</td>
-                    <td>乐加订单号</td>
+                    <!--<td>乐加订单号</td>-->
                     <td>终端号</td>
                     <td>流水号</td>
                     <td>交易金额</td>
@@ -127,12 +127,12 @@
                         <p>{{importOrder.createdAt|date:'yyyy-MM-dd'}}</p>
                         <p>{{importOrder.createdAt|date:'HH:mm:ss'}}</p>
                     </td>
-                    <td>{{importOrder.data.id}}</td>
-                    <td>{{importOrder.data.terminalNum}}</td>
-                    <td>{{importOrder.data.serialNum}}</td>
-                    <td>￥{{importOrder.data.tradeAmount}}</td>
-                    <td>￥{{importOrder.data.charge}}</td>
-                    <td>￥{{importOrder.data.settleAmount}}</td>
+                    <!--<td>{{importOrder.batchNo}}</td>-->
+                    <td>{{importOrderDatas[$index].terminalNum}}</td>
+                    <td>{{importOrderDatas[$index].serialNum}}</td>
+                    <td>￥{{importOrderDatas[$index].tradeAmount}}</td>
+                    <td>￥{{importOrderDatas[$index].charge}}</td>
+                    <td>￥{{importOrderDatas[$index].settleAmount}}</td>
                 </tr>
                 </tbody>
             </table>

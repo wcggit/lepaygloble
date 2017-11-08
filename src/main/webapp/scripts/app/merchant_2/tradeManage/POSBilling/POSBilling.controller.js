@@ -126,7 +126,7 @@ angular.module('lepayglobleApp')
         };
 
         $scope.yinshangshowDetail = function (tradeDate, mid) {
-            $state.go("yinshangDetail", {tradeDate: tradeDate, mid: mid});
+            $state.go("yinshangDetail", {settleDate: tradeDate, merNum: mid});
         }
         $scope.gulijinshowDetail = function (tradeDate, mid) {
             $state.go("gulijinDetail", {tradeDate: tradeDate, mid: mid});
