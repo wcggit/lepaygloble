@@ -8,10 +8,8 @@ angular.module('lepayglobleApp')
     .controller('yinshangDetailController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http, Trade, $stateParams) {
         var importOrderCriteria = {};
         var currentPage = 1;
-        // alert($stateParams.settleDate+"-"+$stateParams.merNum);
         importOrderCriteria.settleDate = $stateParams.settleDate;
         importOrderCriteria.merNum = $stateParams.merNum;
-        // $stateParams.
         $scope.currentTab0 = true;
         $scope.currentTab1 = false;
         $scope.priviousState = 0;
