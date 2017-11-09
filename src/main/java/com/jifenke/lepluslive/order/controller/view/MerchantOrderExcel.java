@@ -5,7 +5,6 @@ import com.jifenke.lepluslive.merchant.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
-import com.jifenke.lepluslive.order.domain.entities.ScanCodeRefundOrder;
 import org.apache.poi.hssf.usermodel.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
@@ -36,7 +35,6 @@ public class MerchantOrderExcel extends AbstractExcelView {
         MerchantScanPayWay payWay = (MerchantScanPayWay) map.get("payWay");
         List<OffLineOrder> offLineOrders = (List<OffLineOrder>) map.get("offLineOrders");
         List<ScanCodeOrder> scanCodeOrders = (List<ScanCodeOrder>) map.get("scanCodeOrders");
-        List<ScanCodeRefundOrder> refoundOrder = (List<ScanCodeRefundOrder>) map.get("refoundOrder");
         Long custScore = (Long) map.get("custScore");
         Long custPay = (Long) map.get("custPay");
         Long trueScore =(Long) map.get("trueScore");
@@ -221,7 +219,7 @@ public class MerchantOrderExcel extends AbstractExcelView {
             cell.setCellValue(titles2[i]);
         }
         if (payWay != null) {
-            if (refoundOrder != null && refoundOrder.size() > 0) {
+          /*  if (refoundOrder != null && refoundOrder.size() > 0) {
                 for (ScanCodeRefundOrder scanCodeRefundOrder : refoundOrder) {
                     HSSFRow contentRow = sheet.createRow(sheet.getLastRowNum() + 1);
                     ScanCodeOrder scanCodeOrder = scanCodeRefundOrder.getScanCodeOrder();
@@ -253,7 +251,7 @@ public class MerchantOrderExcel extends AbstractExcelView {
                     HSSFCell contentCell8 = contentRow.createCell(8);
                     contentCell8.setCellValue(scanCodeOrder.getTransferMoneyFromScore() * 0.01);
                 }
-            }
+            }*/
         }
         //  创建第三个表头
         HSSFRow headRow3 = sheet.createRow(sheet.getLastRowNum() + 1);
