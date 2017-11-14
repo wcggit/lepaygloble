@@ -7,7 +7,10 @@ import com.jifenke.lepluslive.order.controller.view.MerchantOrderDto;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
-import com.jifenke.lepluslive.order.repository.*;
+import com.jifenke.lepluslive.order.repository.MerchantScanPayWayRepository;
+import com.jifenke.lepluslive.order.repository.OffLineOrderRepository;
+import com.jifenke.lepluslive.order.repository.PosOrderRepository;
+import com.jifenke.lepluslive.order.repository.ScanCodeOrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +34,6 @@ public class LejiaOrderService {
     private MerchantScanPayWayRepository merchantScanPayWayRepository;
     @Inject
     private ScanCodeOrderRepository scanCodeOrderRepository;
-
 
     /**
      * 每日账单
