@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('myItemsController', function ($scope, Partner, $state) {
+    .controller('commissionInfoController', function ($scope, Partner, $state) {
         // $('body').css({background: '#f3f3f3'});
         $('.main-content').css({height: 'auto'});
         // select标签右侧小三角
@@ -20,7 +20,7 @@ angular.module('lepayglobleApp')
             $(this).siblings('select').openSelect();
         });
 
-        $('#timePicker1')
+        $('#timePicker')
             // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' +
             // moment().format('YYYY/MM/DD HH:mm:59'))
             .daterangepicker({
@@ -40,7 +40,27 @@ angular.module('lepayglobleApp')
                  }
              }, function (start, end, label) {
              });
-        $("#timePicker1").val("");
+        $('#timePicker1')
+        // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' +
+        // moment().format('YYYY/MM/DD HH:mm:59'))
+            .daterangepicker({
+                timePicker: true, //是否显示小时和分钟
+                timePickerIncrement: 1, //时间的增量，单位为分钟
+                opens: 'right', //日期选择框的弹出位置
+                startDate: moment().format('YYYY/MM/DD HH:mm:00'),
+                endDate: moment().format('YYYY/MM/DD HH:mm:59'),
+                format: 'YYYY/MM/DD HH:mm:ss', //控件中from和to 显示的日期格式
+                ranges: {
+                    '最近1小时': [moment().subtract('hours', 1), moment()],
+                    '今日': [moment().startOf('day'), moment()],
+                    '昨日': [moment().subtract('days', 1).startOf('day'),
+                        moment().subtract('days', 1).endOf('day')],
+                    '最近7日': [moment().subtract('days', 6), moment()],
+                    '最近30日': [moment().subtract('days', 29), moment()]
+                }
+            }, function (start, end, label) {
+            });
+        $("#timePicker").val("");
         var currentPage = 1;
         var criteria = {};
         criteria.offset = 1;
@@ -61,10 +81,10 @@ angular.module('lepayglobleApp')
         $scope.loadPage = function (page) {
             if (page == 0) {
                 return;
-            }
-            if (page > $scope.totalPages) {
-                return;
-            }
+        }
+        if (page > $scope.totalPages) {
+            return;
+        }
             if (currentPage == $scope.totalPages && page == $scope.totalPages) {
                 return;
             }
@@ -131,15 +151,6 @@ angular.module('lepayglobleApp')
             criteria.endDate = null;
             getTotalPage()
             getTotalCount()
-        };
-        $scope.goLePayCode = function (id) {
-            $state.go("lefuma", {id: id})
-        };
-        $scope.goEdit = function (id) {
-            $state.go("createitems", {id: id})
-        };
-        $scope.goMerchantUser = function (id) {
-            $state.go("accountmanager", {id: id})
         };
 
     });

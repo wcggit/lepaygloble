@@ -1,16 +1,16 @@
 <div class="container content main-content my-items">
     <div class="container-fluid">
-        <p class="ttl">门店列表</p>
+        <p class="ttl">商户列表</p>
         <!--查询表单-->
         <form class="form-inline">
             <div class="row">
                 <div class="form-group col-md-5">
-                    <label for="storeName">门店名称</label>
-                    <input type="text" class="form-control" id="storeName" placeholder="请输入门店名称">
+                    <label for="storeName">商户名称</label>
+                    <input type="text" class="form-control" id="storeName" placeholder="请输入商户名称">
                 </div>
                 <div class="form-group col-md-5">
-                    <label for="merchantsName">所属商户名称</label>
-                    <input type="text" class="form-control" id="merchantsName" placeholder="请输入所属商户名称">
+                    <label for="merchantsName">负责人名称</label>
+                    <input type="text" class="form-control" id="merchantsName" placeholder="请输入负责人名称">
                 </div>
             </div>
             <div class="row">
@@ -22,16 +22,9 @@
                         <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                     </div>
                 </div>
-                <div class="form-group col-md-4">
-                    <label>协议类型</label>
-                    <div class="input-group col-md-6">
-                        <select class="form-control" id="partnerShip">
-                            <option value="-1">全部</option>
-                            <option value="0">普通协议</option>
-                            <option value="1">联盟协议</option>
-                        </select>
-                        <span class="select-jiao"></span>
-                    </div>
+                <div class="form-group col-md-5">
+                    <label for="merchantsName">负责人手机号</label>
+                    <input type="number" class="form-control" id="merchantPhone" placeholder="请输入负责人手机号">
                 </div>
             </div>
             <div>
@@ -54,18 +47,15 @@
                 <table class="table ol-tab">
                     <thead class="active">
                     <tr>
-                        <td>门店编号</td>
-                        <td>门店名称</td>
+                        <td>商户编号</td>
+                        <td>商户名称</td>
                         <td>所属城市</td>
-                        <td>所属商户</td>
-                        <td>协议类型</td>
-                        <td>扫码费率</td>
-                        <td>总流水</td>
-                        <td>普通订单</td>
-                        <td>乐加订单</td>
-                        <td>时段内锁定会员</td>
-                        <td>当前锁定情况</td>
-                        <td>操作</td>
+                        <td>名下门店</td>
+                        <td>锁定会员</td>
+                        <td>负责人名称</td>
+                        <td>负责人手机号</td>
+                        <td>累计佣金收入</td>
+                        <td>创建日期</td>
                     </tr>
                     </thead>
                     <tbody>
@@ -82,14 +72,14 @@
                         <td >{{x[5]}}/{{x[8]}}</td>
                         <td ng-bind="x[6]/100"></td>
                         <td ng-bind="x[7]/100"></td>
-                        <td>
-                            <a ng-click="goLePayCode(x[0])">乐付码</a>
-                            <!--<a ng-click="goEdit(x[0])">编辑</a>-->
-                            <a ng-click="goMerchantUser(x[0])">账户</a>
-                            <!--<a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>-->
-                            <!--<a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>-->
-                            <!--<a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>-->
-                        </td>
+                        <!--<td>-->
+                            <!--<a ng-click="goLePayCode(x[0])">乐付码</a>-->
+                            <!--&lt;!&ndash;<a ng-click="goEdit(x[0])">编辑</a>&ndash;&gt;-->
+                            <!--<a ng-click="goMerchantUser(x[0])">账户</a>-->
+                            <!--&lt;!&ndash;<a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>&ndash;&gt;-->
+                        <!--</td>-->
                     </tr>
                     </tbody>
                 </table>

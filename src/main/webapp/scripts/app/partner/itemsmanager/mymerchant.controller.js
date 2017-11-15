@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('myItemsController', function ($scope, Partner, $state) {
+    .controller('myMerchantController', function ($scope, Partner, $state) {
         // $('body').css({background: '#f3f3f3'});
         $('.main-content').css({height: 'auto'});
         // select标签右侧小三角
