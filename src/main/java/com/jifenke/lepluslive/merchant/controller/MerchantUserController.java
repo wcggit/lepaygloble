@@ -407,7 +407,7 @@ public class MerchantUserController {
             for (Map<String, Object> m : list) {
                 Long mid = Long.valueOf(String.valueOf(m.get("mid")));
                 Long bindCount = leJiaUserService.countBindMerchantBindLeJiaUser(mid);
-                map.put("bindCount",bindCount);
+                m.put("bindCount",bindCount);
             }
         }
         return LejiaResult.ok(map);

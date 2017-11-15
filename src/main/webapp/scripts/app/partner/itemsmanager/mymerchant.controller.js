@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('myMerchantController', function ($scope, Partner, $state) {
+    .controller('myMerchantController', function ($scope, Partner, $state,$http) {
         // $('body').css({background: '#f3f3f3'});
         $('.main-content').css({height: 'auto'});
         // select标签右侧小三角
@@ -41,20 +41,34 @@ angular.module('lepayglobleApp')
              }, function (start, end, label) {
              });
         $("#timePicker1").val("");
+
+        var array = new Array();
         var currentPage = 1;
         var criteria = {};
         criteria.offset = 1;
-        Partner.countFullMerchant().then(function (response) {
-            var data = response.data;
-            $scope.fullMerchant = data;
-        });
-        getTotalPage();
-        getTotalCount();
-        function loadContent() {
-            Partner.getPartnerBindMerchantList(criteria).then(function (response) {
+        $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
+            console.log(response);
+            if (response.status == 200) {
                 var data = response.data;
                 $scope.page = currentPage;
-                $scope.pulls = data;
+                $scope.pulls = data.data;
+            } else {
+                alert("加载商户错误...");
+            }
+        });
+
+        getTotalPage();
+        // getTotalCount();
+        function loadContent() {
+            $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
+                console.log(response);
+                if (response.status == 200) {
+                    var data = response.data;
+                    $scope.page = currentPage;
+                    $scope.pulls = data.data;
+                } else {
+                    alert("加载商户错误...");
+                }
             });
         }
 
@@ -77,70 +91,92 @@ angular.module('lepayglobleApp')
         };
 
         function getTotalPage() {
-            Partner.getPartnerBindMerchantListPage(criteria).then(function (response) {
-                $scope.totalPages = response.data;
-                loadContent();
-            });
-        }
+            $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
+                console.log(response);
+                if (response.status == 200) {
+                    $scope.totalPages = response.data.totalPages;
+                    loadContent();
+                } else {
 
-        function getTotalCount() {
-            Partner.getPartnerBindMerchantListCount(criteria).then(function (response) {
-                $scope.totalCount = response.data;
-                loadContent();
+                }
             });
         }
+        //
+        // function getTotalCount() {
+        //     $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
+        //         console.log(response);
+        //         if (response.status == 200) {
+        //             $scope.totalCount = response.data.totalElements;
+        //             loadContent();
+        //         } else {
+        //
+        //         }
+        //     });
+        // }
 
         $scope.searchByCriteria = function () {
+            //获取商户名称
+            var storeName = $("#storeName").val();
+            //获取负责人名称
+            var linkMan = $("#linkMan").val();
+            //过去交易时间
             var dateStr = $("#timePicker1").val();
-            var merchantName = $("#merchantName").val().trim();
-            var partnerShip = $("#partnerShip").val();
-            var userBindState = $("#userBindState").val();
+            //获取负责人手机号
+            var merchantPhone = $("#merchantPhone").val();
+
             if (dateStr != null && dateStr != "") {
                 var startDate = dateStr.split("-")[0].trim();
                 var endDate = dateStr.split("-")[1].trim();
                 criteria.startDate = startDate;
                 criteria.endDate = endDate;
-            }
-            if (partnerShip != -1) {
-                criteria.partnerShip = partnerShip;
             } else {
-                criteria.partnerShip = null;
+                criteria.startDate = null;
+                criteria.endDate = null;
             }
-            if (userBindState != -1) {
-                criteria.userBindState = userBindState;
+            if (storeName != -1) {
+                criteria.merchantName = storeName;
             } else {
-                criteria.userBindState = null;
+                criteria.merchantName = null;
             }
+            if (linkMan != -1) {
+                criteria.linkMan = linkMan;
+            } else {
+                criteria.linkMan = null;
+            }
+            if (merchantPhone != -1) {
+                criteria.phoneNum = merchantPhone;
+            } else {
+                criteria.phoneNum = null;
+            }
+            console.log(criteria);
             criteria.offset = 1;
-            criteria.merchantName = merchantName;
             currentPage = 1;
-            getTotalPage()
-            getTotalCount()
-        }
+            getTotalPage();
+        };
 
-        $scope.showFullMerchant = function (page) {
-            $("#timePicker1").val("");
-            $("#merchantName").val("");
-            $("#userBindState").val("2");
-            $("#partnerShip").val("-1");
-            criteria.offset = 1;
-            criteria.merchantName = null;
-            criteria.userBindState = 2;
-            criteria.partnerShip = null;
-            criteria.startDate = null;
-            criteria.endDate = null;
-            getTotalPage()
-            getTotalCount()
-        };
-        $scope.goLePayCode = function (id) {
-            $state.go("lefuma", {id: id})
-        };
-        $scope.goEdit = function (id) {
-            $state.go("createitems", {id: id})
-        };
-        $scope.goMerchantUser = function (id) {
-            $state.go("accountmanager", {id: id})
-        };
+        // $scope.showFullMerchant = function (page) {
+        //     $("#timePicker1").val("");
+        //     $("#merchantName").val("");
+        //     $("#userBindState").val("2");
+        //     $("#partnerShip").val("-1");
+        //     criteria.offset = 1;
+        //     criteria.merchantName = null;
+        //     criteria.userBindState = 2;
+        //     criteria.partnerShip = null;
+        //     criteria.startDate = null;
+        //     criteria.endDate = null;
+        //     getTotalPage()
+        //     getTotalCount()
+        // };
+        // $scope.goLePayCode = function (id) {
+        //     $state.go("lefuma", {id: id})
+        // };
+        // $scope.goEdit = function (id) {
+        //     $state.go("createitems", {id: id})
+        // };
+        // $scope.goMerchantUser = function (id) {
+        //     $state.go("accountmanager", {id: id})
+        // };
 
     });
 

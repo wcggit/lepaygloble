@@ -103,9 +103,9 @@ public class StatsMerDailyDataService {
         }
         //group
         sql += " GROUP BY s.merchant_id) e ON m.id = e.merchantId ";
-        sql += "  WHERE 1 = 1 ";
         sql += " LEFT JOIN city c ON m.city_id = c.id ";
         sql += " LEFT JOIN merchant_user mu ON m.merchant_user_id = mu.id ";
+        sql += "  WHERE 1 = 1 ";
         //影响记录总条数的筛选条件
         if (criteria.getPartner() != null) {
             sql += " AND m.partner_id = " + criteria.getPartner();

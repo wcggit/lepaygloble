@@ -1,5 +1,10 @@
 <div class="container content main-content my-items">
     <div class="container-fluid">
+        <style>
+            td {
+                text-align: center;
+            }
+        </style>
         <p class="ttl">门店列表</p>
         <!--查询表单-->
         <form class="form-inline">
@@ -70,19 +75,29 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="x in pulls">
-                        <td ng-bind="x[1]"></td>
+                        <td ng-bind="x.mid"></td>
+                        <td ng-bind="x.merchantName"></td>
+                        <td ng-bind="x.cityName"></td>
+                        <td ng-bind="x.ownerMerchant"></td>
+                        <td ng-show="x.partnership==0">普通商户</td>
+                        <td ng-show="x.partnership==1">联盟商户</td>
+                        <td  class="col-sm-2" ng-show="x.partnership==0"><p>普通：<span>{{x.ljBrokerage}}%</span></p></td>
+                        <td  class="col-sm-2" ng-show="x.partnership==1"><p>联盟：<span>{{x.ljCommission}}%</span></p><p>普通：<span>{{x.ljBrokerage}}%</span></p></td>
                         <td>
-                            <p ng-bind="x[2]|date:'yyyy-MM-dd'"></p>
-                            <p ng-bind="x[2]|date:'HH:mm:ss'"></p>
+                            <p>{{x.orderNum==null?0:orderNum}}笔</p>
+                            <p>￥<span ng-bind="x.orderAmount/100"></span></p>
                         </td>
-                        <td ng-show="x[3]==0">普通商户</td>
-                        <td ng-show="x[3]==1">联盟商户</td>
-                        <td ng-show="x[4]!=''" class="address"><span class="tool">{{x[4]}}</span></td>
-                        <td ng-show="x[4]==''">----</td>
-                        <td >{{x[5]}}/{{x[8]}}</td>
-                        <td ng-bind="x[6]/100"></td>
-                        <td ng-bind="x[7]/100"></td>
                         <td>
+                            <p>{{x.comOrderNum==null?0:x.comOrderNum}}笔</p>
+                            <p>￥<span ng-bind="x.comOrderAmount/100"></span></p>
+                        </td>
+                        <td>
+                            <p>{{x.leOrderNum==null?0:x.leOrderNum}}笔</p>
+                            <p>￥<span ng-bind="x.leOrderAmount/100"></span></p>
+                        </td>
+                        <td>{{x.lockNum==null?0:x.lockNum}}</td>
+                        <td>{{x.bindCount}}/{{x.bindLimit}}</td>
+                        <td class="col-md-1">
                             <a ng-click="goLePayCode(x[0])">乐付码</a>
                             <!--<a ng-click="goEdit(x[0])">编辑</a>-->
                             <a ng-click="goMerchantUser(x[0])">账户</a>
