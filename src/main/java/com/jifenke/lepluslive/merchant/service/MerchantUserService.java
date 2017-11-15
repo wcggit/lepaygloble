@@ -2,6 +2,7 @@ package com.jifenke.lepluslive.merchant.service;
 
 import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
+import com.jifenke.lepluslive.merchant.domain.criteria.MerchantUserCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserResource;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserShop;
@@ -10,15 +11,20 @@ import com.jifenke.lepluslive.merchant.repository.MerchantUserRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserResourceRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantUserShopRepository;
 import com.jifenke.lepluslive.security.SecurityUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.*;
 
 /**
  * Created by wcg on 16/6/27.
@@ -155,5 +161,48 @@ public class MerchantUserService {
         merchantUser.setCreateUserId(merchantUser.getId());
         merchantUserRepository.save(merchantUser);
         return true;
+    }
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Page findMerchantUserByPage(MerchantUserCriteria criteria, Integer limit) {
+        Sort sort = new Sort(Sort.Direction.DESC, "completeDate");
+        return merchantUserRepository
+            .findAll(getWhereClause(criteria),
+                new PageRequest(criteria.getOffset() - 1, limit, sort));
+    }
+
+    public static Specification<MerchantUser> getWhereClause(final MerchantUserCriteria criteria) {
+        return new Specification<MerchantUser>() {
+            @Override
+            public Predicate toPredicate(Root<MerchantUser> r, CriteriaQuery<?> q,
+                                         CriteriaBuilder cb) {
+                Predicate predicate = cb.conjunction();
+                if (criteria.getMerchantName() != null&&!"".equals(criteria.getMerchantName())) {
+                    predicate.getExpressions().add(
+                        cb.like(r.get("merchantName"), "%"+criteria.getMerchantName()+"%"));
+                }
+                if(criteria.getPhoneNum()!=null&&!"".equals(criteria.getPhoneNum())){
+                    predicate.getExpressions().add(
+                        cb.like(r.get("phoneNum"), "%"+criteria.getPhoneNum()+"%"));
+                }
+                if(criteria.getLinkMan()!=null&&!"".equals(criteria.getLinkMan())){
+                    predicate.getExpressions().add(
+                        cb.like(r.get("linkMan"), "%"+criteria.getLinkMan()+"%"));
+                }
+                if(criteria.getType()!=null) {
+                    predicate.getExpressions().add(
+                        cb.equal(r.get("type"),criteria.getType()));
+                }
+                if(criteria.getPartner()!=null) {
+                    predicate.getExpressions().add(
+                        cb.equal(r.get("partner"),criteria.getPartner()));
+                }
+                if(criteria.getStartDate()!=null&&!"".equals(criteria.getStartDate())) {
+                    Date start = new Date(criteria.getStartDate());
+                    Date end = new Date(criteria.getEndDate());
+                    predicate.getExpressions().add(cb.between(r.get("createdDate"),criteria.getStartDate(),criteria.getEndDate()));
+                }
+                return predicate;
+            }
+        };
     }
 }

@@ -278,7 +278,7 @@ public class OrderController {
             merchantWallet =
             merchantService.findMerchantWalletByMerchant(merchant);
 
-        Long currentBind = leJiaUserService.countBindMerchant(merchant);
+        Long currentBind = leJiaUserService.countBindMerchantBindLeJiaUser(merchant);
 
         Map map = new HashMap<>();
         List<WithdrawBill> withdrawBillList = withdrawService.findByMerchantId(merchant.getId());

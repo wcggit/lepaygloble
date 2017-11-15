@@ -35,6 +35,7 @@ public class MerchantOrderExcel extends AbstractExcelView {
         MerchantScanPayWay payWay = (MerchantScanPayWay) map.get("payWay");
         List<OffLineOrder> offLineOrders = (List<OffLineOrder>) map.get("offLineOrders");
         List<ScanCodeOrder> scanCodeOrders = (List<ScanCodeOrder>) map.get("scanCodeOrders");
+        /*List<ScanCodeRefundOrder> refoundOrder = (List<ScanCodeRefundOrder>) map.get("refoundOrder");*/
         Long custScore = (Long) map.get("custScore");
         Long custPay = (Long) map.get("custPay");
         Long trueScore =(Long) map.get("trueScore");

@@ -416,4 +416,9 @@ public class MerchantService {
 
     }
 
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public Integer countBindUserByMerchant(Long merchantId) {
+        return merchantRepository.countBindUserByMerchant(merchantId);
+    }
+
 }
