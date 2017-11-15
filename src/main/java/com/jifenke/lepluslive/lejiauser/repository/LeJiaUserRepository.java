@@ -19,7 +19,7 @@ public interface LeJiaUserRepository extends JpaRepository<LeJiaUser, Long> {
     LeJiaUser findByPhoneNumber(String phoneNumber);
 
     @Query(value = "select count(*) from le_jia_user where bind_merchant_id = ?1", nativeQuery = true)
-    Long countBindMerchant(Long id);
+    Long countBindMerchantBindLeJiaUser(Long id);
 
     @Query(value = "select count(*) from le_jia_user where bind_partner_id = ?1", nativeQuery = true)
     Long countPartnerBindLeJiaUser(Long partnerId);

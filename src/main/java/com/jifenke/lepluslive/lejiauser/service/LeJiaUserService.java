@@ -7,22 +7,16 @@ import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.merchant.domain.criteria.LockMemberCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
 
 /**
  * Created by wcg on 16/4/21.
@@ -46,9 +40,13 @@ public class LeJiaUserService {
 
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Long countBindMerchant(Merchant merchant) {
+    public Long countBindMerchantBindLeJiaUser(Merchant merchant) {
+        return leJiaUserRepository.countBindMerchantBindLeJiaUser(merchant.getId());
+    }
 
-        return leJiaUserRepository.countBindMerchant(merchant.getId());
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Long countBindMerchantBindLeJiaUser(Long merchantId) {
+        return leJiaUserRepository.countBindMerchantBindLeJiaUser(merchantId);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)

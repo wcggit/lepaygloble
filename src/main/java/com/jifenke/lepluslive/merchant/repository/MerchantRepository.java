@@ -77,6 +77,9 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
         "where a.id in (?1) GROUP BY a.id ORDER BY number ", nativeQuery = true)
     List<Object[]> findPageMerchantMemberLockNumber(List<Object> obj);
 
+    @Query(value = "SELECT count(id) from le_jia_user  where bind_merchant_id = ?1", nativeQuery = true)
+    Integer countBindUserByMerchant(Long merchantId);
+
     /**
      * 查询商户旗下所有的会员锁定总数
      *
