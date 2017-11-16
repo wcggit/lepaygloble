@@ -8,12 +8,15 @@ import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWalletOnline;
 import com.jifenke.lepluslive.partner.service.*;
 import com.jifenke.lepluslive.security.SecurityUtils;
+import com.jifenke.lepluslive.weixin.domain.entities.Category;
+import com.jifenke.lepluslive.weixin.service.CategoryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +42,9 @@ public class PartnerWalletController {
 
     @Inject
     private PartnerWalletLogtExcel logtExcel;
+
+    @Inject
+    private CategoryService categoryService;
 
     /**
      * 佣金明细 - 数据
@@ -72,11 +78,15 @@ public class PartnerWalletController {
         }
         Long onIncome = partnerWalletOnlineLogService.countDailyIncomeCommissionByPartner(partner.getId());
         Long offIncome = partnerWalletLogService.countDailyIncomeCommissionByPartner(partner.getId());
+        List<Category> offlineChangeOrigins = categoryService.findAllByCategory(5);
+        List<Category> onlineChangeOrigins = categoryService.findAllByCategory(6);
         Map map = new HashMap<>();
         map.put("totalMoney", totalMoney);
         map.put("totalAvail", totalAvail);
         map.put("todayIncome", onIncome + offIncome);
         map.put("totalExpend", totalMoney - totalAvail);
+        map.put("offlineOrigins", offlineChangeOrigins);
+        map.put("onlineOrigins", onlineChangeOrigins);
         return LejiaResult.ok(map);
     }
 
