@@ -24,22 +24,30 @@ angular.module('lepayglobleApp')
                         },
                         {
                             ttl: "我的商户",
-                            state: "myitems"
+                            state: "itemsmanager"
                         },
                         {
                             ttl: "我的会员",
                             state: "userManager"
+                        },
+                        {
+                            ttl: "我的佣金",
+                            state: "usercommission"
                         }
                     ];
                     if ($location.url().indexOf( "/partnerhome")!=-1) {
                         $scope.currentTab = "partnerhome";
                         $state.go("partnerhome");
                     }
-                    if ($location.url().indexOf("myitems") != -1) {
-                        $scope.currentTab = "myitems";
+                    if ($location.url().indexOf("/itemsmanager") != -1) {
+                        $scope.currentTab = "itemsmanager";
                     }
                     if ($location.url().indexOf("/myUser") != -1) {
                         $scope.currentTab = "userManager";
+                        $('body').css({background: '#f3f3f3'});
+                    }
+                    if ($location.url().indexOf("/userCommission") != -1) {
+                        $scope.currentTab = "userCommission";
                         $('body').css({background: '#f3f3f3'});
                     }
                     $scope.onClickTab = function (tab) {

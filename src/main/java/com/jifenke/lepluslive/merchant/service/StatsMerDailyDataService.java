@@ -34,7 +34,7 @@ public class StatsMerDailyDataService {
         Map<String, Object> result = new HashMap<>(3);
         long totalElements = count(criteria);
         result.put("totalElements", totalElements);
-        result.put("data", list(criteria, 10));
+        result.put("data", list(criteria, criteria.getLimit()));
         result.put("totalPages", totalElements / 10 + 1);
         return result;
     }
@@ -103,7 +103,7 @@ public class StatsMerDailyDataService {
         }
         //group
         sql += " GROUP BY s.merchant_id) e ON m.id = e.merchantId ";
-        sql += "  WHERE 1 = 1 ";
+
         sql += " LEFT JOIN city c ON m.city_id = c.id ";
         sql += " LEFT JOIN merchant_user mu ON m.merchant_user_id = mu.id ";
         //影响记录总条数的筛选条件

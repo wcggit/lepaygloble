@@ -62,7 +62,7 @@ public class MerchantDataView extends AbstractExcelView {
             excelRow.createCell(1).setCellValue(String.valueOf(map.get("merchantName")));
             excelRow.createCell(2).setCellValue(String.valueOf(map.get("cityName")));
             excelRow.createCell(3).setCellValue(String.valueOf(map.get("ownerMerchant")));
-            Integer partnership = Integer.valueOf(String.valueOf(map.get("linkMan")));
+            Integer partnership = Integer.valueOf(String.valueOf(map.get("partnership")));
             if(partnership==0) {
                 excelRow.createCell(4).setCellValue("普通");
                 excelRow.createCell(5).setCellValue("普通: "+String.valueOf(map.get("ljBrokerage"))+"% 联盟："+String.valueOf(map.get("ljCommission"))+"%");
@@ -70,10 +70,10 @@ public class MerchantDataView extends AbstractExcelView {
                 excelRow.createCell(4).setCellValue("联盟");
                 excelRow.createCell(5).setCellValue("普通: "+String.valueOf(map.get("ljBrokerage"))+"% 联盟："+String.valueOf(map.get("ljCommission"))+"%");
             }
-            excelRow.createCell(6).setCellValue(String.valueOf(map.get("orderNum"))+"笔"+" ￥"+(Long.valueOf(String.valueOf(map.get("orderAmount")))/100.0));
-            excelRow.createCell(7).setCellValue(String.valueOf(map.get("leOrderNum"))+"笔"+" ￥"+(Long.valueOf(String.valueOf(map.get("leOrderAmount")))/100.0));
-            excelRow.createCell(8).setCellValue(String.valueOf(map.get("comOrderNum"))+"笔"+" ￥"+(Long.valueOf(String.valueOf(map.get("comOrderAmount")))/100.0));
-            excelRow.createCell(9).setCellValue(String.valueOf(map.get("lockNum")));
+            excelRow.createCell(6).setCellValue(String.valueOf(map.get("orderNum")==null?"0":map.get("orderNum"))+"笔"+" ￥"+(Long.valueOf(String.valueOf(map.get("orderAmount")==null?"0":map.get("orderAmount")))/100.0));
+            excelRow.createCell(7).setCellValue(String.valueOf(map.get("leOrderNum")==null?"0":map.get("leOrderNum"))+"笔"+" ￥"+(Long.valueOf(String.valueOf(map.get("leOrderAmount")==null?"0":map.get("leOrderAmount")))/100.0));
+            excelRow.createCell(8).setCellValue(String.valueOf(map.get("comOrderNum")==null?"0":map.get("comOrderNum"))+"笔"+" ￥"+(Long.valueOf(String.valueOf(map.get("comOrderAmount")==null?"0":map.get("comOrderAmount")))/100.0));
+            excelRow.createCell(9).setCellValue(String.valueOf(map.get("lockNum")==null?"0":map.get("lockNum")));
             excelRow.createCell(10).setCellValue(String.valueOf(map.get("bindCount"))+"/"+String.valueOf(map.get("bindLimit")));
         }
     }

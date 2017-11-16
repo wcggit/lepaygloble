@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('myItemsController', function ($scope, Partner, $state,$http) {
+    .controller('myMerchantController', function ($scope, Partner, $state,$http) {
         // $('body').css({background: '#f3f3f3'});
         $('.main-content').css({height: 'auto'});
         // select标签右侧小三角
@@ -41,33 +41,37 @@ angular.module('lepayglobleApp')
              }, function (start, end, label) {
              });
         $("#timePicker1").val("");
+
+        var array = new Array();
         var currentPage = 1;
         var criteria = {};
         criteria.offset = 1;
-        // Partner.countFullMerchant().then(function (response) {
-        //     var data = response.data;
-        //     $scope.fullMerchant = data;
+        // $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
+        //     console.log(response);
+        //     if (response.status == 200) {
+        //         var data = response.data;
+        //         $scope.page = currentPage;
+        //         $scope.pulls = data.data;
+        //     } else {
+        //         alert("加载商户错误...");
+        //     }
         // });
+
         loadContent();
         // getTotalCount();
         function loadContent() {
-            $http.post("/api/merchantUser/merchantList",criteria).success(function (response) {
+            $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
                 console.log(response);
                 if (response.status == 200) {
                     var data = response.data;
                     $scope.page = currentPage;
                     $scope.pulls = data.data;
-                    $scope.totalPages = response.data.totalPages;
+                    $scope.totalPages = data.totalPages;
                 } else {
-                    alert("加载门店错误...");
+                    alert("加载商户错误...");
                 }
-            });
 
-            // Partner.getPartnerBindMerchantList(criteria).then(function (response) {
-            //     var data = response.data;
-            //     $scope.page = currentPage;
-            //     $scope.pulls = data;
-            // });
+            });
         }
 
         $scope.loadPage = function (page) {
@@ -89,7 +93,7 @@ angular.module('lepayglobleApp')
         };
 
         // function getTotalPage() {
-        //     $http.post("/api/merchantUser/merchantList",criteria).success(function (response) {
+        //     $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
         //         console.log(response);
         //         if (response.status == 200) {
         //             $scope.totalPages = response.data.totalPages;
@@ -98,29 +102,30 @@ angular.module('lepayglobleApp')
         //
         //         }
         //     });
-        //     // Partner.getPartnerBindMerchantListPage(criteria).then(function (response) {
-        //     //     $scope.totalPages = response.data;
-        //     //     loadContent();
-        //     // });
         // }
-
+        //
         // function getTotalCount() {
-        //     Partner.getPartnerBindMerchantListCount(criteria).then(function (response) {
-        //         $scope.totalCount = response.data;
-        //         loadContent();
+        //     $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
+        //         console.log(response);
+        //         if (response.status == 200) {
+        //             $scope.totalCount = response.data.totalElements;
+        //             loadContent();
+        //         } else {
+        //
+        //         }
         //     });
         // }
 
         $scope.searchByCriteria = function () {
-            //获取门店名称
+            //获取商户名称
             var storeName = $("#storeName").val();
-            //获取所述商户
-            var merchantName = $("#merchantsName").val();
-            //获取时间
+            //获取负责人名称
+            var linkMan = $("#linkMan").val();
+            //过去交易时间
             var dateStr = $("#timePicker1").val();
-            //获取协议类型
-            var partnerShip = $("#partnerShip").val();
-            // var userBindState = $("#userBindState").val();
+            //获取负责人手机号
+            var merchantPhone = $("#merchantPhone").val();
+
             if (dateStr != null && dateStr != "") {
                 var startDate = dateStr.split("-")[0].trim();
                 var endDate = dateStr.split("-")[1].trim();
@@ -131,31 +136,25 @@ angular.module('lepayglobleApp')
                 criteria.endDate = null;
             }
             if (storeName != -1) {
-                criteria.merchant = storeName;
+                criteria.merchantName = storeName;
             } else {
-                criteria.merchant = null;
+                criteria.merchantName = null;
             }
-            if (merchantName != -1) {
-                criteria.merchantUserName = merchantName;
+            if (linkMan != -1) {
+                criteria.linkMan = linkMan;
             } else {
-                criteria.merchantUserName = null;
+                criteria.linkMan = null;
             }
-            if (partnerShip != -1) {
-                criteria.partnership = parseInt(partnerShip);
+            if (merchantPhone != -1) {
+                criteria.phoneNum = merchantPhone;
             } else {
-                criteria.partnership = null;
+                criteria.phoneNum = null;
             }
-            // if (userBindState != -1) {
-            //     criteria.userBindState = userBindState;
-            // } else {
-            //     criteria.userBindState = null;
-            // }
+            // console.log(criteria);
             criteria.offset = 1;
-            // criteria.merchantName = merchantName;
             currentPage = 1;
-            loadContent();
             // getTotalPage();
-            // getTotalCount()
+            loadContent();
         };
 
         // $scope.showFullMerchant = function (page) {
@@ -172,29 +171,25 @@ angular.module('lepayglobleApp')
         //     getTotalPage()
         //     getTotalCount()
         // };
-        $scope.goLePayCode = function (id) {
-            $state.go("lefuma", {id: id})
-        };
+        // $scope.goLePayCode = function (id) {
+        //     $state.go("lefuma", {id: id})
+        // };
         // $scope.goEdit = function (id) {
         //     $state.go("createitems", {id: id})
         // };
-        $scope.goMerchantUser = function (id) {
-            $state.go("accountmanager", {id: id})
-        };
-
+        // $scope.goMerchantUser = function (id) {
+        //     $state.go("accountmanager", {id: id})
+        // };
 
         // 导出表格
         $scope.exportExcel = function () {
             // setCriteria();
             var data = "?";
-            if(criteria.merchant != '' && criteria.merchant != undefined && criteria.merchant != null){
-                data += "&merchant=" + criteria.merchant;
+            if(criteria.merchantName != '' && criteria.merchantName != undefined && criteria.merchantName != null){
+                data += "&merchantName=" + criteria.merchantName;
             }
-            if(criteria.merchantUserName != '' && criteria.merchantUserName != undefined && criteria.merchantUserName != null){
-                data += "&merchantUserName=" + criteria.merchantUserName;
-            }
-            if(criteria.partnership != '' && criteria.partnership != undefined && criteria.partnership != null){
-                data += "&partnership=" + criteria.partnership;
+            if(criteria.phoneNum != '' && criteria.phoneNum != undefined && criteria.phoneNum != null){
+                data += "&phoneNum=" + criteria.phoneNum;
             }
             if(criteria.startDate != '' && criteria.startDate != undefined && criteria.startDate != null){
                 data += "&startDate=" + criteria.startDate;
@@ -202,8 +197,12 @@ angular.module('lepayglobleApp')
             if(criteria.endDate != '' && criteria.endDate != undefined && criteria.endDate != null){
                 data += "&endDate=" + criteria.endDate;
             }
+            if(criteria.linkMan != '' && criteria.linkMan != undefined && criteria.linkMan != null){
+                data += "&linkMan=" + criteria.linkMan;
+            }
             console.log(data);
-            location.href = "/api/merchantUser/merchantList/export" + data;
+            location.href = "/api/merchantUser/findByCriteria/export" + data;
         }
+
     });
 

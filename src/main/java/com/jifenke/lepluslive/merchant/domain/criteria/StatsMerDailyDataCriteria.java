@@ -13,6 +13,8 @@ public class StatsMerDailyDataCriteria {
 
     private Integer offset;
 
+    private Integer limit = 10;
+
     private Long city;
     /**
      * 销售
@@ -119,5 +121,13 @@ public class StatsMerDailyDataCriteria {
 
     public void setPartnership(Integer partnership) {
         this.partnership = partnership;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 }

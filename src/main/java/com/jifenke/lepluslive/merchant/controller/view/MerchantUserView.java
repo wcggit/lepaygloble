@@ -65,8 +65,7 @@ public class MerchantUserView extends AbstractExcelView {
             excelRow.createCell(5).setCellValue(String.valueOf(map.get("linkMan")));
             excelRow.createCell(6).setCellValue(String.valueOf(map.get("phoneNum")));
             excelRow.createCell(7).setCellValue(Long.valueOf(String.valueOf(map.get("totalCommission")))/100.0);
-            Date date = new Date(String.valueOf(map.get("createdDate")));
-            excelRow.createCell(8).setCellValue(sdf.format(date));
+            excelRow.createCell(8).setCellValue(String.valueOf(map.get("createdDate")));
         }
     }
 }

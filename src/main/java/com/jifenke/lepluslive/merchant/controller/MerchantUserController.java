@@ -423,7 +423,7 @@ public class MerchantUserController {
     }
 
 
-    @RequestMapping(value = "/merchantUser/findByCriteria/export", method = RequestMethod.POST)
+    @RequestMapping(value = "/merchantUser/findByCriteria/export", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView exporeExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
                                     @RequestParam(required = false) String linkMan,
@@ -442,7 +442,7 @@ public class MerchantUserController {
         if(StringUtils.isNoneBlank(phoneNum)) {
             merchantUserCriteria.setPhoneNum(phoneNum);
         }
-        merchantUserCriteria.setOffset(1000);
+        merchantUserCriteria.setOffset(1);
         Partner partner = partnerService
             .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         if (partner == null) {
@@ -451,7 +451,7 @@ public class MerchantUserController {
             merchantUserCriteria.setPartner(partner);
         }
         merchantUserCriteria.setType(8);
-        Page<MerchantUser> page = merchantUserService.findMerchantUserByPage(merchantUserCriteria, 10);
+        Page<MerchantUser> page = merchantUserService.findMerchantUserByPage(merchantUserCriteria, 1000);
         List<MerchantUser> content = page.getContent();
         List<Map> data = new ArrayList<>();
         if (content.size() > 0) {
@@ -513,6 +513,7 @@ public class MerchantUserController {
             criteria.setPartnership(partnership);
         }
         criteria.setOffset(1);
+        criteria.setLimit(2000);
         Partner partner = partnerService
             .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         if (partner == null) {
@@ -530,7 +531,7 @@ public class MerchantUserController {
             }
         }
         Map hashMap = new HashMap<>();
-        map.put("merDataList", list);
+        hashMap.put("merDataList", list);
         return new ModelAndView(merchantDataView, hashMap);
     }
 
