@@ -424,7 +424,6 @@ public class MerchantUserController {
 
 
     @RequestMapping(value = "/merchantUser/findByCriteria/export", method = RequestMethod.GET)
-    @ResponseBody
     public ModelAndView exporeExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
                                     @RequestParam(required = false) String linkMan,
                                     @RequestParam(required = false) String merchantName, @RequestParam(required = false) String phoneNum) {
@@ -495,7 +494,6 @@ public class MerchantUserController {
 
 
     @RequestMapping(value = "/merchantUser/merchantList/export", method = RequestMethod.GET)
-    @ResponseBody
     public ModelAndView merchantListExport(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
                                           @RequestParam(required = false) Integer partnership, @RequestParam(required = false) String merchant,@RequestParam(required = false) String merchantUserName) {
         StatsMerDailyDataCriteria criteria = new StatsMerDailyDataCriteria();
