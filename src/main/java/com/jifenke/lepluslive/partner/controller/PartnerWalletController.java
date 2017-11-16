@@ -71,7 +71,7 @@ public class PartnerWalletController {
         map.put("totalMoney",totalMoney);
         map.put("totalAvail",totalAvail);
         map.put("todayIncome",onIncome+offIncome);
-        map.put("todayExpend",onExpend+offExpend);
+        map.put("totalExpend",totalMoney-totalAvail);
         return LejiaResult.ok(map);
     }
 
