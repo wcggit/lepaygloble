@@ -4,6 +4,8 @@ import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
 import com.jifenke.lepluslive.merchant.controller.dto.PwdDto;
+import com.jifenke.lepluslive.merchant.controller.view.MerchantDataView;
+import com.jifenke.lepluslive.merchant.controller.view.MerchantUserView;
 import com.jifenke.lepluslive.merchant.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.MerchantUserCriteria;
 import com.jifenke.lepluslive.merchant.domain.criteria.PosOrderCriteria;
@@ -14,8 +16,10 @@ import com.jifenke.lepluslive.order.service.MerchantScanPayWayService;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -49,6 +53,10 @@ public class MerchantUserController {
     private StatsMerDailyDataService statsMerDailyDataService;
     @Inject
     private LeJiaUserService leJiaUserService;
+    @Inject
+    private MerchantUserView merchantUserView;
+    @Inject
+    private MerchantDataView merchantDataView;
 
     /**
      * 获取当前登录用户信息
@@ -388,6 +396,7 @@ public class MerchantUserController {
         return LejiaResult.ok(result);
     }
 
+
     @RequestMapping(value = "/merchantUser/merchantList", method = RequestMethod.POST)
     @ResponseBody
     public LejiaResult findByMerchantList(@RequestBody StatsMerDailyDataCriteria criteria) {
@@ -403,13 +412,127 @@ public class MerchantUserController {
         }
         Map<String, Object> map = statsMerDailyDataService.listByCriteria(criteria);
         List<Map<String, Object>> list = (List<Map<String, Object>>) map.get("data");
-        if(list!=null&&list.size()>0) {
+        if (list != null && list.size() > 0) {
             for (Map<String, Object> m : list) {
                 Long mid = Long.valueOf(String.valueOf(m.get("mid")));
                 Long bindCount = leJiaUserService.countBindMerchantBindLeJiaUser(mid);
-                m.put("bindCount",bindCount);
+                m.put("bindCount", bindCount);
             }
         }
         return LejiaResult.ok(map);
     }
+
+
+    @RequestMapping(value = "/merchantUser/findByCriteria/export", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView exporeExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
+                                    @RequestParam(required = false) String linkMan,
+                                    @RequestParam(required = false) String merchantName, @RequestParam(required = false) String phoneNum) {
+        MerchantUserCriteria merchantUserCriteria = new MerchantUserCriteria();
+        if(StringUtils.isNotBlank(startDate)) {
+            merchantUserCriteria.setStartDate(startDate);
+            merchantUserCriteria.setEndDate(endDate);
+        }
+        if(StringUtils.isNotBlank(linkMan)) {
+            merchantUserCriteria.setLinkMan(linkMan);
+        }
+        if(StringUtils.isNoneBlank(merchantName)) {
+            merchantUserCriteria.setMerchantName(merchantName);
+        }
+        if(StringUtils.isNoneBlank(phoneNum)) {
+            merchantUserCriteria.setPhoneNum(phoneNum);
+        }
+        merchantUserCriteria.setOffset(1);
+        Partner partner = partnerService
+            .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        if (partner == null) {
+            return null;
+        } else {
+            merchantUserCriteria.setPartner(partner);
+        }
+        merchantUserCriteria.setType(8);
+        Page<MerchantUser> page = merchantUserService.findMerchantUserByPage(merchantUserCriteria, 1000);
+        List<MerchantUser> content = page.getContent();
+        List<Map> data = new ArrayList<>();
+        if (content.size() > 0) {
+            for (MerchantUser merchantUser : content) {
+                Map<String, Object> map = new HashMap();
+                map.put("merchantNo", merchantUser.getId());
+                map.put("merchantName", merchantUser.getMerchantName());
+                map.put("cityName", merchantUser.getCity().getName());
+                List<MerchantUserShop> shops = merchantUserShopService.findByMerchantUser(merchantUser);
+                Integer totalBind = 0;
+                Long totalLimit = 0L;
+                Long totalCommission = 0L;
+                for (MerchantUserShop shop : shops) {
+                    Merchant merchant = shop.getMerchant();
+                    Integer bindUser = merchantService.countBindUserByMerchant(merchant.getId());
+                    totalBind += bindUser;
+                    totalLimit += merchant.getUserLimit();
+                    MerchantWalletOnline walletOnline = merchantWalletOnlineService.findByMerchant(merchant.getId());
+                    MerchantWallet wallet = merchantWalletService.findByMerchant(merchant.getId());
+                    if (walletOnline != null && walletOnline.getTotalMoney() != null) {
+                        totalCommission += walletOnline.getTotalMoney();
+                    }
+                    if (wallet != null && wallet.getTotalMoney() != null) {
+                        totalCommission += wallet.getTotalMoney();
+                    }
+                }
+                map.put("merchantCount", shops.size());
+                map.put("totalBind", totalBind);
+                map.put("totalLimit", totalLimit);
+                map.put("totalCommission", totalCommission);
+                map.put("linkMan", merchantUser.getLinkMan());
+                map.put("phoneNum", merchantUser.getPhoneNum());
+                map.put("createdDate", merchantUser.getCreatedDate());
+                data.add(map);
+            }
+        }
+        Map map = new HashMap<>();
+        map.put("merList", data);
+        return new ModelAndView(merchantUserView, map);
+    }
+
+
+    @RequestMapping(value = "/merchantUser/merchantList/export", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView merchantListExport(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
+                                          @RequestParam(required = false) Integer partnership, @RequestParam(required = false) String merchant,@RequestParam(required = false) String merchantUserName) {
+        StatsMerDailyDataCriteria criteria = new StatsMerDailyDataCriteria();
+        if(StringUtils.isNotBlank(startDate)) {
+            criteria.setStartDate(startDate);
+            criteria.setEndDate(endDate);
+        }
+        if(StringUtils.isNotBlank(merchant)) {
+            criteria.setMerchant(merchant);
+        }
+        if(StringUtils.isNoneBlank(merchantUserName)) {
+            criteria.setMerchantUserName(merchantUserName);
+        }
+        if(partnership!=null) {
+            criteria.setPartnership(partnership);
+        }
+        criteria.setOffset(1);
+        criteria.setLimit(2000);
+        Partner partner = partnerService
+            .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        if (partner == null) {
+            return null;
+        } else {
+            criteria.setPartner(partner.getId());
+        }
+        Map<String, Object> map = statsMerDailyDataService.listByCriteria(criteria);
+        List<Map<String, Object>> list = (List<Map<String, Object>>) map.get("data");
+        if (list != null && list.size() > 0) {
+            for (Map<String, Object> m : list) {
+                Long mid = Long.valueOf(String.valueOf(m.get("mid")));
+                Long bindCount = leJiaUserService.countBindMerchantBindLeJiaUser(mid);
+                m.put("bindCount", bindCount);
+            }
+        }
+        Map hashMap = new HashMap<>();
+        hashMap.put("merDataList", list);
+        return new ModelAndView(merchantDataView, hashMap);
+    }
+
 }

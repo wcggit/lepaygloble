@@ -198,16 +198,14 @@ public class MerchantUserService {
                         cb.equal(r.get("partner"),criteria.getPartner()));
                 }
                 if(criteria.getStartDate()!=null&&!"".equals(criteria.getStartDate())) {
-
                     try{
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                        Date start = sdf.parse(criteria.getStartDate());
+                        Date start =  sdf.parse(criteria.getStartDate());
                         Date end = sdf.parse(criteria.getEndDate());
                         predicate.getExpressions().add(cb.between(r.get("createdDate"),start,end));
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
                 return predicate;
             }

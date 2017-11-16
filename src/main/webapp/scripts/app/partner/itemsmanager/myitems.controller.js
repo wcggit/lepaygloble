@@ -182,5 +182,28 @@ angular.module('lepayglobleApp')
             $state.go("accountmanager", {id: id})
         };
 
+
+        // 导出表格
+        $scope.exportExcel = function () {
+            // setCriteria();
+            var data = "?";
+            if(criteria.merchant != '' && criteria.merchant != undefined && criteria.merchant != null){
+                data += "&merchant=" + criteria.merchant;
+            }
+            if(criteria.merchantUserName != '' && criteria.merchantUserName != undefined && criteria.merchantUserName != null){
+                data += "&merchantUserName=" + criteria.merchantUserName;
+            }
+            if(criteria.partnership != '' && criteria.partnership != undefined && criteria.partnership != null){
+                data += "&partnership=" + criteria.partnership;
+            }
+            if(criteria.startDate != '' && criteria.startDate != undefined && criteria.startDate != null){
+                data += "&startDate=" + criteria.startDate;
+            }
+            if(criteria.endDate != '' && criteria.endDate != undefined && criteria.endDate != null){
+                data += "&endDate=" + criteria.endDate;
+            }
+            console.log(data);
+            location.href = "/api/merchantUser/merchantList/export" + data;
+        }
     });
 
