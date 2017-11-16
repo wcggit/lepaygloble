@@ -52,7 +52,7 @@ public class PartnerWalletController {
         Long totalMoney = 0L;
         Long totalAvail = 0L;
         if(offWallet!=null&&offWallet.getTotalMoney()!=null) {
-            totalMoney+=onWallet.getTotalMoney();
+            totalMoney+=offWallet.getTotalMoney();
         }
         if(onWallet!=null&&onWallet.getTotalMoney()!=null) {
             totalMoney+=onWallet.getTotalMoney();

@@ -64,18 +64,44 @@ angular.module('lepayglobleApp')
         var currentPage = 1;
         var criteria = {};
         criteria.offset = 1;
-        Partner.countFullMerchant().then(function (response) {
-            var data = response.data;
-            $scope.fullMerchant = data;
-        });
-        getTotalPage();
-        getTotalCount();
-        function loadContent() {
-            Partner.getPartnerBindMerchantList(criteria).then(function (response) {
+        // criteria.linetype = 1;      //线上线下表示：0=线上；1=线下
+
+        //上方数据展示
+        $http.get("/api/partner/commission/data").success(function (response) {
+            console.log(response);
+            if (response.status == 200) {
                 var data = response.data;
-                $scope.page = currentPage;
-                $scope.pulls = data;
+                $scope.showData = data;
+            } else {
+                alert("加载错误...");
+            }
+
+        });
+        // Partner.countFullMerchant().then(function (response) {
+        //     var data = response.data;
+        //     $scope.fullMerchant = data;
+        // });
+        // getTotalPage();
+        // getTotalCount();
+        loadContent();
+        function loadContent() {
+            $http.post("/api/partner/onlineCommission/findByPage",criteria).success(function (response) {
+                console.log(response);
+                if (response.status == 200) {
+                    var data = response.data;
+                    // $scope.page = currentPage;
+                    // $scope.pulls = data.data;
+                    // $scope.totalPages = data.totalPages;
+                } else {
+                    alert("加载错误...");
+                }
+
             });
+            // Partner.getPartnerBindMerchantList(criteria).then(function (response) {
+            //     var data = response.data;
+            //     $scope.page = currentPage;
+            //     $scope.pulls = data;
+            // });
         }
 
         $scope.loadPage = function (page) {

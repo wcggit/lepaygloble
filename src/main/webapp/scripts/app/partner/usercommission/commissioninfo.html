@@ -4,19 +4,19 @@
         <!--明细展示框-->
         <section class="w-showCommissionData">
             <div>
-                <div>￥0</div>
+                <div>￥<span ng-bind="showData.todayIncome"></span></div>
                 <div>今日佣金收入</div>
             </div>
             <div>
-                <div>￥80000</div>
+                <div>￥<span ng-bind="showData.totalAvail"></span></div>
                 <div>当前佣金余额</div>
             </div>
             <div>
-                <div>￥0</div>
+                <div>￥<span ng-bind="showData.totalExpend"></span></div>
                 <div>佣金支出</div>
             </div>
             <div>
-                <div>￥800000</div>
+                <div>￥<span ng-bind="showData.totalMoney"></span></div>
                 <div>累计佣金收入</div>
             </div>
         </section>
@@ -46,9 +46,7 @@
                             <div class="input-group col-md-6">
                                 <select class="form-control" id="changeState">
                                     <option value="-1">全部</option>
-                                    <option value="0">未锁定</option>
-                                    <option value="1">即将锁满</option>
-                                    <option value="2">已锁满</option>
+
                                 </select>
                                 <span class="select-jiao"></span>
                             </div>
