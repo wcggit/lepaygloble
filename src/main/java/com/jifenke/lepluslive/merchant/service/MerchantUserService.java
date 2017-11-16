@@ -24,8 +24,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wcg on 16/6/27.
@@ -198,14 +200,7 @@ public class MerchantUserService {
                         cb.equal(r.get("partner"),criteria.getPartner()));
                 }
                 if(criteria.getStartDate()!=null&&!"".equals(criteria.getStartDate())) {
-                    try{
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                        Date start =  sdf.parse(criteria.getStartDate());
-                        Date end = sdf.parse(criteria.getEndDate());
-                        predicate.getExpressions().add(cb.between(r.get("createdDate"),start,end));
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                        predicate.getExpressions().add(cb.between(r.get("createdDate"),criteria.getStartDate(),criteria.getEndDate()));
                 }
                 return predicate;
             }
