@@ -55,7 +55,7 @@ public class PartnerWalletOnlineLogService {
         Map<String, Object> result = new HashMap<>(3);
         long totalElements = count(criteria);
         result.put("totalElements", totalElements);
-        result.put("data", list(criteria, 10));
+        result.put("data", list(criteria, criteria.getLimit()));
         result.put("totalPages", totalElements / 10 + 1);
         return result;
     }
