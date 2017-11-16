@@ -63,9 +63,7 @@ public class PartnerWalletController {
         if(onWallet!=null&&onWallet.getAvailableBalance()!=null) {
             totalAvail+=onWallet.getAvailableBalance();
         }
-        Long onExpend = partnerWalletOnlineLogService.countDailyExpendCommissionByPartner(partner.getId());
         Long onIncome = partnerWalletOnlineLogService.countDailyIncomeCommissionByPartner(partner.getId());
-        Long offExpend = partnerWalletLogService.countDailyExpendCommissionByPartner(partner.getId());
         Long offIncome = partnerWalletLogService.countDailyIncomeCommissionByPartner(partner.getId());
         Map map = new HashMap<>();
         map.put("totalMoney",totalMoney);
