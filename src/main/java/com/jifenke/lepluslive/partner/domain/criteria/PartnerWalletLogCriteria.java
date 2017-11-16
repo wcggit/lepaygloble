@@ -26,6 +26,18 @@ public class PartnerWalletLogCriteria {
      */
     private Integer offset;
 
+    /***
+     *   每页展示数据数
+     */
+    private Integer limit = 10;
+
+
+    /***
+     *   每页展示数据数
+     *   0=线上   1=线下
+     */
+    private Integer lineType;
+
     public Long getPartnerId() {
         return partnerId;
     }
@@ -64,5 +76,21 @@ public class PartnerWalletLogCriteria {
 
     public void setOffset(Integer offset) {
         this.offset = offset;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
+    public Integer getLineType() {
+        return lineType;
+    }
+
+    public void setLineType(Integer lineType) {
+        this.lineType = lineType;
     }
 }

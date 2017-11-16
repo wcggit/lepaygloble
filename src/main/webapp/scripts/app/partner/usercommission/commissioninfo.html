@@ -24,12 +24,11 @@
 
         <ul class="nav nav-tabs">
             <li name="tab1" class="active">
-                <a>线下佣金记录</a>
+                <a ng-click="changeLineType(1)">线下佣金记录</a>
             </li>
-            <li name="tab2"><a>线上佣金记录</a></li>
+            <li name="tab2"><a ng-click="changeLineType(0)">线上佣金记录</a></li>
         </ul>
         <div class="w-tabList">
-            <div class="offLine show" id="tab1">
                 <!--查询表单-->
                 <form class="form-inline">
                     <div class="row">
@@ -46,7 +45,6 @@
                             <div class="input-group col-md-6">
                                 <select class="form-control" id="changeState">
                                     <option value="-1">全部</option>
-
                                 </select>
                                 <span class="select-jiao"></span>
                             </div>
@@ -62,6 +60,11 @@
                 </form>
                 <div>
                     <!--表格-->
+                    <style>
+                        td {
+                            text-align: center;
+                        }
+                    </style>
                     <div class="panel panel-default">
                         <table class="table ol-tab">
                             <thead class="active">
@@ -77,18 +80,17 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="x in pulls">
-                                <td ng-bind="x[1]"></td>
+                                <td ng-bind="x.logId"></td>
                                 <td>
-                                    <p ng-bind="x[2]|date:'yyyy-MM-dd'"></p>
-                                    <p ng-bind="x[2]|date:'HH:mm:ss'"></p>
+                                    <p ng-bind="x.changeDate|date:'yyyy-MM-dd'"></p>
+                                    <p ng-bind="x.changeDate|date:'HH:mm:ss'"></p>
                                 </td>
-                                <td ng-show="x[3]==0">普通商户</td>
-                                <td ng-show="x[3]==1">联盟商户</td>
-                                <td ng-show="x[4]!=''" class="address"><span class="tool">{{x[4]}}</span></td>
-                                <td ng-show="x[4]==''">----</td>
-                                <td >{{x[5]}}/{{x[8]}}</td>
-                                <td ng-bind="x[6]/100"></td>
-                                <td ng-bind="x[7]/100"></td>
+                                <td ng-bind="x.changeMoney/100"></td>
+                                <td ng-show="x.changeOrigin==null">锁定会员消费</td>
+                                <td ng-show="x.changeOrigin!=null">{{x.changeOrigin}}</td>
+                                <td ng-bind="x.orderSid"></td>
+                                <td ng-bind="x.beforeChange"></td>
+                                <td ng-bind="x.afterChange"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -121,111 +123,6 @@
                         </ul>
                     </nav>
                 </div>
-            </div>
-            <div class="onLine fade" id="tab2">
-                <!--查询表单-->
-                <form class="form-inline">
-                    <div class="row">
-                        <div class="form-group col-md-5">
-                            <label>变更时间</label>
-                            <div class="input-group timePicker col-md-9">
-                                <input type="text" name="reservation" id="timePicker1"
-                                       class="form-control w-timeChoose"/>
-                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label>变更来源</label>
-                            <div class="input-group col-md-6">
-                                <select class="form-control" id="userBindState">
-                                    <option value="-1">全部</option>
-                                    <option value="0">未锁定</option>
-                                    <option value="1">即将锁满</option>
-                                    <option value="2">已锁满</option>
-                                </select>
-                                <span class="select-jiao"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div style="margin-bottom: 20px;">
-                            <button style="margin-left: 10.5%" type="button" class="btn btn-warning btn-check2"
-                                    ng-click="searchByCriteria()">查询
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <div>
-
-                    <!--表格-->
-                    <div class="panel panel-default">
-                        <table class="table ol-tab">
-                            <thead class="active">
-                            <tr>
-                                <td>账务流水号</td>
-                                <td>变更时间</td>
-                                <td>变更值</td>
-                                <td>变更来源</td>
-                                <td>关联业务单号</td>
-                                <td>变更前余额</td>
-                                <td>变更后余额</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="x in pulls">
-                                <td ng-bind="x[1]"></td>
-                                <td>
-                                    <p ng-bind="x[2]|date:'yyyy-MM-dd'"></p>
-                                    <p ng-bind="x[2]|date:'HH:mm:ss'"></p>
-                                </td>
-                                <td ng-show="x[3]==0">普通商户</td>
-                                <td ng-show="x[3]==1">联盟商户</td>
-                                <td ng-show="x[4]!=''" class="address"><span class="tool">{{x[4]}}</span></td>
-                                <td ng-show="x[4]==''">----</td>
-                                <td >{{x[5]}}/{{x[8]}}</td>
-                                <td ng-bind="x[6]/100"></td>
-                                <td ng-bind="x[7]/100"></td>
-                                <td>
-                                    <a ng-click="goLePayCode(x[0])">乐付码</a>
-                                    <a ng-click="goEdit(x[0])">编辑</a>
-                                    <a ng-click="goMerchantUser(x[0])">账户</a>
-                                    <!--<a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>-->
-                                    <!--<a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>-->
-                                    <!--<a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>-->
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!--分页-->
-                <div class=" clearfix">
-                    <nav class="pull-right">
-                        <ul class="pagination">
-                            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
-                            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
-                                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
-                            </li>
-                            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
-                            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
-                            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
-                            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
-                                1}}</a>
-                            </li>
-                            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
-                                2}}</a>
-                            </li>
-                            <li ng-class="{disabled: page==totalPages||totalPages==0}"
-                                ng-click="loadPage(page+1)"><a aria-label="Next">
-                                <span aria-hidden="true">›</span>
-                            </a></li>
-                            <li ng-class="{disabled: page==totalPages||totalPages==0}"
-                                ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -234,8 +131,5 @@
     $(".nav-tabs li").click(function () {
         $(".nav-tabs li").removeClass("active");
         $(this).addClass("active");
-        var _name = $(this).attr("name");
-        $(".w-tabList > div").removeClass("show").addClass("fade");
-        $("#" + _name).removeClass("fade").addClass("show");
     });
 </script>

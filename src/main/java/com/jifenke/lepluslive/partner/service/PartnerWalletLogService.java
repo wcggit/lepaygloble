@@ -56,7 +56,7 @@ public class PartnerWalletLogService {
         Map<String, Object> result = new HashMap<>(3);
         long totalElements = count(criteria);
         result.put("totalElements", totalElements);
-        result.put("data", list(criteria, 10));
+        result.put("data", list(criteria, criteria.getLimit()));
         result.put("totalPages", totalElements / 10 + 1);
         return result;
     }
@@ -91,7 +91,7 @@ public class PartnerWalletLogService {
      * @param criteria 筛选条件
      */
     private long count(PartnerWalletLogCriteria criteria) {
-        String sql = " SELECT count(*) FROM partner_wallet_log log " +
+        String sql = " SELECT count(*) totalElements FROM partner_wallet_log log " +
             " LEFT JOIN category c ON log.type = c.id " +
             " WHERE 1=1 ";
         if(criteria.getPartnerId()!=null) {
