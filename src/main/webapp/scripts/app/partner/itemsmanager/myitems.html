@@ -98,9 +98,9 @@
                         <td>{{x.lockNum==null?0:x.lockNum}}</td>
                         <td>{{x.bindCount}}/{{x.bindLimit}}</td>
                         <td class="col-md-1">
-                            <a ng-click="goLePayCode(x[0])">乐付码</a>
+                            <a ng-click="goLePayCode(x.merchantNo)">乐付码</a>
                             <!--<a ng-click="goEdit(x[0])">编辑</a>-->
-                            <a ng-click="goMerchantUser(x[0])">账户</a>
+                            <a ng-click="goMerchantUser(x.merchantNo)">账户</a>
                             <!--<a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>-->
                             <!--<a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>-->
                             <!--<a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>-->
@@ -113,6 +113,9 @@
 
         <!--分页-->
         <div class=" clearfix">
+            <nav class="pull-left">
+                <button type="button" style="margin-top: 20%" class="btn btn-warning btn-check2">导出表格</button>
+            </nav>
             <nav class="pull-right">
                 <ul class="pagination">
                     <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>

@@ -46,18 +46,18 @@ angular.module('lepayglobleApp')
         var currentPage = 1;
         var criteria = {};
         criteria.offset = 1;
-        $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
-            console.log(response);
-            if (response.status == 200) {
-                var data = response.data;
-                $scope.page = currentPage;
-                $scope.pulls = data.data;
-            } else {
-                alert("加载商户错误...");
-            }
-        });
+        // $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
+        //     console.log(response);
+        //     if (response.status == 200) {
+        //         var data = response.data;
+        //         $scope.page = currentPage;
+        //         $scope.pulls = data.data;
+        //     } else {
+        //         alert("加载商户错误...");
+        //     }
+        // });
 
-        getTotalPage();
+        loadContent();
         // getTotalCount();
         function loadContent() {
             $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
@@ -66,9 +66,11 @@ angular.module('lepayglobleApp')
                     var data = response.data;
                     $scope.page = currentPage;
                     $scope.pulls = data.data;
+                    $scope.totalPages = data.totalPages;
                 } else {
                     alert("加载商户错误...");
                 }
+
             });
         }
 
@@ -90,17 +92,17 @@ angular.module('lepayglobleApp')
             loadContent();
         };
 
-        function getTotalPage() {
-            $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
-                console.log(response);
-                if (response.status == 200) {
-                    $scope.totalPages = response.data.totalPages;
-                    loadContent();
-                } else {
-
-                }
-            });
-        }
+        // function getTotalPage() {
+        //     $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {
+        //         console.log(response);
+        //         if (response.status == 200) {
+        //             $scope.totalPages = response.data.totalPages;
+        //             loadContent();
+        //         } else {
+        //
+        //         }
+        //     });
+        // }
         //
         // function getTotalCount() {
         //     $http.post("/api/merchantUser/findByCriteria",criteria).success(function (response) {

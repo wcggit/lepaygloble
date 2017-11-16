@@ -48,7 +48,7 @@ angular.module('lepayglobleApp')
         //     var data = response.data;
         //     $scope.fullMerchant = data;
         // });
-        getTotalPage();
+        loadContent();
         // getTotalCount();
         function loadContent() {
             $http.post("/api/merchantUser/merchantList",criteria).success(function (response) {
@@ -57,6 +57,7 @@ angular.module('lepayglobleApp')
                     var data = response.data;
                     $scope.page = currentPage;
                     $scope.pulls = data.data;
+                    $scope.totalPages = response.data.totalPages;
                 } else {
                     alert("加载门店错误...");
                 }
@@ -87,21 +88,21 @@ angular.module('lepayglobleApp')
             loadContent();
         };
 
-        function getTotalPage() {
-            $http.post("/api/merchantUser/merchantList",criteria).success(function (response) {
-                console.log(response);
-                if (response.status == 200) {
-                    $scope.totalPages = response.data.totalPages;
-                    loadContent();
-                } else {
-
-                }
-            });
-            // Partner.getPartnerBindMerchantListPage(criteria).then(function (response) {
-            //     $scope.totalPages = response.data;
-            //     loadContent();
-            // });
-        }
+        // function getTotalPage() {
+        //     $http.post("/api/merchantUser/merchantList",criteria).success(function (response) {
+        //         console.log(response);
+        //         if (response.status == 200) {
+        //             $scope.totalPages = response.data.totalPages;
+        //             loadContent();
+        //         } else {
+        //
+        //         }
+        //     });
+        //     // Partner.getPartnerBindMerchantListPage(criteria).then(function (response) {
+        //     //     $scope.totalPages = response.data;
+        //     //     loadContent();
+        //     // });
+        // }
 
         // function getTotalCount() {
         //     Partner.getPartnerBindMerchantListCount(criteria).then(function (response) {
@@ -173,9 +174,9 @@ angular.module('lepayglobleApp')
         $scope.goLePayCode = function (id) {
             $state.go("lefuma", {id: id})
         };
-        $scope.goEdit = function (id) {
-            $state.go("createitems", {id: id})
-        };
+        // $scope.goEdit = function (id) {
+        //     $state.go("createitems", {id: id})
+        // };
         $scope.goMerchantUser = function (id) {
             $state.go("accountmanager", {id: id})
         };

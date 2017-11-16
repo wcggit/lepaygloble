@@ -64,7 +64,7 @@
                         <td ng-bind="x.merchantName"></td>
                         <td ng-bind="x.cityName"></td>
                         <td ng-bind="x.merchantName"></td>
-                        <td ng-bind="x.totalBind"></td>
+                        <td>{{x.totalBind}}/{{x.totalLimit}}</td>
                         <td ng-bind="x.linkMan"></td>
                         <td ng-bind="x.phoneNum"></td>
                         <td ng-bind="x.totalCommission/100"></td>
@@ -88,6 +88,9 @@
 
         <!--分页-->
         <div class=" clearfix">
+            <nav class="pull-left">
+                <button type="button" style="margin-top: 20%" class="btn btn-warning btn-check2">导出表格</button>
+            </nav>
             <nav class="pull-right">
                 <ul class="pagination">
                     <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
