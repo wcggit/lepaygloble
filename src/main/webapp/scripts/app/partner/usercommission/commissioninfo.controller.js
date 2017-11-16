@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('commissionInfoController', function ($scope, Partner, $state) {
+    .controller('commissionInfoController', function ($scope, Partner, $state,$http) {
         // $('body').css({background: '#f3f3f3'});
         $('.main-content').css({height: 'auto'});
         // select标签右侧小三角
