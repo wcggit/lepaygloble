@@ -153,7 +153,8 @@ angular.module('lepayglobleApp')
             criteria.offset = 1;
             // criteria.merchantName = merchantName;
             currentPage = 1;
-            getTotalPage();
+            loadContent();
+            // getTotalPage();
             // getTotalCount()
         };
 
