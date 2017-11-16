@@ -24,6 +24,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -164,7 +165,7 @@ public class MerchantUserService {
     }
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Page findMerchantUserByPage(MerchantUserCriteria criteria, Integer limit) {
-        Sort sort = new Sort(Sort.Direction.DESC, "completeDate");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdDate");
         return merchantUserRepository
             .findAll(getWhereClause(criteria),
                 new PageRequest(criteria.getOffset() - 1, limit, sort));
@@ -197,9 +198,14 @@ public class MerchantUserService {
                         cb.equal(r.get("partner"),criteria.getPartner()));
                 }
                 if(criteria.getStartDate()!=null&&!"".equals(criteria.getStartDate())) {
-                    Date start = new Date(criteria.getStartDate());
-                    Date end = new Date(criteria.getEndDate());
-                    predicate.getExpressions().add(cb.between(r.get("createdDate"),criteria.getStartDate(),criteria.getEndDate()));
+                    try{
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        Date start =  sdf.parse(criteria.getStartDate());
+                        Date end = sdf.parse(criteria.getEndDate());
+                        predicate.getExpressions().add(cb.between(r.get("createdDate"),start,end));
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 return predicate;
             }
