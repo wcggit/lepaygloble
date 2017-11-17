@@ -15,6 +15,7 @@ angular.module('lepayglobleApp')
                 }
             });
         } else {
+            // alert(3);
             $state.go("myitems");
         }
         $scope.downloadQrCode = function () {
