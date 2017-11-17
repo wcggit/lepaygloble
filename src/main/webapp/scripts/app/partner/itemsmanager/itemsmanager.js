@@ -47,4 +47,35 @@ angular.module('lepayglobleApp')
             },
             resolve: {}
         })
+        .state('lefuma', {
+            parent: 'itemsmanager',
+            url: '/lefuma',
+            params: {
+                id: null
+            },
+            data: {
+                authorities: ["partner"]
+            },
+            views: {
+                'itemsmanagerContent@itemsmanager': {
+                    templateUrl: 'scripts/app/partner/itemsmanager/lefuma.html',
+                    controller: 'lefumaController'
+                }
+            },
+            resolve: {}
+        })
+        .state('accountmanager', {
+            parent: 'itemsmanager',
+            url: '/accountmanager?id',
+            data: {
+                authorities: ["partner"]
+            },
+            views: {
+                'itemsmanagerContent@itemsmanager': {
+                    templateUrl: 'scripts/app/partner/itemsmanager/accountmanager.html',
+                    controller: 'accountManagerController'
+                }
+            },
+            resolve: {}
+        })
     });
