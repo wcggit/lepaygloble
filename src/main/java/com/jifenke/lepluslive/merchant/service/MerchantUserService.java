@@ -24,10 +24,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by wcg on 16/6/27.
@@ -200,7 +197,9 @@ public class MerchantUserService {
                         cb.equal(r.get("partner"),criteria.getPartner()));
                 }
                 if(criteria.getStartDate()!=null&&!"".equals(criteria.getStartDate())) {
-                        predicate.getExpressions().add(cb.between(r.get("createdDate"),criteria.getStartDate(),criteria.getEndDate()));
+                    Date start = new Date(criteria.getStartDate());
+                    Date end = new Date(criteria.getEndDate());
+                    predicate.getExpressions().add(cb.between(r.get("createdDate"),start,end));
                 }
                 return predicate;
             }
