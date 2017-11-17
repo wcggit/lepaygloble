@@ -362,25 +362,11 @@ public class MerchantUserController {
                 map.put("merchantNo", merchantUser.getId());
                 map.put("merchantName", merchantUser.getMerchantName());
                 map.put("cityName", merchantUser.getCity().getName());
-                List<MerchantUserShop> shops = merchantUserShopService.findByMerchantUser(merchantUser);
-                Integer totalBind = 0;
-                Long totalLimit = 0L;
-                Long totalCommission = 0L;
-                for (MerchantUserShop shop : shops) {
-                    Merchant merchant = shop.getMerchant();
-                    Integer bindUser = merchantService.countBindUserByMerchant(merchant.getId());
-                    totalBind += bindUser;
-                    totalLimit += merchant.getUserLimit();
-                    MerchantWalletOnline walletOnline = merchantWalletOnlineService.findByMerchant(merchant.getId());
-                    MerchantWallet wallet = merchantWalletService.findByMerchant(merchant.getId());
-                    if (walletOnline != null && walletOnline.getTotalMoney() != null) {
-                        totalCommission += walletOnline.getTotalMoney();
-                    }
-                    if (wallet != null && wallet.getTotalMoney() != null) {
-                        totalCommission += wallet.getTotalMoney();
-                    }
-                }
-                map.put("merchantCount", shops.size());
+                Long merchantCount = merchantUserShopService.countByMerchantUserId(merchantUser);
+                Integer totalBind = merchantService.countBindUserByMerchantUser(merchantUser.getId());
+                Long totalLimit = merchantService.countBindLimitByMerchantUser(merchantUser.getId());
+                Long totalCommission = merchantWalletService.countTotalMoneyByMerchantUser(merchantUser.getId());
+                map.put("merchantCount", merchantCount);
                 map.put("totalBind", totalBind);
                 map.put("totalLimit", totalLimit);
                 map.put("totalCommission", totalCommission);
@@ -459,25 +445,11 @@ public class MerchantUserController {
                 map.put("merchantNo", merchantUser.getId());
                 map.put("merchantName", merchantUser.getMerchantName());
                 map.put("cityName", merchantUser.getCity().getName());
-                List<MerchantUserShop> shops = merchantUserShopService.findByMerchantUser(merchantUser);
-                Integer totalBind = 0;
-                Long totalLimit = 0L;
-                Long totalCommission = 0L;
-                for (MerchantUserShop shop : shops) {
-                    Merchant merchant = shop.getMerchant();
-                    Integer bindUser = merchantService.countBindUserByMerchant(merchant.getId());
-                    totalBind += bindUser;
-                    totalLimit += merchant.getUserLimit();
-                    MerchantWalletOnline walletOnline = merchantWalletOnlineService.findByMerchant(merchant.getId());
-                    MerchantWallet wallet = merchantWalletService.findByMerchant(merchant.getId());
-                    if (walletOnline != null && walletOnline.getTotalMoney() != null) {
-                        totalCommission += walletOnline.getTotalMoney();
-                    }
-                    if (wallet != null && wallet.getTotalMoney() != null) {
-                        totalCommission += wallet.getTotalMoney();
-                    }
-                }
-                map.put("merchantCount", shops.size());
+                Long merchantCount = merchantUserShopService.countByMerchantUserId(merchantUser);
+                Integer totalBind = merchantService.countBindUserByMerchantUser(merchantUser.getId());
+                Long totalLimit = merchantService.countBindLimitByMerchantUser(merchantUser.getId());
+                Long totalCommission = merchantWalletService.countTotalMoneyByMerchantUser(merchantUser.getId());
+                map.put("merchantCount", merchantCount);
                 map.put("totalBind", totalBind);
                 map.put("totalLimit", totalLimit);
                 map.put("totalCommission", totalCommission);

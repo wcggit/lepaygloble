@@ -80,6 +80,11 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
     @Query(value = "SELECT count(id) from le_jia_user  where bind_merchant_id = ?1", nativeQuery = true)
     Integer countBindUserByMerchant(Long merchantId);
 
+    @Query(value = "SELECT COUNT(*) FROM merchant m LEFT JOIN le_jia_user lu ON m.id = lu.bind_merchant_id where m.merchant_user_id = ?1", nativeQuery = true)
+    Integer countBindUserByMerchantUser(Long merchantUserId);
+
+    @Query(value = "SELECT IFNULL(SUM(m.user_limit),0) FROM merchant m where m.merchant_user_id = ?1", nativeQuery = true)
+    Long countUserLimitByMerchantUser(Long merchantUserId);
     /**
      * 查询商户旗下所有的会员锁定总数
      *

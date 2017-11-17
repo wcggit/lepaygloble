@@ -40,4 +40,14 @@ public class MerchantWalletService {
     public MerchantWallet findByMerchant(Long merchantId) {
         return repository.findByMerchantId(merchantId);
     }
+
+    /***
+     *   根据商户查询佣金总额
+     */
+    @Transactional(readOnly = true,propagation = Propagation.REQUIRED)
+    public Long countTotalMoneyByMerchantUser(Long merchantUserId) {
+        Long offCommision = repository.countTotalMoneyByMerchantUserId(merchantUserId);
+        Long onCommission = repository.countTotalMoneyOnlineByMerchantUserId(merchantUserId);
+        return offCommision+onCommission;
+    }
 }

@@ -47,6 +47,10 @@ public class UnionImportOrderService {
                     predicate.getExpressions().add(
                         cb.equal(r.get("merNum"),unionCriteria.getMerNum()));
                 }
+                if(unionCriteria.getPayWay()!=null) {
+                    predicate.getExpressions().add(
+                        cb.equal(r.get("payWay"),unionCriteria.getPayWay()));
+                }
                 return predicate;
             }
         };

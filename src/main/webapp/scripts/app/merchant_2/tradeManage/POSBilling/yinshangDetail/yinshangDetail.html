@@ -90,8 +90,7 @@
                 <tbody ng-show="bankOrders!=null">
                 <tr ng-repeat="order in bankOrders">
                     <td>
-                        <p>{{order.createdAt|date:'yyyy-MM-dd'}}</p>
-                        <p>{{order.createdAt|date:'HH:mm:ss'}}</p>
+                        <p>{{order.settleDate}}</p>
                     </td>
                     <td>{{bankOrderDatas[$index].terminalNum}}</td>
                     <td>{{bankOrderDatas[$index].serialNum}}</td>

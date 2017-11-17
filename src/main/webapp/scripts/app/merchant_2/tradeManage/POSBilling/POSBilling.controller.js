@@ -54,8 +54,11 @@ angular.module('lepayglobleApp')
                 var page = response.data;
                 $scope.page = currentPage;
                 $scope.totalPages = page.totalPages;
-                if(page.content.length>0)
-                $scope.settlements = page.content;
+                if(page.content.length>0) {
+                    $scope.settlements = page.content;
+                }else {
+                    $scope.settlements=null;
+                }
             });
         }
 
@@ -68,8 +71,11 @@ angular.module('lepayglobleApp')
                 var page = response.data;
                 $scope.page = currentPage;
                 $scope.totalPages = page.totalPages;
-                if(page.content.length>0)
-                $scope.importSettlements = page.content;
+                if(page.content.length>0) {
+                    $scope.importSettlements = page.content;
+                }else {
+                    $scope.importSettlements = null;
+                }
             });
         }
 
@@ -87,6 +93,7 @@ angular.module('lepayglobleApp')
                 return;
             }
             currentPage = page;
+            settlementCriteria.offset = page;
             if($scope.currentState==0) {
                 loadImportSettlement();
             }else {

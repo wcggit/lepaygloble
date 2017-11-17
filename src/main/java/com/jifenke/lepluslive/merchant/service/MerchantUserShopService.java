@@ -42,6 +42,10 @@ public class MerchantUserShopService {
         return repository.findByMerchantUser(merchantUser);
     }
 
+    public Long countByMerchantUserId(MerchantUser merchantUser) {
+        return repository.countByMerchantUserId(merchantUser.getId());
+    }
+
     /**
      * 保存某个账号对应的门店 2017/02/09
      */

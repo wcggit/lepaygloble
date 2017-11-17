@@ -3,7 +3,9 @@ package com.jifenke.lepluslive.merchant.repository;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserShop;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -22,4 +24,8 @@ public interface MerchantUserShopRepository extends JpaRepository<MerchantUserSh
     MerchantUserShop findByMerchantUserAndMerchant(MerchantUser merchantUser, Merchant merchant);
 
     List<MerchantUserShop> findByMerchant(Merchant merchant);
+
+    @Query(value = "SELECT count(*) FROM merchant_user_shop ms WHERE ms.merchant_user_id = ?1", nativeQuery = true)
+    Long countByMerchantUserId(Long merchantUserId);
+
 }

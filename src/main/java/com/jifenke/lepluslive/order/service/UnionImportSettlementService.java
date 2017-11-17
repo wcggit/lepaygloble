@@ -16,6 +16,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -42,11 +43,12 @@ public class UnionImportSettlementService {
             public Predicate toPredicate(Root<UnionImportSettlement> r, CriteriaQuery<?> q,
                                          CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
                 if (unionCriteria.getStartDate() != null &&!"".equals(unionCriteria.getStartDate())) {
+                    Date start = new Date(unionCriteria.getStartDate());
+                    Date end = new Date(unionCriteria.getEndDate());
                     predicate.getExpressions().add(
-                        cb.between(r.<Date>get("settleDate"),
-                            new Date(unionCriteria.getStartDate()),
-                            new Date(unionCriteria.getEndDate())));
+                        cb.between(r.get("settleDate"),sdf.format(start),sdf.format(end)));
                 }
                 if(unionCriteria.getMerchantUserId()!=null&&!"".equals(unionCriteria.getMerchantUserId())) {
                     predicate.getExpressions().add(
