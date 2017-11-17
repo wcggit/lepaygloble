@@ -46,7 +46,7 @@ public class StatsMerDailyDataService {
      */
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> list(StatsMerDailyDataCriteria criteria, int pageSize) {
-        String sql = "SELECT m.id mid,m.user_limit bindLimit,m.`name` AS merchantName,mu.`merchant_name` AS ownerMerchant,m.partnership AS partnership,m.lj_commission AS ljCommission," +
+        String sql = "SELECT m.id mid,m.sid sid,m.user_limit bindLimit,m.`name` AS merchantName,mu.`merchant_name` AS ownerMerchant,m.partnership AS partnership,m.lj_commission AS ljCommission," +
                 "m.lj_brokerage AS ljBrokerage,c.`name` AS cityName,e.* FROM merchant m LEFT JOIN (SELECT s.merchant_id AS merchantId,SUM(s.lock_num) AS lockNum,SUM(s.order_num) AS orderNum,"
                 + "SUM(s.order_amount) AS orderAmount,SUM(s.com_order_num) AS comOrderNum," +
                 "SUM(s.com_order_amount) AS comOrderAmount,SUM(s.le_order_num) AS leOrderNum," +
