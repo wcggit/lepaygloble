@@ -40,44 +40,70 @@ angular.module('lepayglobleApp')
                  }
              }, function (start, end, label) {
              });
-        $('#timePicker1')
-        // .val(moment().subtract('day', 1).format('YYYY/MM/DD HH:mm:00') + ' - ' +
-        // moment().format('YYYY/MM/DD HH:mm:59'))
-            .daterangepicker({
-                timePicker: true, //是否显示小时和分钟
-                timePickerIncrement: 1, //时间的增量，单位为分钟
-                opens: 'right', //日期选择框的弹出位置
-                startDate: moment().format('YYYY/MM/DD HH:mm:00'),
-                endDate: moment().format('YYYY/MM/DD HH:mm:59'),
-                format: 'YYYY/MM/DD HH:mm:ss', //控件中from和to 显示的日期格式
-                ranges: {
-                    '最近1小时': [moment().subtract('hours', 1), moment()],
-                    '今日': [moment().startOf('day'), moment()],
-                    '昨日': [moment().subtract('days', 1).startOf('day'),
-                        moment().subtract('days', 1).endOf('day')],
-                    '最近7日': [moment().subtract('days', 6), moment()],
-                    '最近30日': [moment().subtract('days', 29), moment()]
-                }
-            }, function (start, end, label) {
-            });
         $("#timePicker").val("");
         var currentPage = 1;
         var criteria = {};
+        var offlineOrigins,onlineOrigins;
         criteria.offset = 1;
-        Partner.countFullMerchant().then(function (response) {
-            var data = response.data;
-            $scope.fullMerchant = data;
-        });
-        getTotalPage();
-        getTotalCount();
-        function loadContent() {
-            Partner.getPartnerBindMerchantList(criteria).then(function (response) {
+        criteria.lineType = 1;      //线上线下表示：0=线上；1=线下
+
+        //上方数据展示
+        $http.get("/api/partner/commission/data").success(function (response) {
+            console.log(response);
+            if (response.status == 200) {
                 var data = response.data;
-                $scope.page = currentPage;
-                $scope.pulls = data;
-            });
+                $scope.showData = data;
+                offlineOrigins = data.offlineOrigins;
+                onlineOrigins = data.onlineOrigins;
+                appendSelect(offlineOrigins);
+            } else {
+                alert("加载错误...");
+            }
+
+        });
+        function appendSelect(arry) {
+            $("#changeState").empty();
+            $("#changeState").append(
+                $("<option></option>").attr("value","-1").html("全部")
+            );
+            for(var i = 0;i<arry.length;i++){
+                $("#changeState").append(
+                    $("<option></option>").attr("value",arry[i].id).html(arry[i].typeExplain)
+                )
+            }
         }
 
+        loadContent();
+        function loadContent() {
+            $http.post("/api/partner/commission/findByPage",criteria).success(function (response) {
+                console.log(response);
+                if (response.status == 200) {
+                    var data = response.data;
+                    $scope.page = currentPage;
+                    $scope.pulls = data.data;
+                    $scope.totalPages = data.totalPages;
+                } else {
+                    alert("加载错误...");
+                }
+
+            });
+        }
+        //线上线下转换
+        $scope.changeLineType = function (type) {
+            $("#timePicker").val("");
+            criteria.startDate = null;
+            criteria.endDate = null;
+            criteria.type = null;
+            criteria.lineType = type;
+            criteria.offset = 1;
+            currentPage = 1;
+            if(type == 0){
+                appendSelect(onlineOrigins);
+            } else {
+                appendSelect(offlineOrigins);
+            }
+            loadContent();
+        };
         $scope.loadPage = function (page) {
             if (page == 0) {
                 return;
@@ -96,62 +122,46 @@ angular.module('lepayglobleApp')
             loadContent();
         };
 
-        function getTotalPage() {
-            Partner.getPartnerBindMerchantListPage(criteria).then(function (response) {
-                $scope.totalPages = response.data;
-                loadContent();
-            });
-        }
-
-        function getTotalCount() {
-            Partner.getPartnerBindMerchantListCount(criteria).then(function (response) {
-                $scope.totalCount = response.data;
-                loadContent();
-            });
-        }
-
         $scope.searchByCriteria = function () {
-            var dateStr = $("#timePicker1").val();
-            var merchantName = $("#merchantName").val().trim();
-            var partnerShip = $("#partnerShip").val();
-            var userBindState = $("#userBindState").val();
+            //获取时间
+            var dateStr = $("#timePicker").val();
+            //获取变更来源
+            var changeState = $("#changeState").val();
             if (dateStr != null && dateStr != "") {
                 var startDate = dateStr.split("-")[0].trim();
                 var endDate = dateStr.split("-")[1].trim();
                 criteria.startDate = startDate;
                 criteria.endDate = endDate;
+            }else {
+                criteria.startDate = null;
+                criteria.endDate = null;
             }
-            if (partnerShip != -1) {
-                criteria.partnerShip = partnerShip;
+            if (changeState != -1) {
+                criteria.type = changeState;
             } else {
-                criteria.partnerShip = null;
+                criteria.type = null;
             }
-            if (userBindState != -1) {
-                criteria.userBindState = userBindState;
-            } else {
-                criteria.userBindState = null;
-            }
+
             criteria.offset = 1;
-            criteria.merchantName = merchantName;
             currentPage = 1;
-            getTotalPage()
-            getTotalCount()
+            loadContent();
         }
 
-        $scope.showFullMerchant = function (page) {
-            $("#timePicker1").val("");
-            $("#merchantName").val("");
-            $("#userBindState").val("2");
-            $("#partnerShip").val("-1");
-            criteria.offset = 1;
-            criteria.merchantName = null;
-            criteria.userBindState = 2;
-            criteria.partnerShip = null;
-            criteria.startDate = null;
-            criteria.endDate = null;
-            getTotalPage()
-            getTotalCount()
-        };
-
+        // 导出表格
+        $scope.exportExcel = function () {
+            var data = "?";
+            if(criteria.type != '' && criteria.type != undefined && criteria.type != null){
+                data += "&type=" + criteria.type;
+            }
+                data += "&lineType=" + criteria.lineType;
+            if(criteria.startDate != '' && criteria.startDate != undefined && criteria.startDate != null){
+                data += "&startDate=" + criteria.startDate;
+            }
+            if(criteria.endDate != '' && criteria.endDate != undefined && criteria.endDate != null){
+                data += "&endDate=" + criteria.endDate;
+            }
+            console.log(data);
+            location.href = "/api/partner/commission/findByPage/export" + data;
+        }
     });
 
