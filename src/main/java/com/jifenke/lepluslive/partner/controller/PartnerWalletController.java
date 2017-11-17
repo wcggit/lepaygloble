@@ -110,9 +110,9 @@ public class PartnerWalletController {
             criteria.setOffset(1);
         }
         Map<String, Object> map = null;
-        if(criteria.getType()==0) {
+        if(criteria.getLineType()==0) {
             map = partnerWalletOnlineLogService.listByCriteria(criteria);
-        }else if(criteria.getType()==1){
+        }else if(criteria.getLineType()==1){
             map =  partnerWalletLogService.listByCriteria(criteria);
         }else {
             map = partnerWalletOnlineLogService.listByCriteria(criteria);

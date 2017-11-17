@@ -4,6 +4,13 @@
             td {
                 text-align: center;
             }
+            .ol-tab tbody tr td {
+                line-height: 20px !important;
+            }
+            .ng-scope > td:first-child,.ng-scope > td:nth-child(3),.ng-scope > td:nth-child(12),.ng-scope > td:nth-child(13) {
+                line-height: 40px !important;
+            }
+
         </style>
         <p class="ttl">门店列表</p>
         <!--查询表单-->
@@ -64,12 +71,12 @@
                         <td>所属城市</td>
                         <td>所属商户</td>
                         <td>协议类型</td>
-                        <td>扫码费率</td>
+                        <td style="width: 10%">扫码费率</td>
                         <td>总流水</td>
                         <td>普通订单</td>
                         <td>乐加订单</td>
-                        <td>时段内锁定会员</td>
-                        <td>当前锁定情况</td>
+                        <td style="width:6%">锁定会员</td>
+                        <td>当前锁定</td>
                         <td>操作</td>
                     </tr>
                     </thead>
@@ -81,10 +88,10 @@
                         <td ng-bind="x.ownerMerchant"></td>
                         <td ng-show="x.partnership==0">普通商户</td>
                         <td ng-show="x.partnership==1">联盟商户</td>
-                        <td  class="col-sm-2" ng-show="x.partnership==0"><p>普通：<span>{{x.ljBrokerage}}%</span></p></td>
-                        <td  class="col-sm-2" ng-show="x.partnership==1"><p>联盟：<span>{{x.ljCommission}}%</span></p><p>普通：<span>{{x.ljBrokerage}}%</span></p></td>
+                        <td ng-show="x.partnership==0"><p>普通：<span>{{x.ljBrokerage}}%</span></p></td>
+                        <td ng-show="x.partnership==1"><p>联盟：<span>{{x.ljCommission}}%</span></p><p>普通：<span>{{x.ljBrokerage}}%</span></p></td>
                         <td>
-                            <p>{{x.orderNum==null?0:orderNum}}笔</p>
+                            <p>{{x.orderNum==null?0:x.orderNum}}笔</p>
                             <p>￥<span ng-bind="x.orderAmount/100"></span></p>
                         </td>
                         <td>

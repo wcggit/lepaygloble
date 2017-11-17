@@ -9,8 +9,8 @@ angular.module('lepayglobleApp')
                 state: "commissioninfo"
             },
             {
-                pic: "left-menu-icon iconfont icon-yxzh",
-                name: "体现记录",
+                pic: "left-menu-icon iconfont icon-tixianjilu",
+                name: "提现记录",
                 state: "txjl"
             }
         ];

@@ -2,14 +2,15 @@
 
 angular.module('lepayglobleApp')
     .controller('itemsmanagerController', function ($scope, $state, $location) {
+        $('body').css({background: '#fff'});
         $scope.lefts = [
             {
-                pic: 'left-menu-icon iconfont icon-myUser',
+                pic: 'left-menu-icon iconfont icon-2wodezhangdan18x20',
                 name: "商户列表",
                 state: "mymerchant"
             },
             {
-                pic: "left-menu-icon iconfont icon-myUser",
+                pic: "left-menu-icon iconfont icon-jiaoyijilu",
                 name: "门店数据",
                 state: "myitems"
             }
