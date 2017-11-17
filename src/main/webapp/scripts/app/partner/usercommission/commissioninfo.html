@@ -1,4 +1,15 @@
 <div class="container content main-content my-items">
+    <style>
+        td {
+            text-align: center;
+        }
+        .w-showCommissionData {
+            margin-bottom: 25px;
+        }
+        .panel {
+            margin-top: 30px;
+        }
+    </style>
     <div class="container-fluid">
         <p class="ttl">佣金明细</p>
         <!--明细展示框-->
@@ -60,11 +71,6 @@
                 </form>
                 <div>
                     <!--表格-->
-                    <style>
-                        td {
-                            text-align: center;
-                        }
-                    </style>
                     <div class="panel panel-default">
                         <table class="table ol-tab">
                             <thead class="active">
@@ -99,6 +105,7 @@
 
                 <!--分页-->
                 <div class=" clearfix">
+                    <a class="pull-right btn btn-warning btn-check2" style="margin: 2% 0 0 10px;" ng-click="exportExcel()">导出表格</a>
                     <nav class="pull-right">
                         <ul class="pagination">
                             <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>

@@ -43,6 +43,7 @@ angular.module('lepayglobleApp')
         $("#timePicker").val("");
         var currentPage = 1;
         var criteria = {};
+        var offlineOrigins,onlineOrigins;
         criteria.offset = 1;
         criteria.lineType = 1;      //线上线下表示：0=线上；1=线下
 
@@ -52,11 +53,25 @@ angular.module('lepayglobleApp')
             if (response.status == 200) {
                 var data = response.data;
                 $scope.showData = data;
+                offlineOrigins = data.offlineOrigins;
+                onlineOrigins = data.onlineOrigins;
+                appendSelect(offlineOrigins);
             } else {
                 alert("加载错误...");
             }
 
         });
+        function appendSelect(arry) {
+            $("#changeState").empty();
+            $("#changeState").append(
+                $("<option></option>").attr("value","-1").html("全部")
+            );
+            for(var i = 0;i<arry.length;i++){
+                $("#changeState").append(
+                    $("<option></option>").attr("value",arry[i].id).html(arry[i].typeExplain)
+                )
+            }
+        }
 
         loadContent();
         function loadContent() {
@@ -75,9 +90,18 @@ angular.module('lepayglobleApp')
         }
         //线上线下转换
         $scope.changeLineType = function (type) {
+            $("#timePicker").val("");
+            criteria.startDate = null;
+            criteria.endDate = null;
+            criteria.type = null;
             criteria.lineType = type;
             criteria.offset = 1;
             currentPage = 1;
+            if(type == 0){
+                appendSelect(onlineOrigins);
+            } else {
+                appendSelect(offlineOrigins);
+            }
             loadContent();
         };
         $scope.loadPage = function (page) {
@@ -117,18 +141,27 @@ angular.module('lepayglobleApp')
             } else {
                 criteria.type = null;
             }
-            if (userBindState != -1) {
-                criteria.userBindState = userBindState;
-            } else {
-                criteria.userBindState = null;
-            }
+
             criteria.offset = 1;
-            criteria.merchantName = merchantName;
             currentPage = 1;
-            getTotalPage()
-            getTotalCount()
+            loadContent();
         }
 
-
+        // 导出表格
+        $scope.exportExcel = function () {
+            var data = "?";
+            if(criteria.type != '' && criteria.type != undefined && criteria.type != null){
+                data += "&type=" + criteria.type;
+            }
+                data += "&lineType=" + criteria.lineType;
+            if(criteria.startDate != '' && criteria.startDate != undefined && criteria.startDate != null){
+                data += "&startDate=" + criteria.startDate;
+            }
+            if(criteria.endDate != '' && criteria.endDate != undefined && criteria.endDate != null){
+                data += "&endDate=" + criteria.endDate;
+            }
+            console.log(data);
+            location.href = "/api/partner/commission/findByPage/export" + data;
+        }
     });
 

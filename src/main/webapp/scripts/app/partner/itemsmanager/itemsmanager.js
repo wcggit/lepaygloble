@@ -15,8 +15,8 @@ angular.module('lepayglobleApp')
                         controller: 'itemsmanagerController'
                     },
                     'itemsmanagerContent@itemsmanager': {
-                        templateUrl: 'scripts/app/partner/itemsmanager/myitems.html',
-                        controller: 'myItemsController'
+                        templateUrl: 'scripts/app/partner/itemsmanager/mymerchant.html',
+                        controller: 'myMerchantController'
                     }
                 },
                 resolve: {}
