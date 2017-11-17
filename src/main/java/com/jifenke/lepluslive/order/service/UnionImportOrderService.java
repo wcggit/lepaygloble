@@ -16,6 +16,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by wcg on 16/5/5.
@@ -40,8 +43,18 @@ public class UnionImportOrderService {
             public Predicate toPredicate(Root<UnionImportOrder> r, CriteriaQuery<?> q,CriteriaBuilder cb) {
                 Predicate predicate = cb.conjunction();
                 if (unionCriteria.getSettleDate() != null &&!"".equals(unionCriteria.getSettleDate())) {
-                    predicate.getExpressions().add(
-                        cb.equal(r.get("settleDate"),unionCriteria.getSettleDate()));
+                    try{
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                        Date date = sdf.parse(unionCriteria.getSettleDate());
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(date);
+                        calendar.add(Calendar.DAY_OF_MONTH,-1);
+                        Date settleDate = calendar.getTime();
+                        predicate.getExpressions().add(
+                            cb.equal(r.get("settleDate"),sdf.format(settleDate)));
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 if(unionCriteria.getMerNum()!=null&&!"".equals(unionCriteria.getMerNum())) {
                     predicate.getExpressions().add(
