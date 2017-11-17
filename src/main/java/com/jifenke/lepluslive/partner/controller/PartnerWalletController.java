@@ -1,7 +1,7 @@
 package com.jifenke.lepluslive.partner.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
-import com.jifenke.lepluslive.partner.controller.view.PartnerWalletLogtExcel;
+import com.jifenke.lepluslive.partner.controller.view.PartnerWalletLogExcel;
 import com.jifenke.lepluslive.partner.domain.criteria.PartnerWalletLogCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
@@ -41,7 +41,7 @@ public class PartnerWalletController {
     private PartnerService partnerService;
 
     @Inject
-    private PartnerWalletLogtExcel logtExcel;
+    private PartnerWalletLogExcel logtExcel;
 
     @Inject
     private CategoryService categoryService;

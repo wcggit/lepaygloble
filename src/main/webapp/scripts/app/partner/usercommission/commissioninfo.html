@@ -15,19 +15,19 @@
         <!--明细展示框-->
         <section class="w-showCommissionData">
             <div>
-                <div>￥<span ng-bind="showData.todayIncome"></span></div>
+                <div>￥<span ng-bind="showData.todayIncome/100.0"></span></div>
                 <div>今日佣金收入</div>
             </div>
             <div>
-                <div>￥<span ng-bind="showData.totalAvail"></span></div>
+                <div>￥<span ng-bind="showData.totalAvail/100.0"></span></div>
                 <div>当前佣金余额</div>
             </div>
             <div>
-                <div>￥<span ng-bind="showData.totalExpend"></span></div>
+                <div>￥<span ng-bind="showData.totalExpend/100.0"></span></div>
                 <div>佣金支出</div>
             </div>
             <div>
-                <div>￥<span ng-bind="showData.totalMoney"></span></div>
+                <div>￥<span ng-bind="showData.totalMoney/100.0"></span></div>
                 <div>累计佣金收入</div>
             </div>
         </section>
@@ -91,12 +91,12 @@
                                     <p ng-bind="x.changeDate|date:'yyyy-MM-dd'"></p>
                                     <p ng-bind="x.changeDate|date:'HH:mm:ss'"></p>
                                 </td>
-                                <td ng-bind="x.changeMoney/100"></td>
+                                <td ng-bind="x.changeMoney/100.0"></td>
                                 <td ng-show="x.changeOrigin==null">锁定会员消费</td>
                                 <td ng-show="x.changeOrigin!=null">{{x.changeOrigin}}</td>
                                 <td ng-bind="x.orderSid"></td>
-                                <td ng-bind="x.beforeChange"></td>
-                                <td ng-bind="x.afterChange"></td>
+                                <td ng-bind="x.beforeChange/100.0"></td>
+                                <td ng-bind="x.afterChange/100.0"></td>
                             </tr>
                             </tbody>
                         </table>

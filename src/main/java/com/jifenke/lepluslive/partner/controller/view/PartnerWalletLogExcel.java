@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by xf on 17-11-16.
  */
 @Configuration
-public class PartnerWalletLogtExcel extends AbstractExcelView {
+public class PartnerWalletLogExcel extends AbstractExcelView {
     @Override
     protected void buildExcelDocument(Map<String, Object> map, HSSFWorkbook hssfWorkbook,
                                       HttpServletRequest request,
@@ -55,11 +55,11 @@ public class PartnerWalletLogtExcel extends AbstractExcelView {
             HSSFRow excelRow = excelSheet.createRow(record++);
             excelRow.createCell(0).setCellValue(String.valueOf(map.get("logId")));
             excelRow.createCell(1).setCellValue(String.valueOf(map.get("changeDate")));
-            excelRow.createCell(2).setCellValue(String.valueOf(map.get("changeMoney")));
+            excelRow.createCell(2).setCellValue(Long.valueOf(String.valueOf(map.get("changeMoney")==null?0:map.get("changeMoney")))/100.0);
             excelRow.createCell(3).setCellValue(String.valueOf(map.get("changeOrigin")==null?"锁定会员消费":map.get("changeOrigin")));
             excelRow.createCell(4).setCellValue(String.valueOf(map.get("orderSid")));
-            excelRow.createCell(5).setCellValue(String.valueOf(map.get("beforeChange")));
-            excelRow.createCell(6).setCellValue(String.valueOf(map.get("afterChange")));
+            excelRow.createCell(5).setCellValue(Long.valueOf(String.valueOf(map.get("beforeChange")==null?0:map.get("beforeChange")))/100.0);
+            excelRow.createCell(6).setCellValue(Long.valueOf(String.valueOf(map.get("afterChange")==null?0:map.get("afterChange")))/100.0);
         }
     }
 }
