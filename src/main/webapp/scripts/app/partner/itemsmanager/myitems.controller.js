@@ -173,7 +173,6 @@ angular.module('lepayglobleApp')
         //     getTotalCount()
         // };
         $scope.goLePayCode = function (id) {
-            alert(id);
             $state.go("lefuma", {id: id})
         };
         // $scope.goEdit = function (id) {
