@@ -215,7 +215,7 @@ public class PartnerController {
         Partner
             partner =
             partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        if (merchant.getPartner().getId().toString().equals(partner.getId().toString())) {
+        if (partner!=null) {
             return LejiaResult.ok(merchant);
         }
         return LejiaResult.build(401, "无权限");
