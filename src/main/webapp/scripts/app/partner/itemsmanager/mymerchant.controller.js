@@ -194,14 +194,14 @@ angular.module('lepayglobleApp')
             if(criteria.startDate != '' && criteria.startDate != undefined && criteria.startDate != null){
                 data += "&startDate=" + criteria.startDate;
             }
-            if(criteria.endDate != '' && criteria.endDate != undefined && criteria.endDate != null){
+            if(criteria.endDate != '' && criteria.endDate != undefined || criteria.endDate != null){
                 data += "&endDate=" + criteria.endDate;
             }
-            if(criteria.linkMan != '' && criteria.linkMan != undefined && criteria.linkMan != null){
+            if(criteria.linkMan != '' || criteria.linkMan != undefined || criteria.linkMan != null){
                 data += "&linkMan=" + criteria.linkMan;
             }
-            console.log(data);
-            location.href = "/api/merchantUser/findByCriteria/export" + data;
+            console.log();
+            // location.href = "/api/merchantUser/findByCriteria/export" + data;
         }
 
     });
