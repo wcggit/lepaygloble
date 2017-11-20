@@ -449,5 +449,13 @@ public class LeJiaUserService {
         return result;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public LeJiaUser findUserByPhoneNumber(String phoneNumber) {
+        return leJiaUserRepository.findByPhoneNumber(phoneNumber);
+    }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public LeJiaUser findUserById(Long id) {
+        return leJiaUserRepository.findOne(id);
+    }
 }

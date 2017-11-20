@@ -50,8 +50,6 @@ public class OffLineOrder {
 
     private Long rebate = 0L; //返利鼓励金
 
-    private Long scoreB = 0L; //发放积分
-
     private Integer state = 0; //支付状态
 
     private Long transferMoney; //每笔应该转给商户的金额(包括现金和红包)
@@ -68,35 +66,9 @@ public class OffLineOrder {
 
     private Long truePayCommission;//实际支付手续费
 
-    private Long ljProfit = 0L;//每笔订单的额外收入
-
-    private Long monthlyOrderCount;//每月第几笔订单
-
     private Long scoreC = 0L; //发放金币
 
     private BigDecimal commissionScale; // 订单费率
-
-    private String policy; //佣金策略_红包策略 如 0_0 代表固定佣金策略 和普通红包策略
-
-    private Integer criticalOrder; //是否暴击订单
-
-    private Long nonCriticalRebate; //非暴击返鼓励金
-
-    public Long getLjProfit() {
-        return ljProfit;
-    }
-
-    public void setLjProfit(Long ljProfit) {
-        this.ljProfit = ljProfit;
-    }
-
-    public Long getMonthlyOrderCount() {
-        return monthlyOrderCount;
-    }
-
-    public void setMonthlyOrderCount(Long monthlyOrderCount) {
-        this.monthlyOrderCount = monthlyOrderCount;
-    }
 
     public Long getScoreC() {
         return scoreC;
@@ -112,30 +84,6 @@ public class OffLineOrder {
 
     public void setCommissionScale(BigDecimal commissionScale) {
         this.commissionScale = commissionScale;
-    }
-
-    public String getPolicy() {
-        return policy;
-    }
-
-    public void setPolicy(String policy) {
-        this.policy = policy;
-    }
-
-    public Integer getCriticalOrder() {
-        return criticalOrder;
-    }
-
-    public void setCriticalOrder(Integer criticalOrder) {
-        this.criticalOrder = criticalOrder;
-    }
-
-    public Long getNonCriticalRebate() {
-        return nonCriticalRebate;
-    }
-
-    public void setNonCriticalRebate(Long nonCriticalRebate) {
-        this.nonCriticalRebate = nonCriticalRebate;
     }
 
     public Long getTruePayCommission() {
@@ -290,13 +238,6 @@ public class OffLineOrder {
         this.rebate = rebate;
     }
 
-    public Long getScoreB() {
-        return scoreB;
-    }
-
-    public void setScoreB(Long scoreB) {
-        this.scoreB = scoreB;
-    }
 
     public Integer getState() {
         return state;

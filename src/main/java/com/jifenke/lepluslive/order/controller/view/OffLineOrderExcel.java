@@ -63,8 +63,8 @@ public class OffLineOrderExcel extends AbstractExcelView {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             excelRow.createCell(0).setCellValue(order.getOrderSid());
             excelRow.createCell(1).setCellValue(order.getMerchant().getName());
-            if (order.getLeJiaUser() != null && order.getLeJiaUser().getUserName() != null) {
-                excelRow.createCell(2).setCellValue(order.getLeJiaUser().getUserName());
+            if (order.getLeJiaUser() != null && order.getLeJiaUser().getWeiXinUser() != null) {
+                excelRow.createCell(2).setCellValue(order.getLeJiaUser().getWeiXinUser().getNickname());
             } else {
                 excelRow.createCell(2).setCellValue("非会员");
             }
