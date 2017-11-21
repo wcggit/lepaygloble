@@ -378,6 +378,51 @@ public class LeJiaUserService {
         return details;
     }
 
+    /**
+     *  查询门店锁定会员 - 佣金收入（门店）
+     * @param lockMemberCriteria
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Long  getLockMemberCommisionChannel(LockMemberCriteria lockMemberCriteria) {
+
+        int start = lockMemberCriteria.getPageSize() * (lockMemberCriteria.getCurrentPage() - 1);
+
+        StringBuffer sql = new StringBuffer();
+        sql.append(" SELECT IFNULL(sum(counts.total),0) FROM ( SELECT lju1.id lju_id FROM le_jia_user lju1, wei_xin_user wxu1 WHERE ");
+        if (lockMemberCriteria.getMerchantId() != null) {
+            sql.append(" lju1.bind_merchant_id = "+lockMemberCriteria.getMerchantId());
+            sql.append(" and ");
+        }
+        if(lockMemberCriteria.getNickName()!=null && !"".equals(lockMemberCriteria.getNickName())) {
+            sql.append(" wxu1.nickname like '%"+lockMemberCriteria.getNickName()+"%'");
+            sql.append(" and ");
+        }
+        if(lockMemberCriteria.getPhoneNumber()!=null && !"".equals(lockMemberCriteria.getPhoneNumber())) {
+            sql.append(" lju1.phone_number like '%"+lockMemberCriteria.getPhoneNumber()+"%'");
+            sql.append(" and ");
+        }
+        if (lockMemberCriteria.getStartDate() != null && !"".equals(lockMemberCriteria.getStartDate())) {
+            sql.append(" lju1.bind_merchant_date between '");
+            sql.append(lockMemberCriteria.getStartDate());
+            sql.append("' and '");
+            sql.append(lockMemberCriteria.getEndDate());
+            sql.append("' and ");
+        }
+        sql.append(" lju1.id = wxu1.le_jia_user_id order by lju1.bind_merchant_date desc ");
+        sql.append(" ) as lju2 "
+            + " LEFT JOIN (SELECT sum( off_line_order_share.to_lock_merchant ) AS total, scan_code_order.le_jia_user_id AS id FROM scan_code_order, off_line_order_share WHERE scan_code_order.id = off_line_order_share.scan_code_order_id ");
+
+        if (lockMemberCriteria.getMerchantId() != null) {
+            sql.append(" and off_line_order_share.lock_merchant_id = "+lockMemberCriteria.getMerchantId());
+        }
+        sql.append(" group by scan_code_order.le_jia_user_id ) as counts on lju2.lju_id = counts.id ");
+
+        Query query = em.createNativeQuery(sql.toString());
+        Object object= query.getSingleResult();
+        return Long.valueOf(String.valueOf(object));
+    }
+
     /***************************************** 查询 商户门店下 绑定会员信息 **********************************************/
     /**
      * 根据商户门店分页查询锁定会员

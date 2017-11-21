@@ -70,8 +70,6 @@ public class ScanCodeOrder {
 
     private Long transferMoneyFromScore = 0L;   //每笔订单中红包支付转给商户的金额
 
-    private Integer messageState = 0; //发送模版消息状态
-
     @Column(nullable = false, length = 10)
     private String lePayCode; //四位数支付码
 
@@ -122,14 +120,6 @@ public class ScanCodeOrder {
 
     public void setShare(Long share) {
         this.share = share;
-    }
-
-    public Integer getMessageState() {
-        return messageState;
-    }
-
-    public void setMessageState(Integer messageState) {
-        this.messageState = messageState;
     }
 
 

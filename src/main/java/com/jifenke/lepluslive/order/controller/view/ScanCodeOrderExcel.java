@@ -64,7 +64,11 @@ public class ScanCodeOrderExcel extends AbstractExcelView {
             excelRow.createCell(0).setCellValue(order.getOrderSid());
             excelRow.createCell(1).setCellValue(order.getMerchant().getName());
             if(order.getLeJiaUser()!=null && order.getLeJiaUser().getWeiXinUser()!=null) {
-                excelRow.createCell(2).setCellValue(order.getLeJiaUser().getWeiXinUser().getNickname());
+                if("虚拟用户".equals(order.getLeJiaUser().getWeiXinUser().getNickname())) {
+                    excelRow.createCell(2).setCellValue("支付宝用户");
+                }else {
+                    excelRow.createCell(2).setCellValue(order.getLeJiaUser().getWeiXinUser().getNickname());
+                }
             }else {
                 excelRow.createCell(2).setCellValue("非会员");
             }

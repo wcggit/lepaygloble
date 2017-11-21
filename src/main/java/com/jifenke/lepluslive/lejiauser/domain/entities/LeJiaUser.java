@@ -27,7 +27,7 @@ public class LeJiaUser {
 
     private Date phoneBindDate;                                 //   注册时间
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private WeiXinUser weiXinUser;
 
     private String phoneNumber;

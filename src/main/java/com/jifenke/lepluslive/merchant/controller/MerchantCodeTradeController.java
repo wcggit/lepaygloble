@@ -123,19 +123,21 @@ public class MerchantCodeTradeController {
     @ResponseBody
     public LejiaResult findLockMenberByMerchantUser(@RequestBody LockMemberCriteria lockMemberCriteria){
         List<Object[]> listMembers = leJiaUserService.getMerchantLockMemberList(lockMemberCriteria);
-        lockMemberCriteria.setLockMembers(listMembers);
         List<Object[]> listCount = leJiaUserService.getMerchantLockMemberCount(lockMemberCriteria);
+        Long channelCommision = leJiaUserService.getLockMemberCommisionChannel(lockMemberCriteria);
         Integer lockMemberCount = Integer.valueOf(listCount.get(0)[0] == null ? "0" : listCount.get(0)[0].toString());
         Integer pageSize = lockMemberCriteria.getPageSize();
-        lockMemberCriteria.setLockMemberCount(lockMemberCount);
-        lockMemberCriteria.setCommissionIncome(Double.valueOf(listCount.get(0)[1] == null ? "0.0" : listCount.get(0)[1].toString()));
+        Map map = new HashMap();
+        map.put("lockMembers",listMembers);
+        map.put("lockMemberCount",lockMemberCount);
+        Long ptCommission = Long.valueOf(listCount.get(0)[1] == null ? "0" : listCount.get(0)[1].toString());
+        map.put("commissionIncome",ptCommission+channelCommision);
         if (lockMemberCount <= pageSize){
-            lockMemberCriteria.setTotalPages(1);
+            map.put("totalPages",1);
         }else {
-            lockMemberCriteria.setTotalPages(lockMemberCount % pageSize == 0 ? lockMemberCount / pageSize : (lockMemberCount / pageSize) + 1);
+            map.put("totalPages",lockMemberCount % pageSize == 0 ? lockMemberCount / pageSize : (lockMemberCount / pageSize) + 1);
         }
-
-        return LejiaResult.ok(lockMemberCriteria);
+        return LejiaResult.ok(map);
     }
 
     /**
