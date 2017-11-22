@@ -42,6 +42,8 @@ public class MerchantUserCriteria {
      */
     private Partner partner;
 
+    private Long partnerId;
+
     public String getMerchantName() {
         return merchantName;
     }
@@ -104,5 +106,13 @@ public class MerchantUserCriteria {
 
     public void setPartner(Partner partner) {
         this.partner = partner;
+    }
+
+    public Long getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(Long partnerId) {
+        this.partnerId = partnerId;
     }
 }

@@ -14,6 +14,8 @@ import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.service.*;
 import com.jifenke.lepluslive.order.service.MerchantScanPayWayService;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
+import com.jifenke.lepluslive.partner.service.PartnerManagerService;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,7 +59,8 @@ public class MerchantUserController {
     private MerchantUserView merchantUserView;
     @Inject
     private MerchantDataView merchantDataView;
-
+    @Inject
+    private PartnerManagerService partnerManagerService;
     /**
      * 获取当前登录用户信息
      */
@@ -344,13 +347,25 @@ public class MerchantUserController {
         if (merchantUserCriteria.getOffset() == null) {
             merchantUserCriteria.setOffset(1);
         }
-        Partner partner = partnerService
-            .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        Partner partner = null;
+        if(merchantUserCriteria.getPartnerId()!=null) {
+            partner = partnerService
+                .findPartnerById(merchantUserCriteria.getPartnerId());
+            if(partner!=null) {
+                PartnerManager pm = partner.getPartnerManager();
+                PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
+                if(!pm.getId().equals(currPm.getId())){
+                    return LejiaResult.build(400, "登录状态异常");
+                }
+            }
+        }else {
+            partner = partnerService
+                .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        }
         if (partner == null) {
             return LejiaResult.build(400, "登录状态异常");
-        } else {
-            merchantUserCriteria.setPartner(partner);
         }
+        merchantUserCriteria.setPartner(partner);
         merchantUserCriteria.setType(8);
         Page<MerchantUser> page = merchantUserService.findMerchantUserByPage(merchantUserCriteria, 10);
         List<MerchantUser> content = page.getContent();
@@ -389,12 +404,23 @@ public class MerchantUserController {
         if (criteria.getOffset() == null) {
             criteria.setOffset(1);
         }
-        Partner partner = partnerService
-            .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        Partner partner = null;
+        if(criteria.getPartner()!=null) {                               // 城市合伙人
+            partner = partnerService
+                .findPartnerById(criteria.getPartner());
+            if(partner!=null) {
+                PartnerManager pm = partner.getPartnerManager();
+                PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
+                if(!pm.getId().equals(currPm.getId())){
+                    return LejiaResult.build(400, "登录状态异常");
+                }
+            }
+        }else {                                                       // 天使合伙人
+            partner = partnerService
+                .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        }
         if (partner == null) {
             return LejiaResult.build(400, "登录状态异常");
-        } else {
-            criteria.setPartner(partner.getId());
         }
         Map<String, Object> map = statsMerDailyDataService.listByCriteria(criteria);
         List<Map<String, Object>> list = (List<Map<String, Object>>) map.get("data");
@@ -412,7 +438,7 @@ public class MerchantUserController {
     @RequestMapping(value = "/merchantUser/findByCriteria/export", method = RequestMethod.GET)
     public ModelAndView exporeExcel(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
                                     @RequestParam(required = false) String linkMan,
-                                    @RequestParam(required = false) String merchantName, @RequestParam(required = false) String phoneNum) {
+                                    @RequestParam(required = false) String merchantName, @RequestParam(required = false) String phoneNum,@RequestParam(required = false) Long partnerId) {
         MerchantUserCriteria merchantUserCriteria = new MerchantUserCriteria();
         if(StringUtils.isNotBlank(startDate)) {
             merchantUserCriteria.setStartDate(startDate);
@@ -428,8 +454,21 @@ public class MerchantUserController {
             merchantUserCriteria.setPhoneNum(phoneNum);
         }
         merchantUserCriteria.setOffset(1);
-        Partner partner = partnerService
-            .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        Partner partner = null;
+        if(partnerId!=null) {
+            partnerService
+                .findPartnerById(partnerId);
+            if(partner!=null) {
+                PartnerManager pm = partner.getPartnerManager();
+                PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
+                if(!pm.getId().equals(currPm.getId())){
+                    return null;
+                }
+            }
+        }else {
+            partnerService
+                .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        }
         if (partner == null) {
             return null;
         } else {
@@ -467,7 +506,7 @@ public class MerchantUserController {
 
     @RequestMapping(value = "/merchantUser/merchantList/export", method = RequestMethod.GET)
     public ModelAndView merchantListExport(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate,
-                                          @RequestParam(required = false) Integer partnership, @RequestParam(required = false) String merchant,@RequestParam(required = false) String merchantUserName) {
+                                          @RequestParam(required = false) Integer partnership, @RequestParam(required = false) String merchant,@RequestParam(required = false) String merchantUserName,@RequestParam(required = false) Long partnerId) {
         StatsMerDailyDataCriteria criteria = new StatsMerDailyDataCriteria();
         if(StringUtils.isNotBlank(startDate)) {
             criteria.setStartDate(startDate);
@@ -484,8 +523,21 @@ public class MerchantUserController {
         }
         criteria.setOffset(1);
         criteria.setLimit(2000);
-        Partner partner = partnerService
-            .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        Partner partner = null;
+        if(partnerId!=null) {
+            partnerService
+                .findPartnerById(partnerId);
+            if(partner!=null) {
+                PartnerManager pm = partner.getPartnerManager();
+                PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
+                if(!pm.getId().equals(currPm.getId())){
+                    return null;
+                }
+            }
+        }else {
+            partnerService
+                .findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        }
         if (partner == null) {
             return null;
         } else {
