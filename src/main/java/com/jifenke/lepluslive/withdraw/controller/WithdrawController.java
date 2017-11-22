@@ -106,8 +106,25 @@ public class WithdrawController {
     @ResponseBody
     public LejiaResult partnerFindByCriteria(@RequestBody WithdrawCriteria withdrawCriteria) {
         // 获取当前登录合伙人
-        Partner partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        withdrawCriteria.setPartner(partner);
+        Partner
+            partner = null;
+        if(withdrawCriteria.getPartnerId()!=null) {
+            partner = partnerService.findPartnerById(withdrawCriteria.getPartnerId());
+            if(partner!=null) {
+                PartnerManager pm = partner.getPartnerManager();
+                PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
+                if(!pm.getId().equals(currPm.getId())){
+                    return LejiaResult.build(400, "登录状态异常");
+                }
+            }
+        }else {
+            partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        }
+        if (partner == null) {
+            return LejiaResult.build(400, "登录状态异常");
+        } else {
+            withdrawCriteria.setPartner(partner);
+        }
         withdrawCriteria.setBillType(1);
         if(withdrawCriteria.getOffset()==null) {
             withdrawCriteria.setOffset(1);
