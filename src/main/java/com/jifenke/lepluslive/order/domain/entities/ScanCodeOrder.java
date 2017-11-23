@@ -81,6 +81,19 @@ public class ScanCodeOrder {
     @Version
     private Long version;
 
+    /**
+     * 是否有优惠信息 1=是|0=否
+     */
+    private Integer discount = 0;
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
     public Long getVersion() {
         return version;
     }

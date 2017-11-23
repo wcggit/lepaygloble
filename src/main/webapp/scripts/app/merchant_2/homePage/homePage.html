@@ -58,6 +58,7 @@
                             <span class="pull-left nickname">{{arr[7]}}</span>
                             <span class="pull-right pay-detail">付款:{{arr[3]/100.0+arr[4]/100.0}}元<span>（微信支付{{arr[3]/100.0}}元+{{arr[4]/100.0}}元红包）</span></span>
                             <span class="pull-right pay-detail"  ng-show="arr[8]!=null&&arr[8]!=''" style="font-size: 16px;color: #444">买单桌号: {{arr[8]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <span ng-show="arr[9]!=null&&arr[9]==1">惠</span>
                         </div>
                         <div class="left-icon"></div>
                     </div>
@@ -94,6 +95,7 @@
                             <span class="pull-left nickname">{{arr[5]}}</span>
                             <span class="pull-right pay-detail">交易金额:{{arr[3]/100.0}}元</span>
                             <span class="pull-right pay-detail"  ng-show="arr[6]!=null&&arr[6]!=''" style="font-size: 16px;color: #444">买单桌号: {{arr[6]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <span ng-show="arr[7]!=null&&arr[7]==1">惠</span>
                         </div>
                         <div class="left-icon"></div>
                     </div>
