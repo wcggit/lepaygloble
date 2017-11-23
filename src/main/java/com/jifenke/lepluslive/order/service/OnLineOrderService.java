@@ -43,9 +43,10 @@ public class OnLineOrderService {
         }
         if (commissionDetailsCriteria.getStartDate() != null&& !"".equals(commissionDetailsCriteria.getStartDate())) {
             sql.append(" and olo.confirm_date between '");
-            sql.append(commissionDetailsCriteria.getStartDate());
+            sql.append(commissionDetailsCriteria.getStartDate().replaceAll("/","-"));
             sql.append("' and '");
-            sql.append(commissionDetailsCriteria.getEndDate());
+            sql.append(commissionDetailsCriteria.getEndDate().replaceAll("/","-"));
+            sql.append("' ");
         }
         sql.append(" order by olo.confirm_date desc limit ");
         sql.append(start);
@@ -69,7 +70,7 @@ public class OnLineOrderService {
     public List getCommissionDetails_on_line_count(CommissionDetailsCriteria commissionDetailsCriteria) {
 
         StringBuffer sql = new StringBuffer();
-        sql.append(" select count(olo.id), sum(olos.to_lock_merchant) "
+        sql.append(" select count(olo.id), IFNULL(sum(olos.to_lock_merchant),0) "
                    + " from on_line_order olo, on_line_order_share olos where olo.order_sid = olos.order_sid "
 //                   + " and olo.state = 3 " //3已收货
                    + " and olo.pay_state = 1 ");
@@ -78,9 +79,10 @@ public class OnLineOrderService {
         }
         if (commissionDetailsCriteria.getStartDate() != null && !"".equals(commissionDetailsCriteria.getStartDate())) {
             sql.append(" and olo.confirm_date between '");
-            sql.append(commissionDetailsCriteria.getStartDate());
+            sql.append(commissionDetailsCriteria.getStartDate().replaceAll("/","-"));
             sql.append("' and '");
-            sql.append(commissionDetailsCriteria.getEndDate());
+            sql.append(commissionDetailsCriteria.getEndDate().replaceAll("/","-"));
+            sql.append("'");
         }
 
         Query query = em.createNativeQuery(sql.toString());

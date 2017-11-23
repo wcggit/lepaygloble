@@ -287,4 +287,6 @@ public class PartnerManagerService {
     public Optional<Partner> findByWeiXinUser(WeiXinUser weiXinUser) {
         return partnerManagerRepository.findByWeiXinUser(weiXinUser);
     }
+
+
 }

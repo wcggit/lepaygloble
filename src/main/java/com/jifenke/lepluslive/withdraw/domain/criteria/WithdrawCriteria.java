@@ -21,6 +21,7 @@ public class WithdrawCriteria {
     private Merchant merchant;          //  商户
     private PartnerManager partnerManager;  // 城市合伙人
     private MerchantUser merchantUser;
+    private Long partnerId;
 
     public Integer getOffset() {
         return offset;
@@ -108,5 +109,13 @@ public class WithdrawCriteria {
 
     public void setMerchantUser(MerchantUser merchantUser) {
         this.merchantUser = merchantUser;
+    }
+
+    public Long getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(Long partnerId) {
+        this.partnerId = partnerId;
     }
 }

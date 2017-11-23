@@ -1,26 +1,12 @@
 package com.jifenke.lepluslive.lejiauser.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
-import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 /**
  * Created by wcg on 16/3/22.
@@ -39,20 +25,15 @@ public class LeJiaUser {
 
     private Date createDate = new Date();
 
-    private Date phoneBindDate;
+    private Date phoneBindDate;                                 //   注册时间
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private WeiXinUser weiXinUser;
 
     private String phoneNumber;
 
-    private String token;
-
-    private String pwd;    //加密后
-
-    private String headImageUrl;
-
-    private String userName;  //用户名
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private RegisterOrigin registerOrigin;
+    @ManyToOne
+    private RegisterOrigin registerOrigin;                       //  关注来源
 
     @ManyToOne
     private Merchant bindMerchant;
@@ -60,49 +41,21 @@ public class LeJiaUser {
     @ManyToOne
     private Partner bindPartner;
 
-    @ManyToOne
-    private PartnerManager bindPartnerManager;
-
     private Date bindMerchantDate;
 
     private Date bindPartnerDate;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private WeiXinUser weiXinUser;
+    private Long cityId;                                          // 运营城市ID
 
 
-    public WeiXinUser getWeiXinUser() {
-        return weiXinUser;
+    public Long getCityId() {
+        return cityId;
     }
 
-    public void setWeiXinUser(WeiXinUser weiXinUser) {
-        this.weiXinUser = weiXinUser;
+    public void setCityId(Long cityId) {
+        this.cityId = cityId;
     }
 
-    public Date getBindMerchantDate() {
-        return bindMerchantDate;
-    }
-
-    public void setBindMerchantDate(Date bindMerchantDate) {
-        this.bindMerchantDate = bindMerchantDate;
-    }
-
-    public Date getBindPartnerDate() {
-        return bindPartnerDate;
-    }
-
-    public void setBindPartnerDate(Date bindPartnerDate) {
-        this.bindPartnerDate = bindPartnerDate;
-    }
-
-
-    public Partner getBindPartner() {
-        return bindPartner;
-    }
-
-    public void setBindPartner(Partner bindPartner) {
-        this.bindPartner = bindPartner;
-    }
 
     public Merchant getBindMerchant() {
         return bindMerchant;
@@ -112,36 +65,20 @@ public class LeJiaUser {
         this.bindMerchant = bindMerchant;
     }
 
+    public Partner getBindPartner() {
+        return bindPartner;
+    }
+
+    public void setBindPartner(Partner bindPartner) {
+        this.bindPartner = bindPartner;
+    }
+
     public RegisterOrigin getRegisterOrigin() {
         return registerOrigin;
     }
 
     public void setRegisterOrigin(RegisterOrigin registerOrigin) {
         this.registerOrigin = registerOrigin;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    public String getHeadImageUrl() {
-        return headImageUrl;
-    }
-
-    public void setHeadImageUrl(String headImageUrl) {
-        this.headImageUrl = headImageUrl;
     }
 
     public Date getPhoneBindDate() {
@@ -168,6 +105,14 @@ public class LeJiaUser {
         this.phoneNumber = phoneNumber;
     }
 
+    public WeiXinUser getWeiXinUser() {
+        return weiXinUser;
+    }
+
+    public void setWeiXinUser(WeiXinUser weiXinUser) {
+        this.weiXinUser = weiXinUser;
+    }
+
     public Long getId() {
         return id;
     }
@@ -192,19 +137,21 @@ public class LeJiaUser {
         this.userSid = userSid;
     }
 
-    public String getUserName() {
-        return userName;
+    public Date getBindMerchantDate() {
+        return bindMerchantDate;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setBindMerchantDate(Date bindMerchantDate) {
+        this.bindMerchantDate = bindMerchantDate;
     }
 
-    public PartnerManager getBindPartnerManager() {
-        return bindPartnerManager;
+    public Date getBindPartnerDate() {
+        return bindPartnerDate;
     }
 
-    public void setBindPartnerManager(PartnerManager bindPartnerManager) {
-        this.bindPartnerManager = bindPartnerManager;
+    public void setBindPartnerDate(Date bindPartnerDate) {
+        this.bindPartnerDate = bindPartnerDate;
     }
+
+
 }

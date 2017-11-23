@@ -38,16 +38,19 @@ angular.module('lepayglobleApp')
                 commissionDetailsCriteria.consumeType = 1;
             }
             $http.post("/api/commissionDetails/commissionDetailsByMerchantUser", commissionDetailsCriteria).success(function (response) {
+                var page = response.data;
+                console.log(JSON.stringify(page.content));
                 if (response.status == 200) {
-                    if(response.data.commissionDetails.length>0){
-                        $scope.commissionDetailsCriteria = response.data.commissionDetails;
+                    if(page.content!=null&&page.content.length>0) {
+                        $scope.content = page.content;
                     }else {
-                        $scope.commissionDetailsCriteria = null;
+                        $scope.content = null;
                     }
-                    $scope.commissionDetailsData = response.data;
-                    $scope.totalPages = $scope.commissionDetailsData.totalPages;
-                    $scope.consumeType = $scope.commissionDetailsData.consumeType;
+                    $scope.totalPages = page.totalPages;
+                    $scope.consumeType = commissionDetailsCriteria.consumeType;
                     $scope.page = currentPage;
+                    $scope.recordCount = page.count[0];
+                    $scope.totalCommission = page.count[1];
                 } else {
                     // alert('加载佣金明细数据错误...');
                 }

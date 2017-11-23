@@ -4,6 +4,7 @@ import com.jifenke.lepluslive.global.util.LejiaResult;
 import com.jifenke.lepluslive.partner.controller.view.PartnerWalletLogExcel;
 import com.jifenke.lepluslive.partner.domain.criteria.PartnerWalletLogCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWalletOnline;
 import com.jifenke.lepluslive.partner.service.*;
@@ -46,6 +47,8 @@ public class PartnerWalletController {
     @Inject
     private CategoryService categoryService;
 
+    @Inject
+    private PartnerManagerService partnerManagerService;
     /**
      * 佣金明细 - 数据
      *
@@ -53,10 +56,21 @@ public class PartnerWalletController {
      */
     @RequestMapping(value = "/partner/commission/data", method = RequestMethod.GET)
     @ResponseBody
-    public LejiaResult partnerCommission() {
+    public LejiaResult partnerCommission(@RequestParam(required = false) Long partnerId) {
         Partner
-            partner =
-            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+            partner = null;
+        if(partnerId!=null) {
+            partner = partnerService.findPartnerById(partnerId);
+            if(partner!=null) {
+                PartnerManager pm = partner.getPartnerManager();
+                PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
+                if(!pm.getId().equals(currPm.getId())){
+                    return LejiaResult.build(400, "登录状态异常");
+                }
+            }
+        }else {
+            partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        }
         if (partner == null) {
             return LejiaResult.build(400, "登录状态异常");
         }
@@ -99,8 +113,19 @@ public class PartnerWalletController {
     @ResponseBody
     public LejiaResult partnerCommission(@RequestBody PartnerWalletLogCriteria criteria) {
         Partner
-            partner =
-            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+            partner = null;
+        if(criteria.getPartnerId()!=null) {
+            partner = partnerService.findPartnerById(criteria.getPartnerId());
+            if(partner!=null) {
+                PartnerManager pm = partner.getPartnerManager();
+                PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
+                if(!pm.getId().equals(currPm.getId())){
+                    return LejiaResult.build(400, "登录状态异常");
+                }
+            }
+        }else {
+            partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        }
         if (partner == null) {
             return LejiaResult.build(400, "登录状态异常");
         } else {
@@ -122,11 +147,22 @@ public class PartnerWalletController {
 
 
     @RequestMapping(value = "/partner/commission/findByPage/export", method = RequestMethod.GET)
-    public ModelAndView offLineCommissionExport(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = false) Integer type,@RequestParam Integer lineType) {
+    public ModelAndView offLineCommissionExport(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = false) Integer type,@RequestParam Integer lineType,@RequestParam(required = false) Long partnerId) {
         PartnerWalletLogCriteria criteria = new PartnerWalletLogCriteria();
         Partner
-            partner =
-            partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+            partner = null;
+        if(partnerId!=null) {
+            partner = partnerService.findPartnerById(partnerId);
+            if(partner!=null) {
+                PartnerManager pm = partner.getPartnerManager();
+                PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
+                if(!pm.getId().equals(currPm.getId())){
+                    return null;
+                }
+            }
+        }else {
+            partner = partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
+        }
         if (partner == null) {
             return null;
         } else {

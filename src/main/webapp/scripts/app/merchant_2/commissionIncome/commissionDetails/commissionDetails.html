@@ -43,8 +43,8 @@
         </div>
         <!--表格信息总结-->
         <p class="ttl-add table-title">
-            筛选条件下共有<span class="font-yellow">{{commissionDetailsData.commissionDetailsCount}}</span>条记录，
-            给您带来<span class="font-yellow">{{commissionDetailsData.commissionIncome / 100.0 | currency:'￥'}}</span>佣金收入
+            筛选条件下共有<span class="font-yellow">{{recordCount}}</span>条记录，
+            给您带来<span class="font-yellow">{{totalCommission / 100.0 | currency:'￥'}}</span>佣金收入
         </p>
         <!--表格-->
         <div class="panel panel-default">
@@ -59,20 +59,30 @@
                     <td>佣金收入</td>
                 </tr>
                 </thead>
-                <tbody ng-show="commissionDetailsCriteria==null">
+                <tbody ng-show="content==null">
                 <tr class="tr-empty"><td class="text-center" colspan="5">暂无数据！</td></tr>
                 </tbody>
-                <tbody ng-show="commissionDetailsCriteria!=null">
-                <tr class="tr-noEmpty" ng-repeat="x in commissionDetailsCriteria" id="HaveData">
+                <tbody ng-show="content!=null&&consumeType==1">
+                <tr class="tr-noEmpty" ng-repeat="x in content" >
+                    <td class="td-date">
+                        <p ng-bind="x.createdAt|date:'yyyy-MM-dd'"></p>
+                        <p ng-bind="x.createdAt|date:'HH:mm:ss'"></p></td>
+                    <td ng-show="x.imgUrl!=null"><span class="wx-faceImg"><img ng-src="{{x.imgUrl}}" alt=""></span><span ng-bind="x.nickName"></span></td>
+                    <td ng-show="x.imgUrl==null"><span ng-bind="x.user"></span></td></td>
+                    <td>线下消费</td>
+                    <td ng-bind="x.lockMerchant"></td>
+                    <td ng-bind="'¥'+x.totalPrice/100.0"></td>
+                    <td ng-bind="'¥'+x.toLockMerchant/100.0"></td>
+                </tr>
+                </tbody>
+                <tbody ng-show="content!=null&&consumeType==2">
+                <tr class="tr-noEmpty" ng-repeat="x in content">
                     <td class="td-date">
                         <p ng-bind="x[0]|date:'yyyy-MM-dd'"></p>
                         <p ng-bind="x[0]|date:'HH:mm:ss'"></p></td>
                     <td><span class="wx-faceImg"><img ng-src="{{x[2]}}" alt=""></span>
                         <span>{{x[1]}}</span></td>
-
-                    <td ng-show="{{consumeType==1}}">线下消费</td>
-                    <td ng-show="{{consumeType==2}}">线上消费</td>
-
+                    <td>线上消费</td>
                     <td>
                         {{x[3]}}</td>
                     <td ng-bind="'¥'+x[4]/100.0"></td>
