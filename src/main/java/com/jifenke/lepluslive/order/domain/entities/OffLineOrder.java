@@ -69,6 +69,12 @@ public class OffLineOrder {
 
     private BigDecimal commissionScale; // 订单费率
 
+    /**
+     * 是否有优惠信息 1=是|0=否
+     */
+    private Integer discount = 0;
+
+
     public Long getScoreC() {
         return scoreC;
     }
@@ -273,5 +279,13 @@ public class OffLineOrder {
 
     public void setPayType(Integer payType) {
         this.payType = payType;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
 }
