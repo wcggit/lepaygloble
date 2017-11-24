@@ -4,7 +4,10 @@
         cursor: pointer;
         background-color: #fb991a;
         color: #ffffff;
-        padding:4px 1%;
+        width: 24px;
+        height: 24px;
+        text-align: center;
+        line-height: 24px;
         margin-top: 1%;
         margin-left: 3%;
         -webkit-border-radius:5px 5px;
@@ -12,7 +15,7 @@
         border-radius:5px 5px;
     }
     .msgBoard {
-        position: fixed;
+        position: absolute;
         width: 300px;
         height: 115px;
         padding: 10px 0 0 1%;
@@ -20,6 +23,7 @@
         -webkit-border-radius:5px 5px;
         -moz-border-radius:5px 5px;
         border-radius:5px 5px;
+        display: none;
     }
     .msgBoard > div {
         color: #fff;
@@ -86,7 +90,7 @@
                             <span class="pull-left nickname">{{arr[7]}}</span>
                             <span class="pull-right pay-detail">付款:{{arr[3]/100.0+arr[4]/100.0}}元<span>（微信支付{{arr[3]/100.0}}元+{{arr[4]/100.0}}元红包）</span></span>
                             <span class="pull-right pay-detail"  ng-show="arr[8]!=null&&arr[8]!=''" style="font-size: 16px;color: #444">买单桌号: {{arr[8]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                            <span class="hui" ng-show="arr[9]!=null&&arr[9]==1" ng-mouseenter="showMsg(this,arr[0])" ng-mouseleave="hideMsg(this,arr[0])">惠</span>
+                            <span class="hui" ng-show="arr[9]!=null&&arr[9]==1" ng-mouseenter="showMsg($event,arr[0])" ng-mouseleave="hideMsg()">惠</span>
                         </div>
                         <div class="left-icon"></div>
                     </div>
@@ -123,7 +127,7 @@
                             <span class="pull-left nickname">{{arr[5]}}</span>
                             <span class="pull-right pay-detail">交易金额:{{arr[3]/100.0}}元</span>
                             <span class="pull-right pay-detail"  ng-show="arr[6]!=null&&arr[6]!=''" style="font-size: 16px;color: #444">买单桌号: {{arr[6]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                            <span ng-show="arr[7]!=null&&arr[7]==1" ng-mouseenter="showMsg(this,arr[0])" ng-mouseleave="hideMsg(this,arr[0])">惠</span>
+                            <span ng-show="arr[7]!=null&&arr[7]==1" ng-mouseenter="showMsg($event,arr[0])" ng-mouseleave="hideMsg()">惠</span>
                         </div>
                         <div class="left-icon"></div>
                     </div>
