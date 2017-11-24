@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('withdrawDetailsController', function ($scope,$http) {
+    .controller('imWithdrawDetailsController', function ($scope,$http,$stateParams) {
         $('body').css({background: '#f3f3f3'});
         $('.main-content').css({height: 'auto'});
         $('#timePicker1')
@@ -47,10 +47,11 @@ angular.module('lepayglobleApp')
             });
         $("#timePicker2").val("");
 
-
+        var partnerSid = $stateParams.partnerSid;   //获取天使合伙人的Sid
         var currentPage = 1;
         var withdrawCriteria = {};
         withdrawCriteria.offset = 1;
+        withdrawCriteria.partnerSid = partnerSid;
 
         loadContent();
         function loadContent() {

@@ -28,18 +28,19 @@ public class StatsMerDailyDataCriteria {
      * 合伙人ID
      */
     private Long partner;
+    private String partnerSid;
     /**
      * 门店序号
      */
     private String merchant;
 
     /**
-     *  商户名称
+     * 商户名称
      */
     private String merchantUserName;
 
     /**
-     *  协议类型
+     * 协议类型
      */
     private Integer partnership;
 
@@ -129,5 +130,13 @@ public class StatsMerDailyDataCriteria {
 
     public void setLimit(Integer limit) {
         this.limit = limit;
+    }
+
+    public String getPartnerSid() {
+        return partnerSid;
+    }
+
+    public void setPartnerSid(String partnerSid) {
+        this.partnerSid = partnerSid;
     }
 }

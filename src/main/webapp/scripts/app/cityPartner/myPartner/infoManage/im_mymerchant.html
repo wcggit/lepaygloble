@@ -78,6 +78,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <tr class="tr-empty" id="notData" ng-show="pulls.length==0"><td class="text-center" colspan="9" >暂无数据！</td></tr>
                     <tr ng-repeat="x in pulls">
                         <td ng-bind="x.merchantNo"></td>
                         <td ng-bind="x.merchantName"></td>
@@ -171,18 +172,13 @@
             <div>
                 <div style="margin-bottom: 20px;">
                     <button style="margin-left: 10.5%" type="button" class="btn btn-warning btn-check2"
-                            ng-click="searchByCriteria()">查询
+                            ng-click="searchByCriteria_m()">查询
                     </button>
                 </div>
             </div>
         </form>
         <div>
-            <!--表格信息总结-->
-            <!--<p class="ttl-add clearfix">-->
-            <!--<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;因商户系统升级，录入新门店时请联系乐加客服 （微信号：xuyichen1203） 电话：4000412800</span>-->
-            <!--&lt;!&ndash;<a class="btn btn-primary pull-right" ui-sref="createitems" ui-sref-opts="{reload:true}">新建商户</a>&ndash;&gt;-->
-            <!--<span class="pull-left">注：共锁定<font>{{totalCount}}</font>家商户，有<font>{{fullMerchant}}</font>家商户的锁定名额以满 <a ng-click="showFullMerchant()">查看详情</a></span>-->
-            <!--</p>-->
+
             <!--表格-->
             <div class="panel panel-default">
                 <table class="table ol-tab">
@@ -199,11 +195,11 @@
                         <td>乐加订单</td>
                         <td style="width:6%">锁定会员</td>
                         <td>当前锁定</td>
-                        <td>操作</td>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="x in pulls">
+                    <tr class="tr-empty" ng-show="pulls_m.length==0"><td class="text-center" colspan="9" >暂无数据！</td></tr>
+                    <tr ng-repeat="x in pulls_m">
                         <td ng-bind="x.mid"></td>
                         <td ng-bind="x.merchantName"></td>
                         <td ng-bind="x.cityName"></td>
@@ -226,14 +222,14 @@
                         </td>
                         <td>{{x.lockNum==null?0:x.lockNum}}</td>
                         <td>{{x.bindCount}}/{{x.bindLimit}}</td>
-                        <td class="col-md-1">
-                            <a ng-click="goLePayCode(x.sid)">乐付码</a>
-                            <!--<a ng-click="goEdit(x[0])">编辑</a>-->
-                            <a ng-click="goMerchantUser(x.sid)">账户</a>
-                            <!--<a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>-->
-                            <!--<a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>-->
-                            <!--<a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>-->
-                        </td>
+                        <!--<td class="col-md-1">-->
+                            <!--<a ng-click="goLePayCode(x.sid)">乐付码</a>-->
+                            <!--&lt;!&ndash;<a ng-click="goEdit(x[0])">编辑</a>&ndash;&gt;-->
+                            <!--<a ng-click="goMerchantUser(x.sid)">账户</a>-->
+                            <!--&lt;!&ndash;<a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>&ndash;&gt;-->
+                        <!--</td>-->
                     </tr>
                     </tbody>
                 </table>
@@ -243,27 +239,27 @@
         <!--分页-->
         <div class=" clearfix">
             <nav class="pull-right">
-                <a class="pull-right btn btn-warning btn-check2" style="margin: 5.5% 0 0 10px;" ng-click="exportExcel()">导出表格</a>
+                <a class="pull-right btn btn-warning btn-check2" style="margin: 5.5% 0 0 10px;" ng-click="exportExcel_m()">导出表格</a>
                 <ul class="pagination">
-                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
-                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                    <li ng-class="{disabled: page_m==1}" ng-click="loadPage_m(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page_m==1}" ng-click="loadPage_m(page_m-1)">
                         <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
                     </li>
-                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
-                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
-                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
-                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                    <li ng-show="page_m > 2" ng-click="loadPage_m(page_m - 2)"><a>{{page_m - 2}}</a></li>
+                    <li ng-show="page_m > 1" ng-click="loadPage_m(page_m - 1)"><a>{{page_m - 1}}</a></li>
+                    <li class="active" ng-click="loadPage_m(page_m)"><a>{{page_m}}</a></li>
+                    <li ng-show="page_m < totalPages_m" ng-click="loadPage_m(page_m + 1)"><a>{{page_m +
                         1}}</a>
                     </li>
-                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                    <li ng-show="page_m < totalPages_m - 1" ng-click="loadPage_m(page_m + 2)"><a>{{page_m +
                         2}}</a>
                     </li>
-                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
-                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                    <li ng-class="{disabled: page_m==totalPages_m||totalPages_m==0}"
+                        ng-click="loadPage_m(page_m+1)"><a aria-label="Next">
                         <span aria-hidden="true">›</span>
                     </a></li>
-                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
-                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                    <li ng-class="{disabled: page_m==totalPages_m||totalPages_m==0}"
+                        ng-click="loadPage_m(totalPages_m)"><a>&raquo;</a></li>
                 </ul>
             </nav>
         </div>

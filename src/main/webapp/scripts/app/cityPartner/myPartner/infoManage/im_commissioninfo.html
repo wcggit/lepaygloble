@@ -22,9 +22,6 @@
         .w-showCommissionData > div:not(:last-child) {
             margin-right: 4%;
         }
-        .panel {
-            margin-top: 30px;
-        }
         .row {
             margin: 3% 0;
         }
@@ -35,7 +32,7 @@
         }
     </style>
     <div class="container-fluid">
-        <p class="ttl">佣金明细 <a class="tx" ng-click="tixian(x.sid)">查看提现记录</a></p>
+        <p class="ttl">佣金明细 <span class="tx" ng-click="tixian(1)">查看提现记录</span></p>
         <!--明细展示框-->
         <section class="w-showCommissionData">
             <div>
@@ -109,6 +106,7 @@
                             </tr>
                             </thead>
                             <tbody>
+                            <tr class="tr-empty" id="notData" ng-show="pulls.length==0"><td class="text-center" colspan="9" >暂无数据！</td></tr>
                             <tr ng-repeat="x in pulls">
                                 <td ng-bind="x.logId"></td>
                                 <td>

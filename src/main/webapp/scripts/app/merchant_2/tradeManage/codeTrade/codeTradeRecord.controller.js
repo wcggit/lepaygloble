@@ -158,6 +158,27 @@ angular.module('lepayglobleApp')
             codeOrderCriteria.offset = currentPage;
         }
 
+        // 优惠信息
+        $scope.showMsg = function (e,sid) {
+            $http.get('http://www.lepluspay.com/wx/public/discount/2017112315172195696').success(function (response) {
+                var data = response;
+                $scope.originPrice = data.originPrice;
+                $scope.outPrice = data.outPrice;
+                $scope.discount = data.discount;
+                $scope.discountPrice = data.discountPrice;
+            });
+            e = window.event;
+            var __xx = e.pageX || e.clientX + document.body.scroolLeft;
+            var __yy = e.pageY || e.clientY + document.body.scrollTop;
+            $(".msgBoard").css("top",__yy);
+            $(".msgBoard").css("left",__xx);
+            $(".msgBoard").show();
+        }
+        $scope.hideMsg=function (e) {
+            $(".msgBoard").hide();
+        }
+
+
         // 导出表格
         $scope.exportExcel = function () {
             setCriteria();

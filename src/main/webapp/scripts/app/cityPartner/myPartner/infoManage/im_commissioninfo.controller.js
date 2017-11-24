@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lepayglobleApp')
-    .controller('commissionInfoController', function ($scope, Partner, $state,$http) {
+    .controller('imCommissionInfoController', function ($scope, Partner, $state,$http,$stateParams) {
         // $('body').css({background: '#f3f3f3'});
         $('.main-content').css({height: 'auto'});
         // select标签右侧小三角
@@ -41,15 +41,18 @@ angular.module('lepayglobleApp')
              }, function (start, end, label) {
              });
         $("#timePicker").val("");
+        var partnerSid = $stateParams.partnerSid;   //获取天使合伙人的Sid
+
         var currentPage = 1;
         var criteria = {};
+        var wshow = {}
         var offlineOrigins,onlineOrigins;
         criteria.offset = 1;
         criteria.lineType = 1;      //线上线下表示：0=线上；1=线下
+        criteria.partnerSid = partnerSid;
 
         //上方数据展示
-        $http.get("/api/partner/commission/data").success(function (response) {
-            console.log(response);
+        $http.get("/api/partner/commission/data?partnerSid="+partnerSid).success(function (response) {
             if (response.status == 200) {
                 var data = response.data;
                 $scope.showData = data;
@@ -76,7 +79,6 @@ angular.module('lepayglobleApp')
         loadContent();
         function loadContent() {
             $http.post("/api/partner/commission/findByPage",criteria).success(function (response) {
-                console.log(response);
                 if (response.status == 200) {
                     var data = response.data;
                     $scope.page = currentPage;
@@ -156,14 +158,14 @@ angular.module('lepayglobleApp')
             if(criteria.type != '' && criteria.type != undefined && criteria.type != null){
                 data += "&type=" + criteria.type;
             }
-                data += "&lineType=" + criteria.lineType;
+            data += "&lineType=" + criteria.lineType;
+            data += "&partnerSid=" + criteria.partnerSid;
             if(criteria.startDate != '' && criteria.startDate != undefined && criteria.startDate != null){
                 data += "&startDate=" + criteria.startDate;
             }
             if(criteria.endDate != '' && criteria.endDate != undefined && criteria.endDate != null){
                 data += "&endDate=" + criteria.endDate;
             }
-            console.log(data);
             location.href = "/api/partner/commission/findByPage/export" + data;
         }
     });

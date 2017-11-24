@@ -3,13 +3,13 @@
         <div class="panel-body clearfix ">
             <div class="panel-body clearfix">
                 <span class="left-icon pull-left" ui-sref="cp-homePage" ui-sref-opts="{reload:true}"></span>
-                <span ui-sref="cp-homePage" ui-sref-opts="{reload:true}">合伙人管理 / </span>
-                <span class="current-page">提现记录</span>
+                <span ui-sref="cp-homePage" ui-sref-opts="{reload:true}">合伙人管理  </span>
+                <span class="current-page"></span>
                 <div class="pull-right"><span class="face-img"><img src="{{partner.weiXinUser.headImageUrl}}" alt=""></span>天使合伙人：<span class="name" ng-bind="partner.name"></span></div>
             </div>
             <ul class="nav nav-style">
                 <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab($event)" ui-sref="imDataOverview"><a>数据概览</a></li>
-                <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab($event)" ui-sref="imBasicInfo({partnerSid2:{{partnerSid}}})" ui-sref-opts="{reload:true}"><a>基本信息</a></li>
+                <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab($event)" ui-sref="imBasicInfo({partnerSid2:{{partnerSid}}})"><a>基本信息</a></li>
                 <li role="presentation" ng-class="{active:currentTab2}" ng-click="onClickTab($event)" ui-sref="imMyMerchant"><a>合伙人商户</a></li>
                 <li role="presentation" ng-class="{active:currentTab3}" ng-click="onClickTab($event)" ui-sref="imCommissionInfo"><a>合伙人佣金</a></li>
             </ul>

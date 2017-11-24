@@ -108,8 +108,8 @@ public class WithdrawController {
         // 获取当前登录合伙人
         Partner
             partner = null;
-        if(withdrawCriteria.getPartnerId()!=null) {
-            partner = partnerService.findPartnerById(withdrawCriteria.getPartnerId());
+        if(withdrawCriteria.getPartnerSid()!=null) {
+            partner = partnerService.findByPartnerSid(withdrawCriteria.getPartnerSid());
             if(partner!=null) {
                 PartnerManager pm = partner.getPartnerManager();
                 PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());

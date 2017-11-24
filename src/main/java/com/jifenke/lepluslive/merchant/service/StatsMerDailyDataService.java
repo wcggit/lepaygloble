@@ -63,6 +63,7 @@ public class StatsMerDailyDataService {
         sql += " LEFT JOIN merchant_user mu ON m.merchant_user_id = mu.id ";
         sql += " WHERE 1 = 1";
         //影响记录总条数的筛选条件
+        sql += " AND m.partnership !=2 ";
         if (criteria.getPartner() != null) {
             sql += " AND m.partner_id = " + criteria.getPartner();
         }
@@ -106,6 +107,7 @@ public class StatsMerDailyDataService {
 
         sql += " LEFT JOIN city c ON m.city_id = c.id ";
         sql += " LEFT JOIN merchant_user mu ON m.merchant_user_id = mu.id ";
+        sql += " WHERE 1 = 1 ";
         //影响记录总条数的筛选条件
         if (criteria.getPartner() != null) {
             sql += " AND m.partner_id = " + criteria.getPartner();
@@ -124,6 +126,7 @@ public class StatsMerDailyDataService {
         if(criteria.getPartnership()!=null) {
             sql += " AND m.partnership = " + criteria.getPartnership() + "";
         }
+        sql += " AND m.partnership !=2 ";
         Query query = entityManager.createNativeQuery(sql);
         query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         Map<String, Object> result = (Map) query.getSingleResult();

@@ -1,9 +1,17 @@
+<style>
+    .content {
+        width: auto;
+    }
+    .row {
+        margin-bottom: 10px;
+    }
+    .form-inline {
+        margin-top: 20px;
+    }
+</style>
 <div class="container content main-content withDrawDetail">
     <div class="container-fluid">
-        <p class="clearfix">
-            <span class="left-icon pull-left" ui-sref="partnerhome" ui-sref-opts="{reload:true}"></span>
-            <span ui-sref="partnerhome" ui-sref-opts="{reload:true}">首页 / </span><font>提现详情</font>
-        </p>
+
         <!--查询表单-->
         <form class="form-inline">
             <div class="row">
@@ -47,6 +55,7 @@
                         <tr><td>锁定时间</td><td>状态</td><td>提现金额</td><td>到账时间</td><td>结算方式</td><td>银行卡（支付宝号）</td><td>备注信息</td></tr>
                     </thead>
                     <tbody>
+                    <tr class="tr-empty" id="notData" ng-show="pulls.length==0"><td class="text-center" colspan="9" >暂无数据！</td></tr>
                         <tr ng-repeat="x in pulls">
                             <td>
                                 <p ng-bind="x.createdDate|date:'yyyy-MM-dd'"></p>

@@ -64,7 +64,7 @@ angular.module('lepayglobleApp')
                 views: {
                     'infoManageTab@cp-infoManage': {
                         templateUrl: 'scripts/app/cityPartner/myPartner/infoManage/im_commissioninfo.html',
-                        controller: 'commissionInfoController'
+                        controller: 'imCommissionInfoController'
                     }
                 },
                 resolve: {}
@@ -78,10 +78,9 @@ angular.module('lepayglobleApp')
                 views: {
                     'infoManageTab@cp-infoManage': {
                         templateUrl: 'scripts/app/cityPartner/myPartner/infoManage/im_mymerchant.html',
-                        controller: 'myMerchantController'
+                        controller: 'imMyMerchantController'
                     }
                 },
                 resolve: {}
-            })
-        ;
+            });
     });

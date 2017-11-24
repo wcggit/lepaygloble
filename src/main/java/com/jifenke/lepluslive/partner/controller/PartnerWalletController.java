@@ -56,11 +56,11 @@ public class PartnerWalletController {
      */
     @RequestMapping(value = "/partner/commission/data", method = RequestMethod.GET)
     @ResponseBody
-    public LejiaResult partnerCommission(@RequestParam(required = false) Long partnerId) {
+    public LejiaResult partnerCommission(@RequestParam(required = false) String partnerSid) {
         Partner
             partner = null;
-        if(partnerId!=null) {
-            partner = partnerService.findPartnerById(partnerId);
+        if(partnerSid!=null) {
+            partner = partnerService.findByPartnerSid(partnerSid);
             if(partner!=null) {
                 PartnerManager pm = partner.getPartnerManager();
                 PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
@@ -114,8 +114,8 @@ public class PartnerWalletController {
     public LejiaResult partnerCommission(@RequestBody PartnerWalletLogCriteria criteria) {
         Partner
             partner = null;
-        if(criteria.getPartnerId()!=null) {
-            partner = partnerService.findPartnerById(criteria.getPartnerId());
+        if(criteria.getPartnerSid()!=null) {
+            partner = partnerService.findByPartnerSid(criteria.getPartnerSid());
             if(partner!=null) {
                 PartnerManager pm = partner.getPartnerManager();
                 PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
@@ -147,12 +147,12 @@ public class PartnerWalletController {
 
 
     @RequestMapping(value = "/partner/commission/findByPage/export", method = RequestMethod.GET)
-    public ModelAndView offLineCommissionExport(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = false) Integer type,@RequestParam Integer lineType,@RequestParam(required = false) Long partnerId) {
+    public ModelAndView offLineCommissionExport(@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = false) Integer type,@RequestParam Integer lineType,@RequestParam(required = false) String partnerSid) {
         PartnerWalletLogCriteria criteria = new PartnerWalletLogCriteria();
         Partner
             partner = null;
-        if(partnerId!=null) {
-            partner = partnerService.findPartnerById(partnerId);
+        if(partnerSid!=null) {
+            partner = partnerService.findByPartnerSid(partnerSid);
             if(partner!=null) {
                 PartnerManager pm = partner.getPartnerManager();
                 PartnerManager currPm = partnerManagerService.findByPartnerManagerSid(SecurityUtils.getCurrentUserLogin());
