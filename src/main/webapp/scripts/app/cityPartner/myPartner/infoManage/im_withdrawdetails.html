@@ -1,0 +1,106 @@
+<style>
+    .content {
+        width: auto;
+    }
+    .row {
+        margin-bottom: 10px;
+    }
+    .form-inline {
+        margin-top: 20px;
+    }
+</style>
+<div class="container content main-content withDrawDetail">
+    <div class="container-fluid">
+
+        <!--查询表单-->
+        <form class="form-inline">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>提现时间</label>
+                    <div class="input-group timePicker col-md-8">
+                        <input type="text" name="reservation" id="timePicker1" class="form-control" />
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>到账时间</label>
+                    <div class="input-group timePicker col-md-8">
+                        <input type="text" name="reservation" id="timePicker2" class="form-control" />
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>提现状态</label>
+                    <select style="width: 50%;padding-left: 10px;" class="form-control" id="state">
+                        <option value="-1">全部</option>
+                        <option value="0">待处理</option>
+                        <option value="1">已完成</option>
+                        <option value="2">已驳回</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div style="margin-left: 102px" class="form-group col-md-4">
+                    <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+                </div>
+            </div>
+
+        </form>
+        <!--表格-->
+        <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                        <tr><td>锁定时间</td><td>状态</td><td>提现金额</td><td>到账时间</td><td>结算方式</td><td>银行卡（支付宝号）</td><td>备注信息</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr class="tr-empty" id="notData" ng-show="pulls.length==0"><td class="text-center" colspan="9" >暂无数据！</td></tr>
+                        <tr ng-repeat="x in pulls">
+                            <td>
+                                <p ng-bind="x.createdDate|date:'yyyy-MM-dd'"></p>
+                                <p ng-bind="x.createdDate|date:'HH:mm:ss'"></p>
+                            </td>
+                            <td ng-show="x.state==0">审核中</td>
+                            <td ng-show="x.state==1">已完成</td>
+                            <td ng-show="x.state==2">未通过</td>
+                            <td  ng-bind="'¥'+x.totalPrice/100.0"></td>
+                            <td ng-show="x.completeDate!=null">
+                                <p ng-bind="x.completeDate|date:'yyyy-MM-dd'"></p>
+                                <p ng-bind="x.completeDate|date:'HH:mm:ss'"></p>
+                            </td>
+                            <td ng-show="x.completeDate==null">
+                                未确定
+                            </td>
+                            <td ng-bind="x.bankName"></td>
+                            <td><span ng-bind="x.bankNumber|limitTo:4"></span>***************<span ng-bind="x.bankNumber|limitTo:-5"></span></td>
+                            <td ng-bind="x.note"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)"><a aria-label="Previous">
+                        <span aria-hidden="true">‹</span>
+                    </a></li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page + 1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}" ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

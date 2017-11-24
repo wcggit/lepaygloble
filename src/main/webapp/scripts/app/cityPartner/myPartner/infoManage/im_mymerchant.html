@@ -1,0 +1,280 @@
+<style>
+    .content {
+        width: auto;
+        border-top:0;
+    }
+    #tab2 {
+        display: none;
+    }
+    .row {
+        margin-bottom: 10px;
+    }
+</style>
+<!--商户门店切换-->
+<ul class="nav nav-tabs">
+    <li name="tab1" class="active">
+        <a ng-click="changeLineType">商户列表</a>
+    </li>
+    <li name="tab2"><a ng-click="changeLineType">门店数据</a></li>
+</ul>
+<div class="container content main-content my-items">
+    <div class="container-fluid" id="tab1">
+        <p class="ttl">商户列表</p>
+        <!--查询表单-->
+        <form class="form-inline">
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label for="storeName">商户名称</label>
+                    <input type="text" class="form-control" id="merchantsNameName" placeholder="请输入商户名称">
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="linkMan">负责人名称</label>
+                    <input type="text" class="form-control" id="linkMan" placeholder="请输入负责人名称">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label>交易日期</label>
+                    <div class="input-group timePicker col-md-9">
+                        <input type="text" name="reservation" id="timePicker"
+                               class="form-control"/>
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </div>
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="merchantPhone">负责人手机号</label>
+                    <input type="number" class="form-control" id="merchantPhone" placeholder="请输入负责人手机号">
+                </div>
+            </div>
+            <div>
+                <div style="margin-bottom: 20px;">
+                    <button style="margin-left: 10.5%" type="button" class="btn btn-warning btn-check2"
+                            ng-click="searchByCriteria()">查询
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div>
+            <!--表格信息总结-->
+            <!--<p class="ttl-add clearfix">-->
+                <!--<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;因商户系统升级，录入新门店时请联系乐加客服 （微信号：xuyichen1203） 电话：4000412800</span>-->
+                <!--&lt;!&ndash;<a class="btn btn-primary pull-right" ui-sref="createitems" ui-sref-opts="{reload:true}">新建商户</a>&ndash;&gt;-->
+                <!--<span class="pull-left">注：共锁定<font>{{totalCount}}</font>家商户，有<font>{{fullMerchant}}</font>家商户的锁定名额以满 <a ng-click="showFullMerchant()">查看详情</a></span>-->
+            <!--</p>-->
+            <!--表格-->
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>商户编号</td>
+                        <td>商户名称</td>
+                        <td>所属城市</td>
+                        <td>名下门店</td>
+                        <td>锁定会员</td>
+                        <td>负责人名称</td>
+                        <td>负责人手机号</td>
+                        <td>累计佣金收入</td>
+                        <td>创建日期</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="tr-empty" id="notData" ng-show="pulls.length==0"><td class="text-center" colspan="9" >暂无数据！</td></tr>
+                    <tr ng-repeat="x in pulls">
+                        <td ng-bind="x.merchantNo"></td>
+                        <td ng-bind="x.merchantName"></td>
+                        <td ng-bind="x.cityName"></td>
+                        <td ng-bind="x.merchantCount"></td>
+                        <td>{{x.totalBind}}/{{x.totalLimit}}</td>
+                        <td ng-bind="x.linkMan"></td>
+                        <td ng-bind="x.phoneNum"></td>
+                        <td ng-bind="x.totalCommission/100"></td>
+                        <td>
+                            <p ng-bind="x.createdDate|date:'yyyy-MM-dd'"></p>
+                            <p ng-bind="x.createdDate|date:'HH:mm:ss'"></p>
+                        </td>
+                        <!--<td>-->
+                            <!--<a ng-click="goLePayCode(x[0])">乐付码</a>-->
+                            <!--&lt;!&ndash;<a ng-click="goEdit(x[0])">编辑</a>&ndash;&gt;-->
+                            <!--<a ng-click="goMerchantUser(x[0])">账户</a>-->
+                            <!--&lt;!&ndash;<a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>&ndash;&gt;-->
+                        <!--</td>-->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <a class="pull-right btn btn-warning btn-check2" style="margin: 5.5% 0 0 10px;" ng-click="exportExcel()">导出表格</a>
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="container-fluid" id="tab2">
+        <p class="ttl">门店列表</p>
+        <!--查询表单-->
+        <form class="form-inline">
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label for="storeName">门店名称</label>
+                    <input type="text" class="form-control" id="storeName" placeholder="请输入门店名称">
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="merchantsName">所属商户名称</label>
+                    <input type="text" class="form-control" id="merchantsName" placeholder="请输入所属商户名称">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label>交易日期</label>
+                    <div class="input-group timePicker col-md-9">
+                        <input type="text" name="reservation" id="timePicker1"
+                               class="form-control"/>
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>协议类型</label>
+                    <div class="input-group col-md-6">
+                        <select class="form-control" id="partnerShip">
+                            <option value="-1">全部</option>
+                            <option value="0">普通协议</option>
+                            <option value="1">联盟协议</option>
+                        </select>
+                        <span class="select-jiao"></span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div style="margin-bottom: 20px;">
+                    <button style="margin-left: 10.5%" type="button" class="btn btn-warning btn-check2"
+                            ng-click="searchByCriteria_m()">查询
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div>
+
+            <!--表格-->
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>门店编号</td>
+                        <td>门店名称</td>
+                        <td>所属城市</td>
+                        <td>所属商户</td>
+                        <td>协议类型</td>
+                        <td style="width: 10%">扫码费率</td>
+                        <td>总流水</td>
+                        <td>普通订单</td>
+                        <td>乐加订单</td>
+                        <td style="width:6%">锁定会员</td>
+                        <td>当前锁定</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="tr-empty" ng-show="pulls_m.length==0"><td class="text-center" colspan="9" >暂无数据！</td></tr>
+                    <tr ng-repeat="x in pulls_m">
+                        <td ng-bind="x.mid"></td>
+                        <td ng-bind="x.merchantName"></td>
+                        <td ng-bind="x.cityName"></td>
+                        <td ng-bind="x.ownerMerchant"></td>
+                        <td ng-show="x.partnership==0">普通商户</td>
+                        <td ng-show="x.partnership==1">联盟商户</td>
+                        <td ng-show="x.partnership==0"><p>普通：<span>{{x.ljBrokerage}}%</span></p></td>
+                        <td ng-show="x.partnership==1"><p>联盟：<span>{{x.ljCommission}}%</span></p><p>普通：<span>{{x.ljBrokerage}}%</span></p></td>
+                        <td>
+                            <p>{{x.orderNum==null?0:x.orderNum}}笔</p>
+                            <p>￥<span ng-bind="x.orderAmount/100"></span></p>
+                        </td>
+                        <td>
+                            <p>{{x.comOrderNum==null?0:x.comOrderNum}}笔</p>
+                            <p>￥<span ng-bind="x.comOrderAmount/100"></span></p>
+                        </td>
+                        <td>
+                            <p>{{x.leOrderNum==null?0:x.leOrderNum}}笔</p>
+                            <p>￥<span ng-bind="x.leOrderAmount/100"></span></p>
+                        </td>
+                        <td>{{x.lockNum==null?0:x.lockNum}}</td>
+                        <td>{{x.bindCount}}/{{x.bindLimit}}</td>
+                        <!--<td class="col-md-1">-->
+                            <!--<a ng-click="goLePayCode(x.sid)">乐付码</a>-->
+                            <!--&lt;!&ndash;<a ng-click="goEdit(x[0])">编辑</a>&ndash;&gt;-->
+                            <!--<a ng-click="goMerchantUser(x.sid)">账户</a>-->
+                            <!--&lt;!&ndash;<a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>&ndash;&gt;-->
+                        <!--</td>-->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <a class="pull-right btn btn-warning btn-check2" style="margin: 5.5% 0 0 10px;" ng-click="exportExcel_m()">导出表格</a>
+                <ul class="pagination">
+                    <li ng-class="{disabled: page_m==1}" ng-click="loadPage_m(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page_m==1}" ng-click="loadPage_m(page_m-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
+                    <li ng-show="page_m > 2" ng-click="loadPage_m(page_m - 2)"><a>{{page_m - 2}}</a></li>
+                    <li ng-show="page_m > 1" ng-click="loadPage_m(page_m - 1)"><a>{{page_m - 1}}</a></li>
+                    <li class="active" ng-click="loadPage_m(page_m)"><a>{{page_m}}</a></li>
+                    <li ng-show="page_m < totalPages_m" ng-click="loadPage_m(page_m + 1)"><a>{{page_m +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page_m < totalPages_m - 1" ng-click="loadPage_m(page_m + 2)"><a>{{page_m +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page_m==totalPages_m||totalPages_m==0}"
+                        ng-click="loadPage_m(page_m+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page_m==totalPages_m||totalPages_m==0}"
+                        ng-click="loadPage_m(totalPages_m)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<script>
+    $(".nav-tabs li").click(function () {
+        $(".nav-tabs li").removeClass("active");
+        $(this).addClass("active");
+        if($(this).attr("name") == "tab1"){
+            $("#tab1").show();
+            $("#tab2").hide();
+        }else {
+            $("#tab2").show();
+            $("#tab1").hide();
+        }
+    });
+</script>

@@ -8,6 +8,7 @@ public class PartnerWalletLogCriteria {
      * 合伙人ID
      */
     private Long partnerId;
+    private String partnerSid;
     /**
      * 变更来源
      */
@@ -92,5 +93,13 @@ public class PartnerWalletLogCriteria {
 
     public void setLineType(Integer lineType) {
         this.lineType = lineType;
+    }
+
+    public String getPartnerSid() {
+        return partnerSid;
+    }
+
+    public void setPartnerSid(String partnerSid) {
+        this.partnerSid = partnerSid;
     }
 }

@@ -239,13 +239,13 @@ margin-bottom: 15px}
     text-align: center;
 }
 .clock .left,.right{
-    width: 73px;
-    height: 146px;
-    overflow: hidden;
-    position: relative;
-    position: absolute;
-    top: 0;
-    z-index: 3;
+    /*width: 73px;*/
+    /*height: 146px;*/
+    /*overflow: hidden;*/
+    /*position: relative;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*z-index: 3;*/
 }
 .clock .left{
     left: 0;
@@ -256,17 +256,18 @@ margin-bottom: 15px}
     border-radius: 0 146px 146px 0;
 }
 .clock .left div,.right div{
-    content:"";
-    position:absolute;
-    z-index: 2;
-    display:block;
-    width: 73px;
-    height: 146px;
-    background-color: white;
-    border-radius: 146px 0 0 146px;
-    transition:all .3s;
-    transform-origin:right center;
-    transform:rotateZ(-180deg);}
+    /*content:"";*/
+    /*position:absolute;*/
+    /*z-index: 2;*/
+    /*display:block;*/
+    /*width: 73px;*/
+    /*height: 146px;*/
+    /*background-color: white;*/
+    /*border-radius: 146px 0 0 146px;*/
+    /*transition:all .3s;*/
+    /*transform-origin:right center;*/
+    /*transform:rotateZ(-180deg);*/
+}
 .clock .right div{
     content:"";
     position:absolute;

@@ -54,5 +54,33 @@ angular.module('lepayglobleApp')
                     }
                 },
                 resolve: {}
+            })
+            .state('imCommissionInfo', {
+                parent: 'cp-infoManage',
+                url: '/commissioninfo',
+                data: {
+                    authorities: ["partnerManager"]
+                },
+                views: {
+                    'infoManageTab@cp-infoManage': {
+                        templateUrl: 'scripts/app/cityPartner/myPartner/infoManage/im_commissioninfo.html',
+                        controller: 'imCommissionInfoController'
+                    }
+                },
+                resolve: {}
+            })
+            .state('imMyMerchant', {
+                parent: 'cp-infoManage',
+                url: '/mymerchant',
+                data: {
+                    authorities: ["partnerManager"]
+                },
+                views: {
+                    'infoManageTab@cp-infoManage': {
+                        templateUrl: 'scripts/app/cityPartner/myPartner/infoManage/im_mymerchant.html',
+                        controller: 'imMyMerchantController'
+                    }
+                },
+                resolve: {}
             });
     });
