@@ -276,23 +276,23 @@ angular.module('lepayglobleApp')
         // 导出表格
         $scope.exportExcel_m = function () {
             var data = "?";
-            data += "partnerSid=" + criteria.partnerSid;
-            if(criteria.merchant != '' && criteria.merchant != undefined && criteria.merchant != null){
-                data += "&merchant=" + criteria.merchant;
+            data += "partnerSid=" + criteria_m.partnerSid;
+            if(criteria_m.merchant != '' && criteria_m.merchant != undefined && criteria_m.merchant != null){
+                data += "&merchant=" + criteria_m.merchant;
             }
-            if(criteria.merchantUserName != '' && criteria.merchantUserName != undefined && criteria.merchantUserName != null){
-                data += "&merchantUserName=" + criteria.merchantUserName;
+            if(criteria_m.merchantUserName != '' && criteria_m.merchantUserName != undefined && criteria_m.merchantUserName != null){
+                data += "&merchantUserName=" + criteria_m.merchantUserName;
             }
-            if(criteria.partnership != '' && criteria.partnership != undefined && criteria.partnership != null){
-                data += "&partnership=" + criteria.partnership;
+            if(criteria_m.partnership != '' && criteria_m.partnership != undefined && criteria_m.partnership != null){
+                data += "&partnership=" + criteria_m.partnership;
             }
-            if(criteria.startDate != '' && criteria.startDate != undefined && criteria.startDate != null){
-                data += "&startDate=" + criteria.startDate;
+            if(criteria_m.startDate != '' && criteria_m.startDate != undefined && criteria_m.startDate != null){
+                data += "&startDate=" + criteria_m.startDate;
             }
-            if(criteria.endDate != '' && criteria.endDate != undefined && criteria.endDate != null){
-                data += "&endDate=" + criteria.endDate;
+            if(criteria_m.endDate != '' && criteria_m.endDate != undefined && criteria_m.endDate != null){
+                data += "&endDate=" + criteria_m.endDate;
             }
-            console.log(data);
+
             location.href = "/api/merchantUser/merchantList/export" + data;
         }
     });
