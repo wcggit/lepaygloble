@@ -4,15 +4,15 @@
         cursor: pointer;
         background-color: #fb991a;
         color: #ffffff;
-        padding:4px 1%;
-        margin-top: 1%;
-        margin-left: 3%;
+        padding:4px 8px;
+        margin-left: 4px;
+        margin-top: -5px;
         -webkit-border-radius:5px 5px;
         -moz-border-radius:5px 5px;
         border-radius:5px 5px;
     }
     .msgBoard {
-        position: fixed;
+        position: absolute;
         width: 300px;
         height: 115px;
         padding: 10px 0 0 1%;
@@ -20,6 +20,7 @@
         -webkit-border-radius:5px 5px;
         -moz-border-radius:5px 5px;
         border-radius:5px 5px;
+        display: none;
     }
     .msgBoard > div {
         color: #fff;
@@ -170,7 +171,11 @@
             <td>
                 <p ng-bind="o.completeDate|date:'yyyy-MM-dd HH:mm:ss'"></p>
             </td>
-            <td>￥{{o.totalPrice/100.0}}<span class="hui" ng-show="o.discount!=null&&o.discount==1" ng-mouseenter="showMsg(this,o.orderSid)" ng-mouseleave="hideMsg(this,o.orderSid)">惠</span></td>
+            <td>
+                ￥{{o.totalPrice/100.0}}
+                <span class="hui" ng-show="o.discount!=null&&o.discount==1" ng-mouseenter="showMsg($event,o.orderSid)" ng-mouseleave="hideMsg()">惠</span>
+
+            </td>
             <td ng-show="o.basicType==0"><p>普通订单</p>
             </td>
             <td ng-show="o.basicType==1"><p>乐加订单</p></td>
