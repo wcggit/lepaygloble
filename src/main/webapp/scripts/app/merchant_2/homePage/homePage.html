@@ -127,7 +127,7 @@
                             <span class="pull-left nickname">{{arr[5]}}</span>
                             <span class="pull-right pay-detail">交易金额:{{arr[3]/100.0}}元</span>
                             <span class="pull-right pay-detail"  ng-show="arr[6]!=null&&arr[6]!=''" style="font-size: 16px;color: #444">买单桌号: {{arr[6]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                            <span ng-show="arr[7]!=null&&arr[7]==1" ng-mouseenter="showMsg($event,arr[0])" ng-mouseleave="hideMsg()">惠</span>
+                            <span class="hui" ng-show="arr[7]!=null&&arr[7]==1" ng-mouseenter="showMsg($event,arr[0])" ng-mouseleave="hideMsg()">惠</span>
                         </div>
                         <div class="left-icon"></div>
                     </div>

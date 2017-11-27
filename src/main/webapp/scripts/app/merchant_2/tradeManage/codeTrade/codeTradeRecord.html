@@ -201,7 +201,8 @@
             <td>
                 <p ng-bind="o.completeDate|date:'yyyy-MM-dd HH:mm:ss'"></p>
             </td>
-            <td>￥{{o.totalPrice/100.0}}</td>
+            <td>￥{{o.totalPrice/100.0}}
+                <span class="hui" ng-show="o.discount!=null&&o.discount==1" ng-mouseenter="showMsg($event,o.orderSid)" ng-mouseleave="hideMsg()">惠</span></td>
             <td ng-show="o.scanCodeOrderExt.basicType==0">普通订单</td>
             <td ng-show="o.scanCodeOrderExt.basicType==1">乐加订单</td>
             <td>
