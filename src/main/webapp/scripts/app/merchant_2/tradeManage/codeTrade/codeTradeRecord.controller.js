@@ -94,12 +94,12 @@ angular.module('lepayglobleApp')
             $http.post("/api/codeTrade/codeOrderStatistic", codeOrderCriteria).success(function (response) {
                 if (response.status == 200) {
                     var data = response.data;
-                    var totalData = data.totalData;
-                    var lejiaData = data.lejiaData;
-                    var commonData = data.commonData;
                     $scope.totalData = data.totalData;
                     $scope.lejiaData = data.lejiaData;
                     $scope.commonData = data.commonData;
+                    var totalData = data.totalData;
+                    var lejiaData = data.lejiaData;
+                    var commonData = data.commonData;
                 } else {
                     alert('加载扫码订单数据错误...');
                 }
