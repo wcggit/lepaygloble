@@ -117,7 +117,7 @@ angular.module('lepayglobleApp')
             //  门店
             var mid = $("#selMerchant").val();
             if(mid!=-1) {
-                detailCriteria.merchantId = $scope.mid;
+                detailCriteria.merchantId = mid;
             }else {
                 detailCriteria.merchantId = $scope.defaultId;
             }
@@ -145,7 +145,7 @@ angular.module('lepayglobleApp')
             //  门店
             var mid = $("#selMerchant").val();
             if (mid != -1) {
-                detailCriteria.merchantId = $scope.mid;
+                detailCriteria.merchantId = mid;
             } else {
                 detailCriteria.merchantId = $scope.defaultId;
             }
@@ -170,8 +170,8 @@ angular.module('lepayglobleApp')
             if (detailCriteria.payType != null) {
                 data += "&payWay=" + detailCriteria.payType;
             }
-            if ($("#selectStore").val() != null && $("#selectStore").val() != '') {
-                data += "&merchantId=" + $("#selectStore").val();
+            if ($("#selMerchant").val() != null && $("#selMerchant").val() != '') {
+                data += "&merchantId=" + $("#selMerchant").val();
             } else if ($scope.defaultId != null && $scope.defaultId != '') {
                 data += "&merchantId=" + $scope.defaultId;
             }
