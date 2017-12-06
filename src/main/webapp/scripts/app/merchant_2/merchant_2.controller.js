@@ -142,6 +142,23 @@ angular.module('lepayglobleApp')
             },
             {
                 contentState:"0",
+            },
+            {
+                contentState:"1",
+                clickState:"0",
+                name:"团购管理",
+                state:"",
+                icon:"iconfont2 icon2-wodeyongjin"
+            },
+            {
+                contentState:"0",
+            }
+            ,{
+                contentState:"1",
+                clickState:"1",
+                name:"团购核销",
+                state:"groupBuyManagement",
+                icon:""
             }
         ]
         var current = $state.current;
