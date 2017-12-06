@@ -6,10 +6,7 @@ import com.jifenke.lepluslive.partner.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.partner.domain.criteria.PartnerCriteria;
 import com.jifenke.lepluslive.partner.domain.criteria.PartnerManagerCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.*;
-import com.jifenke.lepluslive.partner.repository.PartnerInfoRepository;
-import com.jifenke.lepluslive.partner.repository.PartnerRepository;
-import com.jifenke.lepluslive.partner.repository.PartnerWalletRepository;
-import com.jifenke.lepluslive.partner.repository.PartnerWelfareLogRepository;
+import com.jifenke.lepluslive.partner.repository.*;
 
 import com.jifenke.lepluslive.withdraw.domain.criteria.WithdrawCriteria;
 import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
@@ -61,6 +58,16 @@ public class PartnerService {
 
     @Inject
     private PartnerWelfareLogRepository partnerWelfareLogRepository;
+
+    @Inject
+    private PartnerWalletLogRepository partnerWalletLogRepository;
+
+    @Inject
+    private PartnerManagerWalletLogRepository partnerManagerWalletLogRepository;
+
+    @Inject
+    private PartnerManagerWalletRepository partnerManagerWalletRepository;
+
 
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -496,5 +503,70 @@ public class PartnerService {
             }
         };
     }
+
+
+
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void shareToPartner(Long shareMoney, Partner partner, String orderSid, Long type) {
+        if (shareMoney > 0) {
+            PartnerWalletLog partnerWalletLog = new PartnerWalletLog();
+
+            PartnerWallet partnerWallet = partnerWalletRepository.findByPartner(partner);
+            Long availableBalance = partnerWallet.getAvailableBalance();
+            partnerWalletLog.setBeforeChangeMoney(availableBalance);
+            long afterShareMoney = availableBalance + shareMoney;
+
+            partnerWalletLog.setAfterChangeMoney(afterShareMoney);
+
+            partnerWalletLog.setPartnerId(partner.getId());
+
+            partnerWalletLog.setOrderSid(orderSid);
+
+            partnerWalletLog.setType(type);
+
+            partnerWallet.setTotalMoney(partnerWallet.getTotalMoney() + shareMoney);
+
+            partnerWallet.setAvailableBalance(afterShareMoney);
+
+            partnerWalletLogRepository.save(partnerWalletLog);
+
+            partnerWalletRepository.save(partnerWallet);
+        }
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void shareToPartnerManager(Long shareMoney, PartnerManager partnerManager,
+                                      String orderSid, Long type) {
+        if (shareMoney > 0) {
+            PartnerManagerWalletLog log = new PartnerManagerWalletLog();
+
+            PartnerManagerWallet
+                partnerManagerWallet =
+                partnerManagerWalletRepository.findByPartnerManager(
+                    partnerManager);
+            Long availableBalance = partnerManagerWallet.getAvailableBalance();
+            log.setBeforeChangeMoney(availableBalance);
+            long afterShareMoney = availableBalance + shareMoney;
+
+            log.setAfterChangeMoney(afterShareMoney);
+
+            log.setPartnerManagerId(partnerManager.getId());
+
+            log.setOrderSid(orderSid);
+
+            log.setType(type);
+
+            partnerManagerWallet.setTotalMoney(partnerManagerWallet.getTotalMoney() + shareMoney);
+
+            partnerManagerWallet.setAvailableBalance(afterShareMoney);
+
+            partnerManagerWalletLogRepository.save(log);
+
+            partnerManagerWalletRepository.save(partnerManagerWallet);
+        }
+    }
+
 
 }

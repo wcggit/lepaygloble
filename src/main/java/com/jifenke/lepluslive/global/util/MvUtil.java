@@ -72,6 +72,14 @@ public class MvUtil {
     }
 
     /**
+     * 生成n位随机数
+     */
+    public static String getRandomNumber(Integer number) {
+        return RandomStringUtils.random(number, "0123456789");
+
+    }
+
+    /**
      * 生成4位数验证码
      */
     public static String getLePayCode() {
