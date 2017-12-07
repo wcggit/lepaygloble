@@ -50,6 +50,7 @@ angular.module('lepayglobleApp')
 
         HomePage.getMerchantsInfo().then(function (response) {
             var data = response.data;
+            console.log(data);
             $scope.merchants = data;
             $scope.selectDefault = data[0].id;
             // 默认门店

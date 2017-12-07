@@ -2,25 +2,26 @@
 <form class="form-inline list-check">
     <div class="row">
         <div class="form-group col-md-6">
-            <label>使用状态</label>
+            <label>门店筛选</label>
             <div class="input-group col-md-6">
-                <select id="selectStatus" class="form-control">
+                <select id="selectStore" class="form-control">
                     <!--<option value="">请选择</option>-->
                     <option ng-repeat="x in myStore" value="{{x[0]}}">{{x[1]}}</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
         </div>
-        <!--<div class="form-group col-md-6">-->
-            <!--<label>使用状态</label>-->
-            <!--<div class="input-group col-md-6">-->
-                <!--<select id="selectStore" class="form-control">-->
-                    <!--&lt;!&ndash;<option value="">请选择</option>&ndash;&gt;-->
-                    <!--<option ng-repeat="x in myStore" value="{{x[0]}}">{{x[1]}}</option>-->
-                <!--</select>-->
-                <!--<span class="select-jiao"></span>-->
-            <!--</div>-->
-        <!--</div>-->
+        <div class="form-group col-md-6">
+            <label>使用状态</label>
+            <div class="input-group col-md-6">
+                <select id="selectStatus" class="form-control">
+                    <option value="-1">全部</option>
+                    <option value="0">未使用</option>
+                    <option value="1">已使用</option>
+                </select>
+                <span class="select-jiao"></span>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="form-group col-md-5">
@@ -28,7 +29,7 @@
             <input type="text" class="form-control" id="phone">
         </div>
         <div class="form-group col-md-5">
-            <label>订单金额</label>
+            <label>订单金额(元)</label>
             <input type="text" class="form-control" id="orderMoney">
         </div>
         <div class="form-group col-md-2">
@@ -44,9 +45,7 @@
 <div class="row">
     <div class="col-md-10">
         <p class="ttl-add table-title">
-            所选条件下，共有<span class="font-yellow" ng-bind="totalData[0][0]"></span>条记录，
-            <span class="font-yellow" ng-bind="'￥'+totalData[0][1]/100.0"></span>个未核销，
-            <span class="font-yellow" ng-bind="'￥'+totalData[0][2]/100.0"></span>个已核销，
+            所选条件下，共有<span class="font-yellow" ng-bind="totalData"></span>条记录.
         </p>
     </div>
 </div>
@@ -64,6 +63,7 @@
                 <td>用户昵称</td>
                 <td>电话</td>
                 <td>订单金额</td>
+                <td>有效期</td>
                 <td>使用状态</td>
                 <td>核销时间</td>
             </tr>
@@ -72,28 +72,29 @@
             <tr class="tr-empty" id="notData" hidden="true">
                 <td class="text-center" colspan="8">暂无数据！</td>
             </tr>
-            <tr class="tr-noEmpty" ng-repeat="o in orderList" id="HaveData">
+            <tr class="tr-noEmpty" ng-repeat="o in hx" id="HaveData">
+                <td ng-bind="o.productName"></td>
                 <td ng-bind="o.orderSid"></td>
-                <td ng-bind="o.orderSid"></td>
-                <td ng-bind="o.orderSid"></td>
-                <td ng-bind="o.merchant.name"></td>
-                <!--<td ng-show="x.leJiaUser==null||(x.leJiaUser!=null&&x.leJiaUser.name==null)">非会员</td>
-                <td ng-show="x.leJiaUser!=null&&x.leJiaUser.name!=null">{{x.leJiaUser.id}}</td>-->
-                <td ng-bind="o.payWay.payWay"></td>
-                <td ng-bind="o.lepayCode"></td>
+                <td ng-bind="o.productId"></td>
                 <td>
-                    <p ng-bind="o.completeDate|date:'yyyy-MM-dd HH:mm:ss'"></p>
+                    <p ng-show="o.orderType=1">乐加订单</p>
+                    <p ng-show="o.orderType=0">普通订单</p>
                 </td>
-                <td ng-bind="'¥'+o.totalPrice/100.0"></td>
-                <!--<td ng-show="o.rebateWay==0||o.rebateWay==2||o.rebateWay==4||o.rebateWay==5||o.rebateWay==6"><p ng-bind="'¥'+o.wxCommission/100.0"></p>
-                </td>
-                <td ng-show="o.rebateWay==3||o.rebateWay==1"><p>{{(100-o.merchant.ljCommission)/10}}折</p></td>-->
-                <td ng-show="o.rebateWay==0||o.rebateWay==2||o.rebateWay==4||o.rebateWay==5||o.rebateWay==6"><p>普通订单</p>
-                </td>
-                <td ng-show="o.rebateWay==3||o.rebateWay==1"><p>乐加订单</p></td>
+                <td ng-bind="o.orderNum"></td>
+                <td ng-bind="o.userName"></td>
+                <td ng-bind="o.phoneNumber"></td>
+                <td ng-bind="'¥'+o.orderPrice/100.0"></td>
                 <td>
-                    <p ng-show="o.state=1">支付成功</p>
-                    <p ng-show="o.state=0">未完成</p>
+                    <p>{{o.vaildDate|date:'yyyy-MM-dd'}}</p>
+                    <p>{{o.vaildDate|date:'HH:mm:ss'}}</p>
+                </td>
+                <td>
+                    <p ng-show="o.state=1">已使用</p>
+                    <p ng-show="o.state=0">未使用</p>
+                </td>
+                <td>
+                    <p>{{o.checkDate|date:'yyyy-MM-dd'}}</p>
+                    <p>{{o.checkDate|date:'HH:mm:ss'}}</p>
                 </td>
             </tr>
         </tbody>
@@ -102,7 +103,7 @@
 <!--分页-->
 <div class=" clearfix">
     <nav class="pull-right">
-        <a class="pull-right dcbg" ng-click="exportExcel()">导出表格</a>
+        <!--<a class="pull-right dcbg" ng-click="exportExcel()">导出表格</a>-->
         <ul class="pagination">
             <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
             <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">

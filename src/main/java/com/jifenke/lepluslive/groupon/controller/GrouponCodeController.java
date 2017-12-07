@@ -94,7 +94,7 @@ public class GrouponCodeController {
         if (grouponCode != null && merchantUser != null) {
             if (grouponCode.getGrouponProduct().getMerchantUser().getId().equals(merchantUser.getCreateUserId())) {
                 if (grouponCode.getState() != 0) {
-                    return LejiaResult.build(500, "无效的卷码");
+                    return LejiaResult.build(500, "无效的券码");
                 } else {
                     //判断优惠券是否过期或未到使用时间
                     LejiaResult result = grouponCodeService.checkUseDate(grouponCode);
@@ -108,7 +108,7 @@ public class GrouponCodeController {
                 return LejiaResult.build(401, "无权限核销");
             }
         } else {
-            return LejiaResult.build(500, "无效的卷码");
+            return LejiaResult.build(500, "无效的券码");
         }
     }
 

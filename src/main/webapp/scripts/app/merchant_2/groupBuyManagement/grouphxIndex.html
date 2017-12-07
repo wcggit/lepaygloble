@@ -123,16 +123,16 @@
         font-size: 14px;
         color: #666;
     }
+    #selectStore > option:first-child {
+        display: none;
+    }
 </style>
 <!--门店筛选-->
 <div class="md fixedClear">
     <div>门店名称</div>
     <div>
-        <select name="" id="">
-            <option value="0">一品江南</option>
-            <option value="1">二品江南</option>
-            <option value="2">三品江南</option>
-            <option value="3">四品江南</option>
+        <select name="" id="selMerchant" class="current-store form-control" ng-change="changeStore(selectDefault)" ng-model="selectDefault" ng-options="m[0] as m[1] for m in myStore">
+            <option value="" hidden></option>
         </select>
     </div>
     <!--<div>查询</div>-->
@@ -144,9 +144,9 @@
         <div>验证码核销通道</div>
     </div>
     <div>
-        <input type="text" placeholder="请先选择门店再进行核销">
+        <input type="text" id="yzmInput" placeholder="请先选择门店再进行核销">
     </div>
-    <div>核销</div>
+    <div data-target="#AlertHX" data-toggle="modal">核销</div>
 </div>
 
 <!--二维码核销查询-->
@@ -159,15 +159,15 @@
     <div>
         <div>
             <p>今日核销</p>
-            <p>38</p>
+            <p>{{daily.dailyCount}}</p>
         </div>
         <div>
             <p>验证码核销</p>
-            <p>888</p>
+            <p>{{daily.dailyCount}}</p>
         </div>
         <div>
             <p>共消费</p>
-            <p>23333</p>
+            <p>{{daily.daliyPrice/100}}</p>
         </div>
     </div>
 </div>
@@ -176,15 +176,15 @@
     <div>
         <div>
             <p>累计核销</p>
-            <p>38</p>
+            <p>{{total.totalCount}}</p>
         </div>
         <div>
             <p>验证码核销</p>
-            <p>888</p>
+            <p>{{total.totalCount}}</p>
         </div>
         <div>
             <p>共消费</p>
-            <p>23333</p>
+            <p>{{total.totalPrice/100}}</p>
         </div>
     </div>
 </div>
@@ -205,24 +205,42 @@
             <tr class="tr-empty" id="notData" hidden="true">
                 <td class="text-center" colspan="8">暂无数据！</td>
             </tr>
-            <tr class="tr-noEmpty" ng-repeat="o in orderList" id="HaveData">
-                <td ng-bind="o.orderSid"></td>
-                <td ng-bind="o.merchant.name"></td>
-                <td ng-show="o.desk!=null&&o.desk!=''">{{o.desk}}</td>
-                <td ng-show="o.desk==null||o.desk==''">无</td>
-                <td ng-show="o.payType==0">微信</td>
-                <td ng-show="o.payType==1">支付宝</td>
-                <td ng-bind="o.lepayCode"></td>
+            <tr class="tr-noEmpty" ng-repeat="o in productList" id="HaveData">
+                <td ng-bind="o.productName"></td>
+                <td ng-bind="o.productPrice/100"></td>
+                <td ng-bind="o.checkCount"></td>
+                <td ng-bind="o.checkCount"></td>
+                <td ng-bind="o.totalPrice/100"></td>
             </tr>
         </tbody>
         <tfoot>
             <tr style="background-color: #e4e4e4">
                 <td>总核销数</td>
                 <td>--</td>
-                <td>5</td>
-                <td>5</td>
-                <td>￥30</td>
+                <td>{{allC}}</td>
+                <td>{{allC}}</td>
+                <td>￥{{allP}}</td>
             </tr>
         </tfoot>
     </table>
+</div>
+<!--新建账户提示框-->
+<div class="modal fade" id="AlertHX">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">确认核销</h4>
+            </div>
+            <div class="modal-body">
+                <h2 style="text-align: center;padding: 4% 0">是否确认核销该验证码？</h2>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning"  ng-click="YZMHx()" >确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
