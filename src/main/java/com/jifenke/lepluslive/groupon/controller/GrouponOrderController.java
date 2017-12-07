@@ -6,7 +6,6 @@ import com.jifenke.lepluslive.groupon.controller.view.GrouponOrderExcel;
 import com.jifenke.lepluslive.groupon.domain.criteria.GrouponOrderCriteria;
 import com.jifenke.lepluslive.groupon.domain.entities.GrouponOrder;
 import com.jifenke.lepluslive.groupon.service.GrouponOrderService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,7 +59,6 @@ public class GrouponOrderController {
      * 导出 Excel
      * Created by xf on 2017-06-19.
      */
-    @RequiresPermissions("groupon:order:export")
     @RequestMapping(value = "/grouponOrder/export", method = RequestMethod.POST)
     public ModelAndView export(GrouponOrderCriteria orderCriteria) {
         if (orderCriteria.getOffset() == null) {

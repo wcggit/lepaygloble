@@ -1,0 +1,12 @@
+<div class="codeTrade top-style1">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">
+            团购核销
+            <ul class="nav nav-style">
+                <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab()" ui-sref="grouphxIndex"><a>核销首页</a></li>
+                <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab()" ui-sref="hxInfo"><a>核销明细</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid" ui-view="hxTab"></div>
+</div>

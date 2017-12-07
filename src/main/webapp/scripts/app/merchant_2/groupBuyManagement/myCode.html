@@ -1,0 +1,15 @@
+<div class="row myCode">
+    <!--<tr class="tr-empty" id="notData" hidden="true"><td class="text-center" colspan="8" >暂无数据！</td></tr>-->
+    <div class="col-md-3 text-center" ng-repeat="m in myCodes">
+        <p class="fontSize14 color222">{{m.merchantName}}</p>
+        <div class="haibao">
+            <div class="rvCode">
+                <img src="{{m.qrCodePicture}}" alt="">
+            </div>
+            <div class="colorfff fontSize16 shop-name">{{m.merchantName}}</div>
+            <div class="text-center download-code" ng-click="downloadMyCode(m.sid)"><span class="iconfont2 icon2-xiazai"></span>立即下载</div>
+        </div>
+        <p class="fontSize14 color222e">累计收款：{{m.totalPrice / 100.0 | currency:'￥'}}</p>
+    </div>
+
+</div>
