@@ -112,7 +112,7 @@ public class GrouponCodeService {
         GrouponOrder grouponOrder = grouponCode.getGrouponOrder();
         Integer orderstate = 1;
         for (GrouponCode code : grouponOrder.getGrouponCodes()) {
-            if (code.getId() != grouponCode.getId()) {
+            if (!code.getId().equals(grouponCode.getId())) {
                 if (grouponCode.getState() == 0) {
                     orderstate = 0;
                     break;

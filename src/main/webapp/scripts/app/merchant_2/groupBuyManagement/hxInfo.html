@@ -106,8 +106,8 @@
                 <td ng-bind="o.orderSid"></td>
                 <td ng-bind="o.productId"></td>
                 <td>
-                    <p ng-show="o.orderType=1">乐加订单</p>
-                    <p ng-show="o.orderType=0">普通订单</p>
+                    <p ng-show="o.orderType==1">乐加订单</p>
+                    <p ng-show="o.orderType==0">普通订单</p>
                 </td>
                 <td ng-bind="o.orderNum"></td>
                 <td ng-bind="o.userName"></td>
@@ -118,8 +118,12 @@
                     <p>{{o.vaildDate|date:'HH:mm:ss'}}</p>
                 </td>
                 <td>
-                    <p ng-show="o.state=1">已使用</p>
-                    <p ng-show="o.state=0">未使用</p>
+                    <p ng-show="o.state==4">过期</p>
+                    <p ng-show="o.state==3">已退款</p>
+                    <p ng-show="o.state==2">退款中</p>
+                    <p ng-show="o.state==1">已使用</p>
+                    <p ng-show="o.state==0">未使用</p>
+                    <p ng-show="o.state==-1">未付款</p>
                 </td>
                 <td>
                     <p>{{o.checkDate|date:'yyyy-MM-dd'}}</p>

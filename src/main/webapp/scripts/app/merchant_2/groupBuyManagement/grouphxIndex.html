@@ -168,7 +168,7 @@
         </div>
         <div>
             <p>共消费</p>
-            <p>{{daily.daliyPrice/100}}</p>
+            <p>{{daily.daliyPrice/100.0}}</p>
         </div>
     </div>
 </div>
@@ -185,7 +185,7 @@
         </div>
         <div>
             <p>共消费</p>
-            <p>{{total.totalPrice/100}}</p>
+            <p>{{total.totalPrice/100.0}}</p>
         </div>
     </div>
 </div>
@@ -208,10 +208,10 @@
             </tr>
             <tr class="tr-noEmpty" ng-repeat="o in productList" id="HaveData">
                 <td ng-bind="o.productName"></td>
-                <td ng-bind="o.productPrice/100"></td>
+                <td ng-bind="o.productPrice/100.0"></td>
                 <td ng-bind="o.checkCount"></td>
                 <td ng-bind="o.checkCount"></td>
-                <td ng-bind="o.totalPrice/100"></td>
+                <td ng-bind="o.totalPrice/100.0"></td>
             </tr>
         </tbody>
         <tfoot>
@@ -220,7 +220,7 @@
                 <td>--</td>
                 <td>{{allC}}</td>
                 <td>{{allC}}</td>
-                <td>￥{{allP}}</td>
+                <td>￥{{allP/100.0}}</td>
             </tr>
         </tfoot>
     </table>

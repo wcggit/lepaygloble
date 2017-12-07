@@ -67,6 +67,7 @@ public class GrouponCodeController {
             map.put("orderPrice",order.getTotalPrice());
             map.put("vaildDate",code.getExpiredDate());
             map.put("checkDate",code.getCheckDate());
+            map.put("state",code.getState());
             content.add(map);
         }
         Map data = new HashedMap();

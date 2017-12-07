@@ -13,7 +13,6 @@ angular.module('lepayglobleApp')
         $http.get("/api/merchantUser/merchantsInfo").success(function (response) {
             if (response.status == 200) {
                 var data = response.data;
-                console.log(data);
                 $scope.myStore = data;
                 $scope.selectDefault = data[0][0];
                 storeId = data[0][0];
@@ -29,10 +28,10 @@ angular.module('lepayglobleApp')
                     $scope.daily = data.dailyData[0];
                     $scope.total = data.totalData[0];
                     $scope.productList = data.dailyDetail;
-                    var allC = 0,allP = 0;
-                    for(var i in data.dailyDetail){
-                        allC+= parseInt(data.dailyDetail[i].checkCount);
-                        allP+= parseFloat(data.dailyDetail[i].totalPrice)
+                    var allC = 0, allP = 0;
+                    for (var i in data.dailyDetail) {
+                        allC += parseInt(data.dailyDetail[i].checkCount);
+                        allP += parseFloat(data.dailyDetail[i].totalPrice)
                     }
                     $scope.allC = allC;
                     $scope.allP = allP;
@@ -42,6 +41,7 @@ angular.module('lepayglobleApp')
                 }
             });
         }
+
         $scope.changeStore = function (sid) {
             showStoreData(sid);
             storeId = sid;
@@ -50,18 +50,11 @@ angular.module('lepayglobleApp')
         //验证码核销通道
         $scope.YZMHx = function () {
             var sid = $("#yzmInput").val();
-            if(sid == ''){
+            if (sid == '') {
                 $scope.errorMsg = "验证码不能为空！";
             }
             $http.get("/api/grouponCode/check/" + sid + "/" + storeId).success(function (response) {
-                if (response.status == 200) {
-                    var data = response.data;
-                    console.log(data);
-
-                } else {
-                    console.log(response.msg);
-                    $scope.errorMsg = response.msg;
-                }
+                $scope.errorMsg = response.msg;
             });
         }
         $scope.hideBG = function () {
