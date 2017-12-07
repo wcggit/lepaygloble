@@ -1,3 +1,28 @@
+<style>
+    .codeTrade table tr td {
+        width: 100px !important;
+        word-break: break-all;
+        text-align: center;
+    }
+    .codeTrade table tr td:nth-of-type(1) {
+        width: 120px !important;
+    }
+    .codeTrade table tr td:nth-of-type(5) {
+        width: 80px !important;
+    }
+    .codeTrade table tr td:nth-of-type(4),.codeTrade table tr td:nth-of-type(8) {
+        width: 70px !important;
+    }
+    .codeTrade table tr td:nth-of-type(10) {
+        width: 80px !important;
+    }
+    .codeTrade table tr td:nth-of-type(10) {
+        word-break: normal;
+    }
+    .codeTrade table tr td:nth-of-type(9),.codeTrade table tr td:nth-of-type(11) {
+        width: 150px !important;
+    }
+</style>
 <!--查询表单-->
 <form class="form-inline list-check">
     <div class="row">
@@ -24,21 +49,25 @@
         </div>
     </div>
     <div class="row">
-        <div class="form-group col-md-5">
+        <div class="form-group col-md-6">
             <label>电话</label>
-            <input type="text" class="form-control" id="phone">
+            <div class="input-group col-md-6">
+                <input type="text" class="form-control" id="phone">
+            </div>
         </div>
-        <div class="form-group col-md-5">
+        <div class="form-group col-md-6">
             <label>订单金额(元)</label>
-            <input type="text" class="form-control" id="orderMoney">
+            <div class="input-group col-md-6">
+                <input type="text" class="form-control" id="orderMoney">
+            </div>
         </div>
-        <div class="form-group col-md-2">
+
+    </div>
+    <div class="row">
+        <div class="form-group col-md-2" style="margin-left: 10%">
             &nbsp;&nbsp;
             <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
         </div>
-    </div>
-    <div class="row">
-
     </div>
 </form>
 <!--表格信息总结-->
@@ -64,7 +93,7 @@
                 <td>电话</td>
                 <td>订单金额</td>
                 <td>有效期</td>
-                <td>使用状态</td>
+                <td>状态</td>
                 <td>核销时间</td>
             </tr>
         </thead>
@@ -73,7 +102,7 @@
                 <td class="text-center" colspan="8">暂无数据！</td>
             </tr>
             <tr class="tr-noEmpty" ng-repeat="o in hx" id="HaveData">
-                <td ng-bind="o.productName"></td>
+                <td ng-bind="o.productName" width="100"></td>
                 <td ng-bind="o.orderSid"></td>
                 <td ng-bind="o.productId"></td>
                 <td>
