@@ -13,11 +13,13 @@ angular.module('lepayglobleApp')
                 var data = response.data;
                 $scope.myStore = data;
                 $scope.defaultId = data[0][0];
+                $scope.defaultSid = data[0][2];
                 angular.forEach(data, function (data, index) {
                     array[index] = data[0];
                 });
                 $scope.loadCodeOrderInfo();
                 $scope.loadStatistic();
+                $scope.loadDiscount();
             } else {
                 alert("加载门店错误...");
             }
@@ -86,6 +88,7 @@ angular.module('lepayglobleApp')
             currentPage = 1;
             $scope.loadCodeOrderInfo();
             $scope.loadStatistic();
+            $scope.loadDiscount();
         };
 
         // 加载数据
@@ -111,7 +114,7 @@ angular.module('lepayglobleApp')
             var mid = $("#selectStore").val();
             var merchant = {};
             if (mid != null && mid != "") {
-                merchant.id = mid;
+                merchant.id = mid.split('-')[0];
                 codeOrderCriteria.merchant = merchant;
             } else {
                 merchant.id = $scope.defaultId;
@@ -176,18 +179,44 @@ angular.module('lepayglobleApp')
         };
 
         //  加载优惠信息
-        $scope.loadDiscount = function (msid,startDate,endDate) {
+        $scope.loadDiscount = function () {
+
+            var msid = $("#selectStore").val();
+            if (msid != null && msid != "") {
+                msid= $("#selectStore").val().split('-')[1];
+            } else {
+                msid= $scope.defaultSid;
+            }
+            var startDate=null;
+            var endDate=null;
+            if ($("#completeDate").val() != null && $("#completeDate").val() != '') {
+                var completeDate = $("#completeDate").val().split("-");
+                startDate = completeDate[0];
+                endDate = completeDate[1];
+            } else {
+                startDate = null;
+                endDate = null;
+            }
             var url = "http://www.lepluspay.com/wx/public/discount?merchantSid="+msid;
             if(startDate!=null&&startDate!='') {
                 url+='&startDate='+startDate+"&endDate="+endDate;
             }
             $http.get(url).success(function (response) {
                 var data = response;
-                console.log(JSON.stringify(data));
-                // $scope.originPrice = data.originPrice;
-                // $scope.outPrice = data.outPrice;
-                // $scope.discount = data.discount;
-                // $scope.discountPrice = data.discountPrice;
+                var discount = "";
+                var discountDate = "";
+                if(startDate!=null&&startDate!='') {
+                    discountDate+="在所选时间（"+startDate+" - "+endDate+"） "
+                }else {
+                    discountDate += "在所选时间内";
+                }
+                $("#discountDate").text(discountDate);
+                if(data!=null&&data!='') {
+                     discount += ""+(data/100.0);
+                }else {
+                     discount += "0";
+                }
+                $("#discountInfo").text(discount);
             });
         }
 
@@ -213,7 +242,7 @@ angular.module('lepayglobleApp')
                 data += "&state=" + codeOrderCriteria.state;
             }
             if ($("#selectStore").val() != null && $("#selectStore").val() != '') {
-                data += "&merchantId=" + $("#selectStore").val();
+                data += "&merchantId=" + $("#selectStore").val().split('-')[0];
             } else if ($scope.defaultId != null && $scope.defaultId != '') {
                 data += "&merchantId=" + $scope.defaultId;
             }

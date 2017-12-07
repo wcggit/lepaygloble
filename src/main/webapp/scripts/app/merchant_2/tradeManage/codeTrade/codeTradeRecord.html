@@ -35,7 +35,7 @@
             <div class="input-group col-md-6">
                 <select id="selectStore" class="form-control">
                     <!--<option value="">请选择</option>-->
-                    <option ng-repeat="x in myStore" value="{{x[0]}}">{{x[1]}}</option>
+                    <option ng-repeat="x in myStore" value="{{x[0]+'-'+x[2]}}">{{x[1]}}</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
@@ -131,8 +131,8 @@
         实际到账<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][2]/100.0}}</span><span
         class="font-yellow" ng-show="lejiaData==null">￥0</span>，
         手续费<span class="font-yellow" ng-show="lejiaData!=null">￥{{lejiaData[0][3]/100.0}}</span><span
-        class="font-yellow" ng-show="lejiaData==null">￥0</span>。
-        <span id="discountInfo"></span>
+        class="font-yellow" ng-show="lejiaData==null">￥0</span><br/>
+        <span id="discountDate"></span>的累计优惠金额为<span id="discountInfo" class="font-yellow"></span>元。
     </p>
     <div class="col-md-2 clearfix" ng-show="payWay==3" style="width: 20%;padding-right: 0">
         <div class="btn btn-warning btn-long pull-right" ng-click="historyTradeRecord()" style="margin-top: 27px">历史记录
