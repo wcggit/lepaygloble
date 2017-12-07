@@ -5,6 +5,7 @@ import com.jifenke.lepluslive.groupon.domain.criteria.GrouponCodeCriteria;
 import com.jifenke.lepluslive.groupon.domain.entities.GrouponCode;
 import com.jifenke.lepluslive.groupon.domain.entities.GrouponOrder;
 import com.jifenke.lepluslive.groupon.repository.GrouponCodeRepository;
+import com.jifenke.lepluslive.groupon.repository.GrouponOrderRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.order.service.OnLineOrderShareService;
 import org.hibernate.SQLQuery;
@@ -37,6 +38,8 @@ import java.util.*;
 public class GrouponCodeService {
     @Inject
     private GrouponCodeRepository grouponCodeRepository;
+    @Inject
+    private GrouponOrderRepository grouponOrderRepository;
     @Inject
     private OnLineOrderShareService onLineOrderShareService;
 
@@ -121,6 +124,8 @@ public class GrouponCodeService {
         }
         grouponOrder.setOrderState(orderstate);
         onLineOrderShareService.share(grouponCode);
+        grouponOrderRepository.save(grouponOrder);
+        grouponCodeRepository.save(grouponCode);
     }
 
     /**
