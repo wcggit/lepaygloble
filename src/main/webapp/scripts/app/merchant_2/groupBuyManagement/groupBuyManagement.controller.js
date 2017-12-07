@@ -8,6 +8,7 @@ angular.module('lepayglobleApp')
     .controller('groupBuyManagementController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http) {
         var URL_ = window.location.href.split("/");
         var indexActive = URL_[URL_.length-1];
+        console.log(indexActive);
         switch (indexActive){
             case "groupBuy":
                 $scope.currentTab0 = true;
@@ -22,6 +23,8 @@ angular.module('lepayglobleApp')
                 $scope.currentTab1 = true;
                 break;
             default:
+                $scope.currentTab0 = true;
+                $scope.currentTab1 = false;
                 break;
         }
         $scope.onClickTab = function () {
