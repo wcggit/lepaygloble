@@ -224,7 +224,7 @@
         </tfoot>
     </table>
 </div>
-<!--新建账户提示框-->
+<!--确认核销提示框-->
 <div class="modal fade" id="AlertHX">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -237,8 +237,28 @@
             </div>
             <div class="modal-footer">
                 <div class="clearfix btn-div text-center">
-                    <button type="button" class="btn btn-warning"  ng-click="YZMHx()" >确认</button>
+                    <button type="button" class="btn btn-warning"  ng-click="YZMHx()" data-dismiss="modal" data-target="#HXMsg" data-toggle="modal">确认</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--核销msg提示框-->
+<div class="modal fade" id="HXMsg">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">确认核销</h4>
+            </div>
+            <div class="modal-body">
+                <h2 style="text-align: center;padding: 4% 0" id="w-msg">{{errorMsg}}</h2>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">确认</button>
+                    <button type="button" class="btn btn-default" ng-click="hideBG()" ui-sref="hxInfo">查看明细</button>
                 </div>
             </div>
         </div>

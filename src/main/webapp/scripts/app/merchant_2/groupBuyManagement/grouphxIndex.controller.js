@@ -50,16 +50,22 @@ angular.module('lepayglobleApp')
         //验证码核销通道
         $scope.YZMHx = function () {
             var sid = $("#yzmInput").val();
+            if(sid == ''){
+                $scope.errorMsg = "验证码不能为空！";
+            }
             $http.get("/api/grouponCode/check/" + sid + "/" + storeId).success(function (response) {
                 if (response.status == 200) {
                     var data = response.data;
                     console.log(data);
 
                 } else {
-                    alert(response.msg);
+                    console.log(response.msg);
+                    $scope.errorMsg = response.msg;
                 }
             });
         }
-
+        $scope.hideBG = function () {
+            $(".modal-backdrop").fadeOut();
+        }
 
     });
