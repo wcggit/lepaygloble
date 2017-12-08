@@ -126,7 +126,7 @@ angular.module('lepayglobleApp')
             if(orderType!=-1) {
                 detailCriteria.orderType = orderType;
             }else {
-                detailCriteria.merchant = null;
+                detailCriteria.orderType = null;
             }
             // 支付方式
             var payType = $("#payStyle").val();

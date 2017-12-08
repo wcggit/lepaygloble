@@ -58,11 +58,27 @@ angular.module('lepayglobleApp')
                 '今日': [moment().startOf('day'), moment()],
                 '昨日': [moment().subtract('days', 1).startOf('day'),
                     moment().subtract('days', 1).endOf('day')],
+                '昨日9时-今日9时': [GetDateStr(-1),GetDateStr(0)],
                 '最近7日': [moment().subtract('days', 6), moment()],
                 '最近30日': [moment().subtract('days', 29), moment()]
             }
         }, function (start, end, label) {
         });
+
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate()+AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth()+1;//获取当前月份的日期
+            var d = dd.getDate();
+            if(m<10){
+                m = "0" + m;
+            }
+            if(d<10){
+                d = "0"+d;
+            }
+            return y+"/"+m+"/"+d + " 09:00:00";
+        }
 
 
         $scope.loadPage = function (page) {
@@ -162,7 +178,7 @@ angular.module('lepayglobleApp')
         }
 
         // 优惠信息
-        $scope.showMsg = function ($event,sid) {
+        $scope.showMsg = function ($event, sid) {
             $http.get('http://www.lepluspay.com/wx/public/discount/' + sid).success(function (response) {
                 var data = response;
                 $scope.originPrice = data.originPrice;
@@ -170,11 +186,11 @@ angular.module('lepayglobleApp')
                 $scope.discount = data.discount;
                 $scope.discountPrice = data.discountPrice;
             });
-            $(".msgBoard").css("top",$($event.target).offset().top);
-            $(".msgBoard").css("left",$($event.target).offset().left + $($event.target).innerWidth());
+            $(".msgBoard").css("top", $($event.target).offset().top);
+            $(".msgBoard").css("left", $($event.target).offset().left + $($event.target).innerWidth());
             $(".msgBoard").show();
         }
-        $scope.hideMsg=function (e) {
+        $scope.hideMsg = function (e) {
             $(".msgBoard").hide();
         };
 
@@ -183,12 +199,12 @@ angular.module('lepayglobleApp')
 
             var msid = $("#selectStore").val();
             if (msid != null && msid != "") {
-                msid= $("#selectStore").val().split('-')[1];
+                msid = $("#selectStore").val().split('-')[1];
             } else {
-                msid= $scope.defaultSid;
+                msid = $scope.defaultSid;
             }
-            var startDate=null;
-            var endDate=null;
+            var startDate = null;
+            var endDate = null;
             if ($("#completeDate").val() != null && $("#completeDate").val() != '') {
                 var completeDate = $("#completeDate").val().split("-");
                 startDate = completeDate[0];
@@ -197,24 +213,24 @@ angular.module('lepayglobleApp')
                 startDate = null;
                 endDate = null;
             }
-            var url = "http://www.lepluspay.com/wx/public/discount?merchantSid="+msid;
-            if(startDate!=null&&startDate!='') {
-                url+='&startDate='+startDate+"&endDate="+endDate;
+            var url = "http://www.lepluspay.com/wx/public/discount?merchantSid=" + msid;
+            if (startDate != null && startDate != '') {
+                url += '&startDate=' + startDate + "&endDate=" + endDate;
             }
             $http.get(url).success(function (response) {
                 var data = response;
                 var discount = "";
                 var discountDate = "";
-                if(startDate!=null&&startDate!='') {
-                    discountDate+="在所选时间（"+startDate+" - "+endDate+"） "
-                }else {
+                if (startDate != null && startDate != '') {
+                    discountDate += "在所选时间（" + startDate + " - " + endDate + "） "
+                } else {
                     discountDate += "在所选时间内";
                 }
                 $("#discountDate").text(discountDate);
-                if(data!=null&&data!='') {
-                     discount += ""+(data/100.0);
-                }else {
-                     discount += "0";
+                if (data != null && data != '') {
+                    discount += "" + (data / 100.0);
+                } else {
+                    discount += "0";
                 }
                 $("#discountInfo").text(discount);
             });
