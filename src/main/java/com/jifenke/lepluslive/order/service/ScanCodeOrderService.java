@@ -1,10 +1,24 @@
 package com.jifenke.lepluslive.order.service;
 
+import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
+import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.order.domain.entities.OffLineOrderShare;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.order.domain.criteria.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.repository.ScanCodeOrderRepository;
+import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManagerWallet;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
+import com.jifenke.lepluslive.partner.service.PartnerService;
+import com.jifenke.lepluslive.partner.service.PartnerWalletService;
+import com.jifenke.lepluslive.score.domain.entities.ScoreA;
+import com.jifenke.lepluslive.score.domain.entities.ScoreC;
+import com.jifenke.lepluslive.score.service.ScoreAService;
+import com.jifenke.lepluslive.score.service.ScoreCService;
 import com.jifenke.lepluslive.weixin.domain.entities.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +36,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tqy on 2016/12/27.
@@ -37,6 +53,24 @@ public class ScanCodeOrderService {
 
     @Inject
     private EntityManager em;
+
+    @Inject
+    private PartnerService partnerService;
+
+    @Inject
+    private MerchantService merchantService;
+
+    @Inject
+    private PartnerWalletService partnerWalletService;
+
+    @Inject
+    private ShareService shareService;
+
+    @Inject
+    private ScoreCService scoreCService;
+
+    @Inject
+    private ScoreAService scoreAService;
 
     /**
      * 查询 扫码订单 富友结算
@@ -272,4 +306,115 @@ public class ScanCodeOrderService {
         return repository.countOrderByDateAndMerchantNo(settleDate, realMerNum, basicType);
     }
 
+
+    /**
+     * 易宝 点击退款，获取退款信息  2017/8/3
+     *
+     * @param orderSid 订单号
+     */
+    public Map<String, Object> getRefundInfo(String orderSid) {
+        Map<String, Object> result = new HashMap<>();
+        ScanCodeOrder order = findByOrderSid(orderSid);
+        if (order == null) {
+            result.put("status", 1001);
+            result.put("msg", "未找到该订单");
+            return result;
+        }
+//    if (order.getScanCodeOrderExt().getGatewayType() != 1) {
+//      result.put("status", 1002);
+//      result.put("msg", "该订单不是易宝通道订单");
+//      return result;
+//    }
+        if (order.getState() != 1) {
+            result.put("status", 1003);
+            result.put("msg", "该订单未支付或已退款！state=" + order.getState());
+            return result;
+        }
+        //订单信息
+        result.put("order", order);
+        //用户信息
+        LeJiaUser leJiaUser = order.getLeJiaUser();
+        ScoreA scoreA = scoreAService.findScoreAByWeiXinUser(leJiaUser);
+        ScoreC scoreC = scoreCService.findScoreCByWeiXinUser(leJiaUser);
+        result.put("user", leJiaUser);
+        result.put("userScoreA", scoreA.getScore());
+        result.put("userScoreC", scoreC.getScore());
+        //商户信息
+        Merchant merchant = order.getMerchant();
+        result.put("merchant", merchant);
+        //分润信息
+        try {
+            OffLineOrderShare orderShare = shareService.findByScanCodeOrder(order.getId());
+            String initShare = "0_无_0";
+            if (orderShare != null) {
+                Map<String, Object> share = new HashMap<>();
+                //锁定商户分润信息
+                Merchant lockMerchant = orderShare.getLockMerchant();
+                String toLockMerchant = initShare;
+                if (lockMerchant != null) {
+                    MerchantWallet
+                        merchantWallet =
+                        merchantService.findMerchantWalletByMerchant(lockMerchant);
+                    toLockMerchant =
+                        orderShare.getToLockMerchant() + "_" + lockMerchant.getName() + "_" + merchantWallet
+                            .getAvailableBalance();
+                }
+                share.put("toLockMerchant", toLockMerchant);
+                //锁定商户的天使合伙人分润信息
+                Partner lockPartner = orderShare.getLockPartner();
+                String toLockPartner = initShare;
+                if (lockPartner != null) {
+                    PartnerWallet lockPartnerWallet = partnerWalletService.findByPartner(lockPartner);
+                    toLockPartner =
+                        orderShare.getToLockPartner() + "_" + lockPartner.getName() + "_" + lockPartnerWallet
+                            .getAvailableBalance();
+                }
+                share.put("toLockPartner", toLockPartner);
+                //锁定商户的城市合伙人分润信息
+                PartnerManager lockPartnerManager = orderShare.getLockPartnerManager();
+                String toLockPartnerManager = initShare;
+                if (lockPartnerManager != null) {
+                    PartnerManagerWallet
+                        lockPartnerManagerWallet =
+                        partnerService.findPartnerManagerWalletByPartnerManager(lockPartnerManager);
+                    toLockPartnerManager =
+                        orderShare.getToLockPartnerManager() + "_" + lockPartnerManager.getName() + "_"
+                            + lockPartnerManagerWallet
+                            .getAvailableBalance();
+                }
+                share.put("toLockPartnerManager", toLockPartnerManager);
+                //交易商户的天使合伙人分润信息
+                Partner tradePartner = orderShare.getTradePartner();
+                String toTradePartner = initShare;
+                if (tradePartner != null) {
+                    PartnerWallet tradePartnerWallet = partnerWalletService.findByPartner(tradePartner);
+                    toTradePartner =
+                        orderShare.getToTradePartner() + "_" + tradePartner.getName() + "_"
+                            + tradePartnerWallet
+                            .getAvailableBalance();
+                }
+                share.put("toTradePartner", toTradePartner);
+                //交易商户的城市合伙人分润信息
+                PartnerManager tradePartnerManager = orderShare.getTradePartnerManager();
+                String toTradePartnerManager = initShare;
+                if (tradePartnerManager != null) {
+                    PartnerManagerWallet
+                        tradePartnerManagerWallet =
+                        partnerService.findPartnerManagerWalletByPartnerManager(tradePartnerManager);
+                    toTradePartnerManager =
+                        orderShare.getToTradePartnerManager() + "_" + tradePartnerManager.getName() + "_"
+                            + tradePartnerManagerWallet
+                            .getAvailableBalance();
+                }
+                share.put("toTradePartnerManager", toTradePartnerManager);
+
+                result.put("share", share);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        result.put("status", 200);
+        return result;
+    }
 }

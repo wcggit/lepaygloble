@@ -1,12 +1,17 @@
 package com.jifenke.lepluslive.order.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
+import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.order.service.ChannelRefundOrderService;
+import com.jifenke.lepluslive.order.service.OffLineOrderService;
+import com.jifenke.lepluslive.order.service.ScanCodeOrderService;
 import com.jifenke.lepluslive.yibao.domain.criteria.LedgerRefundOrderCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 /**
  * Created by xf on 17-10-12.
@@ -16,7 +21,15 @@ import javax.inject.Inject;
 public class ChannelRefundOrderController {
     @Inject
     private ChannelRefundOrderService channelRefundOrderService;
+    @Inject
+    private ScanCodeOrderService scanCodeOrderService;
+    @Inject
+    private OffLineOrderService offLineOrderService;
 
+
+    /**
+     *  查询退款单记录
+     */
     @RequestMapping(value = "/channel/refundList", method = RequestMethod.POST)
     @ResponseBody
     public LejiaResult findRefundList(@RequestBody LedgerRefundOrderCriteria refundCriteria) {
@@ -39,4 +52,23 @@ public class ChannelRefundOrderController {
         Page page = channelRefundOrderService.findByCriteria(refundCriteria, 50);
         return LejiaResult.ok(page);
     }
+
+
+    /**
+     * 查询通道订单信息
+     *
+     * @param orderSid  订单sid
+     * @param orderFrom 0：乐加订单，1：通道扫码订单
+     */
+    @RequestMapping(value = "/channel/refund/{orderSid}", method = RequestMethod.GET)
+    public Map queryOrder(@PathVariable String orderSid, @RequestParam int orderFrom) {
+        if (orderFrom == 1) {
+            return scanCodeOrderService.getRefundInfo(orderSid);
+        } else if (orderFrom == 0) {
+            return offLineOrderService.getRefundInfo(orderSid);
+        } else {
+            throw new RuntimeException("orderFrom格式不正确");
+        }
+    }
+
 }
