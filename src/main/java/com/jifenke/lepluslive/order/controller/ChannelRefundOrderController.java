@@ -71,4 +71,13 @@ public class ChannelRefundOrderController {
         }
     }
 
+    /**
+     *  发起退款申请
+     */
+    @RequestMapping(value = "/refund/request",method = RequestMethod.GET)
+    public LejiaResult createRefund(@RequestParam String orderSid,@RequestParam Integer orderFrom) {
+        Map<String, Object> map = channelRefundOrderService.createRefundRequest(orderSid, orderFrom);
+        return LejiaResult.build(Integer.valueOf(String.valueOf(map.get("status"))),String.valueOf(map.get("msg")));
+    }
+
 }
