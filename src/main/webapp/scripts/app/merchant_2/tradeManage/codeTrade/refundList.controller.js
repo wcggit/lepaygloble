@@ -7,6 +7,9 @@
 angular.module('lepayglobleApp')
     .controller('refundListController', function ($scope, $state, $rootScope, $location, Principal, Auth, $http) {
 
+        var currentPage = 1;
+        var codeOrderCriteria = {};
+        codeOrderCriteria.offset = 1;
         var array = new Array();
         $http.get("/api/merchantUser/merchantsInfo").success(function (response) {
             if (response.status == 200) {
@@ -17,7 +20,8 @@ angular.module('lepayglobleApp')
                 angular.forEach(data, function (data, index) {
                     array[index] = data[0];
                 });
-                $scope.loadCodeOrderInfo();
+                codeOrderCriteria.merchantId = data[0][0];
+                loadData();
                 $scope.loadStatistic();
                 $scope.loadDiscount();
             } else {
@@ -26,24 +30,21 @@ angular.module('lepayglobleApp')
         });
 
 
-        var currentPage = 1;
-        var codeOrderCriteria = {};
-        codeOrderCriteria.offset = 1;
-        $scope.loadCodeOrderInfo = function () {
-            setCriteria();
-            $http.post("/api/codeTrade/codeOrderByCriteria", codeOrderCriteria).success(function (response) {
+        function loadData() {
+            $http.post("/api/channel/refundList", codeOrderCriteria).success(function (response) {
                 if (response.status == 200) {
                     var data = response.data;
+                    console.log(data);
                     var page = data.page;
                     $scope.payWay = data.payWay;
                     $scope.orderList = page.content;
                     $scope.page = currentPage;
                     $scope.totalPages = page.totalPages;
                 } else {
-                    alert('加载扫码订单数据错误...');
+                    alert('列表数据错误...');
                 }
             });
-        };
+        }
 
 
         $('#completeDate').daterangepicker({

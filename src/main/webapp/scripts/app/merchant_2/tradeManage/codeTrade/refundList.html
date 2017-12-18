@@ -31,8 +31,14 @@
 <form class="form-inline list-check">
     <div class="row">
         <div class="form-group col-md-5">
-            <label>门店ID</label>
-            <input type="text" class="form-control" style="width: 60% !important;" id="shopId">
+            <label>门店名称</label>
+            <div class="input-group col-md-6">
+                <select id="selectStore" class="form-control">
+                    <!--<option value="">请选择</option>-->
+                    <option ng-repeat="x in myStore" value="{{x[0]+'-'+x[2]}}">{{x[1]}}</option>
+                </select>
+                <span class="select-jiao"></span>
+            </div>
         </div>
         <div class="form-group col-md-7">
             <label>退款完成时间</label>

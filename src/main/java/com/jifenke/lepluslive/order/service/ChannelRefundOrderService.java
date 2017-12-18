@@ -125,7 +125,7 @@ public class ChannelRefundOrderService {
     /**
      * 发起退款申请
      */
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public Map<String, Object> createRefundRequest(String orderSid, Integer orderFrom) {
         ChannelRefundRequest refundRequest = requestRepository.findByOrderSid(orderSid);
         Map<String, Object> map = new HashMap<>();

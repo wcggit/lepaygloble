@@ -48,31 +48,31 @@
         <div class="row">
             <div class="form-group col-md-5">订单编号:</div>
             <div class="form-group col-md-5">
-                29292929292929292929
+                {{orderSid}}
             </div>
         </div>
         <div class="row">
             <div class="form-group col-md-5">交易门店:</div>
             <div class="form-group col-md-5">
-                果果蛋糕
+                {{merchantName}}
             </div>
         </div>
         <div class="row">
             <div class="form-group col-md-5">消费者:</div>
             <div class="form-group col-md-5">
-                29292929292929292929
+                {{userInfo}}
             </div>
         </div>
         <div class="row">
             <div class="form-group col-md-5">消费金额:</div>
             <div class="form-group col-md-5">
-                15元（）
+                {{totalPrice}}元（实付{{truePay}}元+{{trueScore}}鼓励金）
             </div>
         </div>
         <div class="row">
             <div class="form-group col-md-5">消费后发放:</div>
             <div class="form-group col-md-5">
-                0.00鼓励金+0.00金币
+                {{backScoreA}}鼓励金+{{backScoreC}}金币
             </div>
         </div>
 
@@ -81,39 +81,39 @@
         <div class="row">
             <div class="form-group col-md-5">实退款金额:</div>
             <div class="form-group col-md-5">
-                0.00鼓励金+0.00金币
+                {{truePay}}元
             </div>
         </div>
         <div class="row">
             <div class="form-group col-md-5">鼓励金退款金额:</div>
             <div class="form-group col-md-5">
-                0.00鼓励金+0.00金币
+                {{trueScore}}鼓励金
             </div>
         </div>
         <div class="row">
             <div class="form-group col-md-5">实际可追回鼓励金:</div>
             <div class="form-group col-md-5">
-                0.00鼓励金+0.00金币
+                {{backScoreA}}鼓励金
             </div>
         </div>
         <div class="row">
             <div class="form-group col-md-5">实际可追回金币:</div>
             <div class="form-group col-md-5">
-                0.00鼓励金+0.00金币
+                {{backScoreC}}金币
             </div>
         </div>
-        <div class="row">
-            <div class="form-group col-md-5">退款后鼓励金变更:</div>
-            <div class="form-group col-md-5">
-                0.00鼓励金+0.00金币
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-5">退款后金币变更:</div>
-            <div class="form-group col-md-5">
-                0.00鼓励金+0.00金币
-            </div>
-        </div>
+        <!--<div class="row">-->
+            <!--<div class="form-group col-md-5">退款后鼓励金变更:</div>-->
+            <!--<div class="form-group col-md-5">-->
+                <!--0.00鼓励金+0.00金币-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="row">-->
+            <!--<div class="form-group col-md-5">退款后金币变更:</div>-->
+            <!--<div class="form-group col-md-5">-->
+                <!--0.00鼓励金+0.00金币-->
+            <!--</div>-->
+        <!--</div>-->
         <div class="row btnBox">
             <button type="button" class="btn btn-warning btn-check2" ng-click="sub()">确认退款</button>
             <button type="button" class="btn btn-warning btn-check2" ng-click="cancel()">取消</button>
