@@ -39,9 +39,9 @@ public class ChannelRefundOrderController {
         if (refundCriteria.getMerchantId() == null) {
             return LejiaResult.build(400, "无相关数据");
         }
-        if(refundCriteria.getState()==null) {
+     /*   if(refundCriteria.getState()==null) {
             refundCriteria.setState(2);
-        }
+        }*/
         // 设置前一天
         if(refundCriteria.getTradeDate()!=null && !"".equals(refundCriteria.getTradeDate())) {
             String tradeBefore = refundCriteria.getTradeDate();
@@ -58,13 +58,15 @@ public class ChannelRefundOrderController {
      * 查询通道订单信息
      *
      * @param orderSid  订单sid
-     * @param orderFrom 0：乐加订单，1：通道扫码订单
+     * @param
      */
     @RequestMapping(value = "/channel/refund/{orderSid}", method = RequestMethod.GET)
-    public Map queryOrder(@PathVariable String orderSid, @RequestParam int orderFrom) {
-        if (orderFrom == 1) {
+    public Map queryOrder(@PathVariable String orderSid) {
+        ScanCodeOrder scanCodeOrder =  scanCodeOrderService.findByOrderSid(orderSid);
+        OffLineOrder offLineOrder =  offLineOrderService.findByOrderSid(orderSid);
+        if (scanCodeOrder != null) {
             return scanCodeOrderService.getRefundInfo(orderSid);
-        } else if (orderFrom == 0) {
+        } else if (offLineOrder != null) {
             return offLineOrderService.getRefundInfo(orderSid);
         } else {
             throw new RuntimeException("orderFrom格式不正确");

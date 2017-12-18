@@ -340,6 +340,7 @@ public class ScanCodeOrderService {
         result.put("backScoreA", order.getRebate());
         result.put("userScoreA", scoreA.getScore());
         result.put("userScoreC", scoreC.getScore());
+        result.put("orderFrom", 1);
         result.put("status", 200);
         return result;
     }

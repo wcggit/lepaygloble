@@ -760,6 +760,7 @@ public class OffLineOrderService {
         result.put("backScoreA", order.getRebate());
         result.put("userScoreA", scoreA.getScore());
         result.put("userScoreC", scoreC.getScore());
+        result.put("orderFrom", 0);
         result.put("status", 200);
         return result;
     }

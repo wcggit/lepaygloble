@@ -8,6 +8,7 @@ import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.order.repository.ChannelRefundOrderRepository;
 import com.jifenke.lepluslive.order.repository.ChannelRefundRequestRepository;
 import com.jifenke.lepluslive.yibao.domain.criteria.LedgerRefundOrderCriteria;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -101,6 +102,14 @@ public class ChannelRefundOrderService {
                 if (criteria.getPayType() != null) {
                     predicate.getExpressions().add(
                         cb.equal(root.get("payType"), criteria.getPayType()));
+                }
+                if (StringUtils.isNoneBlank(criteria.getRefundOrderSid())) {
+                    predicate.getExpressions().add(
+                        cb.equal(root.get("refundOrderSid"), criteria.getRefundOrderSid()));
+                }
+                if (StringUtils.isNoneBlank(criteria.getOrderSid())) {
+                    predicate.getExpressions().add(
+                        cb.equal(root.get("orderSid"), criteria.getOrderSid()));
                 }
                 // 退款完成时间
                 if (criteria.getTradeDate() != null && criteria.getTradeDate() != null) {
