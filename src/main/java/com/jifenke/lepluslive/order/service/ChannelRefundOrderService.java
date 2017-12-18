@@ -116,6 +116,11 @@ public class ChannelRefundOrderService {
                     predicate.getExpressions().add(
                         cb.equal(root.get("orderSid"), criteria.getOrderSid()));
                 }
+                if(StringUtils.isNoneBlank(criteria.getStartDate())) {
+                    Date start = new Date(criteria.getStartDate());
+                    Date end = new Date(criteria.getEndDate());
+                    predicate.getExpressions().add(cb.between(root.get("dateCompleted"),start,end));
+                }
                 // 退款完成时间
                 if (criteria.getTradeDate() != null && criteria.getTradeDate() != null) {
                     predicate.getExpressions().add(
@@ -130,7 +135,7 @@ public class ChannelRefundOrderService {
     /**
      * 发起退款申请
      */
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public Map<String, Object> createRefundRequest(String orderSid, Integer orderFrom,MerchantUser merchantUser) {
         ChannelRefundRequest refundRequest = requestRepository.findByOrderSid(orderSid);
         Map<String, Object> map = new HashMap<>();

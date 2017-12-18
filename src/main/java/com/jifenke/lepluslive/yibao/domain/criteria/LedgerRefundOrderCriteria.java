@@ -15,6 +15,8 @@ public class LedgerRefundOrderCriteria {
     private Integer state;         // 退款状态 0=待退款，1=未开始退款，2=退款成功，3=退款失败，其他为通道返回码
     private String refundOrderSid; // 己方退款单号
     private String orderSid;        // 对应订单号
+    private String startDate;       // 退款开始时间
+    private String endDate;         // 退款完成时间
 
     public Integer getOffset() {
         return offset;
@@ -96,5 +98,21 @@ public class LedgerRefundOrderCriteria {
 
     public void setOrderSid(String orderSid) {
         this.orderSid = orderSid;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }
