@@ -1,7 +1,8 @@
 package com.jifenke.lepluslive.score.domain.entities;
 
 
-import com.jifenke.lepluslive.user.domain.entities.LeJiaUser;
+
+import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 
 import javax.persistence.*;
 import java.util.Date;

@@ -1,0 +1,110 @@
+<style>
+    .row > div:first-child {
+        text-align: right;
+    }
+    .refundInfo {
+        display: none;
+        margin-top: 8%;
+    }
+</style>
+<div class="row myCode">
+    <!--退款码输入框-->
+    <form class="form-inline list-check">
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label>订单类型</label>
+                <div class="input-group col-md-5">
+                    <select class="form-control" id="orderType">
+                        <option value="-1">全部订单</option>
+                        <option value="0">普通订单</option>
+                        <option value="1">乐加订单</option>
+                    </select>
+                    <span class="select-jiao"></span>
+                </div>
+            </div>
+            <div class="form-group col-md-5">
+                <label>订单号</label>
+                <input type="text" class="form-control" style="width: 60% !important;" id="orderSid">
+            </div>
+            <div class="form-group col-md-3" style="margin-top: 0">
+                <button type="button" class="btn btn-warning btn-check2" style="margin-left: 20px"
+                        ng-click="searchByCriteria()">查询
+                </button>
+            </div>
+        </div>
+    </form>
+
+
+    <!--退款单信息展示-->
+    <div class="refundInfo">
+        <div class="row">
+            <div class="form-group col-md-5">订单编号:</div>
+            <div class="form-group col-md-5">
+                29292929292929292929
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">交易门店:</div>
+            <div class="form-group col-md-5">
+                果果蛋糕
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">消费者:</div>
+            <div class="form-group col-md-5">
+                29292929292929292929
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">消费金额:</div>
+            <div class="form-group col-md-5">
+                15元（）
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">消费后发放:</div>
+            <div class="form-group col-md-5">
+                0.00鼓励金+0.00金币
+            </div>
+        </div>
+
+        <hr style="border:1px dotted #e1e1e1;margin-bottom: 3%;">
+
+        <div class="row">
+            <div class="form-group col-md-5">实退款金额:</div>
+            <div class="form-group col-md-5">
+                0.00鼓励金+0.00金币
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">鼓励金退款金额:</div>
+            <div class="form-group col-md-5">
+                0.00鼓励金+0.00金币
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">实际可追回鼓励金:</div>
+            <div class="form-group col-md-5">
+                0.00鼓励金+0.00金币
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">实际可追回金币:</div>
+            <div class="form-group col-md-5">
+                0.00鼓励金+0.00金币
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">退款后鼓励金变更:</div>
+            <div class="form-group col-md-5">
+                0.00鼓励金+0.00金币
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">退款后金币变更:</div>
+            <div class="form-group col-md-5">
+                0.00鼓励金+0.00金币
+            </div>
+        </div>
+    </div>
+</div>

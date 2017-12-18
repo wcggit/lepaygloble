@@ -63,4 +63,32 @@ angular.module('lepayglobleApp')
                 },
                 resolve: {}
             })
+            .state('refund', {
+                parent: 'codeTrade',
+                url: '/refund',
+                data: {
+                    authorities: ["merchant"]
+                },
+                views: {
+                    'codeTradeTab@codeTrade': {
+                        templateUrl: 'scripts/app/merchant_2/tradeManage/codeTrade/refund.html',
+                        controller: 'refundController'
+                    }
+                },
+                resolve: {}
+            })
+            .state('refundList', {
+                parent: 'codeTrade',
+                url: '/refundList',
+                data: {
+                    authorities: ["merchant"]
+                },
+                views: {
+                    'codeTradeTab@codeTrade': {
+                        templateUrl: 'scripts/app/merchant_2/tradeManage/codeTrade/refundList.html',
+                        controller: 'refundListController'
+                    }
+                },
+                resolve: {}
+            })
     });
