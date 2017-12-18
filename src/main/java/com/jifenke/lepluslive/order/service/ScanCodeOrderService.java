@@ -320,100 +320,26 @@ public class ScanCodeOrderService {
             result.put("msg", "未找到该订单");
             return result;
         }
-//    if (order.getScanCodeOrderExt().getGatewayType() != 1) {
-//      result.put("status", 1002);
-//      result.put("msg", "该订单不是易宝通道订单");
-//      return result;
-//    }
         if (order.getState() != 1) {
             result.put("status", 1003);
             result.put("msg", "该订单未支付或已退款！state=" + order.getState());
             return result;
         }
         //订单信息
-        result.put("order", order);
+        result.put("orderSid", order.getOrderSid());
+        result.put("merchantName", order.getMerchant().getName());
         //用户信息
         LeJiaUser leJiaUser = order.getLeJiaUser();
         ScoreA scoreA = scoreAService.findScoreAByWeiXinUser(leJiaUser);
         ScoreC scoreC = scoreCService.findScoreCByWeiXinUser(leJiaUser);
-        result.put("user", leJiaUser);
+        result.put("userInfo", leJiaUser.getPhoneNumber());
+        result.put("totalPrice", order.getTotalPrice());
+        result.put("truePay", order.getTruePay());
+        result.put("trueScore", order.getTrueScore());
+        result.put("backScoreC", order.getScoreC());
+        result.put("backScoreA", order.getRebate());
         result.put("userScoreA", scoreA.getScore());
         result.put("userScoreC", scoreC.getScore());
-        //商户信息
-        Merchant merchant = order.getMerchant();
-        result.put("merchant", merchant);
-        //分润信息
-        try {
-            OffLineOrderShare orderShare = shareService.findByScanCodeOrder(order.getId());
-            String initShare = "0_无_0";
-            if (orderShare != null) {
-                Map<String, Object> share = new HashMap<>();
-                //锁定商户分润信息
-                Merchant lockMerchant = orderShare.getLockMerchant();
-                String toLockMerchant = initShare;
-                if (lockMerchant != null) {
-                    MerchantWallet
-                        merchantWallet =
-                        merchantService.findMerchantWalletByMerchant(lockMerchant);
-                    toLockMerchant =
-                        orderShare.getToLockMerchant() + "_" + lockMerchant.getName() + "_" + merchantWallet
-                            .getAvailableBalance();
-                }
-                share.put("toLockMerchant", toLockMerchant);
-                //锁定商户的天使合伙人分润信息
-                Partner lockPartner = orderShare.getLockPartner();
-                String toLockPartner = initShare;
-                if (lockPartner != null) {
-                    PartnerWallet lockPartnerWallet = partnerWalletService.findByPartner(lockPartner);
-                    toLockPartner =
-                        orderShare.getToLockPartner() + "_" + lockPartner.getName() + "_" + lockPartnerWallet
-                            .getAvailableBalance();
-                }
-                share.put("toLockPartner", toLockPartner);
-                //锁定商户的城市合伙人分润信息
-                PartnerManager lockPartnerManager = orderShare.getLockPartnerManager();
-                String toLockPartnerManager = initShare;
-                if (lockPartnerManager != null) {
-                    PartnerManagerWallet
-                        lockPartnerManagerWallet =
-                        partnerService.findPartnerManagerWalletByPartnerManager(lockPartnerManager);
-                    toLockPartnerManager =
-                        orderShare.getToLockPartnerManager() + "_" + lockPartnerManager.getName() + "_"
-                            + lockPartnerManagerWallet
-                            .getAvailableBalance();
-                }
-                share.put("toLockPartnerManager", toLockPartnerManager);
-                //交易商户的天使合伙人分润信息
-                Partner tradePartner = orderShare.getTradePartner();
-                String toTradePartner = initShare;
-                if (tradePartner != null) {
-                    PartnerWallet tradePartnerWallet = partnerWalletService.findByPartner(tradePartner);
-                    toTradePartner =
-                        orderShare.getToTradePartner() + "_" + tradePartner.getName() + "_"
-                            + tradePartnerWallet
-                            .getAvailableBalance();
-                }
-                share.put("toTradePartner", toTradePartner);
-                //交易商户的城市合伙人分润信息
-                PartnerManager tradePartnerManager = orderShare.getTradePartnerManager();
-                String toTradePartnerManager = initShare;
-                if (tradePartnerManager != null) {
-                    PartnerManagerWallet
-                        tradePartnerManagerWallet =
-                        partnerService.findPartnerManagerWalletByPartnerManager(tradePartnerManager);
-                    toTradePartnerManager =
-                        orderShare.getToTradePartnerManager() + "_" + tradePartnerManager.getName() + "_"
-                            + tradePartnerManagerWallet
-                            .getAvailableBalance();
-                }
-                share.put("toTradePartnerManager", toTradePartnerManager);
-
-                result.put("share", share);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         result.put("status", 200);
         return result;
     }
