@@ -4,25 +4,33 @@
     }
     .refundInfo {
         display: none;
-        margin-top: 8%;
+        margin-top: 6%;
+    }
+    .btnBox {
+        margin-top: 3%;
+    }
+    .btnBox > button:first-child {
+        margin-left: 30%;
+    }
+    .btnBox > button:last-child {
+        margin-left: 7%;
     }
 </style>
 <div class="row myCode">
     <!--退款码输入框-->
     <form class="form-inline list-check">
         <div class="row">
-            <div class="form-group col-md-4">
-                <label>订单类型</label>
-                <div class="input-group col-md-5">
-                    <select class="form-control" id="orderType">
-                        <option value="-1">全部订单</option>
-                        <option value="0">普通订单</option>
-                        <option value="1">乐加订单</option>
-                    </select>
-                    <span class="select-jiao"></span>
-                </div>
+            <div class="form-group col-md-2">
+                <!--<label>订单类型</label>-->
+                <!--<div class="input-group col-md-5">-->
+                    <!--<select class="form-control" id="orderType">-->
+                        <!--<option value="0">乐加订单</option>-->
+                        <!--<option value="1">通道订单</option>-->
+                    <!--</select>-->
+                    <!--<span class="select-jiao"></span>-->
+                <!--</div>-->
             </div>
-            <div class="form-group col-md-5">
+            <div class="form-group col-md-6">
                 <label>订单号</label>
                 <input type="text" class="form-control" style="width: 60% !important;" id="orderSid">
             </div>
@@ -105,6 +113,10 @@
             <div class="form-group col-md-5">
                 0.00鼓励金+0.00金币
             </div>
+        </div>
+        <div class="row btnBox">
+            <button type="button" class="btn btn-warning btn-check2" ng-click="sub()">确认退款</button>
+            <button type="button" class="btn btn-warning btn-check2" ng-click="cancel()">取消</button>
         </div>
     </div>
 </div>
