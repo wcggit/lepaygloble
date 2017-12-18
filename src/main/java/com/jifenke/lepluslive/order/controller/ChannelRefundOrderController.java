@@ -100,10 +100,9 @@ public class ChannelRefundOrderController {
      */
     @RequestMapping(value = "/refund/request",method = RequestMethod.GET)
     public LejiaResult createRefund(@RequestParam String orderSid,@RequestParam Integer orderFrom) {
-        Map<String, Object> map = channelRefundOrderService.createRefundRequest(orderSid, orderFrom);
+        MerchantUser merchantUser =  merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        Map<String, Object> map = channelRefundOrderService.createRefundRequest(orderSid, orderFrom,merchantUser);
         return LejiaResult.build(Integer.valueOf(String.valueOf(map.get("status"))),String.valueOf(map.get("msg")));
     }
-
-
 
 }
