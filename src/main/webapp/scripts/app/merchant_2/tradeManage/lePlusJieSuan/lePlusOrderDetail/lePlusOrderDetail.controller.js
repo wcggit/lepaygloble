@@ -119,8 +119,8 @@ angular.module('lepayglobleApp')
             if (olOrderCriteria.orderSid != null) {
                 data += "&orderSid=" + olOrderCriteria.orderSid;
             }
-            if (olOrderCriteria.rebateWay != null) {
-                data += "&rebateWay=" + olOrderCriteria.rebateWay;
+            if (olOrderCriteria.basicType != null) {
+                data += "&basicType=" + olOrderCriteria.basicType;
             }
             location.href = "/api/offLineOrder/export" + data;
         }

@@ -109,12 +109,9 @@
                 <p ng-bind="o.completeDate|date:'yyyy-MM-dd HH:mm:ss'"></p>
             </td>
             <td ng-bind="'¥'+o.totalPrice/100.0"></td>
-            <!--<td ng-show="o.rebateWay==0||o.rebateWay==2||o.rebateWay==4||o.rebateWay==5||o.rebateWay==6"><p ng-bind="'¥'+o.wxCommission/100.0"></p>
+            <td ng-show="o.basicType==0"><p>普通订单</p>
             </td>
-            <td ng-show="o.rebateWay==3||o.rebateWay==1"><p>{{(100-o.merchant.ljCommission)/10}}折</p></td>-->
-            <td ng-show="o.rebateWay==0||o.rebateWay==2||o.rebateWay==4||o.rebateWay==5||o.rebateWay==6"><p>普通订单</p>
-            </td>
-            <td ng-show="o.rebateWay==3||o.rebateWay==1"><p>乐加订单</p></td>
+            <td ng-show="o.basicType==1"><p>乐加订单</p></td>
             <td>
                 <p ng-show="o.state=1">支付成功</p>
                 <p ng-show="o.state=0">未完成</p>

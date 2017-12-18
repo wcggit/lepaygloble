@@ -71,8 +71,8 @@
                         <p ng-bind="x.completeDate|date:'HH:mm:ss'"></p>
                     </td>
                     <td ng-bind="'¥'+x.totalPrice/100.0"></td>
-                    <td ng-show="x.rebateWay==0||x.rebateWay==2||x.rebateWay==4||x.rebateWay==5||x.rebateWay==6">普通订单</td>
-                    <td ng-show="x.rebateWay==3||x.rebateWay==1">乐加订单</td>
+                    <td ng-show="x.basicType==0">普通订单</td>
+                    <td ng-show="x.basicType==1">乐加订单</td>
                     <td ng-bind="'¥'+x.ljCommission/100.0"></td>
                     <td ng-bind="'¥'+x.transferMoney/100.0"></td>
                 </tr>

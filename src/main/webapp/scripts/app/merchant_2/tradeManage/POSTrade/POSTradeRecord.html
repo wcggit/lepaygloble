@@ -124,10 +124,8 @@
                 </p>
             </td>
             <td>
-                <p ng-show="{{x.rebateWay==1}}">非会员订单</p>
-                <p ng-show="{{x.rebateWay==2}}">会员订单</p>
-                <p ng-show="{{x.rebateWay==3}}">导流订单</p>
-                <p ng-show="{{x.rebateWay==4}}">会员普通订单</p>
+                <p ng-show="{{x.basicType==1}}">乐加订单</p>
+                <p ng-show="{{x.basicType==0}}">普通订单</p>
             </td>
             <td>
                 <p>{{x.transferByBank/100 | currency:'￥'}}</p>

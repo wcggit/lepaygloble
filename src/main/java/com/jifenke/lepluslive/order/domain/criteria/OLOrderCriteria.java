@@ -17,16 +17,16 @@ public class OLOrderCriteria {
 
     private String orderSid;
 
-    private Integer rebateWay;
+    private Integer basicType;
 
     private Integer offset;
 
-    public Integer getRebateWay() {
-        return rebateWay;
+    public Integer getBasicType() {
+        return basicType;
     }
 
-    public void setRebateWay(Integer rebateWay) {
-        this.rebateWay = rebateWay;
+    public void setBasicType(Integer basicType) {
+        this.basicType = basicType;
     }
 
     public String getOrderSid() {

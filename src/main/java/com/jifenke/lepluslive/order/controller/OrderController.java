@@ -354,12 +354,12 @@ public class OrderController {
     public ModelAndView exportExcel(@RequestParam(required = false) String startDate,
                                     @RequestParam(required = false) String endDate,
                                     @RequestParam(required = false) String orderSid,
-                                    @RequestParam(required = false) Integer rebateWay) {
+                                    @RequestParam(required = false) Integer basicType) {
         OLOrderCriteria olOrderCriteria = new OLOrderCriteria();
         olOrderCriteria.setStartDate(startDate);
         olOrderCriteria.setEndDate(endDate);
         olOrderCriteria.setOrderSid(orderSid);
-        olOrderCriteria.setRebateWay(rebateWay);
+        olOrderCriteria.setBasicType(basicType);
         olOrderCriteria.setState(1);
         if (olOrderCriteria.getOffset() == null) {
             olOrderCriteria.setOffset(1);

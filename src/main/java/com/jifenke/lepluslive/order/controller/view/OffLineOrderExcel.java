@@ -51,7 +51,7 @@ public class OffLineOrderExcel extends AbstractExcelView {
         excelHeader.createCell(5).setCellValue("交易完成时间");
         excelHeader.createCell(6).setCellValue("订单金额");
         excelHeader.createCell(7).setCellValue("实际入账");
-        excelHeader.createCell(8).setCellValue("手续费率");
+        excelHeader.createCell(8).setCellValue("手续费");
         excelHeader.createCell(9).setCellValue("订单类型");
         excelHeader.createCell(10).setCellValue("订单状态");
     }
@@ -76,13 +76,13 @@ public class OffLineOrderExcel extends AbstractExcelView {
             excelRow.createCell(6)
                 .setCellValue(order.getTotalPrice() / 100.0);
             excelRow.createCell(7).setCellValue(order.getTransferMoney()/100.0);
-            if (order.getRebateWay() == 1 || order.getRebateWay() == 3) {
+            if (order.getBasicType() == 1) {
                 double result = (100-order.getMerchant().getLjCommission().intValue())/10;
                 excelRow.createCell(8).setCellValue((result)+"折");
             } else {
-                excelRow.createCell(8).setCellValue(order.getWxCommission()/100.0);
+                excelRow.createCell(8).setCellValue(order.getLjCommission()/100.0);
             }
-            if (order.getRebateWay() == 1 || order.getRebateWay() == 3) {
+            if (order.getBasicType() == 1) {
                 excelRow.createCell(9).setCellValue("乐加订单");
             } else {
                 excelRow.createCell(9).setCellValue("普通订单");

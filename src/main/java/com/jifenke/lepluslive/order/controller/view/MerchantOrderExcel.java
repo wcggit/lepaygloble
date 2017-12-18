@@ -92,19 +92,15 @@ public class MerchantOrderExcel extends AbstractExcelView {
                     contentCell6.setCellValue(new Double((offLineOrder.getTransferMoneyFromTruePay()) * 0.01));
                     // 订单类型
                     HSSFCell contentCell7 = contentRow.createCell(7);
-                    if (offLineOrder.getRebateWay() == 0 || offLineOrder.getRebateWay() == 2) {
+                    if (offLineOrder.getBasicType() == 0) {
                         contentCell7.setCellValue("普通订单");
-                    } else if (offLineOrder.getRebateWay() == 1) {
-                        contentCell7.setCellValue("导流订单");
-                    } else if (offLineOrder.getRebateWay() == 3 || offLineOrder.getRebateWay() == 6) {
-                        contentCell7.setCellValue("会员订单");
-                    } else {
-                        contentCell7.setCellValue("扫码订单");
+                    } else if (offLineOrder.getBasicType() == 1) {
+                        contentCell7.setCellValue("乐加订单");
                     }
                     //  导流订单和会员订单（佣金费率） 显示折扣
                     HSSFCell contentCell8 = contentRow.createCell(8);
                     HSSFCell contentCell9 = contentRow.createCell(9);
-                    if (offLineOrder.getRebateWay() == 1 || offLineOrder.getRebateWay() == 3) {
+                    if (offLineOrder.getBasicType() == 1) {
                         Long wxCommission = offLineOrder.getWxCommission();
                         String wxDiscount = new Double((100L - wxCommission) * 0.1).toString();
                         contentCell8.setCellValue(wxDiscount);

@@ -79,24 +79,10 @@ public class OffLineOrderService {
                             new Date(orderCriteria.getEndDate())));
                 }
 
-                if (orderCriteria.getRebateWay() != null&&!"".equals(orderCriteria.getRebateWay())) {
-                    if (orderCriteria.getRebateWay() == 1) {
+                if (orderCriteria.getBasicType() != null) {
                         predicate.getExpressions().add(
-                            cb.equal(r.get("rebateWay"),
-                                1));
-                    } else if (orderCriteria.getRebateWay() == 2) {
-                        predicate.getExpressions().add(
-                            cb.notEqual(r.get("rebateWay"),
-                                1));
-                        predicate.getExpressions().add(
-                            cb.notEqual(r.get("rebateWay"),
-                                3));
-                    } else {
-                        predicate.getExpressions().add(
-                            cb.equal(r.get("rebateWay"),
-                                3));
-                    }
-
+                            cb.equal(r.get("basicType"),
+                                orderCriteria.getBasicType()));
                 }
 
                 if(orderCriteria.getPayWay()!=null) {
@@ -336,17 +322,10 @@ public class OffLineOrderService {
             sql.append(olOrderCriteria.getOrderSid());
             sql.append("%'");
         }
-        if (olOrderCriteria.getRebateWay() != null) {
-            if (olOrderCriteria.getRebateWay() == 2) {
-                sql.append(" and rebate_way != 1 and rebate_way !=3");
-            } else if (olOrderCriteria.getRebateWay() == 1) {
-                sql.append(" and rebate_way = 1");
-            } else if (olOrderCriteria.getRebateWay() == 3) {
-                sql.append(" and rebate_way = 3");
-            }
+        if (olOrderCriteria.getBasicType() != null) {
+                sql.append(" and basic_type = "+olOrderCriteria.getBasicType());
         }
         sql.append(" and state = 1 group by merchant_id");
-
         Query query = em.createNativeQuery(sql.toString());
 
         List<Object[]> details = query.getResultList();
