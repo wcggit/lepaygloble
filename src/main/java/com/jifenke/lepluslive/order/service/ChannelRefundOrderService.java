@@ -1,6 +1,10 @@
 package com.jifenke.lepluslive.order.service;
 
 
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserShop;
+import com.jifenke.lepluslive.merchant.service.MerchantUserShopService;
 import com.jifenke.lepluslive.order.domain.entities.ChannelRefundOrder;
 import com.jifenke.lepluslive.order.domain.entities.ChannelRefundRequest;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
@@ -43,7 +47,8 @@ public class ChannelRefundOrderService {
     private OffLineOrderService offLineOrderService;
     @Inject
     private ChannelRefundRequestRepository requestRepository;
-
+    @Inject
+    private MerchantUserShopService merchantUserShopService;
     /**
      * 某商户某日退款单 - 记录
      */
@@ -111,6 +116,11 @@ public class ChannelRefundOrderService {
                     predicate.getExpressions().add(
                         cb.equal(root.get("orderSid"), criteria.getOrderSid()));
                 }
+                if(StringUtils.isNoneBlank(criteria.getStartDate())) {
+                    Date start = new Date(criteria.getStartDate());
+                    Date end = new Date(criteria.getEndDate());
+                    predicate.getExpressions().add(cb.between(root.get("dateCompleted"),start,end));
+                }
                 // 退款完成时间
                 if (criteria.getTradeDate() != null && criteria.getTradeDate() != null) {
                     predicate.getExpressions().add(
@@ -126,12 +136,17 @@ public class ChannelRefundOrderService {
      * 发起退款申请
      */
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Map<String, Object> createRefundRequest(String orderSid, Integer orderFrom) {
+    public Map<String, Object> createRefundRequest(String orderSid, Integer orderFrom,MerchantUser merchantUser) {
         ChannelRefundRequest refundRequest = requestRepository.findByOrderSid(orderSid);
         Map<String, Object> map = new HashMap<>();
         /*通道订单*/
         if (orderFrom == 1) {
             ScanCodeOrder codeOrder = scanCodeOrderService.findByOrderSid(orderSid);
+            //  无权限退款
+            if(!checkSecurity(codeOrder.getMerchant(),merchantUser)) {
+                map.put("status", 400);
+                map.put("msg", "无操作权限 ！");
+            }
             //  订单不存在
             if (codeOrder == null) {
                 map.put("status", 400);
@@ -163,6 +178,11 @@ public class ChannelRefundOrderService {
         /*非通道订单*/
         } else if (orderFrom == 0) {
             OffLineOrder offLineOrder = offLineOrderService.findOffLineOrderByOrderSid(orderSid);
+            //  无权限退款
+            if(!checkSecurity(offLineOrder.getMerchant(),merchantUser)) {
+                map.put("status", 400);
+                map.put("msg", "无操作权限 ！");
+            }
             //  订单不存在
             if (offLineOrder == null) {
                 map.put("status", 400);
@@ -203,4 +223,12 @@ public class ChannelRefundOrderService {
         return map;
     }
 
+    public boolean checkSecurity(Merchant merchant, MerchantUser merchantUser) {
+        MerchantUserShop merchantUserShop = merchantUserShopService.findByMerchantAndUser(merchantUser,merchant);
+        if(merchantUserShop==null) {
+            return false;
+        }else {
+            return true;
+        }
+    }
 }

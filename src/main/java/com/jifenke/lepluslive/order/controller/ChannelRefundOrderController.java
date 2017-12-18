@@ -1,16 +1,23 @@
 package com.jifenke.lepluslive.order.controller;
 
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantUserShop;
+import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.merchant.service.MerchantUserShopService;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.order.service.ChannelRefundOrderService;
 import com.jifenke.lepluslive.order.service.OffLineOrderService;
 import com.jifenke.lepluslive.order.service.ScanCodeOrderService;
+import com.jifenke.lepluslive.security.SecurityUtils;
 import com.jifenke.lepluslive.yibao.domain.criteria.LedgerRefundOrderCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,6 +32,8 @@ public class ChannelRefundOrderController {
     private ScanCodeOrderService scanCodeOrderService;
     @Inject
     private OffLineOrderService offLineOrderService;
+    @Inject
+    private MerchantService merchantService;
 
 
     /**
@@ -64,12 +73,26 @@ public class ChannelRefundOrderController {
     public Map queryOrder(@PathVariable String orderSid) {
         ScanCodeOrder scanCodeOrder =  scanCodeOrderService.findByOrderSid(orderSid);
         OffLineOrder offLineOrder =  offLineOrderService.findByOrderSid(orderSid);
+        MerchantUser merchantUser =  merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        Map map = new HashMap();
         if (scanCodeOrder != null) {
+            if(!channelRefundOrderService.checkSecurity(scanCodeOrder.getMerchant(),merchantUser)) {
+                map.put("status",400);
+                map.put("msg","无操作权限！");
+                return map;
+            }
             return scanCodeOrderService.getRefundInfo(orderSid);
         } else if (offLineOrder != null) {
+            if(!channelRefundOrderService.checkSecurity(offLineOrder.getMerchant(),merchantUser)) {
+                map.put("status",400);
+                map.put("msg","无操作权限！");
+                return map;
+            }
             return offLineOrderService.getRefundInfo(orderSid);
         } else {
-            throw new RuntimeException("orderFrom格式不正确");
+            map.put("status",400);
+            map.put("msg","未找到相应数据");
+            return map;
         }
     }
 
@@ -78,7 +101,8 @@ public class ChannelRefundOrderController {
      */
     @RequestMapping(value = "/refund/request",method = RequestMethod.GET)
     public LejiaResult createRefund(@RequestParam String orderSid,@RequestParam Integer orderFrom) {
-        Map<String, Object> map = channelRefundOrderService.createRefundRequest(orderSid, orderFrom);
+        MerchantUser merchantUser =  merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+        Map<String, Object> map = channelRefundOrderService.createRefundRequest(orderSid, orderFrom,merchantUser);
         return LejiaResult.build(Integer.valueOf(String.valueOf(map.get("status"))),String.valueOf(map.get("msg")));
     }
 
