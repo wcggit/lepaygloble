@@ -168,6 +168,7 @@ public class ChannelRefundOrderService {
                 refundRequest = new ChannelRefundRequest();
                 refundRequest.setOrderSid(orderSid);
                 refundRequest.setOrderFrom(orderFrom);
+                refundRequest.setOrderPrice(codeOrder.getTotalPrice());
                 refundRequest.setOrderType(codeOrder.getScanCodeOrderExt().getBasicType());
                 refundRequest.setLepayCode(codeOrder.getLePayCode());
                 refundRequest.setMerchantId(codeOrder.getMerchant().getId());
@@ -205,6 +206,7 @@ public class ChannelRefundOrderService {
                 refundRequest = new ChannelRefundRequest();
                 refundRequest.setOrderSid(orderSid);
                 refundRequest.setOrderFrom(orderFrom);
+                refundRequest.setOrderPrice(offLineOrder.getTotalPrice());
                 refundRequest.setOrderType(offLineOrder.getBasicType());
                 refundRequest.setLepayCode(offLineOrder.getLepayCode());
                 refundRequest.setMerchantId(offLineOrder.getMerchant().getId());
