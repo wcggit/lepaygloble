@@ -55,8 +55,6 @@ public class ChannelRefundOrderController {
         if(refundCriteria.getTradeDate()!=null && !"".equals(refundCriteria.getTradeDate())) {
             String tradeBefore = refundCriteria.getTradeDate();
             refundCriteria.setTradeDate(tradeBefore);
-        }else {
-            return LejiaResult.build(400, "无相关数据");
         }
         Page page = channelRefundOrderService.findByCriteria(refundCriteria, 50);
         return LejiaResult.ok(page);

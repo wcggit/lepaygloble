@@ -72,8 +72,9 @@
             <div class="input-group col-md-5">
                 <select class="form-control" id="orderState">
                     <option value="-1">全部</option>
-                    <option value="1">退款成功</option>
-                    <option value="2">退款中</option>
+                    <option value="0">待退款</option>
+                    <option value="1">未开始退款</option>
+                    <option value="2">退款成功</option>
                     <option value="3">退款失败</option>
                 </select>
                 <span class="select-jiao"></span>
@@ -94,14 +95,10 @@
             <td>退款单号</td>
             <td>订单编号</td>
             <td>门店ID</td>
-            <td>退款通道</td>
             <td>清算日期</td>
             <td>退款完成时间</td>
             <td>退款金额</td>
-            <td>手续费</td>
-            <td>手续费承担方</td>
             <td>订单类型</td>
-            <td>追回虚拟币</td>
             <td>状态</td>
         </tr>
         </thead>
@@ -111,54 +108,24 @@
             <td class="text-center" colspan="8">暂无数据！</td>
         </tr>
         <tr class="tr-noEmpty" ng-repeat="o in orderList" id="HaveData">
+            <td ng-bind="o.refundOrderSid"></td>
             <td ng-bind="o.orderSid"></td>
-            <td ng-bind="o.merchant.name"></td>
-            <td ng-show="o.desk!=null&&o.desk!=''">{{o.desk}}</td>
-            <td ng-show="o.desk==null||o.desk==''">无</td>
-            <td ng-show="o.payType==0">微信</td>
-            <td ng-show="o.payType==1">支付宝</td>
-            <td ng-bind="o.lepayCode"></td>
+            <td ng-bind="o.merchantId"></td>
+            <td ng-bind="o.tradeDate"></td>
             <td>
-                <p ng-bind="o.completeDate|date:'yyyy-MM-dd HH:mm:ss'"></p>
+                <p ng-bind="o.dateCompleted|date:'yyyy-MM-dd HH:mm:ss'"></p>
             </td>
             <td>
-                ￥{{o.totalPrice/100.0}}
-                <span class="hui" ng-show="o.discount!=null&&o.discount==1" ng-mouseenter="showMsg($event,o.orderSid)" ng-mouseleave="hideMsg()">惠</span>
-
+                ￥{{o.totalAmount/100.0}}
             </td>
-            <td ng-show="o.basicType==0"><p>普通订单</p>
+            <td ng-show="o.orderType==0"><p>普通订单</p>
             </td>
-            <td ng-show="o.basicType==1"><p>乐加订单</p></td>
+            <td ng-show="o.orderType==1"><p>乐加订单</p></td>
             <td>
-                <p ng-show="o.state=1">支付成功</p>
-                <p ng-show="o.state=0">未完成</p>
-            </td>
-        </tr>
-        </tbody>
-        <!--通道结算： 易宝、民生-->
-        <tbody ng-if="payWay==3||payWay==4">
-        <tr class="tr-empty" hidden="true">
-            <td class="text-center" colspan="8">暂无数据！</td>
-        </tr>
-        <tr class="tr-noEmpty" ng-repeat="o in orderList">
-            <td ng-bind="o.orderSid"></td>
-            <td ng-bind="o.merchant.name"></td>
-            <td ng-show="o.desk!=null&&o.desk!=''">{{o.desk}}</td>
-            <td ng-show="o.desk==null||o.desk==''">无</td>
-            <td ng-show="o.scanCodeOrderExt.payType==0">微信</td>
-            <td ng-show="o.scanCodeOrderExt.payType==1">支付宝</td>
-            <td ng-bind="o.lePayCode"></td>
-            <td>
-                <p ng-bind="o.completeDate|date:'yyyy-MM-dd HH:mm:ss'"></p>
-            </td>
-            <td>￥{{o.totalPrice/100.0}}
-                <span class="hui" ng-show="o.discount!=null&&o.discount==1" ng-mouseenter="showMsg($event,o.orderSid)" ng-mouseleave="hideMsg()">惠</span></td>
-            <td ng-show="o.scanCodeOrderExt.basicType==0">普通订单</td>
-            <td ng-show="o.scanCodeOrderExt.basicType==1">乐加订单</td>
-            <td>
-                <p ng-show="o.state==1">支付成功</p>
-                <p ng-show="o.state==0">未完成</p>
-                <p ng-show="o.state==2">已退款</p>
+                <p ng-show="o.state==0">待退款</p>
+                <p ng-show="o.state==1">未开始退款</p>
+                <p ng-show="o.state==2">退款成功</p>
+                <p ng-show="o.state==3">退款失败</p>
             </td>
         </tr>
         </tbody>
@@ -191,10 +158,4 @@
             </li>
         </ul>
     </nav>
-</div>
-<div class="msgBoard">
-    <div>原始金额：￥{{originPrice}}</div>
-    <div>不参与优惠金额：￥{{outPrice}}</div>
-    <div>{{discount}}</div>
-    <div>商户优惠：￥{{discountPrice}}</div>
 </div>

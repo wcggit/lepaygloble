@@ -115,8 +115,27 @@
             <!--</div>-->
         <!--</div>-->
         <div class="row btnBox">
-            <button type="button" class="btn btn-warning btn-check2" ng-click="sub()">确认退款</button>
+            <button type="button" class="btn btn-warning btn-check2" ng-click="sub()" data-target="#addStore" data-toggle="modal">确认退款</button>
             <button type="button" class="btn btn-warning btn-check2" ng-click="cancel()">取消</button>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addStore">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body" style="margin: 3% 0">
+                <p class="text-center">{{msg}}</p>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

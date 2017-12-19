@@ -28,10 +28,11 @@ angular.module('lepayglobleApp')
                         $scope.backScoreC = response.backScoreC/100.0;  //返金币 （1:100）
                         $scope.backScoreA = response.backScoreA/100.0;  //返鼓励金 （1:100）
 
-                        $(".refundInfo").fadeIn();
                     } else {
-                        alert(data.msg);
+                        $scope.msg = response.msg;
                     }
+
+                    $(".refundInfo").fadeIn();
                 });
             }
         };
@@ -41,9 +42,9 @@ angular.module('lepayglobleApp')
             $http.get("/api/refund/request?orderSid=" + ordersId + "&orderFrom=" + orderType).success(function (response) {
                 if (response.status == 200) {
                     console.log(response);
-                    alert("确认成功！");
+                    $scope.msg = "确认成功！";
                 } else {
-                    alert(data.msg);
+                    $scope.msg = response.msg;
                 }
             });
         };

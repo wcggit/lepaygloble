@@ -1,5 +1,5 @@
 /**
- * Created by recoluan on 2016/11/25.
+ * Created by wanghl on 2017/12/18.
  */
 'use strict';
 
@@ -22,8 +22,6 @@ angular.module('lepayglobleApp')
                 });
                 codeOrderCriteria.merchantId = data[0][0];
                 loadData();
-                $scope.loadStatistic();
-                $scope.loadDiscount();
             } else {
                 alert("加载门店错误...");
             }
@@ -35,11 +33,10 @@ angular.module('lepayglobleApp')
                 if (response.status == 200) {
                     var data = response.data;
                     console.log(data);
-                    var page = data.page;
-                    $scope.payWay = data.payWay;
-                    $scope.orderList = page.content;
                     $scope.page = currentPage;
-                    $scope.totalPages = page.totalPages;
+                    $scope.totalPages = data.totalPages;
+                    $scope.totalElements = data.totalElements;
+                    $scope.orderList = data.content;
                 } else {
                     alert('列表数据错误...');
                 }
@@ -97,177 +94,32 @@ angular.module('lepayglobleApp')
             }
             currentPage = page;
             codeOrderCriteria.offset = page;
-            $scope.loadCodeOrderInfo();
+            loadData();
         };
-
-
-        $scope.searchByCriteria = function () {
-            currentPage = 1;
-            $scope.loadCodeOrderInfo();
-            $scope.loadStatistic();
-            $scope.loadDiscount();
-        };
-
-        // 加载数据
-        $scope.loadStatistic = function () {
-            setCriteria();
-            $http.post("/api/codeTrade/codeOrderStatistic", codeOrderCriteria).success(function (response) {
-                if (response.status == 200) {
-                    var data = response.data;
-                    $scope.totalData = data.totalData;
-                    $scope.lejiaData = data.lejiaData;
-                    $scope.commonData = data.commonData;
-                    var totalData = data.totalData;
-                    var lejiaData = data.lejiaData;
-                    var commonData = data.commonData;
-                } else {
-                    alert('加载扫码订单数据错误...');
-                }
-            });
-        }
 
         // 设置查询条件
-        function setCriteria() {
-            var mid = $("#selectStore").val();
-            var merchant = {};
-            if (mid != null && mid != "") {
-                merchant.id = mid.split('-')[0];
-                codeOrderCriteria.merchant = merchant;
-            } else {
-                merchant.id = $scope.defaultId;
-                codeOrderCriteria.merchant = merchant;
+        $scope.searchByCriteria = function () {
+            var merchantId = $("#selectStore").val().split("-")[0];
+            var completeDate = $("#completeDate").val() == ''?null:$("#completeDate").val();
+            var orderSid = $("#orderSid").val() == ''?null:$("#orderSid").val();
+            var orderType = $("#orderType").val() == -1?null:$("#orderType").val();
+            var orderStatus = $("#orderState").val() == -1?null:$("#orderState").val();
+            var startDate,endDate;
+            if(completeDate != null){
+                startDate  = completeDate.split("-")[0];
+                endDate  = completeDate.split("-")[1];
+            }else {
+                startDate  = null;
+                endDate  = null;
             }
-            var payWay = $("#payWay").val();
-            var payType = $("#payType").val();
-            var orderType = $("#orderType").val();
-            var orderSid = $("#orderSid").val();
-            var state = $("#orderState").val();
-            if (payWay != null && payWay != '') {
-                codeOrderCriteria.payWay = payWay;
-            } else {
-                codeOrderCriteria.payWay = null;
-            }
-            if (orderType != null && orderType != '') {
-                codeOrderCriteria.orderType = orderType;
-            } else {
-                codeOrderCriteria.orderType = null;
-            }
-            if (orderSid != null && orderSid != '') {
-                codeOrderCriteria.orderSid = orderSid;
-            } else {
-                codeOrderCriteria.orderSid = null;
-            }
-            if (payType != null && payType != '') {
-                codeOrderCriteria.payType = payType;
-            } else {
-                codeOrderCriteria.payType = null;
-            }
-            if (state != null && state != '') {
-                codeOrderCriteria.state = state;
-            } else {
-                codeOrderCriteria.state = null;
-            }
-            if ($("#completeDate").val() != null && $("#completeDate").val() != '') {
-                var completeDate = $("#completeDate").val().split("-");
-                codeOrderCriteria.startDate = completeDate[0];
-                codeOrderCriteria.endDate = completeDate[1];
-            } else {
-                codeOrderCriteria.startDate = null;
-                codeOrderCriteria.endDate = null;
-            }
-            codeOrderCriteria.offset = currentPage;
+            console.log(startDate,endDate);
+            codeOrderCriteria.offset = 1;
+            codeOrderCriteria.merchantId = merchantId;
+            codeOrderCriteria.state = orderStatus;
+            codeOrderCriteria.orderType = orderType;
+            codeOrderCriteria.orderSid = orderSid;
+            codeOrderCriteria.startDate = startDate;
+            codeOrderCriteria.endDate = endDate;
+            loadData();
         }
-
-        // 优惠信息
-        $scope.showMsg = function ($event, sid) {
-            $http.get('http://www.lepluspay.com/wx/public/discount/' + sid).success(function (response) {
-                var data = response;
-                $scope.originPrice = data.originPrice;
-                $scope.outPrice = data.outPrice;
-                $scope.discount = data.discount;
-                $scope.discountPrice = data.discountPrice;
-            });
-            $(".msgBoard").css("top", $($event.target).offset().top);
-            $(".msgBoard").css("left", $($event.target).offset().left + $($event.target).innerWidth());
-            $(".msgBoard").show();
-        }
-        $scope.hideMsg = function (e) {
-            $(".msgBoard").hide();
-        };
-
-        //  加载优惠信息
-        $scope.loadDiscount = function () {
-
-            var msid = $("#selectStore").val();
-            if (msid != null && msid != "") {
-                msid = $("#selectStore").val().split('-')[1];
-            } else {
-                msid = $scope.defaultSid;
-            }
-            var startDate = null;
-            var endDate = null;
-            if ($("#completeDate").val() != null && $("#completeDate").val() != '') {
-                var completeDate = $("#completeDate").val().split("-");
-                startDate = completeDate[0];
-                endDate = completeDate[1];
-            } else {
-                startDate = null;
-                endDate = null;
-            }
-            var url = "http://www.lepluspay.com/wx/public/discount?merchantSid=" + msid;
-            if (startDate != null && startDate != '') {
-                url += '&startDate=' + startDate + "&endDate=" + endDate;
-            }
-            $http.get(url).success(function (response) {
-                var data = response;
-                var discount = "";
-                var discountDate = "";
-                if (startDate != null && startDate != '') {
-                    discountDate += "在所选时间（" + startDate + " - " + endDate + "） "
-                } else {
-                    discountDate += "在所选时间内";
-                }
-                $("#discountDate").text(discountDate);
-                if (data != null && data != '') {
-                    discount += "" + (data / 100.0);
-                } else {
-                    discount += "0";
-                }
-                $("#discountInfo").text(discount);
-            });
-        }
-
-
-        // 导出表格
-        $scope.exportExcel = function () {
-            setCriteria();
-            var data = "?";
-            if (codeOrderCriteria.startDate != null) {
-                data += "startDate=" + codeOrderCriteria.startDate + "&";
-                data += "endDate=" + codeOrderCriteria.endDate;
-            }
-            if (codeOrderCriteria.orderSid != null) {
-                data += "&orderSid=" + codeOrderCriteria.orderSid;
-            }
-            if (codeOrderCriteria.orderType != null) {
-                data += "&orderType=" + codeOrderCriteria.orderType;
-            }
-            if (codeOrderCriteria.payWay != null) {
-                data += "&payWay=" + codeOrderCriteria.payWay;
-            }
-            if (codeOrderCriteria.state != null) {
-                data += "&state=" + codeOrderCriteria.state;
-            }
-            if ($("#selectStore").val() != null && $("#selectStore").val() != '') {
-                data += "&merchantId=" + $("#selectStore").val().split('-')[0];
-            } else if ($scope.defaultId != null && $scope.defaultId != '') {
-                data += "&merchantId=" + $scope.defaultId;
-            }
-            location.href = "/api/codeTradeList/export" + data;
-        }
-
-        $scope.historyTradeRecord = function () {
-            $state.go("historyTradeRecord");
-        }
-
-    })
+    });
