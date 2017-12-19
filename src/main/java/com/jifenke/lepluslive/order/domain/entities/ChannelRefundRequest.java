@@ -37,6 +37,10 @@ public class ChannelRefundRequest {
      */
     private Integer orderType;
     /**
+     *   订单金额
+     */
+    private Long orderPrice;
+    /**
      *  订单确认码
      */
     private String lepayCode;
@@ -156,5 +160,13 @@ public class ChannelRefundRequest {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public Long getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(Long orderPrice) {
+        this.orderPrice = orderPrice;
     }
 }
