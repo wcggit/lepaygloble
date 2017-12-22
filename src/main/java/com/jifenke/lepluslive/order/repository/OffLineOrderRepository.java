@@ -139,5 +139,7 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
     OffLineOrder findByOrderSid(String orderSid);
 
 
+    @Query(value = "SELECT * FROM off_line_order WHERE order_sid=?1", nativeQuery = true)
+    OffLineOrder findOneByOrderSid(String orderSid);
 }
 

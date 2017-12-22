@@ -569,4 +569,10 @@ public class PartnerService {
     }
 
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public PartnerManagerWallet findPartnerManagerWalletByPartnerManager(
+        PartnerManager PartnerManager) {
+        return partnerManagerWalletRepository.findByPartnerManager(PartnerManager);
+    }
+
 }

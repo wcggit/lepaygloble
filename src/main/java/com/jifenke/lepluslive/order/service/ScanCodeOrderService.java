@@ -1,10 +1,24 @@
 package com.jifenke.lepluslive.order.service;
 
+import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.merchant.domain.criteria.CodeOrderCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantWallet;
+import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.order.domain.entities.OffLineOrderShare;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.order.domain.criteria.ScanCodeOrderCriteria;
 import com.jifenke.lepluslive.order.repository.ScanCodeOrderRepository;
+import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManagerWallet;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
+import com.jifenke.lepluslive.partner.service.PartnerService;
+import com.jifenke.lepluslive.partner.service.PartnerWalletService;
+import com.jifenke.lepluslive.score.domain.entities.ScoreA;
+import com.jifenke.lepluslive.score.domain.entities.ScoreC;
+import com.jifenke.lepluslive.score.service.ScoreAService;
+import com.jifenke.lepluslive.score.service.ScoreCService;
 import com.jifenke.lepluslive.weixin.domain.entities.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +36,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tqy on 2016/12/27.
@@ -37,6 +53,24 @@ public class ScanCodeOrderService {
 
     @Inject
     private EntityManager em;
+
+    @Inject
+    private PartnerService partnerService;
+
+    @Inject
+    private MerchantService merchantService;
+
+    @Inject
+    private PartnerWalletService partnerWalletService;
+
+    @Inject
+    private ShareService shareService;
+
+    @Inject
+    private ScoreCService scoreCService;
+
+    @Inject
+    private ScoreAService scoreAService;
 
     /**
      * 查询 扫码订单 富友结算
@@ -272,4 +306,42 @@ public class ScanCodeOrderService {
         return repository.countOrderByDateAndMerchantNo(settleDate, realMerNum, basicType);
     }
 
+
+    /**
+     * 易宝 点击退款，获取退款信息  2017/8/3
+     *
+     * @param orderSid 订单号
+     */
+    public Map<String, Object> getRefundInfo(String orderSid) {
+        Map<String, Object> result = new HashMap<>();
+        ScanCodeOrder order = findByOrderSid(orderSid);
+        if (order == null) {
+            result.put("status", 1001);
+            result.put("msg", "未找到该订单");
+            return result;
+        }
+        if (order.getState() != 1) {
+            result.put("status", 1003);
+            result.put("msg", "该订单未支付或已退款！state=" + order.getState());
+            return result;
+        }
+        //订单信息
+        result.put("orderSid", order.getOrderSid());
+        result.put("merchantName", order.getMerchant().getName());
+        //用户信息
+        LeJiaUser leJiaUser = order.getLeJiaUser();
+        ScoreA scoreA = scoreAService.findScoreAByWeiXinUser(leJiaUser);
+        ScoreC scoreC = scoreCService.findScoreCByWeiXinUser(leJiaUser);
+        result.put("userInfo", leJiaUser.getPhoneNumber());
+        result.put("totalPrice", order.getTotalPrice());
+        result.put("truePay", order.getTruePay());
+        result.put("trueScore", order.getTrueScore());
+        result.put("backScoreC", order.getScoreC());
+        result.put("backScoreA", order.getRebate());
+        result.put("userScoreA", scoreA.getScore());
+        result.put("userScoreC", scoreC.getScore());
+        result.put("orderFrom", 1);
+        result.put("status", 200);
+        return result;
+    }
 }
