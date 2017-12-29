@@ -14,11 +14,9 @@ import com.jifenke.lepluslive.yibao.service.LedgerSettlementService;
 import com.jifenke.lepluslive.yibao.service.MerchantLedgerService;
 import com.jifenke.lepluslive.yibao.service.MerchantUserLedgerService;
 import com.jifenke.lepluslive.yibao.service.StoreSettlementService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
@@ -63,7 +61,7 @@ public class LedgerSettlementController {
         if (merchantId == null) {
             return LejiaResult.build(400, "无门店信息");
         }
-        if(settlementCriteria.getStartDate()!=null&&!"".equals(settlementCriteria.getStartDate())) {
+        if (settlementCriteria.getStartDate() != null && !"".equals(settlementCriteria.getStartDate())) {
             String startAfter = getDateStrAfter(settlementCriteria.getStartDate()); //  结算单差异天数
             String endAfter = getDateStrAfter(settlementCriteria.getEndDate());
             settlementCriteria.setStartDate(getDateStrBefore(startAfter));          //  数据偏移处理 between end
@@ -81,8 +79,8 @@ public class LedgerSettlementController {
             String dateBefore = getTradeDateStrBefore(settlement.getTradeDate());
             dateBefores.add(dateBefore);
         }
-        map.put("page",page);
-        map.put("dateBefores",dateBefores);
+        map.put("page", page);
+        map.put("dateBefores", dateBefores);
         return LejiaResult.ok(map);
     }
 
@@ -162,8 +160,22 @@ public class LedgerSettlementController {
      * 导出 Excel
      * Created by xf on 2017-07-14.
      */
-    @RequestMapping(value = "/ledgerSettlement/export", method = RequestMethod.POST)
-    public ModelAndView export(LedgerSettlementCriteria settlementCriteria) {
+    @RequestMapping(value = "/ledgerSettlement/export", method = RequestMethod.GET)
+    public ModelAndView export(@RequestParam Long mid, @RequestParam(required = false) String startDate,
+                               @RequestParam(required = false) String endDate, @RequestParam(required = false) Integer state) {
+        LedgerSettlementCriteria settlementCriteria = new LedgerSettlementCriteria();
+        if(mid==null) {
+            return null;
+        }else {
+            settlementCriteria.setMerchant(merchantService.findMerchantById(mid));
+        }
+        if(state!=null) {
+            settlementCriteria.setState(state);
+        }
+        if(StringUtils.isNoneBlank(startDate)) {
+            settlementCriteria.setStartDate(startDate);
+            settlementCriteria.setEndDate(endDate);
+        }
         if (settlementCriteria.getOffset() == null) {
             settlementCriteria.setOffset(1);
         }
