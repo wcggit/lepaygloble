@@ -164,10 +164,13 @@ public class LedgerSettlementController {
     public ModelAndView export(@RequestParam Long mid, @RequestParam(required = false) String startDate,
                                @RequestParam(required = false) String endDate, @RequestParam(required = false) Integer state) {
         LedgerSettlementCriteria settlementCriteria = new LedgerSettlementCriteria();
-        if(mid==null) {
+        Merchant merchant = merchantService.findMerchantById(mid);
+        if(merchant==null) {
             return null;
         }else {
-            settlementCriteria.setMerchant(merchantService.findMerchantById(mid));
+            MerchantLedger merchantLedger = merchantLedgerService.findMerchantLedgerByMerchant(merchant);
+            MerchantUserLedger merchantUserLedger = merchantLedger.getMerchantUserLedger();
+            settlementCriteria.setLedgerNo(merchantUserLedger.getLedgerNo());               //  获取子商户号
         }
         if(state!=null) {
             settlementCriteria.setState(state);
