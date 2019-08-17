@@ -2,6 +2,7 @@ package com.jifenke.lepluslive.order.domain.entities;
 
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerManager;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,88 +14,182 @@ import java.util.Date;
 @Table(name = "ON_LINE_ORDER_SHARE")
 public class OnLineOrderShare {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  @OneToOne
-  private OnLineOrder onLineOrder;
+    private Integer type = 0;   //分润单来源   1=商城|2=电影票|3=团购
 
-  private Long shareMoney = 0L;  //=toLockMerchant + toLockPartner
+    private String orderSid;   //对应的分润来源的订单号
 
-  private Long toLockMerchant = 0L;
+    private Long userId;//对应leJiaUser.id
 
-  private Long toLockPartner = 0L;
+    //=toLockMerchant + toLockPartner + toLockPartnerManager + toTradePartner + toTradePartnerManager
+    private Long shareMoney = 0L;
 
-  private Date createDate = new Date();
+    private Date createDate = new Date();
 
-  @ManyToOne
-  private Merchant lockMerchant;
+    @ManyToOne
+    private Merchant lockMerchant; //锁定商户
 
-  @ManyToOne
-  private Partner lockPartner;
+    private Long toLockMerchant = 0L;
 
-  public Long getShareMoney() {
-    return shareMoney;
-  }
+    @ManyToOne
+    private Partner lockPartner;  //锁定天使合伙人
 
-  public void setShareMoney(Long shareMoney) {
-    this.shareMoney = shareMoney;
-  }
+    private Long toLockPartner = 0L;
 
-  public Merchant getLockMerchant() {
-    return lockMerchant;
-  }
+    @ManyToOne
+    private PartnerManager lockPartnerManager; //锁定城市合伙人
 
-  public void setLockMerchant(Merchant lockMerchant) {
-    this.lockMerchant = lockMerchant;
-  }
+    private Long toLockPartnerManager = 0L;
 
-  public Partner getLockPartner() {
-    return lockPartner;
-  }
+    private Long toTradePartner = 0L;
 
-  public void setLockPartner(Partner lockPartner) {
-    this.lockPartner = lockPartner;
-  }
+    @ManyToOne
+    private Partner tradePartner;
 
-  public Date getCreateDate() {
-    return createDate;
-  }
+    private Long toTradePartnerManager = 0L;
 
-  public void setCreateDate(Date createDate) {
-    this.createDate = createDate;
-  }
+    @ManyToOne
+    private PartnerManager tradePartnerManager;
 
-  public Long getId() {
-    return id;
-  }
+    private Long toLePlusLife = 0L; //给积分客的
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Long getShareMoney() {
+        return shareMoney;
+    }
 
-  public OnLineOrder getOnLineOrder() {
-    return onLineOrder;
-  }
+    public void setShareMoney(Long shareMoney) {
+        this.shareMoney = shareMoney;
+    }
 
-  public void setOnLineOrder(OnLineOrder onLineOrder) {
-    this.onLineOrder = onLineOrder;
-  }
+    public Merchant getLockMerchant() {
+        return lockMerchant;
+    }
 
-  public Long getToLockMerchant() {
-    return toLockMerchant;
-  }
+    public void setLockMerchant(Merchant lockMerchant) {
+        this.lockMerchant = lockMerchant;
+    }
 
-  public void setToLockMerchant(Long toLockMerchant) {
-    this.toLockMerchant = toLockMerchant;
-  }
+    public Long getUserId() {
+        return userId;
+    }
 
-  public Long getToLockPartner() {
-    return toLockPartner;
-  }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-  public void setToLockPartner(Long toLockPartner) {
-    this.toLockPartner = toLockPartner;
-  }
+    public Partner getLockPartner() {
+        return lockPartner;
+    }
+
+    public void setLockPartner(Partner lockPartner) {
+        this.lockPartner = lockPartner;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getToLockMerchant() {
+        return toLockMerchant;
+    }
+
+    public void setToLockMerchant(Long toLockMerchant) {
+        this.toLockMerchant = toLockMerchant;
+    }
+
+    public Long getToLockPartner() {
+        return toLockPartner;
+    }
+
+    public void setToLockPartner(Long toLockPartner) {
+        this.toLockPartner = toLockPartner;
+    }
+
+    public Long getToLockPartnerManager() {
+        return toLockPartnerManager;
+    }
+
+    public void setToLockPartnerManager(Long toLockPartnerManager) {
+        this.toLockPartnerManager = toLockPartnerManager;
+    }
+
+    public PartnerManager getLockPartnerManager() {
+        return lockPartnerManager;
+    }
+
+    public void setLockPartnerManager(PartnerManager lockPartnerManager) {
+        this.lockPartnerManager = lockPartnerManager;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getOrderSid() {
+        return orderSid;
+    }
+
+    public void setOrderSid(String orderSid) {
+        this.orderSid = orderSid;
+    }
+
+    public Long getToLePlusLife() {
+        return toLePlusLife;
+    }
+
+    public void setToLePlusLife(Long toLePlusLife) {
+        this.toLePlusLife = toLePlusLife;
+    }
+
+    public Long getToTradePartner() {
+        return toTradePartner;
+    }
+
+    public void setToTradePartner(Long toTradePartner) {
+        this.toTradePartner = toTradePartner;
+    }
+
+    public Partner getTradePartner() {
+        return tradePartner;
+    }
+
+    public void setTradePartner(Partner tradePartner) {
+        this.tradePartner = tradePartner;
+    }
+
+    public Long getToTradePartnerManager() {
+        return toTradePartnerManager;
+    }
+
+    public void setToTradePartnerManager(Long toTradePartnerManager) {
+        this.toTradePartnerManager = toTradePartnerManager;
+    }
+
+    public PartnerManager getTradePartnerManager() {
+        return tradePartnerManager;
+    }
+
+    public void setTradePartnerManager(
+        PartnerManager tradePartnerManager) {
+        this.tradePartnerManager = tradePartnerManager;
+    }
 }

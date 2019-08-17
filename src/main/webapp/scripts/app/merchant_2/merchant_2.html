@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="../../../assets/styles/css/merchant_2/reset.css">
 <link rel="stylesheet" href="../../../assets/styles/css/merchant_2/main.css">
 <link rel="stylesheet" href="../../../assets/styles/css/merchant_2/merchant_2.css">
 <link rel="stylesheet" href="../../../assets/styles/css/merchant_2/homePage.css">
@@ -6,9 +7,9 @@
 <link rel="stylesheet" href="../../../assets/styles/css/merchant_2/memberRealized.css">
 <link rel="stylesheet" href="../../../assets/styles/css/merchant_2/invitationCode.css">
 <link rel="stylesheet" href="../../../assets/styles/css/merchant_2/accountManage.css">
-<nav class="navbar navbar-default merchant-header">
+<nav class="navbar navbar-default merchant-header index-top ">
     <div class="container">
-        <div class="navbar-header">
+        <div class="navbar-header" style="width: 300px">
             <a class="navbar-brand" href="#">
                 <img alt="Brand" src="/assets/images/head/logo.png">
             </a>
@@ -20,13 +21,17 @@
         </div>
     </div>
 </nav>
-<div class="content clear-float">
+<div class="content clear-float index-content">
     <div class ="pull-left left-menu">
         <ul>
             <li ng-repeat="x in menuList" ng-class="{'contClick':x.clickState==0,'active':isActiveTab(x.state)}" ng-click="onClickTab(x)">
                 <hr ng-if="x.contentState==0">
                 <p ng-if="x.contentState==1"><span ng-if="x.icon!=''" ng-class="x.icon"></span>{{x.name}}</p>
             </li>
+            <!--<li ng-click="toCouponSystem()">
+                <p><span ng-class="iconfont2 icon2-shanghuzhanghuguanli"></span>卡券管理</p>
+                <hr>
+            </li>-->
         </ul>
     </div>
     <div class="pull-right right-content" ui-view="right-content"></div>

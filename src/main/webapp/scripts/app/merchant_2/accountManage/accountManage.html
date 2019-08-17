@@ -1,4 +1,4 @@
-<div class="accountManage">
+ <div class="accountManage">
     <div class="panel panel-default page-top">
         <div class="panel-body clearfix">账户管理</div>
     </div>
@@ -16,32 +16,36 @@
                     <div class="col-md-2">登陆账号</div>
                     <div class="col-md-4">{{loginInfo.name}}</div>
                     <div class="col-md-2">登陆密码</div>
-                    <div class="col-md-4" >**********<a class="changePassword a-btn" data-target="#changePassword" ng-click="changePassword()">修改</a></div>
+                    <div class="col-md-4">**********
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">绑定手机号</div>
+                    <div class="col-md-4">19283645367</div>
                 </div>
             </div>
         </div>
         <p class="ttl">结算信息</p>
+
         <div class="panel panel-default">
             <div class="panel-body">
                 <p class="ttl2">佣金结算账户</p>
                 <div class="row">
                     <div class="col-md-2">银行账号</div>
                     <div class="col-md-4">****** ******** {{loginInfo.merchantBank.bankNumber| limitTo:-4 }}</div>
-                    <div class="col-md-2">结算周期</div>
-                    <div class="col-md-4"> T+2(提现申请后两个工作日内到账)</div>
+                    <div class="col-md-2">收款人</div>
+                    <div class="col-md-4">{{loginInfo.merchantBank.payee}}</div>
                 </div>
                 <div class="row">
                     <div class="col-md-2">开户支行</div>
                     <div class="col-md-4">{{loginInfo.merchantBank.bankName}}</div>
-                    <!--<div class="col-md-2">收款人</div>
-                    <div class="col-md-4" >{{loginInfo.merchantBank.bankName}}</div>-->
                 </div>
                 <hr>
                 <p class="ttl2">门店结算账户
                     <span class="select-style">
-                        <select class="form-control select-inline-block" ng-model="x" id="selMerchant" ng-change="getBankByMerchant()">
-                            <option value="">门店选择</option>
-                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                        <select class="form-control select-inline-block" ng-model="selectDefault" id="selMerchant"
+                                ng-change="getBankByMerchant()" ng-options="m[0] as m[1] for m in merchants">
+                                <option value="" hidden></option>
                         </select>
                     </span>
                 </p>
@@ -49,128 +53,284 @@
                     <div class="col-md-2">银行账号</div>
                     <div class="col-md-4">****** ******** {{bankInfo.bankNumber| limitTo:-4}}</div>
                     <div class="col-md-2">结算周期</div>
-                    <div class="col-md-4"> T+2(提现申请后两个工作日内到账)</div>
+                    <div class="col-md-4"> T+1(提现申请后一个工作日内到账)</div>
                 </div>
                 <div class="row">
                     <div class="col-md-2">开户支行</div>
                     <div class="col-md-4">{{bankInfo.bankName}}</div>
                     <div class="col-md-2">收款人</div>
-                    <div class="col-md-4" >{{payee}}</div>
+                    <div class="col-md-4">{{payee}}</div>
                 </div>
             </div>
         </div>
-
-<p class="ttl clearfix"  id="p-accnoutInfo" style="display: none">账号信息<button class="btn btn-warning pull-right" data-target="#createAccount" data-toggle="modal">新建账号</button></p>
-<div class="panel panel-default" id="div-accnoutInfo" style="display: none">
+        <!--账号信息-->
+        <p class="ttl clearfix" id="p-accnoutInfo">账号信息
+            <button class="btn btn-warning pull-right" data-target="#createAccount" data-toggle="modal" ng-show="merchantType==8">新建账号</button>
+        </p>
+        <div class="panel panel-default" id="div-accnoutInfo">
             <div class="panel-body">
                 <ul id="myTab" class="nav nav-pills">
-                    <li ng-class="{'active':accountInfoState0}" ng-click="shopOwnerAccount()"><a data-toggle="tab">账号</a></li>
-                    <li ng-class="{'active':accountInfoState1}" ng-click="cashierAccount()"><a data-toggle="tab">收银微信号</a></li>
+                    <li ng-class="{'active':accountInfoState0}" ng-click="accountInfoFun0()"><a
+                        data-toggle="tab" id="iosTab">账号</a></li>
+                    <li ng-class="{'active':accountInfoState1}" ng-click="accountInfoFun1()"><a
+                        data-toggle="tab" id="homeTab">收银微信号</a></li>
                 </ul>
                 <div id="myTabContent" class="tab-content">
-
-
-                </div>
-            </div>
-</div>
-<!--新建账户提示框-->
-<div class="modal fade" id="createAccount">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-warning">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">新建账号</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-3 col-sm-offset-1 control-label">账户名称</label>
-                        <div class="col-sm-4">
-                            <input type="name"  class="form-control" id="username" placeholder="请输入账户名称" ng-blur="checkNameRepeat()">
+                    <div ng-class="{'active':accountInfoState0}" class="tab-pane fade in" id="home">
+                        <!--表格-->
+                        <div class="panel panel-default">
+                            <table class="table ol-tab">
+                                <thead class="active">
+                                <tr>
+                                    <td>账号类型</td>
+                                    <td>用户名</td>
+                                    <td>密码</td>
+                                    <td>操作</td>
+                                </tr>
+                                </thead>
+                                <tbody id="account">
+                                    <tr ng-repeat="account in accounts">
+                                        <td ng-if="account.type==0">收银员</td>
+                                        <td ng-if="account.type==1">店主</td>
+                                        <td><span ng-bind="account.name"></span></td>
+                                        <td>********</td>
+                                        <!--<td><a class="a-btn" ng-click="unbindAccount(account.merchantSid)">解除绑定</a></td>-->
+                                        <td><a class="a-btn" ng-click="changePwd(account.merchantSid)">修改密码</a></td>
+                                    </tr>
+                                    <tr class="tr-empty" ng-show="accounts==null"><td class="text-center" colspan="4">暂无数据！</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 col-sm-offset-1 control-label">账户类型</label>
-                        <div class="col-sm-4">
-                            <div><input type="radio" name="accountType" value="1"/>&nbsp;&nbsp;店主账号</div>
-                            <div><input type="radio" name="accountType" value="0">&nbsp;&nbsp;收银员账号</div>
+                    <div ng-class="{'active':accountInfoState1}" class="tab-pane fade in" id="ios">
+                        <!--表格-->
+                        <div class="panel panel-default">
+                            <table class="table ol-tab">
+                                <thead class="active">
+                                <tr>
+                                    <td>账号类型</td>
+                                    <td>账号名</td>
+                                    <td>微信名</td>
+                                    <td>操作</td>
+                                </tr>
+                                </thead>
+                                <tbody id="crasher">
+                                    <tr ng-repeat="cs in cashiers">
+                                        <td>收银员</td>
+                                        <td><span ng-bind="cashierAccount[$index].name"></span></td>
+                                        <td ng-bind="cs.nickname"></td>
+                                        <td><a class="a-btn" ng-click="unbindWx(cs)">解除绑定</a></td>
+                                        <!--<td><a class="a-btn" ng-click="changePwd(account.merchantSid)">修改密码</a></td>-->
+                                    </tr>
+                                    <tr class="tr-empty" ng-show="cashiers==null"><td class="text-center" colspan="4">暂无数据！</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 col-sm-offset-1 control-label">账户密码</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control" id="passwd" placeholder="请输入账户密码">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 col-sm-offset-1 control-label">再次确认密码</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control" id="repasswd" placeholder="请再次输入密码">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 col-sm-offset-1 control-label">管理员登陆密码</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control" id="thisPwd"placeholder="请输入您当前账号密码" ng-blur="checkInfo()">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label  class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
-                        <div class="col-sm-7">
-                            <select class="form-control" style="margin: 0 0 10px 0"  ng-model="y" id="selBankName" ng-change="selBankName()">
-                                <option value=""> -  请选择  -</option>
-                                <option value="1">中国农业银行</option>
-                                <option value="2">中国工商银行</option>
-                                <option value="3">中国银行</option>
-                                <option value="4">交通银行</option>
-                                <option value="5">中信银行</option>
-                                <option value="6">中国光大银行</option>
-                                <option value="7">华夏银行</option>
-                                <option value="8">中国民生银行</option>
-                                <option value="9">广发银行股份有限公司</option>
-                                <option value="10">中国邮政储蓄银行</option>
-                                <option value="11">平安银行</option>
-                                <option value="12">兴业银行</option>
-                                <option value="13">上海浦东发展银行</option>
-                                <option value="14">中国建设银行</option>
-                                <option value="15">鞍山市商业银行</option>
-                                <option value="16">营口银行</option>
-                                <option value="17">农村信用社</option>
-                                <option value="18">锦州银行</option>
-                                <option value="19">北京农村商业银行</option>
-                                <option value="20">吉林银行</option>
-                                <option value="21">盛京银行</option>
-                                <option value="22">大连银行</option>
-                            </select>
-                            <p class="text-muted" class="form-control"><input type="text"  id="bankName" name="bankName" class="form-control" placeholder="请设置银行名称"/></p>
-                            <p class="text-muted" class="form-control"><input type="text"  id="bankNum" name="bankNum"  class="form-control" placeholder="请输入银行卡号"/></p>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div class="clearfix btn-div text-center">
-                    <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="saveAccount()">确认</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!--提现成功提示框-->
-<div class="modal fade" id="tx-success">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="icon-success"></div>
-                <p class="text-center">提现申请成功</p>
-                <p class="text-center">佣金将会在1个工作日内后抵达您的结算账户</p>
-            </div>
-            <div class="modal-footer">
-                <div class="clearfix btn-div text-center">
-                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
+
+    <!--新建账户提示框-->
+    <div class="modal fade" id="createAccount">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">新建账号</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group radio-style">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">角色</label>
+                            <div class="col-sm-7">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="accountType"  checked value="1">收银员
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group radio-style">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">门店</label>
+                            <div class="col-sm-7">
+                                <div class="panel panel-default">
+                                    <div class="radio-inline">
+                                        <label>
+                                            <input type="checkBox" id="checkAll" name="checkAll" value="-1" ng-click="checkAll()">&nbsp;全部门店
+                                        </label>
+                                    </div>
+                                    <br>
+                                    <div class="radio-inline" ng-repeat="m in merchants">
+                                        <label>
+                                            <input type="checkbox" name="checkMerchant" value="{{m[0]}}"><span ng-bind="m[1]"></span>
+                                        </label>
+                                        <span ng-show="$index%2!=0"><div></div></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">账户名称</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="accountName" class="form-control" ng-blur="checkRepeat()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">账户密码</label>
+                            <div class="col-sm-4">
+                                <input type="password" class="form-control" id="accountPwd">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">再次确认密码</label>
+                            <div class="col-sm-4">
+                                <input type="password" class="form-control" id="rePwd">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-sm-offset-1 control-label">管理员登录密码</label>
+                            <div class="col-sm-4">
+                                <input type="password" class="form-control" id="thisPwd">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="clearfix btn-div text-center">
+                        <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="saveAccount()">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <!--修改密码提示框-->
+    <div class="modal fade" id="changePassword">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <input type="hidden" id="currEditId"/>
+                            <label for="inputPassword1" class="col-sm-2 col-sm-offset-1 control-label">新密码</label>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" id="inputPassword1" placeholder="密码由数字和字母组合，不少于6位">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword2" class="col-sm-2 col-sm-offset-1 control-label">确认新密码</label>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" id="inputPassword2">
+                                <p class="text-muted small tishi"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 col-sm-offset-1 control-label">管理员密码</label>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control" id="inputPassword3">
+                                <p class="text-muted small tishi">输入管理员登陆密码进行操作</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="clearfix btn-div text-center">
+                        <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="updatePwd()">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--修改密码提示框2-->
+    <div class="modal fade" id="changePassword2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-8 col-sm-offset-2 control-label">新密码</label><br>
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <input type="password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-8 col-sm-offset-2 control-label">确认密码</label><br>
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <input type="password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-8 col-sm-offset-2 control-label">管理员密码(输入管理员登录密码确认操作)</label><br>
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <input type="password" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="clearfix btn-div text-center">
+                        <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="withDraw()">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--解除绑定-->
+    <div class="modal fade" id="unbind">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">解除绑定</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">确认要将该账号解除绑定吗？</p>
+                    <div>
+                        <span class="icon-success wx-faceImg"><img src="{{currWxUser.headImageUrl}}" alt=""></span>
+                    </div>
+                    <p class="text-center wx-nickname fontSize14" ng-bind="currWxUser.nickname"></p>
+                </div>
+                <div class="modal-footer">
+                    <div class="clearfix btn-div text-center">
+                        <button type="button" class="btn btn-warning" ng-class="{disabled: srgl.thirNum<=200}" ng-click="unbindAccount(currWxUser.id)">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <!--解除绑定提示框-->
+     <div class="modal fade" id="jb-success">
+         <div class="modal-dialog">
+             <div class="modal-content">
+                 <div class="modal-header bg-warning">
+                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                     <h4 class="modal-title">解除绑定</h4>
+                 </div>
+                 <div class="modal-body">
+                     <div class="icon-success"></div>
+                     <p class="text-center">解绑成功</p>
+                 </div>
+                 <div class="modal-footer">
+                     <div class="clearfix btn-div text-center">
+                         <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="refresh()">知道了</button>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
 </div>
+
+

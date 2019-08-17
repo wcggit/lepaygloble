@@ -13,13 +13,13 @@
     </div>
     <div class="col-md-3">
         <div class="out-div">
-            <p class="text-center">注册获得红包</p>
+            <p class="text-center">注册获得鼓励金</p>
             <p class="text-center">￥{{lockCount.thirNum}}</p>
         </div>
     </div>
     <div class="col-md-3">
         <div class="out-div">
-            <p class="text-center">注册获得积分</p>
+            <p class="text-center">注册获得金币</p>
             <p class="text-center">{{lockCount.fouNum}}</p>
         </div>
     </div>
@@ -32,15 +32,18 @@
             <label>门店名称</label>
             <div class="input-group col-md-6 select-style">
                 <select class="form-control" id="selMerchant">
-                    <option value="">请选择</option>
+                    <!--<option value="">请选择</option>-->
                     <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
                 </select>
                 <span class="select-jiao"></span>
             </div>
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-7">
             <label>邀请时间</label>
-            <input type="text" name="reservation" id="completeDate" class="form-control"/>
+            <div class="input-group timePicker col-md-9">
+                <input type="text" name="reservation" id="completeDate" class="form-control"/>
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -59,8 +62,8 @@
             <td>微信信息</td>
             <td>锁定时间</td>
             <td>锁定门店</td>
-            <td>注册获得红包</td>
-            <td>注册获得积分</td>
+            <td>注册获得鼓励金</td>
+            <td>注册获得金币</td>
         </tr>
         </thead>
         <tbody>

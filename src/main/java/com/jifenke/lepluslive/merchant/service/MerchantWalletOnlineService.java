@@ -1,5 +1,6 @@
 package com.jifenke.lepluslive.merchant.service;
 
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantWalletOnline;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletOnlineLogRepository;
 import com.jifenke.lepluslive.merchant.repository.MerchantWalletOnlineRepository;
 import org.springframework.stereotype.Service;
@@ -36,4 +37,9 @@ public class MerchantWalletOnlineService {
         return  merchantWalletOnlineLogRepository.findTotalCount(id);
     }
 
+
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public MerchantWalletOnline findByMerchant(Long merchantId) {
+        return merchantWalletOnlineRepository.findByMerchantId(merchantId);
+    }
 }

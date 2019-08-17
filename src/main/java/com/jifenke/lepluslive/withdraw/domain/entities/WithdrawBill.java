@@ -38,7 +38,7 @@ public class WithdrawBill {
     @ManyToOne
     private PartnerManager partnerManager;
 
-    private Integer billType;//0是合伙人管理员  1是合伙人 2是商户
+    private Integer billType;//0是合伙人管理员  1是合伙人 2是门店  3是商户
 
     private Date createdDate;
 

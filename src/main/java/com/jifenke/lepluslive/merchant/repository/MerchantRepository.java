@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.merchant.repository;
 
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
+import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,25 +45,23 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
 
     Long countByPartnerAndPartnershipNot(Partner partner, Integer partnerShip);
 
-    Merchant findMerchantUserBySid(String sid);
+    Merchant findByMerchantSid(String merchantSid);
 
     /***
      * 根据门店查询数据 (乐加)
      */
     @Query(value = "select * from (" +
-        "        SELECT o.order_sid,o.complete_date,lepay_code,true_pay,true_score,o.rebate_way,0 order_type,1 merchant_name FROM off_line_order o where o.state=1 and  o.merchant_id=?1" +
+        "        SELECT o.order_sid,o.complete_date,lepay_code,true_pay,true_score,o.basic_type,0 order_type,1 merchant_name,desk,o.discount FROM off_line_order o where o.state=1 and  o.merchant_id=?1" +
         "        UNION " +
-        "        SELECT p.order_sid,p.complete_date,null,true_pay,true_score,p.rebate_way,1 order_type,1 merchant_name FROM pos_order p where  p.state=1 and p.merchant_id =?1" +
+        "        SELECT p.order_sid,p.complete_date,null,true_pay,true_score,p.rebate_way,1 order_type,1 merchant_name,desk,0 discount FROM pos_order p where  p.state=1 and p.merchant_id =?1" +
         "    ) r order by r.complete_date desc limit ?2,10", nativeQuery = true)
     List<Object[]> findOrderListByMerchant(Long merchantId, Long offSet);
 
+
     /***
-     * 根据门店查询数据 (掌富)
+     * 根据门店查询数据 (易宝)
      */
-    @Query(value = "select * from (" +
-        "SELECT o.order_sid,o.complete_date,le_pay_code ,true_pay,true_score,o.order_type_id rebate_way,0 order_type,1 merchant_name FROM scan_code_order o where o.state=1 and  o.merchant_id=?1 " +
-        "UNION  " +
-        "SELECT p.order_sid,p.complete_date,null le_pay_code,true_pay,true_score,p.rebate_way rebate_way,1 order_type,1 merchant_name FROM pos_order p where  p.state=1 and p.merchant_id =?1) r order by r.complete_date desc limit ?2,10", nativeQuery = true)
+    @Query(value="select so.order_sid,se.basic_type,so.le_pay_code,so.total_price,so.complete_date,1 merchant_name,se.desk,so.discount from scan_code_order so,scan_code_order_ext se where state=1 and so.scan_code_order_ext_id = se.id and merchant_id=?1 order by complete_date desc limit ?2,10",nativeQuery = true)
     List<Object[]> findScanOrderListByMerchant(Long merchantId, Long offSet);
 
 
@@ -73,11 +72,19 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
      * @param offSet
      * @return
      */
-    @Query(value = "SELECT a.`name`,count(b.id) number, a.user_limit from merchant a " +
+    @Query(value = "SELECT a.`name`,count(b.id) number, a.user_limit,a.id from merchant a " +
         "LEFT JOIN le_jia_user b on a.id = b.bind_merchant_id " +
-        "where a.id in (?1) GROUP BY a.id ORDER BY number DESC LIMIT ?2,6", nativeQuery = true)
-    List<Object[]> findPageMerchantMemberLockNumber(List<Object> obj, Integer offSet);
+        "where a.id in (?1) GROUP BY a.id ORDER BY number ", nativeQuery = true)
+    List<Object[]> findPageMerchantMemberLockNumber(List<Object> obj);
 
+    @Query(value = "SELECT count(id) from le_jia_user  where bind_merchant_id = ?1", nativeQuery = true)
+    Integer countBindUserByMerchant(Long merchantId);
+
+    @Query(value = "SELECT COUNT(*) FROM merchant m LEFT JOIN le_jia_user lu ON m.id = lu.bind_merchant_id where m.merchant_user_id = ?1", nativeQuery = true)
+    Integer countBindUserByMerchantUser(Long merchantUserId);
+
+    @Query(value = "SELECT IFNULL(SUM(m.user_limit),0) FROM merchant m where m.merchant_user_id = ?1", nativeQuery = true)
+    Long countUserLimitByMerchantUser(Long merchantUserId);
     /**
      * 查询商户旗下所有的会员锁定总数
      *
@@ -102,4 +109,11 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
 
     @Query(value = "select DATE_FORMAT(create_date,\"%Y-%m-%d\"),count(*) from merchant where partner_id = ?1 and create_date between ?2 and ?3 GROUP BY DATE_FORMAT(create_date,\"%Y-%m-%d\")", nativeQuery = true)
     List<Object[]> countMerchantByPartnerAndDate(Long partnerId, Date startDate, Date endDate);
+
+    /**
+     *  统计指定合伙人 7 天内锁定的商户数量
+     */
+    @Query(value = "select DATE_FORMAT(create_date,'%Y-%m-%d'),IFNULL(count(*),0) from merchant " +
+        " where  partner_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(create_date) group by DATE_FORMAT(create_date,'%Y-%m-%d')",nativeQuery = true)
+    List<Object[]> countMerchantByPartnerWeek(Long partnerId, Date start);
 }

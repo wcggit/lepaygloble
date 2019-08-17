@@ -1,0 +1,109 @@
+<div class="minShengJieSuanTrade">
+    <!--查询表单-->
+    <form class="form-inline list-check">
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label>选择门店</label>
+                <div class="input-group col-md-6 select-style">
+                    <select class="form-control" id="selMerchant">
+                        <option value="{{m[0]}}" ng-repeat="m in merchants">{{m[1]}}</option>
+                    </select>
+                    <span class="select-jiao"></span>
+                </div>
+            </div>
+            <div class="form-group col-md-5">
+                <label>交易日期</label>
+                <input type="text" id="timePicker1" class="form-control" style="width:200px">
+            </div>
+            <button type="button" class="btn btn-warning btn-check2" ng-click="searchByDate()">查询</button>
+        </div>
+    </form>
+    <hr>
+    <!--表格信息总结-->
+    <p class="ttl-add table-title">
+        以下<span style="color: #fb991a">{{ledgerCount}}</span>家门店将合并到账，如需查看到账详情，可点击下方[查看详情]按钮
+    </p>
+    <p style="background-color: rgba(251, 153, 26, .2);padding: 12px 8px;color: #333;font-size: 14px">
+        <span ng-repeat="name in ledgerNames">{{name}} / </span>
+    </p>
+    <!--tab-->
+    <div class=" top-style1">
+        <div class="panel panel-default page-top">
+            <div class="panel-body">
+                <ul class="nav nav-style">
+                    <li role="presentation" ng-class="{active:currentState == 0}" ng-click="onClickTab(0)"><a>全部状态</a></li>
+                    <li role="presentation" ng-class="{active:currentState == 1}" ng-click="onClickTab(1)"><a>待结算</a></li>
+                    <li role="presentation" ng-class="{active:currentState == 2}" ng-click="onClickTab(2)"><a>已结算</a></li>
+                    <li role="presentation" ng-class="{active:currentState == 3}" ng-click="onClickTab(3)"><a>已挂起</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="ttl-add table-title" style="position: relative;line-height: 30px">
+            每笔结算记录，对应三笔到账，分别是微信渠道普通订单、支付宝渠道普通订单、乐加订单，请注意查收。
+        <div class="btn btn-warning" ng-click="lookHistoryTrade()" style="position: absolute;top: 0;bottom: 0;right: 0;z-index:10;margin: auto">历史记录</div>
+        </div>
+        <!--表格-->
+        <div class="panel panel-default">
+            <table class="table ol-tab">
+                <thead class="active">
+                <tr>
+                    <td>交易日期</td>
+                    <td>状态</td>
+                    <td>微信到账金额</td>
+                    <td>支付宝到账金额</td>
+                    <td>乐加到账金额</td>
+                    <td>总入账</td>
+                    <td>结算账户</td>
+                    <td>操作</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="tr-empty"><td class="text-center" colspan="8" ng-show="pulls==null">暂无数据！</td></tr>
+                <tr ng-repeat="stl in pulls">
+                    <td>{{stl.settleDate}}</td>
+                    <td ng-if="stl.state==0">待结算</td>
+                    <td ng-if="stl.state==1">已结算</td>
+                    <td ng-if="stl.state==2">已挂起</td>
+                    <td>￥{{stl.wxActual/100.0}}</td>
+                    <td>￥{{stl.aliActual/100.0}}</td>
+                    <td>￥{{stl.leActual/100.0}}</td>
+                    <td>￥{{stl.totalActual/100.0}}</td>
+                    <td>
+                        <p>{{stl.accName}}</p>
+                        <p>{{stl.accNo|limitTo:4}}**** **** ***{{stl.accNo|limitTo:-4}}</p>
+                    </td>
+                    <td><a ng-click="goDetail(stl.id,stl.cmbcMerchantNo,stl.settleDate,stl.totalActual,stl.state)">查看详情</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+            <a class="pull-right dcbg" ng-click="exportExcel()">导出表格</a>
+        </div>
+    </div>
+</div>

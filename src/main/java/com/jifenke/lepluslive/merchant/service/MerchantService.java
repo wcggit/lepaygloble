@@ -11,25 +11,22 @@ import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.lejiauser.repository.RegisterOriginRepository;
 import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.repository.*;
-import com.jifenke.lepluslive.order.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.repository.MerchantScanPayWayRepository;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.service.PartnerService;
-import com.jifenke.lepluslive.security.SecurityUtils;
 import com.jifenke.lepluslive.weixin.repository.WeiXinUserRepository;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 /**
  * Created by wcg on 16/3/17.
@@ -90,6 +87,17 @@ public class MerchantService {
     @Inject
     private MerchantBankRepository merchantBankRepository;
 
+    @Inject
+    private MerchantUserResourceRepository merchantUserResourceRepository;
+
+    @Inject
+    private LejiaResourceRepository lejiaResourceRepository;
+
+    @Inject
+    private MerchantWalletOnlineRepository merchantWalletOnlineRepository;
+
+    @Inject
+    private MerchantUserShopService merchantUserShopService;
     /**
      * 获取商家详情
      */
@@ -110,14 +118,16 @@ public class MerchantService {
         Long available = 0L;
         Long totalCommission = 0L;
         for (Merchant merchant : merchants) {                                                                           // 门店钱包
-            MerchantWallet merchantWallet = merchantWalletRepository.findByMerchant(merchant);
-            available += merchantWallet.getAvailableBalance()==null ? 0L:merchantWallet.getAvailableBalance();
-            totalCommission += merchantWallet.getTotalMoney()==null ? 0L:merchantWallet.getTotalMoney();
-        }
-        MerchantUser merchantUser = findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
-        MerchantWallet merchantUserWallet = merchantWalletRepository.findByMerchantUser(merchantUser.getId());          //  商户钱包
-        if(merchantUserWallet!=null) {
-            available+= merchantUserWallet.getAvailableBalance();
+            MerchantWallet merchantWallet = merchantWalletRepository.findByMerchantId(merchant.getId());
+            MerchantWalletOnline merchantWalletOnline = merchantWalletOnlineRepository.findByMerchantId(merchant.getId());
+            if (merchantWallet != null) {
+                available += merchantWallet.getAvailableBalance()==null ? 0L:merchantWallet.getAvailableBalance();
+                totalCommission += merchantWallet.getTotalMoney()==null ? 0L:merchantWallet.getTotalMoney();
+            }
+            if (merchantWalletOnline != null) {
+                available += merchantWalletOnline.getAvailableBalance()==null ? 0L:merchantWalletOnline.getAvailableBalance();
+                totalCommission += merchantWalletOnline.getTotalMoney()==null ? 0L:merchantWalletOnline.getTotalMoney();
+            }
         }
         map.put("available",available);
         map.put("totalCommission",totalCommission);
@@ -164,8 +174,8 @@ public class MerchantService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Merchant findmerchantBySid(String sid) {
-        return merchantRepository.findMerchantUserBySid(sid);
+    public Merchant findMerchantByMerchantSid(String sid) {
+        return merchantRepository.findByMerchantSid(sid);
     }
 
     public List<MerchantUser> findMerchantUserByMerchant(Merchant merchant) {
@@ -183,7 +193,7 @@ public class MerchantService {
         }
         merchant.setSid((int) merchantRepository.count());
         String merchantSid = MvUtil.getMerchantSid();
-        while (merchantRepository.findMerchantUserBySid(merchantSid) != null) {
+        while (merchantRepository.findByMerchantSid(merchantSid) != null) {
             merchantSid = MvUtil.getMerchantSid();
         }
         merchant.setMerchantSid(merchantSid);
@@ -205,6 +215,16 @@ public class MerchantService {
         new Thread(() -> {
             fileImageService.SaveBarCode(finalBytes, filePath);
         }).start();
+        //  MerchantUser 创建商户账号
+        MerchantUser merchantUser = new MerchantUser();
+        merchantUser.setName(merchant.getName()+"管理员");
+        merchantUser.setCity(merchant.getCity());
+        merchantUser.setType(8);                                                 // 9-系统管理员  8-管理员(商户)
+        merchantUser.setCreatedDate(new Date());
+        String md5pwd = MD5Util.MD5Encode("123456", null);     // md5加密
+        merchantUser.setPassword(md5pwd);
+        merchantUserRepository.save(merchantUser);
+        merchant.setMerchantUser(merchantUser);
         //  MerchantInfo   02/12/16
         MerchantInfo merchantInfo = new MerchantInfo();
         merchantInfoRepository.save(merchantInfo);
@@ -344,27 +364,71 @@ public class MerchantService {
      * @return
      */
     @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
-    public List<Object[]> findOrderList(Merchant merchant,Long limit) {
+    public Map findOrderList(Merchant merchant,Long limit) {
         Long offset = limit*10;
         MerchantScanPayWay payway = merchantScanPayWayRepository.findByMerchantId(merchant.getId());
-        if(payway==null) {        // 返回 Pos 订单和乐加扫码订单
-            return merchantRepository.findOrderListByMerchant(merchant.getId(),offset);
-        }else {                   // 返回 Pos 订单和掌富扫码订单
-            return merchantRepository.findScanOrderListByMerchant(merchant.getId(),offset);
+        Map map = new HashMap();
+        if(payway==null||payway.getType()==1) {                    // 返回 Pos 订单和乐加扫码订单
+            List<Object[]> list = merchantRepository.findOrderListByMerchant(merchant.getId(),offset);
+            map.put("olOrders",list);
+            map.put("key","olOrders");
+            return map;
+        }else {
+            List<Object[]> scanCodeOrders = merchantRepository.findScanOrderListByMerchant(merchant.getId(), offset);
+            map.put("scanCodeOrders",scanCodeOrders);
+            map.put("key","scanCodeOrders");
+            return map;
         }
-
     }
 
     /**
      *  商户（管理员） 创建子账号
      */
     @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
-    public void saveUserAccount(MerchantUser merchantUser) {
-        MerchantBank merchantBank = merchantUser.getMerchantBank();
-        merchantBankRepository.save(merchantBank);
+    public void saveUserAccount(MerchantUser merchantUser,List<Merchant> merchants) {
+        // 设置 PassWord
         merchantUser.setPassword(MD5Util.MD5Encode(merchantUser.getPassword(),null));
-        merchantUser.setMerchantBank(merchantBank);
         merchantUserRepository.save(merchantUser);
+        // 设置门店
+        if(merchants!=null&&merchants.size()>0) {
+            for (Merchant merchant : merchants) {
+                //  PC 后台关联
+                LejiaResource lejiaResource = lejiaResourceRepository.findByResourceIdAndResourceType(merchant.getId(), 0);
+                if(lejiaResource==null) {
+                    lejiaResource = new LejiaResource();
+                    lejiaResource.setResourceId(merchant.getId());
+                    lejiaResource.setResourceType(0);
+                    lejiaResourceRepository.save(lejiaResource);
+                }
+                MerchantUserResource merchantUserResource = new MerchantUserResource();
+                merchantUserResource.setMerchantUser(merchantUser);
+                merchantUserResource.setLeJiaResource(lejiaResource);
+                merchantUserResource.setResourceType(0);
+                merchantUserResourceRepository.save(merchantUserResource);
+                // 乐加支付公众号
+                MerchantUserShop merchantUserShop = new MerchantUserShop();
+                merchantUserShop.setMerchantUser(merchantUser);
+                merchantUserShop.setMerchant(merchant);
+                merchantUserShop.setCreateDate(new Date());
+                merchantUserShopService.saveShop(merchantUserShop);
+            }
+        }
+
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public Integer countBindUserByMerchant(Long merchantId) {
+        return merchantRepository.countBindUserByMerchant(merchantId);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public Integer countBindUserByMerchantUser(Long merchantUserId) {
+        return merchantRepository.countBindUserByMerchantUser(merchantUserId);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = true)
+    public Long countBindLimitByMerchantUser(Long merchantUserId) {
+        return merchantRepository.countUserLimitByMerchantUser(merchantUserId);
     }
 
 }

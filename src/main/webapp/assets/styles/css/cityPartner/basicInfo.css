@@ -58,7 +58,7 @@
 }
 
 .basicInfo #changePassword label{position: relative;text-align: left;width: 17%;}
-.basicInfo #changePassword label:before{content: "*";color: red;position: absolute;left: 0px;top: 10px;}
+.basicInfo #changePassword label:not(.no-warn):before{content: "*";color: red;position: absolute;left: 0px;top: 10px;}
 .basicInfo #changePassword .label-last:before{content: '\20' !important;}
 
 .basicInfo #changePassword2 .form-horizontal .control-label{
@@ -80,6 +80,7 @@
 .basicInfo .tishi{
     color: #f66762;
     font-size: 12px;
+    margin-top: 4px;
 }
 .basicInfo .current-name{
     display: block;

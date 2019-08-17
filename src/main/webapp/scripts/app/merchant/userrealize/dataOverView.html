@@ -3,7 +3,7 @@
     <div class="row sjgl1">
         <div class="col-md-6 clearfix sjgl1-left">
             <div class="pull-left col-md-5">
-                <p class="text-center">¥{{available}}</p>
+                <p class="text-center">¥{{available-withdrawTotalPrice}}</p>
                 <p class="text-center">佣金余额 <button class="btn btn-warning btn-xs" ng-click="tx()">提现</button></p>
             </div>
             <div class="pull-right col-md-7">
@@ -55,14 +55,14 @@
         <div class="modal-content">
             <div class="modal-header bg-warning">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">提现余额 <span>佣金余额：<font color="#fb991a">{{available}}</font>元</span></h4>
+                <h4 class="modal-title">提现余额 <span>佣金余额：<font color="#fb991a">{{available-withdrawTotalPrice}}</font>元</span></h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
                         <label for="inputPassword1" class="col-sm-3 col-sm-offset-1 control-label">提现金额</label>
                         <div class="col-sm-4">
-                            <input type="password" class="form-control" id="inputPassword1" placeholder="请输入金额">
+                            <input type="text" class="form-control" id="inputPassword1" placeholder="请输入金额">
 
                         </div>
                         <div class="col-md-3"><span class="ts">至少提现200元</span></div>
@@ -78,7 +78,7 @@
             </div>
             <div class="modal-footer">
                 <div class="clearfix btn-div">
-                    <button type="button" class="btn btn-warning pull-left" ng-class="{disabled: available<=200}">确认</button>
+                    <button type="button" class="btn btn-warning pull-left" ng-class="{disabled: available<200}" ng-click="withDraw()">确认</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>

@@ -19,7 +19,7 @@ public class DataOverviewCriteria {
     private Double onPerCapita;               //线上人均佣金收入
     private Integer offTotalNumber;           //线下累计佣金单数
     private Integer onTotalNumber;            //线上累计佣金单数
-    private List<Object []> merchants;        //商户旗下门店会员锁定信息
+    private List<Object[]> merchants;        //商户旗下门店会员锁定信息
     private List<Object> merchantIds;         //商户旗下门店ids
 
     public Integer getOffset() {
@@ -124,5 +124,25 @@ public class DataOverviewCriteria {
 
     public void setMerchantIds(List<Object> merchantIds) {
         this.merchantIds = merchantIds;
+    }
+
+    private List<Long> totalCommissions;                //  全部佣金
+
+    private List<Long> availableCommissions;            //  可用佣金
+
+    public List<Long> getTotalCommissions() {
+        return totalCommissions;
+    }
+
+    public void setTotalCommissions(List<Long> totalCommissions) {
+        this.totalCommissions = totalCommissions;
+    }
+
+    public List<Long> getAvailableCommissions() {
+        return availableCommissions;
+    }
+
+    public void setAvailableCommissions(List<Long> availableCommissions) {
+        this.availableCommissions = availableCommissions;
     }
 }

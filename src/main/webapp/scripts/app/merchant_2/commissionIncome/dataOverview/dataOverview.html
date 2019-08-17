@@ -1,7 +1,7 @@
 <div class="dataOverview">
     <div class="panel panel-default page-top">
         <div class="panel-body clearfix">
-            数据概览
+            佣金管理
         </div>
     </div>
     <div class="container-fluid">
@@ -25,74 +25,32 @@
                 </div>
             </div>
         </div>
-        <p class="ttl">线上佣金收入</p>
-        <div class="row merchant-data">
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">今日佣金收入</p>
-                    <p class="text-center">{{data.onTodayTotalCommission | currency:'￥'}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">人均佣金收入</p>
-                    <p class="text-center">{{data.onPerCapita | currency:'￥'}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">今日佣金单数</p>
-                    <p class="text-center">{{data.onTodayTotalNumber}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">累计佣金单数</p>
-                    <p class="text-center">{{data.onTotalNumber}}</p>
-                </div>
-            </div>
+        <div class="ttl clearfix" style="position: relative;line-height: 30px">
+            门店锁定管理
+            <div class="btn btn-warning pull-right"  ui-sref="tixianDetail" style="padding: 5px 14px;position: absolute;top: 0;bottom: 0;right: 0;z-index:10;margin: auto">提现详情</div>
         </div>
-        <p class="ttl">线下佣金收入</p>
-        <div class="row merchant-data">
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">今日佣金收入</p>
-                    <p class="text-center">{{data.offTodayTotalCommission | currency:'￥'}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">人均佣金收入</p>
-                    <p class="text-center">{{data.offPerCapita | currency:'￥'}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">今日佣金单数</p>
-                    <p class="text-center">{{data.offTodayTotalNumber}}</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="out-div">
-                    <p class="text-center">累计佣金单数</p>
-                    <p class="text-center">{{data.offTotalNumber}}</p>
-                </div>
-            </div>
-        </div>
-        <p class="ttl">门店锁定情况</p>
         <div class="row row-margin lockStoreState">
-            <div class="col-md-8 col-md-offset-2" ng-repeat="x in merchants">
-                <div class="col-md-11">
+            <div class="col-md-12" ng-repeat="x in merchants">
+                <div class="col-md-4">
                     <p>{{x[0]}}</p>
                     <div class="progress">
                         <div style="width:{{x[1]/x[2]*100}}%" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </div>
-                <div class="col-md-1"><span>{{x[1]}}</span>/{{x[2]}}</div>
+                <div class="col-md-2 progress-text"><span>{{x[1]}}</span>/{{x[2]}}</div>
+                <div class="col-md-2 progress-text1">
+                    <h4>累计收入</h4>
+                    <h4>￥{{totalCommissions[$index]/100.0}}</h4>
+                </div>
+                <div class="col-md-2 progress-text2">
+                    <h4>门店余额</h4>
+                    <h4>￥{{availableCommissions[$index]/100.0}}</h4>
+                </div>
+                <div class="col-md-1 progress-btn text-center"><div class="btn btn-warning btn-long" ng-click="withDrawWindow(x[3])">提现</div></div>
             </div>
-            <div class="col-md-8 col-md-offset-2" id="seeMore">
+            <!--<div class="col-md-10 col-md-offset-1" id="seeMore">
                 <input type="button" class="btn btn-warning look-more" value="查看更多" ng-click="moreMerchant()">
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
@@ -102,22 +60,22 @@
         <div class="modal-content">
             <div class="modal-header bg-warning">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">提现 <span>佣金余额：<font color="#fb991a">100.22</font>元</span></h4>
+                <h4 class="modal-title">提现 <span>提现门店:<font color="#fb991a">{{merchantName}}</font></span><span>佣金余额：<font color="#fb991a">¥{{avaiWith/100.0}}</font>元</span></h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label for="inputPassword1" class="col-sm-3 col-sm-offset-1 control-label">提现金额（元）</label>
+                        <label for="withDrawInput" class="col-sm-3 col-sm-offset-1 control-label">提现金额（元）</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="inputPassword1" placeholder="请输入金额">
+                            <input type="number" class="form-control" id="withDrawInput"  placeholder="请输入金额"  value="0"/>
                         </div>
                         <div class="col-sm-3"><span class="ts">至少提现200元</span></div>
                     </div>
                     <div class="form-group">
                         <label  class="col-sm-3 col-sm-offset-1 control-label">结算账户</label>
                         <div class="col-sm-7">
-                            <p class="text-muted" class="form-control">xxxxxxxxxxxxxxxxxxx{{bank}}</p>
-                            <p class="text-muted" class="form-control">农行</p>
+                            <p class="text-muted" class="form-control">****** ******** {{bankNumb| limitTo:-4 }}</p>
+                            <p class="text-muted" class="form-control">{{bankName}}</p>
                         </div>
 
                     </div>
@@ -143,7 +101,7 @@
             </div>
             <div class="modal-footer">
                 <div class="clearfix btn-div text-center">
-                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="txHide()">知道了</button>
                 </div>
             </div>
         </div>

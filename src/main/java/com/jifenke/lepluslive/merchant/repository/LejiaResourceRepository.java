@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Created by xf on 16-12-2.
  */
 public interface LejiaResourceRepository extends JpaRepository<LejiaResource,Long>{
+    LejiaResource findByResourceIdAndResourceType(Long resourceId, Integer resourceType);
 }

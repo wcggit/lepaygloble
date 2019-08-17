@@ -43,4 +43,14 @@ public interface OffLineOrderShareRepository extends JpaRepository<OffLineOrderS
      */
     @Query(value = "SELECT count(a.id) as offTotalNumber,ifnull(sum(a.to_lock_merchant)/?1*0.01,0) as offPerCapita from off_line_order_share a where a.lock_merchant_id in (?2)" ,nativeQuery = true)
     List<Object []> findPerCapitaAndTotalNumber(Integer totalMember, List<Object> obj);
+
+
+    @Query(value="select count(distinct lock_merchant_id),sum(to_lock_partner_manager),sum(o.total_price) from off_line_order_share os,off_line_order o where os.off_line_order_id = o.id and os.lock_partner_manager_id = ?1 and o.created_date between ?2 and ?3 ",nativeQuery = true)
+    List<Object[]> findOtherData(Long managerId, Date startDate, Date endDate);
+
+    @Query(value = "SELECT * FROM off_line_order_share WHERE off_line_order_id=?1", nativeQuery = true)
+    OffLineOrderShare findOneByOrderId(Long orderId);
+
+    @Query(value = "SELECT * FROM off_line_order_share WHERE scan_code_order_id = ?1", nativeQuery = true)
+    OffLineOrderShare findByScanCodeOrder(Long orderId);
 }

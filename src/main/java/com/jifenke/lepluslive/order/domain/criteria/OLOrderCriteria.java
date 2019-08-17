@@ -17,16 +17,16 @@ public class OLOrderCriteria {
 
     private String orderSid;
 
-    private Integer rebateWay;
+    private Integer basicType;
 
     private Integer offset;
 
-    public Integer getRebateWay() {
-        return rebateWay;
+    public Integer getBasicType() {
+        return basicType;
     }
 
-    public void setRebateWay(Integer rebateWay) {
-        this.rebateWay = rebateWay;
+    public void setBasicType(Integer basicType) {
+        this.basicType = basicType;
     }
 
     public String getOrderSid() {
@@ -75,5 +75,45 @@ public class OLOrderCriteria {
 
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
+    }
+
+    private Integer payWay;
+
+    private Integer orderType;
+
+    private Integer payType;  // 0=微信 1=支付宝
+
+    private Integer payment;  ////付款方式  0=纯现金|1=纯红包|2=混合
+
+    public Integer getPayWay() {
+        return payWay;
+    }
+
+    public void setPayWay(Integer payWay) {
+        this.payWay = payWay;
+    }
+
+    public Integer getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
+    }
+
+    public Integer getPayType() {
+        return payType;
+    }
+
+    public void setPayType(Integer payType) {
+        this.payType = payType;
+    }
+
+    public Integer getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Integer payment) {
+        this.payment = payment;
     }
 }

@@ -9,6 +9,9 @@ angular.module('lepayglobleApp')
                 data: {
                     authorities: ["partnerManager"]
                 },
+                params: {
+                    partnerSid: {value: null}
+                },
                 views: {
                     'right-content@cityPartner': {
                         templateUrl: 'scripts/app/cityPartner/myPartner/infoManage/infoManage.html',
@@ -25,7 +28,7 @@ angular.module('lepayglobleApp')
                 parent: 'cp-infoManage',
                 url: '/imDataOverview',
                 data: {
-                    authorities: ["partner"]
+                    authorities: ["partnerManager"]
                 },
                 views: {
                     'infoManageTab@cp-infoManage': {
@@ -39,12 +42,43 @@ angular.module('lepayglobleApp')
                 parent: 'cp-infoManage',
                 url: '/imBasicInfo',
                 data: {
-                    authorities: ["partner"]
+                    authorities: ["partnerManager"]
+                },
+                params: {
+                    partnerSid2: {value: null}
                 },
                 views: {
                     'infoManageTab@cp-infoManage': {
                         templateUrl: 'scripts/app/cityPartner/myPartner/infoManage/im_basicInfo.html',
                         controller: 'imBasicInfoController'
+                    }
+                },
+                resolve: {}
+            })
+            .state('imCommissionInfo', {
+                parent: 'cp-infoManage',
+                url: '/commissioninfo',
+                data: {
+                    authorities: ["partnerManager"]
+                },
+                views: {
+                    'infoManageTab@cp-infoManage': {
+                        templateUrl: 'scripts/app/cityPartner/myPartner/infoManage/im_commissioninfo.html',
+                        controller: 'imCommissionInfoController'
+                    }
+                },
+                resolve: {}
+            })
+            .state('imMyMerchant', {
+                parent: 'cp-infoManage',
+                url: '/mymerchant',
+                data: {
+                    authorities: ["partnerManager"]
+                },
+                views: {
+                    'infoManageTab@cp-infoManage': {
+                        templateUrl: 'scripts/app/cityPartner/myPartner/infoManage/im_mymerchant.html',
+                        controller: 'imMyMerchantController'
                     }
                 },
                 resolve: {}

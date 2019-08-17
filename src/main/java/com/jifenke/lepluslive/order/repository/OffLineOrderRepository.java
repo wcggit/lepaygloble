@@ -50,7 +50,10 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
      *  门店下:  今日订单流水(线下)
      */
     @Query(value = "select sum(total_price) from off_line_order where merchant_id = ?1 and to_days(complete_date) = to_days(now())",nativeQuery = true)
-    Long countTotalPrice(Long merchantId);
+    Long countDailyTotalPrice(Long merchantId);
+
+    @Query(value = "select count(*) from off_line_order where merchant_id = ?1 and to_days(complete_date) = to_days(now())",nativeQuery = true)
+    Long countDailyOrderNum(Long merchantId);
 
 
     /**
@@ -58,14 +61,14 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
      */
     @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),sum(transfer_money) from off_line_order " +
                 " where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
-    List<Object[]> countWeekOfflineOrder(Long merchantId,Date startDate);
+    List<Object[]> countWeekOfflineOrder(Long merchantId, Date startDate);
 
     /**
      *  扫码牌微信最近七天入账
      */
     @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),IFNULL(sum(transfer_money_from_true_pay),0) from off_line_order " +
           " where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
-    List<Object[]> countWeekOfflineWx(Long merchantId,Date startDate);
+    List<Object[]> countWeekOfflineWx(Long merchantId, Date startDate);
 
     /**
      * 指定商户线下订单红包支付入账
@@ -73,25 +76,25 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
     @Query(value="select DATE_FORMAT(complete_date,'%Y-%m-%d'),IFNULL(sum(transfer_money-transfer_money_from_true_pay),0) from off_line_order " +
         "where merchant_id = ?1 AND DATE_SUB(date(?2), INTERVAL 7 DAY) <= date(complete_date) " +
         "group by DATE_FORMAT(complete_date,'%Y-%m-%d')",nativeQuery = true)
-    List<Object[]> countWeekOffScore(Long merchantId,Date completeDate);
+    List<Object[]> countWeekOffScore(Long merchantId, Date completeDate);
 
     /**
      * 查询指定门店 时间段内总入账 (扫码订单)
      */
     @Query(value="select IFNULL(sum(transfer_money),0) from off_line_order where merchant_id = ?1 and complete_date between ?2  and ?3",nativeQuery = true)
-    Long countMerchantTotal(Long id,String startDate,String endDate);
+    Long countMerchantTotal(Long id, String startDate, String endDate);
 
     /**
      * 查询指定门店 微信总入账
      */
     @Query(value="select IFNULL(sum(transfer_money_from_true_pay),0) from off_line_order where merchant_id = ?1 and complete_date between ?2 and ?3",nativeQuery = true)
-    Long countMerchantWxTransfer(Long id,String startDate,String endDate);
+    Long countMerchantWxTransfer(Long id, String startDate, String endDate);
 
     /**
      * 查询指定门店 红包入账(扫码)
      */
     @Query(value="select IFNULL(sum(transfer_money-transfer_money_from_true_pay),0) from off_line_order where merchant_id =?1 and complete_date between  ?2 and ?3",nativeQuery = true)
-    Long countMerchantOffScore(Long id,String startDate,String endDate);
+    Long countMerchantOffScore(Long id, String startDate, String endDate);
 
     /**
      * 指定商户线下订单红包支付入账
@@ -104,20 +107,39 @@ public interface OffLineOrderRepository extends JpaRepository<OffLineOrder, Long
      *  查询指定门店的订单记录 （指定时间段）
      */
     @Query(value=" select * from off_line_order where merchant_id = ?1 and complete_date between ?2 and ?3 and (state = 1 or  state = 2) ",nativeQuery = true)
-    List<OffLineOrder> findByMerchantAndDate(Long merchantId,String startTime,String endTime);
+    List<OffLineOrder> findByMerchantAndDate(Long merchantId, String startTime, String endTime);
 
     /**
      *  查询指定门店下用户消费金额 （时间段内）
      */
     @Query(value="select IFNULL(sum(true_pay),0) from off_line_order where merchant_id = ?1 and complete_date between ?2 and ?3",nativeQuery = true)
-    Long findCustPayByMerchantAndDate(Long merchantId,String startTime,String endTime);
+    Long findCustPayByMerchantAndDate(Long merchantId, String startTime, String endTime);
 
     /**
      *  查询指定门店下用户消费红包 （时间段内）
      */
     @Query(value="select IFNULL(sum(true_score),0) from off_line_order where merchant_id = ?1 and complete_date between ?2 and ?3",nativeQuery = true)
-    Long findCustScoreByMerchantAndDate(Long merchantId,String startTime,String endTime);
+    Long findCustScoreByMerchantAndDate(Long merchantId, String startTime, String endTime);
 
 
+    /***
+     *  查询指定日期总流水、总入账
+     */
+    @Query(value="select IFNULL(sum(total_price),0),IFNULL(sum(transfer_money),0) from off_line_order where merchant_id = ?1 and complete_date between ?2 and ?3",nativeQuery = true)
+    List<Object[]> countTotalTransferByMerchantAndDate(Long merchantId, String startTime, String endTime);
+
+
+    @Query(value="select count(1),IFNULL(sum(total_price),0),IFNULL(sum(transfer_money),0) from off_line_order where merchant_id = ?1 and complete_date between ?2 and ?3 and (rebate_way=1 or rebate_way=3)",nativeQuery = true)
+    List<Object[]> countLejiaTransferByMerchantAndDate(Long merchantId, String startTime, String endTime);
+
+    @Query(value="select count(1),IFNULL(sum(total_price),0),IFNULL(sum(transfer_money),0) from off_line_order where merchant_id = ?1 and complete_date between ?2 and ?3 and (rebate_way=0 or rebate_way=2 or rebate_way=4 or rebate_way=6) ",nativeQuery = true)
+    List<Object[]> countCommonTransferByMerchantAndDate(Long merchantId, String startTime, String endTime);
+
+
+    OffLineOrder findByOrderSid(String orderSid);
+
+
+    @Query(value = "SELECT * FROM off_line_order WHERE order_sid=?1", nativeQuery = true)
+    OffLineOrder findOneByOrderSid(String orderSid);
 }
 

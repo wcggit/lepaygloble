@@ -1,5 +1,8 @@
 package com.jifenke.lepluslive.merchant.domain.entities;
 
+import javax.persistence.Entity;
+
+import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.global.util.MvUtil;
 
 import javax.persistence.*;
@@ -66,6 +69,13 @@ public class MerchantUser {
     }
 
     // ---  新版本扩展属性 ---
+
+    @ManyToOne
+    private Partner partner;            // 合伙人
+
+    private Long createUserId;                                                                  // 所属商户（管理员） ID
+
+
     private String merchantName;        // 商户名称
     private String linkMan;             // 商户负责人 （联系人）
     private String phoneNum;            // 联系方式
@@ -138,6 +148,14 @@ public class MerchantUser {
         this.city = city;
     }
 
+    public Partner getPartner() {
+        return partner;
+    }
+
+    public void setPartner(Partner partner) {
+        this.partner = partner;
+    }
+
     public String getMerchantName() {
         return merchantName;
     }
@@ -146,7 +164,6 @@ public class MerchantUser {
         this.merchantName = merchantName;
     }
 
-    private Long createUserId;                                                                  // 所属商户（管理员） ID
 
     public Long getCreateUserId() {
         return createUserId;
@@ -181,4 +198,5 @@ public class MerchantUser {
     public void setMerchantSid(String merchantSid) {
         this.merchantSid = merchantSid;
     }
+
 }

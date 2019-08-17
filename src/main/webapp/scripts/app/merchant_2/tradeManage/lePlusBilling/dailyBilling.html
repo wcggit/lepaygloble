@@ -1,66 +1,102 @@
-<!--查询表单-->
-<form class="form-inline list-check">
-    <div class="row">
-        <div class="form-group col-md-4">
-            <label>门店名称</label>
-            <div class="input-group col-md-6">
-                <select name="" id="selMerchant" class="current-store" ng-change="changeStore(x)" ng-model="x">
-                    <option value="">请选择</option>
-                    <option value="{{m.sid}}" ng-repeat="m in merchants">{{m.name}}</option>
-                </select>
+<div class="withdrawRecord">
+    <div class="container-fluid">
+        <!--查询表单-->
+        <form class="form-inline list-check">
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label>结算日期</label>
+                    <input type="text" id="timePicker1" class="form-control" style="width:90px">
+                </div>
+                <div class="form-group col-md-4">
+                    <label>选择门店</label>
+                    <div class="input-group col-md-6 select-style">
+                        <select class="form-control" id="selMerchant">
+                            <option value="-1">请选择</option>
+                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                        </select>
+                        <span class="select-jiao"></span>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>到账状态</label>
+                    <div class="input-group col-md-6 select-style">
+                        <select class="form-control" id="financialState">
+                            <option value="-1">全部</option>
+                            <option value="0">转账中</option>
+                            <option value="1">已到账</option>
+                            <option value="2">已到账</option>
+                        </select>
+                        <span class="select-jiao"></span>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-warning btn-check2" ng-click="searchByDate()">查询</button>
             </div>
+            <!--<div class="row">
+                <div class="form-group col-md-5">
+                    <label></label>
+
+                </div>
+            </div>-->
+        </form>
+        <!--报表-->
+        <!--<div class="panel-body rjysr-panel-body">-->
+            <!--<div my-chart style="height: 400px">-->
+                <!--<div id="dailyBillingEchart"  my-chart ui-options='' style="height: 400px;width: 100%;"></div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--表格-->
+        <div class="panel panel-default">
+            <table class="table ol-tab">
+                <thead class="active">
+                <tr>
+                    <td>交易日期</td>
+                    <td>状态</td>
+                    <td>交易金额</td>
+                    <td>结算账号</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="tr-empty"><td class="text-center" colspan="8" ng-show="pulls==null">暂无数据！</td></tr>
+                <tr ng-repeat="financial in pulls">
+                    <td>{{financial.balanceDate|date:'yyyy-MM-dd'}}</td>
+                    <td ng-if="financial.state==1">已到账</td>
+                    <td ng-if="financial.state==0">转账中</td>
+                    <td ng-if="financial.state==2">已挂账</td>
+                    <td>{{'￥'+(financial.transferPrice+financial.posTransfer+financial.appTransfer)/100}}</td>
+                    <td>
+                        <p>{{financial.merchant.merchantBank.bankName}}</p>
+                        <p>{{financial.merchant.merchantBank.bankNumber|limitTo:4}}**** **** ***{{financial.merchant.merchantBank.bankNumber|limitTo:-4}}</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="form-group col-md-6">
-            <label>交易完成时间</label>
-            <input type="text" name="completeTime" id="timePicker1" class="input-group timePicker col-md-9" />
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
         </div>
     </div>
-    <div class="row">
-        <div class="form-group col-md-5">
-            <label></label>
-            <button type="button" class="btn btn-warning btn-check2" ng-click="findByDate()">查询</button>
-        </div>
-    </div>
-</form>
-<div class="panel-body rjysr-panel-body">
-    <div my-chart style="height: 400px">
-        <div id="dailyBillingEchart"  my-chart ui-options='' style="height: 400px;width: 100%;"></div>
-    </div>
-</div>
-<!--表格信息总结-->
-<p class="ttl-add table-title clearfix">
-    详细数据<span class="pull-right"><i class="iconfont icon-2wodezhangdan18x20"></i>下载表格</span>
-</p>
-<!--表格-->
-<div class="panel panel-default">
-    <table class="table ol-tab">
-        <thead class="active">
-        <tr>
-            <td>交易完成时间</td>
-            <td>入账总金额</td>
-            <td>扫码微信入账</td>
-            <td>POS刷卡入账</td>
-            <td>POS移动支付入账</td>
-            <td>红包支付入账</td>
-            <td>操作</td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="x in dates">
-            <td>{{x}}</td>
-            <td>￥{{totalTransfer[$index]| number:2}}</td>
-            <td>￥{{wxTransfer[$index]| number:2}}</td>
-            <td>￥{{posCardTransfer[$index]| number:2}}</td>
-            <td>
-                <p>￥{{posMobileTransfer[$index]| number:2}}</p>
-                <p>(微信￥{{wxMobileTransfer[$index]}}+支付宝￥{{aliMobileTransfer[$index]| number:2}})</p>
-            </td>
-            <td>
-                <p>￥{{scoreTransfer[$index]| number:2}}</p>
-                <p>(扫码￥{{offScores[$index]| number:2}}+POS￥{{posScores[$index]| number:2}})</p>
-            </td>
-            <td><a>下载表格</a></td>
-        </tr>
-        </tbody>
-    </table>
+
 </div>

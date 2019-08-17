@@ -14,6 +14,6 @@ import java.util.Date;
  */
 public interface PartnerScoreLogRepository extends JpaRepository<PartnerScoreLog, Long> {
 
-    Page findAll(Specification<PartnerScoreLog> whereClause,Pageable pageRequest);
+    Page findAll(Specification<PartnerScoreLog> whereClause, Pageable pageRequest);
     Integer countByPartnerIdAndCreateDateBetween(Long id, Date startOfDay, Date endOfDay);
 }

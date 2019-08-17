@@ -1,11 +1,33 @@
 <div class="container content main-content my-items">
     <div class="container-fluid">
-        <p class="ttl">我的商户</p>
+        <style>
+            td {
+                text-align: center;
+            }
+            .ol-tab tbody tr td {
+                line-height: 20px !important;
+            }
+            .ng-scope > td:first-child,.ng-scope > td:nth-child(3),.ng-scope > td:nth-child(12),.ng-scope > td:nth-child(13) {
+                line-height: 40px !important;
+            }
+
+        </style>
+        <p class="ttl">门店列表</p>
         <!--查询表单-->
         <form class="form-inline">
             <div class="row">
                 <div class="form-group col-md-5">
-                    <label>创建时间</label>
+                    <label for="storeName">门店名称</label>
+                    <input type="text" class="form-control" id="storeName" placeholder="请输入门店名称">
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="merchantsName">所属商户名称</label>
+                    <input type="text" class="form-control" id="merchantsName" placeholder="请输入所属商户名称">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label>交易日期</label>
                     <div class="input-group timePicker col-md-9">
                         <input type="text" name="reservation" id="timePicker1"
                                class="form-control"/>
@@ -13,25 +35,7 @@
                     </div>
                 </div>
                 <div class="form-group col-md-4">
-                    <label>会员锁定状态</label>
-                    <div class="input-group col-md-6">
-                        <select class="form-control" id="userBindState">
-                            <option value="-1">全部</option>
-                            <option value="0">未锁定</option>
-                            <option value="1">即将锁满</option>
-                            <option value="2">已锁满</option>
-                        </select>
-                        <span class="select-jiao"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-5">
-                    <label for="merchantName">商户名称</label>
-                    <input type="text" class="form-control" id="merchantName" placeholder="请输入商户名称">
-                </div>
-                <div class="form-group col-md-4">
-                    <label>签约类型</label>
+                    <label>协议类型</label>
                     <div class="input-group col-md-6">
                         <select class="form-control" id="partnerShip">
                             <option value="-1">全部</option>
@@ -52,43 +56,58 @@
         </form>
         <div>
             <!--表格信息总结-->
-            <p class="ttl-add clearfix">
-                <a class="btn btn-primary pull-right" ui-sref="createitems" ui-sref-opts="{reload:true}">新建商户</a>
-                <span class="pull-left">注：共锁定<font>{{totalCount}}</font>家商户，有<font>{{fullMerchant}}</font>家商户的锁定名额以满 <a ng-click="showFullMerchant()">查看详情</a></span>
-            </p>
+            <!--<p class="ttl-add clearfix">-->
+                <!--<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;因商户系统升级，录入新门店时请联系乐加客服 （微信号：xuyichen1203） 电话：4000412800</span>-->
+                <!--&lt;!&ndash;<a class="btn btn-primary pull-right" ui-sref="createitems" ui-sref-opts="{reload:true}">新建商户</a>&ndash;&gt;-->
+                <!--<span class="pull-left">注：共锁定<font>{{totalCount}}</font>家商户，有<font>{{fullMerchant}}</font>家商户的锁定名额以满 <a ng-click="showFullMerchant()">查看详情</a></span>-->
+            <!--</p>-->
             <!--表格-->
             <div class="panel panel-default">
                 <table class="table ol-tab">
                     <thead class="active">
                     <tr>
-                        <td>商户名称</td>
-                        <td>创建时间</td>
-                        <td>签约类型</td>
-                        <td>商户地址</td>
-                        <td>会员锁定</td>
-                        <td>店铺佣金</td>
-                        <td>我的佣金</td>
+                        <td>门店编号</td>
+                        <td>门店名称</td>
+                        <td>所属城市</td>
+                        <td>所属商户</td>
+                        <td>协议类型</td>
+                        <td style="width: 10%">扫码费率</td>
+                        <td>总流水</td>
+                        <td>普通订单</td>
+                        <td>乐加订单</td>
+                        <td style="width:6%">锁定会员</td>
+                        <td>当前锁定</td>
                         <td>操作</td>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="x in pulls">
-                        <td ng-bind="x[1]"></td>
+                        <td ng-bind="x.mid"></td>
+                        <td ng-bind="x.merchantName"></td>
+                        <td ng-bind="x.cityName"></td>
+                        <td ng-bind="x.ownerMerchant"></td>
+                        <td ng-show="x.partnership==0">普通商户</td>
+                        <td ng-show="x.partnership==1">联盟商户</td>
+                        <td ng-show="x.partnership==0"><p>普通：<span>{{x.ljBrokerage}}%</span></p></td>
+                        <td ng-show="x.partnership==1"><p>联盟：<span>{{x.ljCommission}}%</span></p><p>普通：<span>{{x.ljBrokerage}}%</span></p></td>
                         <td>
-                            <p ng-bind="x[2]|date:'yyyy-MM-dd'"></p>
-                            <p ng-bind="x[2]|date:'HH:mm:ss'"></p>
+                            <p>{{x.orderNum==null?0:x.orderNum}}笔</p>
+                            <p>￥<span ng-bind="x.orderAmount/100"></span></p>
                         </td>
-                        <td ng-show="x[3]==0">普通商户</td>
-                        <td ng-show="x[3]==1">联盟商户</td>
-                        <td ng-show="x[4]!=''" class="address"><span class="tool">{{x[4]}}</span></td>
-                        <td ng-show="x[4]==''">----</td>
-                        <td >{{x[5]}}/{{x[8]}}</td>
-                        <td ng-bind="x[6]/100"></td>
-                        <td ng-bind="x[7]/100"></td>
                         <td>
-                            <a ng-click="goLePayCode(x[0])">乐付码</a>
-                            <a ng-click="goEdit(x[0])">编辑</a>
-                            <a ng-click="goMerchantUser(x[0])">账户</a>
+                            <p>{{x.comOrderNum==null?0:x.comOrderNum}}笔</p>
+                            <p>￥<span ng-bind="x.comOrderAmount/100"></span></p>
+                        </td>
+                        <td>
+                            <p>{{x.leOrderNum==null?0:x.leOrderNum}}笔</p>
+                            <p>￥<span ng-bind="x.leOrderAmount/100"></span></p>
+                        </td>
+                        <td>{{x.lockNum==null?0:x.lockNum}}</td>
+                        <td>{{x.bindCount}}/{{x.bindLimit}}</td>
+                        <td class="col-md-1">
+                            <a ng-click="goLePayCode(x.sid)">乐付码</a>
+                            <!--<a ng-click="goEdit(x[0])">编辑</a>-->
+                            <a ng-click="goMerchantUser(x.sid)">账户</a>
                             <!--<a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>-->
                             <!--<a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>-->
                             <!--<a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>-->
@@ -102,6 +121,7 @@
         <!--分页-->
         <div class=" clearfix">
             <nav class="pull-right">
+                <a class="pull-right btn btn-warning btn-check2" style="margin: 5.5% 0 0 10px;" ng-click="exportExcel()">导出表格</a>
                 <ul class="pagination">
                     <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
                     <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">

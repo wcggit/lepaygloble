@@ -30,7 +30,7 @@ public interface MerchantUserResourceRepository extends JpaRepository<MerchantUs
      *
      * 万俊
      */
-    @Query(value = "SELECT c.id,c.name from merchant c where c.id in" +
+    @Query(value = "SELECT c.id,c.name,c.merchant_sid from merchant c where c.id in" +
         "(SELECT a.resource_id from le_jia_resource a where a.id in " +
         "(SELECT b.le_jia_resource_id from merchant_user_resource b where b.merchant_user_id=" +
         "(SELECT d.id from merchant_user d WHERE d.name=?1)))",nativeQuery = true)

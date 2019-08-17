@@ -1,0 +1,142 @@
+<div class="container content main-content my-items">
+    <style>
+        td {
+            text-align: center;
+        }
+        .w-showCommissionData {
+            margin-bottom: 25px;
+        }
+        .panel {
+            margin-top: 30px;
+        }
+    </style>
+    <div class="container-fluid">
+        <p class="ttl">佣金明细</p>
+        <!--明细展示框-->
+        <section class="w-showCommissionData">
+            <div>
+                <div>￥<span ng-bind="showData.todayIncome/100.0"></span></div>
+                <div>今日佣金收入</div>
+            </div>
+            <div>
+                <div>￥<span ng-bind="showData.totalAvail/100.0"></span></div>
+                <div>当前佣金余额</div>
+            </div>
+            <div>
+                <div>￥<span ng-bind="showData.totalExpend/100.0"></span></div>
+                <div>佣金支出</div>
+            </div>
+            <div>
+                <div>￥<span ng-bind="showData.totalMoney/100.0"></span></div>
+                <div>累计佣金收入</div>
+            </div>
+        </section>
+
+
+        <ul class="nav nav-tabs">
+            <li name="tab1" class="active">
+                <a ng-click="changeLineType(1)">线下佣金记录</a>
+            </li>
+            <li name="tab2"><a ng-click="changeLineType(0)">线上佣金记录</a></li>
+        </ul>
+        <div class="w-tabList">
+                <!--查询表单-->
+                <form class="form-inline">
+                    <div class="row">
+                        <div class="form-group col-md-5">
+                            <label>变更时间</label>
+                            <div class="input-group timePicker col-md-9">
+                                <input type="text" name="reservation" id="timePicker"
+                                       class="form-control"/>
+                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>变更来源</label>
+                            <div class="input-group col-md-6">
+                                <select class="form-control" id="changeState">
+                                    <option value="-1">全部</option>
+                                </select>
+                                <span class="select-jiao"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin-bottom: 20px;">
+                            <button style="margin-left: 10.5%" type="button" class="btn btn-warning btn-check2"
+                                    ng-click="searchByCriteria()">查询
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div>
+                    <!--表格-->
+                    <div class="panel panel-default">
+                        <table class="table ol-tab">
+                            <thead class="active">
+                            <tr>
+                                <td>账务流水号</td>
+                                <td>变更时间</td>
+                                <td>变更值</td>
+                                <td>变更来源</td>
+                                <td>关联业务单号</td>
+                                <td>变更前余额</td>
+                                <td>变更后余额</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in pulls">
+                                <td ng-bind="x.logId"></td>
+                                <td>
+                                    <p ng-bind="x.changeDate|date:'yyyy-MM-dd'"></p>
+                                    <p ng-bind="x.changeDate|date:'HH:mm:ss'"></p>
+                                </td>
+                                <td ng-bind="x.changeMoney/100.0"></td>
+                                <td ng-show="x.changeOrigin==null">锁定会员消费</td>
+                                <td ng-show="x.changeOrigin!=null">{{x.changeOrigin}}</td>
+                                <td ng-bind="x.orderSid"></td>
+                                <td ng-bind="x.beforeChange/100.0"></td>
+                                <td ng-bind="x.afterChange/100.0"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!--分页-->
+                <div class=" clearfix">
+                    <a class="pull-right btn btn-warning btn-check2" style="margin: 2% 0 0 10px;" ng-click="exportExcel()">导出表格</a>
+                    <nav class="pull-right">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                            </li>
+                            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                                1}}</a>
+                            </li>
+                            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                                2}}</a>
+                            </li>
+                            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                                ng-click="loadPage(page+1)"><a aria-label="Next">
+                                <span aria-hidden="true">›</span>
+                            </a></li>
+                            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                                ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                        </ul>
+                    </nav>
+                </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".nav-tabs li").click(function () {
+        $(".nav-tabs li").removeClass("active");
+        $(this).addClass("active");
+    });
+</script>

@@ -1,7 +1,7 @@
 <div class="cp-homePage">
     <div class="panel panel-default page-top">
         <div class="panel-body clearfix">
-            首页 <input type="button" class="btn btn-default pull-right" value="账务对账">
+            首页 <!--<input type="button" class="btn btn-default pull-right" value="账务对账">-->
         </div>
     </div>
     <div class="container-fluid">
@@ -9,19 +9,20 @@
         <div class="row basic-info">
             <div class="col-md-2 col-md-offset-1">
                 <div class="face-img">
-                    <img src="{{partner.weiXinUser.headImageUrl}}" alt="">
+                    <img src="{{partnerManager.weiXinUser.headImageUrl}}" ng-show="partnerManager.weiXinUser!=null" alt="">
+                    <img src="../../../../assets/styles/images/head/webwxgetmsgimg.jpg" ng-show="partnerManager.weiXinUser==null" alt="">
                 </div>
-                <h5 class="text-center" ng-show="partner.weiXinUser==null"><a data-target="#bind-wx" data-toggle="modal" >绑定微信号</a></h5>
+                <h5 class="text-center" ng-show="partnerManager.weiXinUser!=null">{{partnerManager.weiXinUser.nickname}}</h5>
+                <h5 class="text-center" ng-show="partnerManager.weiXinUser==null"><a data-target="#bind-wx" data-toggle="modal" >绑定微信号</a></h5>
             </div>
             <div class="col-md-8 ttl-top">
                 <p class="money-ttl">
                     佣金余额
-                    <span class="tooltip-problem" data-toggle="tooltip" data-placement="right" title="您店铺锁定的会员在乐加体系下的任何消费，都会给您带来佣金">?</span>
                 </p>
                 <p class="money-content clearfix">
-                    <span class="pull-left" ng-bind="'￥'+partnerManagerWallet.availableBalance/100.0"></span>
+                    <span class="pull-left" >￥<span ng-bind="partnerManagerWallet.availableBalance/100.0"></span></span>
                     <input type="button" class="btn btn-warning pull-left tx" data-target="#tx-success" data-toggle="modal" value="提现">
-                    <a class="pull-left" ui-sref="withdrawRecord" ui-sref-opts="{reload: true}">查看提现详情</a>
+                    <!--<a class="pull-left" ui-sref="withdrawRecord" ui-sref-opts="{reload: true}">查看提现详情</a>-->
                 </p>
             </div>
         </div>
@@ -30,22 +31,22 @@
             <div class="col-md-4">
                 <div class="out-div">
                     <p class="text-center">今日佣金收入</p>
-                    <p class="text-center"><span ng-bind="'￥'+dailyCommission/100.0"></span></p>
+                    <p class="text-center"><span>￥<span class="num" ng-bind="dailyCommission/100.0"></span></span></p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="out-div">
                     <p class="text-center">累计佣金收入</p>
-                    <p class="text-center"><span ng-bind="'￥'+partnerManagerWallet.totalMoney/100.0"></span></p>
+                    <p class="text-center"><span>￥<span class="num" ng-bind="partnerManagerWallet.totalMoney/100.0"></span></span></p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="out-div">
                     <p class="text-center">
                         激活会员数
-                        <span class="tooltip-problem" data-toggle="tooltip" data-placement="top" title="乐加会员到店使用的红包总额。消费者使用的红包扣除相应手续费后，按1红包等于1元结算给商户">?</span>
+                        <span class="tooltip-problem" data-toggle="tooltip" data-placement="top" title="激活会员：至少一次在联盟门店消费过，为您带来佣金的会员">?</span>
                     </p>
-                    <p class="text-center"><span>100</span></p>
+                    <p class="text-center"><span class="num" ng-bind="bindUserNumber"></span></p>
                 </div>
             </div>
         </div>
@@ -55,28 +56,28 @@
                 <div class="clock my-member">
                     <div class="left"><div></div></div>
                     <div class="right"><div></div></div>
-                    <div class="clock-progress"><span>{{clockData[0].initNum}}</span></div>
+                    <div class="clock-progress"><span></span></div>
                     <div class="out"></div>
                 </div>
-                <div>我的会员： <span></span></div>
+                <div>我的会员：<span ng-bind="bindUserNumber+'/'+userLimit"></span></div>
             </div>
             <div class="col-md-4">
                 <div class="clock my-store">
                     <div class="left"><div></div></div>
                     <div class="right"><div></div></div>
-                    <div class="clock-progress"><span>{{clockData[1].initNum}}</span></div>
+                    <div class="clock-progress"><span></span></div>
                     <div class="out"></div>
                 </div>
-                <div>我的门店： <span></span></div>
+                <div>我的门店：<span ng-bind="bindMerchantNumber+'/'+merchantLimit"></span></div>
             </div>
             <div class="col-md-4">
                 <div class="clock my-partner">
                     <div class="left"><div></div></div>
                     <div class="right"><div></div></div>
-                    <div class="clock-progress"><span>{{clockData[2].initNum}}</span></div>
+                    <div class="clock-progress"><span></span></div>
                     <div class="out"></div>
                 </div>
-                <div>我的合伙人： <span></span></div>
+                <div>我的合伙人：<span ng-bind="bindPartnerNumber+'/'+partnerLimit"></span></div>
             </div>
         </div>
         <p class="ttl">数据趋势</p>
@@ -88,7 +89,7 @@
                         <input type="text" name="reservation" id="completeDate" class="form-control"/>
                         <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                     </div>
-                    <input type="button" class="btn btn-warning" value="查询">
+                    <input type="button" class="btn btn-warning" value="查询" ng-click="searchByCriteria()">
                 </div>
                 <div class="from-group col-md-4 ">
                     <ul class="nav nav-pills">
@@ -169,7 +170,7 @@
             </div>
             <div class="modal-body">
                 <div class="icon-success">
-                    <img src="../../../../assets/images/jygl/rvCode.png" alt="">
+                    <img src="/api/partnerManager/bindQrCode" alt="">
                 </div>
                 <p class="text-center">请使用微信扫码绑定微信号</p>
             </div>

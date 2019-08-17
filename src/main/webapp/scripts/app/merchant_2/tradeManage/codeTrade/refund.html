@@ -1,0 +1,141 @@
+<style>
+    .row > div:first-child {
+        text-align: right;
+    }
+    .refundInfo {
+        display: none;
+        margin-top: 6%;
+    }
+    .btnBox {
+        margin-top: 3%;
+    }
+    .btnBox > button:first-child {
+        margin-left: 30%;
+    }
+    .btnBox > button:last-child {
+        margin-left: 7%;
+    }
+</style>
+<div class="row myCode">
+    <!--退款码输入框-->
+    <form class="form-inline list-check">
+        <div class="row">
+            <div class="form-group col-md-2">
+                <!--<label>订单类型</label>-->
+                <!--<div class="input-group col-md-5">-->
+                    <!--<select class="form-control" id="orderType">-->
+                        <!--<option value="0">乐加订单</option>-->
+                        <!--<option value="1">通道订单</option>-->
+                    <!--</select>-->
+                    <!--<span class="select-jiao"></span>-->
+                <!--</div>-->
+            </div>
+            <div class="form-group col-md-6">
+                <label>订单号</label>
+                <input type="text" class="form-control" style="width: 60% !important;" id="orderSid">
+            </div>
+            <div class="form-group col-md-3" style="margin-top: 0">
+                <button type="button" class="btn btn-warning btn-check2" style="margin-left: 20px"
+                        ng-click="searchByCriteria()">查询
+                </button>
+            </div>
+        </div>
+    </form>
+
+
+    <!--退款单信息展示-->
+    <div class="refundInfo">
+        <div class="row">
+            <div class="form-group col-md-5">订单编号:</div>
+            <div class="form-group col-md-5">
+                {{orderSid}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">交易门店:</div>
+            <div class="form-group col-md-5">
+                {{merchantName}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">消费者:</div>
+            <div class="form-group col-md-5">
+                {{userInfo}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">消费金额:</div>
+            <div class="form-group col-md-5">
+                {{totalPrice}}元（实付{{truePay}}元+{{trueScore}}鼓励金）
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">消费后发放:</div>
+            <div class="form-group col-md-5">
+                {{backScoreA}}鼓励金+{{backScoreC}}金币
+            </div>
+        </div>
+
+        <hr style="border:1px dotted #e1e1e1;margin-bottom: 3%;">
+
+        <div class="row">
+            <div class="form-group col-md-5">实退款金额:</div>
+            <div class="form-group col-md-5">
+                {{truePay}}元
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">鼓励金退款金额:</div>
+            <div class="form-group col-md-5">
+                {{trueScore}}鼓励金
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">实际可追回鼓励金:</div>
+            <div class="form-group col-md-5">
+                {{backScoreA}}鼓励金
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-5">实际可追回金币:</div>
+            <div class="form-group col-md-5">
+                {{backScoreC}}金币
+            </div>
+        </div>
+        <!--<div class="row">-->
+            <!--<div class="form-group col-md-5">退款后鼓励金变更:</div>-->
+            <!--<div class="form-group col-md-5">-->
+                <!--0.00鼓励金+0.00金币-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="row">-->
+            <!--<div class="form-group col-md-5">退款后金币变更:</div>-->
+            <!--<div class="form-group col-md-5">-->
+                <!--0.00鼓励金+0.00金币-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="row btnBox">
+            <button type="button" class="btn btn-warning btn-check2" ng-click="sub()" data-target="#addStore" data-toggle="modal">确认退款</button>
+            <button type="button" class="btn btn-warning btn-check2" ng-click="cancel()">取消</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addStore">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body" style="margin: 3% 0">
+                <p class="text-center">{{msg}}</p>
+            </div>
+            <div class="modal-footer">
+                <div class="clearfix btn-div text-center">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

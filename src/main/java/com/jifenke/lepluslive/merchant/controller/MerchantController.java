@@ -2,6 +2,7 @@ package com.jifenke.lepluslive.merchant.controller;
 
 import com.jifenke.lepluslive.global.util.ImageLoad;
 import com.jifenke.lepluslive.global.util.LejiaResult;
+import com.jifenke.lepluslive.global.util.MD5Util;
 import com.jifenke.lepluslive.lejiauser.domain.criteria.LeJiaUserCriteria;
 import com.jifenke.lepluslive.lejiauser.repository.LeJiaUserRepository;
 import com.jifenke.lepluslive.lejiauser.service.LeJiaUserService;
@@ -9,22 +10,21 @@ import com.jifenke.lepluslive.merchant.controller.dto.MerchantDto;
 import com.jifenke.lepluslive.merchant.domain.criteria.LockMemberCriteria;
 import com.jifenke.lepluslive.merchant.domain.entities.*;
 import com.jifenke.lepluslive.merchant.service.MerchantRebatePolicyService;
-import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
+import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
+import com.jifenke.lepluslive.merchant.service.MerchantUserShopService;
 import com.jifenke.lepluslive.order.service.FinanicalStatisticService;
 import com.jifenke.lepluslive.order.service.OffLineOrderService;
 import com.jifenke.lepluslive.partner.service.PartnerService;
 import com.jifenke.lepluslive.security.SecurityUtils;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-
+import javax.imageio.ImageIO;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -32,15 +32,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by wcg on 16/6/29.
@@ -51,7 +45,8 @@ public class MerchantController {
 
     private String
         backgroundPicture =
-        "http://lepluslive-image.oss-cn-beijing.aliyuncs.com/20160701164034O6wvP4QZ5X.png";
+        "http://www.lepluslife.com/resource/lepayNew/images/trade/4pic.png";
+//        "http://lepluslive-image.oss-cn-beijing.aliyuncs.com/20160701164034O6wvP4QZ5X.png";
 
     @Inject
     private MerchantService merchantService;
@@ -63,10 +58,20 @@ public class MerchantController {
     private LeJiaUserService leJiaUserService;
 
     @Inject
+    private MerchantUserShopService merchantUserShopService;
+
+    @Inject
     private PartnerService partnerService;
 
     @Inject
     private MerchantRebatePolicyService merchantRebatePolicyService;
+
+    @Value("${transfer.address}")
+    private String transferAddress;
+
+    @Value("${transfer.sign}")
+    private String transferKey;
+
 
     @Inject
     private MerchantUserResourceService merchantUserResourceService;
@@ -143,12 +148,12 @@ public class MerchantController {
         Merchant
             merchant = null;
         if (sid != null && sid != "") {
-            merchant = merchantService.findmerchantBySid(sid);
+            merchant = merchantService.findMerchantByMerchantSid(sid);
         } else {
-            merchant = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin())
-                .getMerchant();
+            MerchantUser merchantUser = merchantService.findMerchantUserBySid(SecurityUtils.getCurrentUserLogin());
+            List<MerchantUserShop> userShops = merchantUserShopService.findByMerchantUser(merchantUser);
+            merchant = userShops.get(0).getMerchant();
         }
-
         response.setContentType("application/x-msdownload;");
         response.setHeader("Content-disposition", "attachment; filename=image.png");
         response.setCharacterEncoding("UTF-8");
@@ -163,29 +168,21 @@ public class MerchantController {
 
             BufferedImage logo = ImageIO.read(qrCode);
 
-            int widthLogo = logo.getWidth(), heightLogo = logo.getHeight();
+            int widthLogo = Long.valueOf(Math.round(logo.getWidth()*0.8)).intValue(),
+                heightLogo = Long.valueOf(Math.round(logo.getHeight()*0.8)).intValue();
 
             // 计算图片放置位置
             int width = image.getWidth();
             int height = image.getHeight();
             System.out.println(width + height);
             int x = (image.getWidth() - widthLogo) / 2;
-            int y = (image.getHeight() - logo.getHeight()) / 2;
+            int y = (image.getHeight() - logo.getHeight()) / 2+100;
             //开始绘制图片
             g.drawImage(logo, x, y, widthLogo, heightLogo, null);
             g.drawRoundRect(x, y, widthLogo, heightLogo, 20, 20);
             g.setStroke(new BasicStroke(1.0f));
             g.setColor(Color.white);
             g.drawRect(x, y, widthLogo, heightLogo);
-            //写文子
-            g.setColor(Color.WHITE);
-            g.setBackground(Color.red);
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setFont(new Font("微软雅黑", Font.PLAIN, 88)); //字体、字型、字号
-            g.drawString(merchant.getName(),
-                (image.getWidth() - g.getFontMetrics().stringWidth(merchant.getName()))
-                    / 2, 1700); //画文字
-
             g.dispose();
 
             int len = 0;
@@ -308,6 +305,22 @@ public class MerchantController {
         return LejiaResult.ok("修改商户成功");
     }
 
+
+    /***
+     *  登录跳转
+     */
+    @RequestMapping(value="/merchant/trans/login",method = RequestMethod.GET)
+    public LejiaResult transLogin() {
+        MerchantUser
+            merchantUser =
+            merchantService.findMerchantUserByName(SecurityUtils.getCurrentUserLogin());
+        String userId = "user_id="+ merchantUser.getId();
+        String msgTime = "msg_time="+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String key = "key="+transferKey;
+        String sign = "sign="+MD5Util.MD5Encode(userId+"&"+msgTime+"&"+key,"UTF-8");
+        String url = transferAddress+"&"+userId+"&"+msgTime+"&"+sign;
+        return LejiaResult.ok(url);
+    }
     /**
      * 新版本: 查询指定门店所有绑定用户,如果没有指定门店,则查询当前商户下所有门店绑定用户
      */

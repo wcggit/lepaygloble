@@ -11,3 +11,4 @@ import org.springframework.stereotype.Repository;
 public interface MerchantRebatePolicyRepository extends JpaRepository<MerchantRebatePolicy,Long> {
     MerchantRebatePolicy findByMerchantId(Long merchnatId);
 }
+

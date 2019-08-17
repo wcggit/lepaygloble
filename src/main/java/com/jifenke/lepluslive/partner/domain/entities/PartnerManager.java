@@ -1,6 +1,7 @@
 package com.jifenke.lepluslive.partner.domain.entities;
 
 import com.jifenke.lepluslive.merchant.domain.entities.City;
+import com.jifenke.lepluslive.weixin.domain.entities.WeiXinUser;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -155,5 +156,27 @@ public class PartnerManager {
 
     public void setPartnerManagerSid(String partnerManagerSid) {
         this.partnerManagerSid = partnerManagerSid;
+    }
+
+    // 绑定微信
+    @ManyToOne
+    private WeiXinUser weiXinUser;
+
+    private String qrCodeUrl;               // 绑定二维码地址
+
+    public WeiXinUser getWeiXinUser() {
+        return weiXinUser;
+    }
+
+    public void setWeiXinUser(WeiXinUser weiXinUser) {
+        this.weiXinUser = weiXinUser;
+    }
+
+    public String getQrCodeUrl() {
+        return qrCodeUrl;
+    }
+
+    public void setQrCodeUrl(String qrCodeUrl) {
+        this.qrCodeUrl = qrCodeUrl;
     }
 }

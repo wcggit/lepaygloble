@@ -1,21 +1,19 @@
 package com.jifenke.lepluslive.order.controller.view;
 
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
-
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by wcg on 16/5/9.
@@ -64,12 +62,10 @@ public class OrderViewExcel extends AbstractExcelView {
                                                                                 : sdf
                                                     .format(order.getCompleteDate()));
             excelRow.createCell(1).setCellValue(order.getOrderSid());
-            if (order.getRebateWay() == 1) {
-                excelRow.createCell(2).setCellValue("导流订单");
-            } else if (order.getRebateWay() == 3) {
-                excelRow.createCell(2).setCellValue("会员订单");
-            } else {
+            if (order.getBasicType() == 0) {
                 excelRow.createCell(2).setCellValue("普通订单");
+            } else if (order.getBasicType() == 1) {
+                excelRow.createCell(2).setCellValue("乐加订单");
             }
             excelRow.createCell(3).setCellValue(order.getTotalPrice() / 100.0);
             excelRow.createCell(4).setCellValue(order.getPayWay().getPayWay());

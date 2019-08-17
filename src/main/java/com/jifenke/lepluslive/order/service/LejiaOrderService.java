@@ -1,24 +1,21 @@
 package com.jifenke.lepluslive.order.service;
 
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
-import com.jifenke.lepluslive.merchant.domain.entities.MerchantScroll;
+import com.jifenke.lepluslive.merchant.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.controller.view.LejiaOrderDTO;
 import com.jifenke.lepluslive.order.controller.view.MerchantOrderDto;
 import com.jifenke.lepluslive.order.domain.criteria.DailyOrderCriteria;
-import com.jifenke.lepluslive.order.domain.entities.MerchantScanPayWay;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 import com.jifenke.lepluslive.order.domain.entities.ScanCodeOrder;
-import com.jifenke.lepluslive.order.domain.entities.ScanCodeRefundOrder;
-import com.jifenke.lepluslive.order.repository.*;
-import org.apache.poi.hssf.usermodel.*;
+import com.jifenke.lepluslive.order.repository.MerchantScanPayWayRepository;
+import com.jifenke.lepluslive.order.repository.OffLineOrderRepository;
+import com.jifenke.lepluslive.order.repository.PosOrderRepository;
+import com.jifenke.lepluslive.order.repository.ScanCodeOrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import javax.servlet.ServletOutputStream;
-import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -37,8 +34,6 @@ public class LejiaOrderService {
     private MerchantScanPayWayRepository merchantScanPayWayRepository;
     @Inject
     private ScanCodeOrderRepository scanCodeOrderRepository;
-    @Inject
-    private ScanCodeRefundOrderRepository scanCodeRefundOrderRepository;
 
     /**
      * 每日账单
@@ -237,8 +232,8 @@ public class LejiaOrderService {
         map.put("offLineOrders",offLineOrders);
         List<ScanCodeOrder> scanCodeOrders = scanCodeOrderRepository.findByMerchantAndDate(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
         map.put("scanCodeOrders",scanCodeOrders);
-        List<ScanCodeRefundOrder> refoundOrder = scanCodeRefundOrderRepository.findScanOrderByMerchant(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
-        map.put("refoundOrder",refoundOrder);
+//        List<ScanCodeRefundOrder> refoundOrder = scanCodeRefundOrderRepository.findScanOrderByMerchant(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+//        map.put("refoundOrder",refoundOrder);
         Long custScore = scanCodeOrderRepository.countMerchantCustScore(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
         map.put("custScore",custScore);
         Long custPay = scanCodeOrderRepository.countMerchantWxCustTransfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
@@ -247,8 +242,8 @@ public class LejiaOrderService {
         map.put("trueScore",trueScore);
         Long truePay = scanCodeOrderRepository.countMerchantWxTransfer(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
         map.put("truePay",truePay);
-        List<Object[]> refound = scanCodeRefundOrderRepository.countRefundMoneyAndScore(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
-        map.put("refound",refound);
+//        List<Object[]> refound = scanCodeRefundOrderRepository.countRefundMoneyAndScore(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
+//        map.put("refound",refound);
         Long offCustScore = offLineOrderRepository.findCustScoreByMerchantAndDate(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());
         map.put("offCustScore",offCustScore);
         Long offCustPay = offLineOrderRepository.findCustPayByMerchantAndDate(merchant.getId(), dailyOrderCriteria.getStartDate(), dailyOrderCriteria.getEndDate());

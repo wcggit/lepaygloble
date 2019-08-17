@@ -10,22 +10,17 @@ import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.merchant.domain.entities.MerchantUser;
 import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.merchant.service.MerchantUserResourceService;
-import com.jifenke.lepluslive.order.service.MerchantScanPayWayService;
-import com.jifenke.lepluslive.order.service.OffLineOrderService;
-import com.jifenke.lepluslive.order.service.OnLineOrderService;
-import com.jifenke.lepluslive.order.service.ScanCodeOrderService;
+import com.jifenke.lepluslive.order.domain.criteria.ShareCriteria;
+import com.jifenke.lepluslive.order.service.*;
 import com.jifenke.lepluslive.security.SecurityUtils;
-
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 扫码交易
@@ -49,7 +44,8 @@ public class MerchantCodeTradeController {
     private MerchantScanPayWayService merchantScanPayWayService;
     @Inject
     private ScanCodeOrderService scanCodeOrderService;
-
+    @Inject
+    private OffLineOrderShareService offLineOrderShareService;
     /**
      *  查询商户下所有的门店
      */
@@ -126,77 +122,72 @@ public class MerchantCodeTradeController {
     @RequestMapping(value = "/lockMenber/lockMenberByMerchantUser")
     @ResponseBody
     public LejiaResult findLockMenberByMerchantUser(@RequestBody LockMemberCriteria lockMemberCriteria){
-
-//        //测试
-//        Object[] o = {1,3,9};
-//        lockMemberCriteria.setStoreIds(o);
-
         List<Object[]> listMembers = leJiaUserService.getMerchantLockMemberList(lockMemberCriteria);
-        lockMemberCriteria.setLockMembers(listMembers);
-
         List<Object[]> listCount = leJiaUserService.getMerchantLockMemberCount(lockMemberCriteria);
+        Long channelCommision = leJiaUserService.getLockMemberCommisionChannel(lockMemberCriteria);
         Integer lockMemberCount = Integer.valueOf(listCount.get(0)[0] == null ? "0" : listCount.get(0)[0].toString());
         Integer pageSize = lockMemberCriteria.getPageSize();
-        lockMemberCriteria.setLockMemberCount(lockMemberCount);
-        lockMemberCriteria.setCommissionIncome(Double.valueOf(listCount.get(0)[1] == null ? "0.0" : listCount.get(0)[1].toString()));
+        Map map = new HashMap();
+        map.put("lockMembers",listMembers);
+        map.put("lockMemberCount",lockMemberCount);
+        Long ptCommission = Long.valueOf(listCount.get(0)[1] == null ? "0" : listCount.get(0)[1].toString());
+        map.put("commissionIncome",ptCommission+channelCommision);
         if (lockMemberCount <= pageSize){
-            lockMemberCriteria.setTotalPages(1);
+            map.put("totalPages",1);
         }else {
-            lockMemberCriteria.setTotalPages(lockMemberCount % pageSize == 0 ? lockMemberCount / pageSize : (lockMemberCount / pageSize) + 1);
+            map.put("totalPages",lockMemberCount % pageSize == 0 ? lockMemberCount / pageSize : (lockMemberCount / pageSize) + 1);
         }
-
-        return LejiaResult.ok(lockMemberCriteria);
+        return LejiaResult.ok(map);
     }
 
     /**
      * 查询 订单 佣金明细
-     * @param commissionDetailsCriteria
+     * @param criteria
      * @return
      */
     @RequestMapping(value = "/commissionDetails/commissionDetailsByMerchantUser")
     @ResponseBody
-    public LejiaResult findCommissionDetailsByMerchantUser(@RequestBody CommissionDetailsCriteria commissionDetailsCriteria){
-
-//        //测试
-//        Object[] o = {1,3,9};
-//        commissionDetailsCriteria.setStoreIds(o);
-
-        Integer consumeType = commissionDetailsCriteria.getConsumeType();
+    public LejiaResult findCommissionDetailsByMerchantUser(@RequestBody CommissionDetailsCriteria criteria){
+        if(criteria.getMerchantId()==null) {
+            return LejiaResult.build(400,"无数据");
+        }
+        Map<String, Object> page = null;
+        Integer consumeType = criteria.getConsumeType();
         if (consumeType != null && consumeType == 1){//线下消费
-            List<Object[]> off_line = offLineOrderService.getCommissionDetailsList_off_line(commissionDetailsCriteria);
-            commissionDetailsCriteria.setCommissionDetails(off_line);
-
-            //分页
-            List<Object[]> listCount = offLineOrderService.getCommissionDetails_off_line_count(commissionDetailsCriteria);
-            Integer cdCount = Integer.valueOf(listCount.get(0)[0] == null ? "0" : listCount.get(0)[0].toString());
-            Integer pageSize = commissionDetailsCriteria.getPageSize();
-            commissionDetailsCriteria.setCommissionDetailsCount(cdCount);
-            commissionDetailsCriteria.setCommissionIncome(Double.valueOf(listCount.get(0)[1] == null ? "0.0" : listCount.get(0)[1].toString()));
-            if (cdCount <= pageSize){
-                commissionDetailsCriteria.setTotalPages(1);
+            ShareCriteria shareCriteria = new ShareCriteria();
+            if(criteria.getCurrentPage()==null) {
+                shareCriteria.setOffset(1);
             }else {
-                commissionDetailsCriteria.setTotalPages(cdCount % pageSize == 0 ? cdCount / pageSize : (cdCount / pageSize) + 1);
+                shareCriteria.setOffset(criteria.getCurrentPage());
             }
-
+            if(criteria.getMerchantId()!=null) {
+                shareCriteria.setLockMerchantId(criteria.getMerchantId());
+            }
+            if(StringUtils.isNoneBlank(criteria.getStartDate())) {
+                shareCriteria.setStartDate(criteria.getStartDate());
+                shareCriteria.setEndDate(criteria.getEndDate());
+            }
+            page = offLineOrderShareService.findShareByPage(shareCriteria);
+            return LejiaResult.ok(page);
         }
         if (consumeType != null && consumeType == 2){//线上消费
-            List<Object[]> on_line = onLineOrderService.getCommissionDetailsList_on_line(commissionDetailsCriteria);
-            commissionDetailsCriteria.setCommissionDetails(on_line);
-
+            List<Object[]> on_line = onLineOrderService.getCommissionDetailsList_on_line(criteria);
+            criteria.setCommissionDetails(on_line);
             //分页
-            List<Object[]> listCount = onLineOrderService.getCommissionDetails_on_line_count(commissionDetailsCriteria);
+            List<Object[]> listCount = onLineOrderService.getCommissionDetails_on_line_count(criteria);
             Integer cdCount = Integer.valueOf(listCount.get(0)[0] == null ? "0" : listCount.get(0)[0].toString());
-            Integer pageSize = commissionDetailsCriteria.getPageSize();
-            commissionDetailsCriteria.setCommissionDetailsCount(cdCount);
-            commissionDetailsCriteria.setCommissionIncome(Double.valueOf(listCount.get(0)[1] == null ? "0.0" : listCount.get(0)[1].toString()));
+            Integer pageSize = 10;
+            page = new HashMap<>();
+            page.put("totalElements",Double.valueOf(cdCount));
+            page.put("content",on_line);
+            page.put("count",listCount.get(0));
             if (cdCount <= pageSize){
-                commissionDetailsCriteria.setTotalPages(1);
+                page.put("totalPages",1);
             }else {
-                commissionDetailsCriteria.setTotalPages(cdCount % pageSize == 0 ? cdCount / pageSize : (cdCount / pageSize) + 1);
+                page.put("totalPages",cdCount % pageSize == 0 ? cdCount / pageSize : (cdCount / pageSize) + 1);
             }
         }
-
-        return LejiaResult.ok(commissionDetailsCriteria);
+        return LejiaResult.ok(page);
     }
 
 }

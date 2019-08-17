@@ -76,12 +76,16 @@ ul,li{list-style: none}
 
 }
 .modal-content{border-radius: 0}
+.modal .close span:first-child{font-size: 33px}
+.panel{
+    margin-bottom: 0;
+}
 label{
     font-weight: normal;
     font-size: 14px;
-    text-align: right;
     width: 90px;
     display: inline-block;
+    margin-right: 20px;
 }
 .table>tbody>tr>td, .table>tbody>tr>th,
 .table>tfoot>tr>td, .table>tfoot>tr>th,
@@ -95,13 +99,16 @@ label{
 }
 thead>tr>td,tbody>tr>td,thead>tr>td>p,tbody>tr>td>p{font-size: 14px;}
 .progress,.progress-bar{border-radius: 10px}
+.form-inline{
+    margin-top: 35px;
+}
 /*自定义属性*/
 .page-top{border: none;border-bottom: solid 1px #e7e8eb;border-radius: 0px}
 .page-bottom{border: none;border-bottom: solid 1px #e7e8eb;border-top: solid 1px #e7e8eb;border-radius: 0px}
 .page-top > div{
     line-height: 32px;
 }
-.ttl{border-left: solid 2px #fb991a;height: 20px;line-height: 20px;padding-left: 10px;margin: 24px 0 20px}
+.ttl{border-left: solid 2px #fb991a;height: 30px;line-height: 30px;padding-left: 10px;margin: 10px 0 10px}
 .tooltip-problem{
     display: inline-block;
     width: 20px;
@@ -116,7 +123,7 @@ thead>tr>td,tbody>tr>td,thead>tr>td>p,tbody>tr>td>p{font-size: 14px;}
 .list-check .row{margin: 10px 0 30px}
 .timePicker{cursor: pointer ;}
 .font-yellow{color: #fb991a}
-.table-title{font-size: 14px}
+.table-title{font-size: 14px;margin: 10px 0;line-height: 23px}
 .margin-center{display:block;margin: 20px auto;}
 .color222{color: #222}
 .color666{color: #666}
@@ -138,6 +145,9 @@ thead>tr>td,tbody>tr>td,thead>tr>td>p,tbody>tr>td>p{font-size: 14px;}
 .merchant-data .col-md-3 .out-div p:last-child{
     color: #444;
     font-size: 28px;
+}
+.merchant-data .col-md-3 .out-div p:last-child span{
+    font-size: 20px;
 }
 .row-margin{
     margin-left: 0;
@@ -212,10 +222,19 @@ select.select-inline-block{display: inline-block;width: auto;}
     border-bottom:solid 2px #fb991a;
     color: #fb991a;
 }
-.top-style1 .panel-body{padding-bottom: 65px;position: relative}
+.top-style1 .panel-body{padding-bottom: 45px;position: relative}
 .top-style1 .nav-style{
     margin-bottom: -20px;
     position: absolute;
     bottom: 19px;
     left:0px;
+}
+/*下载表格*/
+.dcbg{
+    margin: 27px 15px 0 0;
+    text-decoration: underline;
+}
+
+.btn-long{
+    padding: 5px 15px;
 }

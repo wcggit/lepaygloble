@@ -1,6 +1,3 @@
-/**
- * Created by recoluan on 2017/3/13.
- */
 'use strict';
 
 angular.module('lepayglobleApp')

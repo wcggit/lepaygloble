@@ -25,8 +25,8 @@ public class PosOrderSerivce {
     public Long countPosOrder(List<Merchant> merchants) {
         Long posDailyCount = 0L;
         for (Merchant merchant : merchants) {
-            Long totalPrice = posOrderRepository.countTotalPrice(merchant.getId());
-            posDailyCount += totalPrice==null?0L:totalPrice;
+            Long totalCount = posOrderRepository.countDailyNum(merchant.getId());
+            posDailyCount += totalCount==null?0L:totalCount;
         }
         return posDailyCount;
     }

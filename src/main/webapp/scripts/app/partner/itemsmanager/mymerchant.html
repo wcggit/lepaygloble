@@ -1,0 +1,117 @@
+<div class="container content main-content my-items">
+    <div class="container-fluid">
+        <p class="ttl">商户列表</p>
+        <!--查询表单-->
+        <form class="form-inline">
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label for="storeName">商户名称</label>
+                    <input type="text" class="form-control" id="storeName" placeholder="请输入商户名称">
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="linkMan">负责人名称</label>
+                    <input type="text" class="form-control" id="linkMan" placeholder="请输入负责人名称">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-5">
+                    <label>交易日期</label>
+                    <div class="input-group timePicker col-md-9">
+                        <input type="text" name="reservation" id="timePicker1"
+                               class="form-control"/>
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </div>
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="merchantPhone">负责人手机号</label>
+                    <input type="number" class="form-control" id="merchantPhone" placeholder="请输入负责人手机号">
+                </div>
+            </div>
+            <div>
+                <div style="margin-bottom: 20px;">
+                    <button style="margin-left: 10.5%" type="button" class="btn btn-warning btn-check2"
+                            ng-click="searchByCriteria()">查询
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div>
+            <!--表格信息总结-->
+            <!--<p class="ttl-add clearfix">-->
+                <!--<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;因商户系统升级，录入新门店时请联系乐加客服 （微信号：xuyichen1203） 电话：4000412800</span>-->
+                <!--&lt;!&ndash;<a class="btn btn-primary pull-right" ui-sref="createitems" ui-sref-opts="{reload:true}">新建商户</a>&ndash;&gt;-->
+                <!--<span class="pull-left">注：共锁定<font>{{totalCount}}</font>家商户，有<font>{{fullMerchant}}</font>家商户的锁定名额以满 <a ng-click="showFullMerchant()">查看详情</a></span>-->
+            <!--</p>-->
+            <!--表格-->
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>商户编号</td>
+                        <td>商户名称</td>
+                        <td>所属城市</td>
+                        <td>名下门店</td>
+                        <td>锁定会员</td>
+                        <td>负责人名称</td>
+                        <td>负责人手机号</td>
+                        <td>累计佣金收入</td>
+                        <td>创建日期</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in pulls">
+                        <td ng-bind="x.merchantNo"></td>
+                        <td ng-bind="x.merchantName"></td>
+                        <td ng-bind="x.cityName"></td>
+                        <td ng-bind="x.merchantCount"></td>
+                        <td>{{x.totalBind}}/{{x.totalLimit}}</td>
+                        <td ng-bind="x.linkMan"></td>
+                        <td ng-bind="x.phoneNum"></td>
+                        <td ng-bind="x.totalCommission/100"></td>
+                        <td>
+                            <p ng-bind="x.createdDate|date:'yyyy-MM-dd'"></p>
+                            <p ng-bind="x.createdDate|date:'HH:mm:ss'"></p>
+                        </td>
+                        <!--<td>-->
+                            <!--<a ng-click="goLePayCode(x[0])">乐付码</a>-->
+                            <!--&lt;!&ndash;<a ng-click="goEdit(x[0])">编辑</a>&ndash;&gt;-->
+                            <!--<a ng-click="goMerchantUser(x[0])">账户</a>-->
+                            <!--&lt;!&ndash;<a ui-sref="lefuma" ui-sref-opts="{reload:true}">乐付码</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<a ui-sref="createitems1" ui-sref-opts="{reload:true}">编辑</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<a ui-sref="accountmanager" ui-sref-opts="{reload:true}">账户</a>&ndash;&gt;-->
+                        <!--</td>-->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <a class="pull-right btn btn-warning btn-check2" style="margin: 5.5% 0 0 10px;" ng-click="exportExcel()">导出表格</a>
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

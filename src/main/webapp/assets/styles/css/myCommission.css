@@ -1,0 +1,28 @@
+.w-showCommissionData {
+    position: relative;
+    display: flex;
+}
+.w-showCommissionData > div {
+    width: 20%;
+    border:1px solid #dadada;
+    margin: 2.5%;
+    padding: 2% 0;
+}
+.w-showCommissionData > div > div:first-child {
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+}
+.w-showCommissionData > div > div:last-child {
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    margin-top: 4%;
+}
+
+.fade {
+    display: none;
+}
+.show {
+    display: block;
+}

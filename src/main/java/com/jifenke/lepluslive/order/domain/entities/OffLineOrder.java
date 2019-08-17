@@ -4,15 +4,9 @@ import com.jifenke.lepluslive.global.util.MvUtil;
 import com.jifenke.lepluslive.lejiauser.domain.entities.LeJiaUser;
 import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 
+import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 /**
  * Created by wcg on 16/5/5.
@@ -31,7 +25,6 @@ public class OffLineOrder {
 
     private Date completeDate;
 
-
     @ManyToOne
     private LeJiaUser leJiaUser;
 
@@ -41,31 +34,78 @@ public class OffLineOrder {
     @ManyToOne
     private PayWay payWay;
 
-    private Long totalPrice = 0L;   // 总金额 (实际支付+红包)
+    private int basicType;      // 0=普通订单  1=乐加订单
 
-    private Long truePay = 0L;      // 实际支付(微信等)
+    private Integer payType = 0; // 0代表微信 1 代表支付宝
 
-    private Long ljCommission = 0L; // 乐加佣金
+    private Long totalPrice = 0L;
 
-    private Long trueScore = 0L;    // 支付红包
+    private Long truePay = 0L;
+
+    private Long ljCommission = 0L; //乐加佣金
+
+    private Long trueScore = 0L; //实际使用红包
 
     private Long wxCommission = 0L; //微信手续费
 
-    private Long rebate = 0L; //返利红包
+    private Long rebate = 0L; //返利鼓励金
 
-    private Long scoreB = 0L; //发放积分
+    private Integer state = 0; //支付状态
 
-    private Integer state = 0;//支付状态  0=未支付|1=已支付|2=已退款
+    private Long transferMoney; //每笔应该转给商户的金额(包括现金和红包)
 
-    private Long transferMoney; //每笔应该转给商户的金额  (商户实际到账 = 微信入账 + 乐加转账)
+    private Long transferMoneyFromTruePay; //每笔订单中现金支付转给商户的金额
 
-    private Long transferMoneyFromTruePay; //每笔订单中现金支付转给商户的金额 (微信入账)
+    private Integer
+        rebateWay;
+    //返利方式,如果为0 代表非会员普通订单 则只返b积分 如果为1 导流订单 2 会员普通订单 3会员订单 4 非会员扫纯支付码 5 会员扫纯支付码 6会员订单（普通费率）
 
-    private Integer rebateWay; //返利方式,如果为0 代表非会员普通订单 则只返b积分 如果为1 导流订单(佣金费率) 2 普通订单(会员消费) 3会员订单(佣金费率) 4 非会员扫纯支付码 5 会员扫纯支付码 6会员订单（普通费率）
+
+    private String lepayCode;
+
+    private Long truePayCommission;//实际支付手续费
+
+    private Long scoreC = 0L; //发放金币
+
+    private BigDecimal commissionScale; // 订单费率
+
+    /**
+     * 是否有优惠信息 1=是|0=否
+     */
+    private Integer discount = 0;
 
 
-    private String lepayCode = MvUtil.getLePayCode(); // 乐付码
+    public Long getScoreC() {
+        return scoreC;
+    }
 
+    public void setScoreC(Long scoreC) {
+        this.scoreC = scoreC;
+    }
+
+    public BigDecimal getCommissionScale() {
+        return commissionScale;
+    }
+
+    public void setCommissionScale(BigDecimal commissionScale) {
+        this.commissionScale = commissionScale;
+    }
+
+    public Long getTruePayCommission() {
+        return truePayCommission;
+    }
+
+    public void setTruePayCommission(Long truePayCommission) {
+        this.truePayCommission = truePayCommission;
+    }
+
+    public Long getTransferMoneyFromTruePay() {
+        return transferMoneyFromTruePay;
+    }
+
+    public void setTransferMoneyFromTruePay(Long transferMoneyFromTruePay) {
+        this.transferMoneyFromTruePay = transferMoneyFromTruePay;
+    }
 
     public String getLepayCode() {
         return lepayCode;
@@ -195,13 +235,6 @@ public class OffLineOrder {
         this.rebate = rebate;
     }
 
-    public Long getScoreB() {
-        return scoreB;
-    }
-
-    public void setScoreB(Long scoreB) {
-        this.scoreB = scoreB;
-    }
 
     public Integer getState() {
         return state;
@@ -211,11 +244,48 @@ public class OffLineOrder {
         this.state = state;
     }
 
-    public Long getTransferMoneyFromTruePay() {
-        return transferMoneyFromTruePay;
+    private Long shareMoney = 0L; //每笔订单分润金额
+
+    public Long getShareMoney() {
+        return shareMoney;
     }
 
-    public void setTransferMoneyFromTruePay(Long transferMoneyFromTruePay) {
-        this.transferMoneyFromTruePay = transferMoneyFromTruePay;
+    public void setShareMoney(Long shareMoney) {
+        this.shareMoney = shareMoney;
+    }
+
+    @Column(length = 50)
+    private String desk;//桌号
+
+    public String getDesk() {
+        return desk;
+    }
+
+    public void setDesk(String desk) {
+        this.desk = desk;
+    }
+
+    public int getBasicType() {
+        return basicType;
+    }
+
+    public void setBasicType(int basicType) {
+        this.basicType = basicType;
+    }
+
+    public Integer getPayType() {
+        return payType;
+    }
+
+    public void setPayType(Integer payType) {
+        this.payType = payType;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
 }

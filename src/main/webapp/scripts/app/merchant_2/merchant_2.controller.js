@@ -1,7 +1,7 @@
- /**
+/**
  * Created by recoluan on 2016/11/16.
  */
- 'use strict';
+'use strict';
 
 
 angular.module('lepayglobleApp')
@@ -19,6 +19,7 @@ angular.module('lepayglobleApp')
         $http.get('api/merchantUser').success(function (response) {
             $scope.shopName = response.data.merchantName;
             $scope.loginName = response.data.name;
+            $scope.loginToken = response.data.merchantSid;
         });
         //  LOGOUT
         $scope.logout = function () {
@@ -26,13 +27,15 @@ angular.module('lepayglobleApp')
             $state.go('home')
         }
         //  MENU
+
+
         $scope.menuList=[
             {
                 contentState:"1",
                 clickState:"1",
                 name:"首页",
                 state:"homePage",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-shanghushouye"
             },
             {
                 contentState:"0",
@@ -42,15 +45,22 @@ angular.module('lepayglobleApp')
                 clickState:"0",
                 name:"交易管理",
                 state:"",
-                icon:"iconfont icon-2wodezhangdan18x20"
-            },
-            {
+                icon:"iconfont2 icon2-shanghujiaoyiguanli"
+            }
+            ,{
                 contentState:"1",
                 clickState:"1",
-                name:"乐加账单",
-                state:"lePlusBilling",
+                name:"乐加结算",
+                state:"lePlusCodeTrade",
                 icon:""
             },
+            /*,{
+                contentState:"1",
+                clickState:"1",
+                name:"民生结算",
+                state:"minShengCodeTrade",
+                icon:""
+            },*/
             {
                 contentState:"1",
                 clickState:"1",
@@ -58,11 +68,18 @@ angular.module('lepayglobleApp')
                 state:"codeTrade",
                 icon:""
             },
+            // {
+            //     contentState:"1",
+            //     clickState:"1",
+            //     name:"POS交易",
+            //     state:"POSTrade",
+            //     icon:""
+            // },
             {
                 contentState:"1",
                 clickState:"1",
-                name:"POS交易",
-                state:"POSTrade",
+                name:"POS账单",
+                state:"POSBilling",
                 icon:""
             },
             {
@@ -72,13 +89,13 @@ angular.module('lepayglobleApp')
                 contentState:"1",
                 clickState:"0",
                 name:"佣金收入",
-                state:"commissionIncome",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                state:"",
+                icon:"iconfont2 icon2-shanghuhuiyuanbianxian"
             },
             {
                 contentState:"1",
                 clickState:"1",
-                name:"数据概览",
+                name:"佣金管理",
                 state:"dataOverview",
                 icon:""
             },
@@ -111,7 +128,7 @@ angular.module('lepayglobleApp')
                 clickState:"1",
                 name:"门店管理",
                 state:"storeManage",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-shanghumendianguanli"
             },
             {
                 contentState:"0",
@@ -121,14 +138,37 @@ angular.module('lepayglobleApp')
                 clickState:"1",
                 name:"账户管理",
                 state:"accountManage",
-                icon:"iconfont icon-2wodezhangdan18x20"
+                icon:"iconfont2 icon2-shanghuzhanghuguanli"
+            },
+            {
+                contentState:"0",
+            },
+            {
+                contentState:"1",
+                clickState:"0",
+                name:"团购管理",
+                state:"",
+                icon:"iconfont2 icon2-wodeyongjin"
             },
             {
                 contentState:"0",
             }
+            ,{
+                contentState:"1",
+                clickState:"1",
+                name:"团购核销",
+                state:"groupBuyManagement",
+                icon:""
+            }
         ]
-        $scope.currentTab=$scope.menuList[0].state;
+        var current = $state.current;
+        if (current.parent == "merchant_2") {
+            $scope.currentTab=current.name;
+        } else {
+            $scope.currentTab=current.parent;
+        }
         $scope.onClickTab=function (tab) {
+            console.log($location)
             if(tab.state!=''){
                 $scope.currentTab=tab.state;
                 $state.go(tab.state);
@@ -137,6 +177,24 @@ angular.module('lepayglobleApp')
         }
         $scope.isActiveTab=function (tab) {
             return tab==$scope.currentTab;
+        }
+
+        // 跳转页面
+        $scope.toCouponSystem = function () {
+                var form = $("<form></form>");
+                form.attr('action', "http://b.lepluspay.com/login");//请求地址
+                form.attr('method', 'post');
+                form.attr('target', '_self');
+
+                var input1 = $("<input type='hidden' name='username' />");
+                input1.val($scope.loginName);
+                form.append(input1);
+                var input2 = $("<input type='hidden' name='password' />");
+                input2.val($scope.loginToken);
+                form.append(input2);
+                form.appendTo("body");
+                form.css('display', 'none');
+                form.submit();
         }
 
     })

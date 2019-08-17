@@ -10,3 +10,19 @@
 .cp-withdrawRecord table tr td:nth-child(3){
     width: 10%;
 }
+.cp-withdrawRecord .page-top li{
+    position: relative;
+}
+.cp-withdrawRecord .page-top li .title-warn{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    line-height: 16px;
+    border-radius: 50%;
+    background: #fb991a;
+    color:#fff;
+    font-size: 12px;
+}

@@ -1,0 +1,311 @@
+<div class="minShengJieSuanTrade minShengOrderDetail">
+    <div class="panel panel-default page-top">
+        <div class="panel-body clearfix">
+            <span class="left-icon pull-left" ui-sref="minShengJieSuan"></span>
+            <span ui-sref="minShengJieSuan">乐加结算 / </span>
+            <span class="current-page">到账详情</span>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="show-wrapper">
+            <div class="show-item">
+                <h4 class="text-center">总入账</h4>
+                <h4 class="text-center">￥{{totalActual/100.0}}</h4>
+                <h4 class="text-center" ng-if="transState==0">待划款</h4>
+                <h4 class="text-center" ng-if="transState==1">已到账</h4>
+                <h4 class="text-center" ng-if="transState==2">已退回</h4>
+            </div>
+            <div class="show-item">
+                <h4>普通订单{{settlement.ptCount}}笔交易成功，{{settlement.ptRefundCount}}笔退款</h4>
+                <h4>
+                    总金额￥{{settlement.ptTotal/100.0}}，手续费：￥{{settlement.ptCommission/100.0}}，应入账￥{{settlement.ptActual/100.0}}</h4>
+                <h4>(普通订单分两笔入账，微信入账￥{{settlement.wxActual/100.0}}，支付宝入账￥{{settlement.aliActual/100.0}})</h4>
+            </div>
+            <div class="show-item">
+                <h4>乐加订单{{settlement.ljCount}}笔交易成功，{{settlement.ljRefundCount}}笔退款</h4>
+                <h4>总金额￥{{settlement.ljTotal/100.0}}，应入账￥{{settlement.ljActual/100.0}}</h4>
+                <h4>(乐加订单只有一笔入账)</h4>
+            </div>
+        </div>
+    </div>
+    <div class="topTab-wrapper">
+        <div class="topTab-item" ng-class="{active:currentTopTapState == 0}" ng-click="topTabClick(0)">
+            微信渠道入账（普通订单）：￥{{settlement.wxActual/100.0}}
+        </div>
+        <div class="topTab-item" ng-class="{active:currentTopTapState == 1}" ng-click="topTabClick(1)">
+            支付宝渠道入账（普通订单）：￥{{settlement.aliActual/100.0}}
+        </div>
+        <div class="topTab-item" ng-class="{active:currentTopTapState == 2}" ng-click="topTabClick(2)">
+            乐加订单入账：￥{{settlement.ljActual/100.0}}
+        </div>
+    </div>
+    <!--乐加订单描述信息-->
+    <div class="desc container-fluid" ng-show="currentTopTapState == 2">
+        <h4>
+            乐加订单中，消费订单{{settlement.ljCount}}笔，订单金额￥{{settlement.ljTotal/100.0}}；退款{{settlement.ljRefundCount}}笔，退款金额￥{{settlement.ljRefundTotal/100.0}}。</h4>
+        <h4>扎差后，商户应入账￥{{settlement.ljActual/100.0}}</h4>
+    </div>
+    <!--普通订单描述信息-->
+    <div class="desc container-fluid" ng-show="currentTopTapState == 0">
+        <h4>
+            微信渠道下，消费订单{{settlement.wxCount}}笔，订单金额￥{{settlement.wxTotal/100.0}}，手续费￥{{settlement.wxCommission/100.0}}；退款{{settlement.wxRefundCount}}笔，退款金额￥{{settlement.wxRefundTotal/100.0}}，手续费￥{{settlement.wxRefundCommision/100.0}}。</h4>
+        <h4>扎差后，商户应入账￥{{settlement.wxActual/100.0}} = (￥{{(settlement.wxTotal-settlement.wxRefundTotal)/100.0}} ) -
+            (￥{{(settlement.wxCommission-settlement.wxRefundCommision)/100.0}} )</h4>
+        <h4><span>*</span>微信渠道应入账 = (微信订单总金额-退款总金额) - (消费总手续费-退款订单总手续费)，公式计算得到的值，小数点后两位直接舍去。</h4>
+    </div>
+    <div class="desc container-fluid" ng-show="currentTopTapState == 1">
+        <h4>
+            支付宝渠道下，消费订单{{settlement.aliCount}}笔，订单金额￥{{settlement.aliTotal/100.0}}，手续费￥{{settlement.aliCommision/100.0}}；退款{{settlement.aliRefundCount}}笔，退款金额￥{{settlement.aliRefundTotal/100.0}}，手续费￥{{settlement.aliRefundCommision/100.0}}。</h4>
+        <h4>扎差后，商户应入账￥{{settlement.aliActual/100.0}} = (￥{{(settlement.aliTotal-settlement.aliRefundTotal)/100.0}} ) -
+            (￥{{(settlement.aliCommision-settlement.aliRefundCommision)/100.0}}) )</h4>
+        <h4><span>*</span>支付宝渠道应入账 = (支付宝订单总金额-退款总金额) - (消费总手续费-退款订单总手续费)，公式计算得到的值，小数点后两位直接舍去。</h4>
+    </div>
+    <!--tab-->
+    <div class=" top-style1">
+        <div class="panel panel-default page-top">
+            <div class="panel-body">
+                <ul class="nav nav-style">
+                    <li role="presentation" ng-class="{active:currentState == 0}" ng-click="onClickTab(0)"><a>交易记录</a>
+                    </li>
+                    <li role="presentation" ng-class="{active:currentState == 1}" ng-click="onClickTab(1)"><a>退款记录</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <form class="form-inline list-check" id="selMerchant">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>交易门店</label>
+                    <div class="input-group col-md-6 select-style">
+                        <select class="form-control" id="ljMerchant">
+                            <!--<option value="-1">请选择</option>-->
+                            <option value="{{m.id}}" ng-repeat="m in merchants">{{m.name}}</option>
+                        </select>
+                        <span class="select-jiao"></span>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+            </div>
+        </form>
+        <!--乐加订单-消费订单-->
+        <div ng-show="currentTopTapState == 2 && currentState == 0">
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>订单金额</td>
+                        <td>乐加折扣</td>
+                        <td>实际入账</td>
+                    </tr>
+                    </thead>
+                    <tbody colspan="6" ng-show="ljOrderList==null">
+                    <tr class="tr-empty">
+                        <td class="text-center">暂无数据！</td>
+                    </tr>
+                    </tbody>
+                    <tbody colspan="6" ng-show="ljOrderList!=null">
+                    <tr ng-repeat="ljOrder in ljOrderList">
+                        <td><h4>{{ljOrder.completeDate|date:'yyyy-MM-dd'}}</h4><h4>
+                            {{ljOrder.completeDate|date:'HH:mm:ss'}}</h4></td>
+                        <td><h4>{{ljOrder.merchant.name}}</h4></td>
+                        <td>{{ljOrder.orderSid}}</td>
+                        <td>￥{{ljOrder.totalPrice/100.0}}</td>
+                        <td>￥{{(100-ljOrder.scanCodeOrderExt.merchantRate)/10.0}}</td>
+                        <td>￥{{ljOrder.transferMoney/100.0}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--乐加订单-退款记录-->
+        <div ng-show="currentTopTapState == 2 && currentState == 1">
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>退款金额</td>
+                        <td>乐加折扣</td>
+                        <td>实际少入账</td>
+                    </tr>
+                    </thead>
+                    <tbody ng-show="ljRefundList==null">
+                    <tr class="tr-empty">
+                        <td class="text-center" colspan="10">暂无数据！</td>
+                    </tr>
+                    </tbody>
+                    <tbody ng-show="ljRefundList!=null">
+                    <tr ng-repeat="leRefund in ljRefundList">
+                        <td><h4>{{leRefund.dateCompleted|date:'yyyy-MM-dd'}}</h4><h4>
+                            {{leRefund.dateCompleted|date:'HH:mm:ss'}}</h4></td>
+                        <td><h4>{{selMerchantName}}</h4></td>
+                        <td>{{leRefund.orderSid}}</td>
+                        <td>￥{{leRefund.totalAmount/100.0}}</td>
+                        <td>￥{{(100-leRefund.merchantRate)/10.0}}</td>
+                        <td>￥{{leRefund.transferMoney/100.0}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--普通订单(微信)-消费订单-->
+        <div ng-show="currentTopTapState == 0 && currentState == 0">
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>订单金额</td>
+                        <td>手续费</td>
+                    </tr>
+                    </thead>
+                    <tbody ng-show="wxOrderList==null">
+                    <tr class="tr-empty">
+                        <td class="text-center" colspan="6" ng-show="wxOrderList==null">暂无数据！</td>
+                    </tr>
+                    </tbody>
+                    <tbody ng-show="wxOrderList!=null">
+                    <tr ng-repeat="order in wxOrderList">
+                        <td><h4>{{order.completeDate|date:'yyyy-MM-dd'}}</h4><h4>
+                            {{order.completeDate|date:'HH:mm:ss'}}</h4></td>
+                        <td><h4>{{order.merchant.name}}</h4></td>
+                        <td>{{order.orderSid}}</td>
+                        <td>￥{{order.totalPrice/100.0}}</td>
+                        <td>￥{{order.commission/100.0}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--普通订单（微信）-退款记录-->
+        <div ng-show="currentTopTapState == 0 && currentState == 1">
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>退款金额</td>
+                        <td>退还商户手续费</td>
+                    </tr>
+                    </thead>
+                    <tbody ng-show="wxRefundList==null">
+                    <tr class="tr-empty">
+                        <td class="text-center" colspan="6">暂无数据！</td>
+                    </tr>
+                    </tbody>
+                    <tbody ng-show="wxRefundList!=null">
+                    <tr ng-repeat="wxRefund in wxRefundList">
+                        <td><h4>{{wxRefund.dateCompleted|date:'yyyy-MM-dd'}}</h4><h4>
+                            {{wxRefund.dateCompleted|date:'HH:mm:ss'}}</h4></td>
+                        <td><h4>{{selMerchantName}}</h4></td>
+                        <td>{{wxRefund.orderSid}}</td>
+                        <td>￥{{wxRefund.totalAmount/100.0}}</td>
+                        <td>￥{{wxRefund.thirdTrueCommission/100.0}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--普通订单(支付宝)-消费订单-->
+        <div ng-show="currentTopTapState == 1 && currentState == 0">
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>订单金额</td>
+                        <td>手续费</td>
+                    </tr>
+                    </thead>
+                    <tbody ng-show="aliOrderList==null">
+                    <tr class="tr-empty">
+                        <td class="text-center" colspan="6">暂无数据！</td>
+                    </tr>
+                    </tbody>
+                    <tbody ng-show="aliOrderList!=null">
+                        <tr ng-repeat="aliOrder in aliOrderList">
+                            <td><h4>{{aliOrder.completeDate|date:'yyyy-MM-dd'}}</h4><h4>
+                                {{aliOrder.completeDate|date:'HH:mm:ss'}}</h4></td>
+                            <td><h4>{{aliOrder.merchant.name}}</h4></td>
+                            <td>{{aliOrder.orderSid}}</td>
+                            <td>￥{{aliOrder.totalPrice/100.0}}</td>
+                            <td>￥{{aliOrder.commission/100.0}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--普通订单（支付宝）-退款记录-->
+        <div ng-show="currentTopTapState == 1 && currentState == 1">
+            <div class="panel panel-default">
+                <table class="table ol-tab">
+                    <thead class="active">
+                    <tr>
+                        <td>交易完成时间</td>
+                        <td>交易门店</td>
+                        <td>订单号</td>
+                        <td>退款金额</td>
+                        <td>退还商户手续费</td>
+                    </tr>
+                    </thead>
+                    <tbody ng-show="aliRefundList==null">
+                    <tr class="tr-empty">
+                        <td class="text-center" colspan="6">暂无数据！</td>
+                    </tr>
+                    </tbody>
+                    <tbody ng-show="aliRefundList!=null">
+                    <tr ng-repeat="aliRefund in aliRefundList">
+                        <td><h4>{{aliRefund.dateCompleted|date:'yyyy-MM-dd'}}</h4><h4>
+                            {{aliRefund.dateCompleted|date:'HH:mm:ss'}}</h4></td>
+                        <td><h4>{{selMerchantName}}</h4></td>
+                        <td>{{aliRefund.orderSid}}</td>
+                        <td>￥{{aliRefund.totalAmount/100.0}}</td>
+                        <td>￥{{aliRefund.thirdTrueCommission/100.0}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--分页-->
+        <div class=" clearfix">
+            <nav class="pull-right">
+                <ul class="pagination">
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+                    <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                        <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+                    </li>
+                    <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+                    <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+                    <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+                    <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                        1}}</a>
+                    </li>
+                    <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                        2}}</a>
+                    </li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(page+1)"><a aria-label="Next">
+                        <span aria-hidden="true">›</span>
+                    </a></li>
+                    <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                        ng-click="loadPage(totalPages)"><a>&raquo;</a></li>
+                </ul>
+            </nav>
+            <a class="pull-right dcbg" ng-click="exportExcel()">导出表格</a>
+        </div>
+    </div>
+
+</div>

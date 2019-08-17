@@ -48,7 +48,7 @@ angular.module('lepayglobleApp')
                          //                   }
                          //               });
                          var deferred = $q.defer();
-                         $http.post('/api/offLineOrder', orderCriteria, {
+                         $http.post('/api/offLineOrder/tradeDetail', orderCriteria, {
                              headers: {
                                  'Content-Type': 'application/json'
                              }
@@ -70,7 +70,7 @@ angular.module('lepayglobleApp')
                      },
                      getOrderStatistic: function (orderCriteria) {
                          var deferred = $q.defer();
-                         $http.post('/api/offLineOrder/statistic', orderCriteria, {
+                         $http.post('/api/offLineOrder/orderStatistic', orderCriteria, {
                              headers: {
                                  'Content-Type': 'application/json'
                              }

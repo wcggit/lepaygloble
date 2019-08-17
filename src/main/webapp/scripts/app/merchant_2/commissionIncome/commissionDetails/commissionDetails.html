@@ -9,10 +9,10 @@
         <form class="form-inline list-check">
             <div class="row">
                 <div class="form-group col-md-4">
-                    <label>门店名称</label>
+                    <label>锁定会员门店</label>
                     <div class="input-group col-md-6">
                         <select id="selectStore" class="form-control">
-                            <option value="">请选择</option>
+                            <!--<option value="">请选择</option>-->
                             <option ng-repeat="x in myStore" value="{{x[0]}}">{{x[1]}}</option>
                         </select>
                         <span class="select-jiao"></span>
@@ -20,34 +20,31 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label>交易完成时间</label>
-                    <!--<date-choice class="input-group timePicker col-md-9"></date-choice>-->
-                    <div class="input-group timePicker col-md-9">
+                    <div class="input-group timePicker" style="width: 72%">
                         <input type="text" name="reservation" id="completeDate" class="form-control"/>
                         <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label>消费方式</label>
-                    <div class="input-group col-md-6">
-                        <select class="form-control" id="consumeType">
-                            <option value="1" selected="selected">线下消费</option>
-                            <option value="2">线上消费</option>
-                        </select>
-                        <span class="select-jiao"></span>
-                    </div>
-                </div>
-                <div class="form-group col-md-4">
-                    <label></label>
+                <div class="form-group col-md-1">
                     <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
                 </div>
             </div>
         </form>
+        <!--tab-->
+        <div class=" top-style1">
+            <div class="panel panel-default page-top">
+                <div class="panel-body" style="padding-bottom: 35px;">
+                    <ul class="nav nav-style">
+                        <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab(0)"><a>线下消费收入</a></li>
+                        <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab(1)"><a>线上消费收入</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <!--表格信息总结-->
         <p class="ttl-add table-title">
-            筛选条件下共有<span class="font-yellow">{{commissionDetailsData.commissionDetailsCount}}</span>条记录，
-            给您带来<span class="font-yellow">{{commissionDetailsData.commissionIncome / 100.0 | currency:'￥'}}</span>佣金收入
+            筛选条件下共有<span class="font-yellow">{{recordCount}}</span>条记录，
+            给您带来<span class="font-yellow">{{totalCommission / 100.0 | currency:'￥'}}</span>佣金收入
         </p>
         <!--表格-->
         <div class="panel panel-default">
@@ -57,24 +54,35 @@
                     <td>交易完成时间</td>
                     <td>微信信息</td>
                     <td>消费方式</td>
-                    <td>锁定门店</td>
+                    <td>会员锁定门店</td>
                     <td>消费金额</td>
-                    <td>佣金贡献</td>
+                    <td>佣金收入</td>
                 </tr>
                 </thead>
-                <tbody>
-
-                <tr class="tr-empty" id="notData" hidden="true"><td class="text-center" colspan="8" >暂无数据！</td></tr>
-                <tr class="tr-noEmpty" ng-repeat="x in commissionDetailsCriteria" id="HaveData">
+                <tbody ng-show="content==null">
+                <tr class="tr-empty"><td class="text-center" colspan="5">暂无数据！</td></tr>
+                </tbody>
+                <tbody ng-show="content!=null&&consumeType==1">
+                <tr class="tr-noEmpty" ng-repeat="x in content" >
+                    <td class="td-date">
+                        <p ng-bind="x.createdAt|date:'yyyy-MM-dd'"></p>
+                        <p ng-bind="x.createdAt|date:'HH:mm:ss'"></p></td>
+                    <td ng-show="x.imgUrl!=null"><span class="wx-faceImg"><img ng-src="{{x.imgUrl}}" alt=""></span><span ng-bind="x.nickName"></span></td>
+                    <td ng-show="x.imgUrl==null"><span ng-bind="x.user"></span></td></td>
+                    <td>线下消费</td>
+                    <td ng-bind="x.lockMerchant"></td>
+                    <td ng-bind="'¥'+x.totalPrice/100.0"></td>
+                    <td ng-bind="'¥'+x.toLockMerchant/100.0"></td>
+                </tr>
+                </tbody>
+                <tbody ng-show="content!=null&&consumeType==2">
+                <tr class="tr-noEmpty" ng-repeat="x in content">
                     <td class="td-date">
                         <p ng-bind="x[0]|date:'yyyy-MM-dd'"></p>
                         <p ng-bind="x[0]|date:'HH:mm:ss'"></p></td>
                     <td><span class="wx-faceImg"><img ng-src="{{x[2]}}" alt=""></span>
                         <span>{{x[1]}}</span></td>
-
-                    <td ng-show="{{consumeType==1}}">线下消费</td>
-                    <td ng-show="{{consumeType==2}}">线上消费</td>
-
+                    <td>线上消费</td>
                     <td>
                         {{x[3]}}</td>
                     <td ng-bind="'¥'+x[4]/100.0"></td>

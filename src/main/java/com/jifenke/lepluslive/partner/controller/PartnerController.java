@@ -9,29 +9,26 @@ import com.jifenke.lepluslive.merchant.service.MerchantService;
 import com.jifenke.lepluslive.partner.domain.criteria.MerchantCriteria;
 import com.jifenke.lepluslive.partner.domain.entities.Partner;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWallet;
+import com.jifenke.lepluslive.partner.domain.entities.PartnerWalletOnline;
 import com.jifenke.lepluslive.partner.domain.entities.PartnerWelfareLog;
 import com.jifenke.lepluslive.partner.service.PartnerService;
+import com.jifenke.lepluslive.partner.service.PartnerWalletOnlineService;
 import com.jifenke.lepluslive.security.SecurityUtils;
-
+import com.jifenke.lepluslive.withdraw.domain.entities.WithdrawBill;
+import com.jifenke.lepluslive.withdraw.service.WithdrawService;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by wcg on 16/7/21.
@@ -52,6 +49,12 @@ public class PartnerController {
     @Inject
     SimpMessageSendingOperations messagingTemplate;
 
+    @Inject
+    WithdrawService withdrawService;
+
+    @Inject
+    private PartnerWalletOnlineService partnerWalletOnlineService;
+
     @RequestMapping(value = "/partner", method = RequestMethod.GET)
     public
     @ResponseBody
@@ -59,6 +62,7 @@ public class PartnerController {
         return LejiaResult.ok(partnerService
                                   .findByPartnerSid(SecurityUtils.getCurrentUserLogin()));
     }
+
 
     @RequestMapping(value = "/partner/info", method = RequestMethod.GET)
     public
@@ -120,10 +124,24 @@ public class PartnerController {
             partner =
             partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
         PartnerWallet partnerWallet = partnerService.findPartnerWalletByPartner(partner);
+        PartnerWalletOnline walletOnline = partnerWalletOnlineService.findByPartner(partner);
+        Long onlineTotal = 0L;
+        Long onlineAvail = 0L;
+        if(walletOnline!=null&&walletOnline.getTotalMoney()!=null) {
+            onlineTotal+=walletOnline.getTotalMoney();
+        }
+        if(walletOnline!=null&&walletOnline.getAvailableBalance()!=null) {
+            onlineAvail+=walletOnline.getAvailableBalance();
+        }
         Long bindLeJiaUser = leJiaUserService.countPartnerBindLeJiaUser(partner);
-
-        result.put("available", partnerWallet.getAvailableBalance() / 100.0);
-        result.put("total", partnerWallet.getTotalMoney() / 100.0);
+        List<WithdrawBill> withdrawBillList=withdrawService.findByPartnerId(partner.getId());
+        Long withdrawTotalPrice=0L;
+        for(WithdrawBill withdrawBill:withdrawBillList){
+            withdrawTotalPrice=withdrawTotalPrice+withdrawBill.getTotalPrice();
+        }
+        result.put("withdrawTotalPrice", withdrawTotalPrice/100.0);
+        result.put("available", (partnerWallet.getAvailableBalance()+onlineAvail) / 100.0);
+        result.put("total", (partnerWallet.getTotalMoney()+onlineTotal) / 100.0);
         result.put("userLimit", partner.getUserLimit());
         result.put("merchantLimit", partner.getMerchantLimit());
         result.put("dayCommission", partnerService.countPartnerDayCommission(partner));
@@ -193,11 +211,11 @@ public class PartnerController {
     public
     @ResponseBody
     LejiaResult getMerchantBySid(@RequestParam String sid) {
-        Merchant merchant = merchantService.findmerchantBySid(sid);
+        Merchant merchant = merchantService.findMerchantByMerchantSid(sid);
         Partner
             partner =
             partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
-        if (merchant.getPartner().getId().toString().equals(partner.getId().toString())) {
+        if (partner!=null) {
             return LejiaResult.ok(merchant);
         }
         return LejiaResult.build(401, "无权限");
@@ -207,7 +225,7 @@ public class PartnerController {
     public
     @ResponseBody
     LejiaResult getMerchantUserBySid(@RequestParam String sid) {
-        Merchant merchant = merchantService.findmerchantBySid(sid);
+        Merchant merchant = merchantService.findMerchantByMerchantSid(sid);
         Partner
             partner =
             partnerService.findByPartnerSid(SecurityUtils.getCurrentUserLogin());
@@ -237,7 +255,7 @@ public class PartnerController {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String sid = request.getParameter("sid");
-        Merchant merchant = merchantService.findmerchantBySid(sid);
+        Merchant merchant = merchantService.findMerchantByMerchantSid(sid);
         merchantService.createMerchantUser(merchant, username, password);
         return LejiaResult.ok("创建成功");
     }

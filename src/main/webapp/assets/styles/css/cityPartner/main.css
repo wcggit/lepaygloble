@@ -39,12 +39,18 @@ ul,li{list-style: none}
     background-color: #fb991a;
     border-color: #adadad;
 }
+.tooltip{
+    top: -30px;
+    left: 30px;
+}
 .tooltip-inner {
-    max-width: 500px;
+    max-width: 350px;
+    width: 350px;
     color: #fb991a;
     border: solid 1px #fb991a;
     background-color: #fff;
     font-size: 12px;
+    margin-left: -120px;
 }
 .tooltip.top .tooltip-arrow{
     border-width: 0;
@@ -63,6 +69,7 @@ ul,li{list-style: none}
     border-width: 1px;
 }
 .tooltip.top .tooltip-arrow{
+    /*margin-left: -10px;*/
     width: 8px;
     height: 8px;
     border-left: solid 1px #fb991a;
@@ -106,6 +113,7 @@ tr>td>a{cursor: pointer;font-size: 14px}
     line-height: 32px;
 }
 .ttl{border-left: solid 2px #fb991a;height: 20px;line-height: 20px;padding-left: 10px;margin: 24px 0 20px}
+.ttl:not(:first-child){margin: 60px 0 20px}
 .tooltip-problem{
     display: inline-block;
     width: 20px;
@@ -120,7 +128,7 @@ tr>td>a{cursor: pointer;font-size: 14px}
 .list-check .row{margin: 10px 0 30px}
 .timePicker{cursor: pointer ;}
 .font-yellow{color: #fb991a}
-.table-title{font-size: 14px}
+.table-title{font-size: 14px;margin-top: 20px}
 .margin-center{display:block;margin: 20px auto;}
 .color222{color: #222}
 .color666{color: #666}
@@ -147,7 +155,7 @@ tr>td>a{cursor: pointer;font-size: 14px}
     font-size: 30px;
 }
 .merchant-data .col-md-4 .out-div{
-    width: 260px;
+    width: 280px;
     border: solid 1px #e4e4e4;
     margin: 0 auto;
     padding: 10px 0;
@@ -162,6 +170,9 @@ tr>td>a{cursor: pointer;font-size: 14px}
     font-size: 18px;
 }
 .merchant-data .col-md-4 .out-div p:last-child span{
+    font-size: 18px;
+}
+.merchant-data .col-md-4 .out-div p:last-child span.num{
     font-size: 30px;
 }
 .row-margin{
@@ -182,6 +193,7 @@ tr>td>a{cursor: pointer;font-size: 14px}
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    overflow: hidden;
 }
 .wx-faceImg img{
     width: 100%;
@@ -195,7 +207,7 @@ tr>td>a{cursor: pointer;font-size: 14px}
     position: absolute;
     top:0;
     bottom: 0;
-    left: -12px;
+    left: -17px;
     margin: auto;
     display: inline-block;
     content: '';
@@ -203,6 +215,9 @@ tr>td>a{cursor: pointer;font-size: 14px}
     height: 10px;
     background: url("../../../../assets/styles/images/cityPartner/myCommission/lock.png") no-repeat;
     background-size: 100% 100%;
+}
+.table>tbody>tr td.icon-lock:nth-child(3):after{
+    left: -2px;
 }
 /*a-btn样式*/
 .a-btn{cursor: pointer}
@@ -267,4 +282,8 @@ select.select-inline-block{display: inline-block;width: auto;}
     position: absolute;
     bottom: 19px;
     left:0px;
+}
+
+.nav>li>a {
+    padding: 10px 28px;
 }

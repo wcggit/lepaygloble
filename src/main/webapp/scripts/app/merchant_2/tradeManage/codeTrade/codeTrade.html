@@ -3,8 +3,10 @@
         <div class="panel-body clearfix">
             扫码交易
             <ul class="nav nav-style">
-                <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab()" ui-sref="codeTradeRecord"><a>交易记录</a></li>
-                <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab()" ui-sref="myCode"><a>我的收款码</a></li>
+                <li role="presentation" ng-class="{active:currentTab0}" ng-click="onClickTab(0)" ui-sref="codeTradeRecord"><a>交易记录</a></li>
+                <li role="presentation" ng-class="{active:currentTab1}" ng-click="onClickTab(1)" ui-sref="myCode"><a>我的收款码</a></li>
+                <li role="presentation" ng-class="{active:currentTab2}" ng-click="onClickTab(2)" ui-sref="refund"><a>退款申请</a></li>
+                <li role="presentation" ng-class="{active:currentTab3}" ng-click="onClickTab(3)" ui-sref="refundList"><a>退款单记录</a></li>
             </ul>
         </div>
     </div>

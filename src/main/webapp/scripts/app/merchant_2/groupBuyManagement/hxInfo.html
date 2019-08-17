@@ -1,0 +1,163 @@
+<style>
+    .codeTrade table tr td {
+        width: 100px !important;
+        word-break: break-all;
+        text-align: center;
+    }
+    .codeTrade table tr td:nth-of-type(1) {
+        width: 120px !important;
+    }
+    .codeTrade table tr td:nth-of-type(5) {
+        width: 80px !important;
+    }
+    .codeTrade table tr td:nth-of-type(4),.codeTrade table tr td:nth-of-type(8) {
+        width: 70px !important;
+    }
+    .codeTrade table tr td:nth-of-type(10) {
+        width: 80px !important;
+    }
+    .codeTrade table tr td:nth-of-type(10) {
+        word-break: normal;
+    }
+    .codeTrade table tr td:nth-of-type(9),.codeTrade table tr td:nth-of-type(11) {
+        width: 150px !important;
+    }
+</style>
+<!--查询表单-->
+<form class="form-inline list-check">
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>门店筛选</label>
+            <div class="input-group col-md-6">
+                <select id="selectStore" class="form-control">
+                    <!--<option value="">请选择</option>-->
+                    <option ng-repeat="x in myStore" value="{{x[0]}}">{{x[1]}}</option>
+                </select>
+                <span class="select-jiao"></span>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label>使用状态</label>
+            <div class="input-group col-md-6">
+                <select id="selectStatus" class="form-control">
+                    <option value="-1">全部</option>
+                    <option value="0">未使用</option>
+                    <option value="1">已使用</option>
+                </select>
+                <span class="select-jiao"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>电话</label>
+            <div class="input-group col-md-6">
+                <input type="text" class="form-control" id="phone">
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label>订单金额(元)</label>
+            <div class="input-group col-md-6">
+                <input type="text" class="form-control" id="orderMoney">
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="form-group col-md-2" style="margin-left: 10%">
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-warning btn-check2" ng-click="searchByCriteria()">查询</button>
+        </div>
+    </div>
+</form>
+<!--表格信息总结-->
+<div class="row">
+    <div class="col-md-10">
+        <p class="ttl-add table-title">
+            所选条件下，共有<span class="font-yellow" ng-bind="totalData"></span>条记录.
+        </p>
+    </div>
+</div>
+
+<!--表格-->
+<div class="panel panel-default">
+    <table class="table ol-tab">
+        <thead class="active">
+            <tr>
+                <td>团购名称</td>
+                <td>订单编码</td>
+                <td>团购ID</td>
+                <td>订单类型</td>
+                <td>数量</td>
+                <td>用户昵称</td>
+                <td>电话</td>
+                <td>订单金额</td>
+                <td>有效期</td>
+                <td>状态</td>
+                <td>核销时间</td>
+            </tr>
+        </thead>
+        <tbody ng-if="payWay!=3">
+            <tr class="tr-empty" id="notData" hidden="true">
+                <td class="text-center" colspan="8">暂无数据！</td>
+            </tr>
+            <tr class="tr-noEmpty" ng-repeat="o in hx" id="HaveData">
+                <td ng-bind="o.productName" width="100"></td>
+                <td ng-bind="o.orderSid"></td>
+                <td ng-bind="o.productId"></td>
+                <td>
+                    <p ng-show="o.orderType==1">乐加订单</p>
+                    <p ng-show="o.orderType==0">普通订单</p>
+                </td>
+                <td ng-bind="o.orderNum"></td>
+                <td ng-bind="o.userName"></td>
+                <td ng-bind="o.phoneNumber"></td>
+                <td ng-bind="'¥'+o.orderPrice/100.0"></td>
+                <td>
+                    <p>{{o.vaildDate|date:'yyyy-MM-dd'}}</p>
+                    <p>{{o.vaildDate|date:'HH:mm:ss'}}</p>
+                </td>
+                <td>
+                    <p ng-show="o.state==4">过期</p>
+                    <p ng-show="o.state==3">已退款</p>
+                    <p ng-show="o.state==2">退款中</p>
+                    <p ng-show="o.state==1">已使用</p>
+                    <p ng-show="o.state==0">未使用</p>
+                    <p ng-show="o.state==-1">未付款</p>
+                </td>
+                <td>
+                    <p>{{o.checkDate|date:'yyyy-MM-dd'}}</p>
+                    <p>{{o.checkDate|date:'HH:mm:ss'}}</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--分页-->
+<div class=" clearfix">
+    <nav class="pull-right">
+        <!--<a class="pull-right dcbg" ng-click="exportExcel()">导出表格</a>-->
+        <ul class="pagination">
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(1)"><a>&laquo;</a></li>
+            <li ng-class="{disabled: page==1}" ng-click="loadPage(page-1)">
+                <a aria-label="Previous"><span aria-hidden="true">‹</span></a>
+            </li>
+            <li ng-show="page > 2" ng-click="loadPage(page - 2)"><a>{{page - 2}}</a></li>
+            <li ng-show="page > 1" ng-click="loadPage(page - 1)"><a>{{page - 1}}</a></li>
+            <li class="active" ng-click="loadPage(page)"><a>{{page}}</a></li>
+            <li ng-show="page < totalPages" ng-click="loadPage(page + 1)"><a>{{page +
+                1}}</a>
+            </li>
+            <li ng-show="page < totalPages - 1" ng-click="loadPage(page + 2)"><a>{{page +
+                2}}</a>
+            </li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(page+1)"><a aria-label="Next">
+                <span aria-hidden="true">›</span>
+            </a></li>
+            <li ng-class="{disabled: page==totalPages||totalPages==0}"
+                ng-click="loadPage(totalPages)"><a>&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+</div>

@@ -1,5 +1,6 @@
 package com.jifenke.lepluslive.merchant.domain.criteria;
 
+import com.jifenke.lepluslive.merchant.domain.entities.Merchant;
 import com.jifenke.lepluslive.order.domain.entities.OffLineOrder;
 
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ public class CodeOrderCriteria {
     public List<Object[]> getListCodeOrder() {
         return listCodeOrder;
     }
+
     public void setListCodeOrder(List<Object[]> listCodeOrder) {
         this.listCodeOrder = listCodeOrder;
     }
@@ -29,7 +31,7 @@ public class CodeOrderCriteria {
     /**
      * 门店ID
      */
-    private Object [] storeIds;
+    private Object[] storeIds;
 
     /**
      * 订单类型
@@ -206,4 +208,73 @@ public class CodeOrderCriteria {
         this.trueScore = trueScore;
     }
 
+    private Long merchantId;            // 门店ID
+
+    private Integer payment;            // 金额类型
+
+    private Integer payType;            // 支付方式  0=微信  1=支付宝
+
+    private Integer offset;             // 页码
+
+    private Integer orderType;          // 订单类型
+
+    private String payWayName;          // 支付名称
+
+    public Long getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
+    }
+
+    public Integer getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Integer payment) {
+        this.payment = payment;
+    }
+
+    public Integer getPayType() {
+        return payType;
+    }
+
+    public void setPayType(Integer payType) {
+        this.payType = payType;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
+    public Integer getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
+    }
+
+    public String getPayWayName() {
+        return payWayName;
+    }
+
+    public void setPayWayName(String payWayName) {
+        this.payWayName = payWayName;
+    }
+
+    private Merchant merchant;
+
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
 }

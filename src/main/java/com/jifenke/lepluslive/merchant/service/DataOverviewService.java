@@ -82,8 +82,7 @@ public class DataOverviewService {
      * @return
      */
     public List<Object[]> findPageMerchantMemberLockNumber(DataOverviewCriteria dataOverviewCriteria) {
-        Integer offSet = dataOverviewCriteria.getOffset() * 6;
-        List<Object[]> list = merchantRepository.findPageMerchantMemberLockNumber(dataOverviewCriteria.getMerchantIds(), offSet);
+        List<Object[]> list = merchantRepository.findPageMerchantMemberLockNumber(dataOverviewCriteria.getMerchantIds());
         return list;
     }
 

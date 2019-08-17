@@ -36,6 +36,11 @@
     font-size: 14px;
     color: #333;
 }
+.imBasicInfo .tel{
+    color: #666;
+    font-size: 14px;
+}
+.imBasicInfo .btn-new{margin: 40px 0 16px}
 
 .infoManage .page-top > .panel-body:first-child{
     padding-bottom: 0;
@@ -54,3 +59,32 @@
     cursor: pointer;
     font-size: 16px;
 }
+.infoManage .page-top .pull-right{
+    line-height: 44px;
+}
+.infoManage .page-top .pull-right .face-img{
+    display: inline-block;
+    width: 44px;
+    height: 44px;
+    overflow: hidden;
+    border-radius: 50%;
+    background: url("../../../../assets/styles/images/head/webwxgetmsgimg.jpg") no-repeat;
+    background-size: 100% 100%;
+    vertical-align: top;
+    margin-right: 10px;
+}
+.infoManage .page-top .pull-right .face-img img{
+    width: 44px;
+    height: 44px;
+    vertical-align: top;
+}
+
+.infoManage .sdxi .col-md-5{
+    margin-left: 35px;
+}
+.infoManage .sdxi .num > span{
+    font-size: 28px;
+    color: #fb991a;
+}
+
+

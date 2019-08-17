@@ -15,5 +15,5 @@ public interface WeiXinUserRepository extends JpaRepository<WeiXinUser,Long> {
 
   WeiXinUser findByOpenId(String openId);
 
-  Page<WeiXinUser> findAll(Specification<WeiXinUser> whereClause,Pageable pageRequest);
+  Page<WeiXinUser> findAll(Specification<WeiXinUser> whereClause, Pageable pageRequest);
 }
